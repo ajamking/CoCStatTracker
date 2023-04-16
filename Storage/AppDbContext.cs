@@ -1,0 +1,81 @@
+﻿using CoCStatTracker;
+using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Storage.Configurations.Base;
+using Storage.Configurations.ClanWars;
+using Storage.Configurations.Raids;
+
+namespace Storage
+{
+    public class AppDbContext : DbContext, ICoCDbContext
+    {
+        public string ConnectionString { get; }
+
+        public DbSet<ClanMember> ClanMembers { get; set; }
+        public DbSet<TrackedClan> TrackedClans { get; set; }
+        public DbSet<Unit> Units { get; set; }
+
+        public DbSet<ClanWar> ClanWars { get; set; }
+        public DbSet<EnemyWarMember> EnemyWarMembers { get; set; }
+        public DbSet<WarAttack> WarAttacks { get; set; }
+        public DbSet<WarMember> WarMembers { get; set; }
+
+        public DbSet<Carma> Carmas { get; set; }
+        public DbSet<CustomActivity> CustomActivities { get; set; }
+        public DbSet<PrizeDraw> PrizeDraws { get; set; }
+        public DbSet<DrawMember> DrawMembers { get; set; }
+
+        public DbSet<CapitalRaid> CapitalRaids { get; set; }
+        public DbSet<DefeatedCapital> DefeatedClans { get; set; }
+        public DbSet<OpponentDistrict> EnemyDistricts { get; set; }
+        public DbSet<RaidAttack> RaidAttacks { get; set; }
+        public DbSet<RaidMember> RaidMembers { get; set; }
+        public DbSet<RaidDefense> RaidDefenses { get; set; }
+        public DbSet<DestroyedFriendlyDistrict> DestroyedFriendlyDistricts { get; set; }
+
+        public AppDbContext(string connectionString)
+        {
+            ConnectionString = connectionString;
+            Database.EnsureDeleted(); // Не забыть убрать!!
+            Database.EnsureCreated();
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlite(ConnectionString);
+            optionsBuilder.LogTo(Console.WriteLine); //удалить и сделать нормальный
+
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new ClanMemberConfiguration());
+            modelBuilder.ApplyConfiguration(new TrackedClanConfiguration());
+            modelBuilder.ApplyConfiguration(new UnitConfiguration());
+
+            modelBuilder.ApplyConfiguration(new ClanWarConfiguration());
+            modelBuilder.ApplyConfiguration(new EnemyWarMemberConfiguration());
+            modelBuilder.ApplyConfiguration(new WarAttackConfiguration());
+            modelBuilder.ApplyConfiguration(new WarMemberConfiguration());
+
+            modelBuilder.ApplyConfiguration(new CarmaConfiguration());
+            modelBuilder.ApplyConfiguration(new CustomActivitiesConfiguration());
+            modelBuilder.ApplyConfiguration(new DrawMemberConfiguration());
+            modelBuilder.ApplyConfiguration(new PrizeDrawConfiguration());
+
+            modelBuilder.ApplyConfiguration(new CapitalRaidConfigurartion());
+            modelBuilder.ApplyConfiguration(new DefeatedClanConfiguration());
+            modelBuilder.ApplyConfiguration(new EnemyDistrictConfiguration());
+            modelBuilder.ApplyConfiguration(new RaidAttackConfiguration());
+            modelBuilder.ApplyConfiguration(new RaidMemberConfiguration());
+            modelBuilder.ApplyConfiguration(new RaidDefenseConfiguration());
+            modelBuilder.ApplyConfiguration(new DestroyedFriendlyDistrictConfiguration());
+        }
+
+        public int Complete()
+        {
+            return SaveChanges();
+        }
+
+    }
+}
