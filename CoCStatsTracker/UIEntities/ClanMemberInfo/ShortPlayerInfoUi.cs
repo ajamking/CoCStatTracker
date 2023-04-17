@@ -1,6 +1,6 @@
 ﻿namespace CoCApiDealer.UIEntities;
 
-public class ShrortPlayerInfoUi
+public class ShortPlayerInfoUi
 {
     public string Tag { get; set; }
     public string Name { get; set; }

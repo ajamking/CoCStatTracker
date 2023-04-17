@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 
 namespace CoCApiDealer.UIEntities;
-public class CarmaChangeUi
+
+public class CarmaUi
 {
     public string PlayersName { get; set; }
     public string PlayersTag { get; set; }

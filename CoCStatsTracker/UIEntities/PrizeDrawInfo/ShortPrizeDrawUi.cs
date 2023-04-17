@@ -11,5 +11,5 @@ public class ShortPrizeDrawUi
     public DateTime EndedOn { get; set; }
     public string Description { get; set; }
 
-    public Dictionary<string, int>[] Participants { get; set; }
+    public Dictionary<string, int> Participants { get; set; }
 }

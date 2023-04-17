@@ -17,8 +17,8 @@ public class RaidMembershipUi
 
 public class RaidAttackUi
 {
-    public string DefendersName { get; set; }
     public string DefendersTag { get; set; }
+    public string DefendersName { get; set; }
     public string DistrictName { get; set; }
     public int DistrictLevel { get; set; }
     public int DestructionPercentFrom { get; set; }

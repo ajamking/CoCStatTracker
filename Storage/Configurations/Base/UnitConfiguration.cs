@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Storage.Configurations.Base
 {
-    public class UnitConfiguration : IEntityTypeConfiguration<Unit>
+    public class UnitConfiguration : IEntityTypeConfiguration<Troop>
     {
-        public void Configure(EntityTypeBuilder<Unit> builder)
+        public void Configure(EntityTypeBuilder<Troop> builder)
         {
             builder.ToTable("Units");
             builder.Property(p => p.Name).IsRequired();

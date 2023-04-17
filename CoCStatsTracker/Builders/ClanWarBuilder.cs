@@ -30,8 +30,8 @@ public class ClanWarBuilder
         ClanWar.StartTime = DateTimeParser.Parse(clanWarApi.StartTime);
         ClanWar.EndTime = DateTimeParser.Parse(clanWarApi.EndTime);
 
-        ClanWar.AttacksDone = clanWarApi.ClanResults.AttacksCount;
-        ClanWar.TotalStars = clanWarApi.ClanResults.StarsCount;
+        ClanWar.AttacksCount = clanWarApi.ClanResults.AttacksCount;
+        ClanWar.StarsCount = clanWarApi.ClanResults.StarsCount;
         ClanWar.DestructionPercentage = clanWarApi.ClanResults.DestructionPercentage;
 
         ClanWar.OpponentClanTag = clanWarApi.OpponentResults.Tag;

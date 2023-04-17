@@ -6,7 +6,6 @@ public class PlayerInfoUi
     public string ClanTag { get; set; }
     public string ClanName { get; set; }
     public string RoleInClan { get; set; }
-    public int RankInClan { get; set; }
     public int ExpLevel { get; set; }
     public int TownHallLevel { get; set; }
     public int TownHallWeaponLevel { get; set; }

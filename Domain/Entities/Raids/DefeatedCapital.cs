@@ -2,7 +2,7 @@
 
 namespace Domain.Entities
 {
-    public class DefeatedCapital
+    public class DefeatedClan
     {
         public int Id { get; set; }
         public string DefendersTag { get; set; }
@@ -16,7 +16,7 @@ namespace Domain.Entities
         public CapitalRaid CapitalRaid { get; set; }
         public virtual ICollection<OpponentDistrict> DefeatedDistricts { get; set; }
 
-        public DefeatedCapital()
+        public DefeatedClan()
         {
             DefeatedDistricts = new HashSet<OpponentDistrict>();
         }

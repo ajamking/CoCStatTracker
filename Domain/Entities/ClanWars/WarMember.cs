@@ -5,6 +5,9 @@ namespace Domain.Entities
     public class WarMember
     {
         public int Id { get; set; }
+        public string Tag { get; set; }
+        public string Name { get; set; }
+        public int TownHallLevel { get; set; }
         public int MapPosition { get; set; }
         public int BestOpponentStars { get; set; }
         public int BestOpponentTime { get; set; }

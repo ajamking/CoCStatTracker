@@ -17,8 +17,8 @@ namespace Domain.Entities
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
 
-        public int AttacksDone { get; set; }
-        public int TotalStars { get; set; }
+        public int AttacksCount { get; set; }
+        public int StarsCount { get; set; }
         public double DestructionPercentage { get; set; }
 
         public string OpponentClanTag { get; set; }

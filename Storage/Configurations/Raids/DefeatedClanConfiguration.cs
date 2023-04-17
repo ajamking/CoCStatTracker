@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Storage.Configurations.ClanWars
 {
-    public class DefeatedClanConfiguration : IEntityTypeConfiguration<DefeatedCapital>
+    public class DefeatedClanConfiguration : IEntityTypeConfiguration<DefeatedClan>
     {
-        public void Configure(EntityTypeBuilder<DefeatedCapital> builder)
+        public void Configure(EntityTypeBuilder<DefeatedClan> builder)
         {
             builder.ToTable("DefeatedClans");
             builder.Property(p => p.DefendersTag).IsRequired();

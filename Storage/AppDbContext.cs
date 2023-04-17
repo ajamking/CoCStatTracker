@@ -13,7 +13,7 @@ namespace Storage
 
         public DbSet<ClanMember> ClanMembers { get; set; }
         public DbSet<TrackedClan> TrackedClans { get; set; }
-        public DbSet<Unit> Units { get; set; }
+        public DbSet<Troop> Units { get; set; }
 
         public DbSet<ClanWar> ClanWars { get; set; }
         public DbSet<EnemyWarMember> EnemyWarMembers { get; set; }
@@ -26,7 +26,7 @@ namespace Storage
         public DbSet<DrawMember> DrawMembers { get; set; }
 
         public DbSet<CapitalRaid> CapitalRaids { get; set; }
-        public DbSet<DefeatedCapital> DefeatedClans { get; set; }
+        public DbSet<DefeatedClan> DefeatedClans { get; set; }
         public DbSet<OpponentDistrict> EnemyDistricts { get; set; }
         public DbSet<RaidAttack> RaidAttacks { get; set; }
         public DbSet<RaidMember> RaidMembers { get; set; }

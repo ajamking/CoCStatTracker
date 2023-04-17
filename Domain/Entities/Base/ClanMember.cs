@@ -37,14 +37,14 @@ namespace Domain.Entities
         public TrackedClan Clan { get; set; }
         public int? CarmaId { get; set; }
         public Carma Carma { get; set; }
-        public virtual ICollection<Unit> Units { get; set; }
+        public virtual ICollection<Troop> Units { get; set; }
         public virtual ICollection<WarMember> WarMembership { get; set; }
         public virtual ICollection<RaidMember> RaidMembership { get; set; }
         public virtual ICollection<DrawMember> DrawMembership { get; set; }
 
         public ClanMember()
         {
-            Units = new HashSet<Unit>();
+            Units = new HashSet<Troop>();
             WarMembership = new HashSet<WarMember>();
             RaidMembership = new HashSet<RaidMember>();
             DrawMembership = new HashSet<DrawMember>();

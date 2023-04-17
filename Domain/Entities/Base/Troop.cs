@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entities
 {
-    public class Unit
+    public class Troop
     {
         public int Id { get; set; }
         public string Name { get; set; }

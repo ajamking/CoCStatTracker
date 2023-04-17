@@ -9,7 +9,7 @@ public class OpponentDistrict
     public int Level { get; set; }
 
     public int? DefeatedCLanId { get; set; }
-    public DefeatedCapital DefeatedClan { get; set; }
+    public DefeatedClan DefeatedClan { get; set; }
     public virtual ICollection<RaidAttack> Attacks { get; set; }
 
     public OpponentDistrict()
