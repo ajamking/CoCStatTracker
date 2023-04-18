@@ -10,7 +10,7 @@ public class Program
 
     static async Task Main(string[] args)
     {
-        //RunDb();
+        RunDb();
 
         //var requesResult = new PlayerRequest().CallApi("#2VGG92CL9").Result;
 
@@ -32,9 +32,7 @@ public class Program
 
 
 
-        var pl = new PlayerInfoUi() { Name = "afs", ClanName = "124" };
-
-        Console.WriteLine(@$"{pl.Name} // {pl.Tag} // {pl.ClanName} // {pl.TownHallLevel} // {pl.TownHallWeaponLevel}");
+       
 
         //var excd = new ExcelDealer();
 
