@@ -1,7 +1,7 @@
 ﻿using CoCStatsTracker.ApiEntities;
 using Domain.Entities;
 
-namespace CoCStatsTracker.Builders;
+namespace CoCStatsTracker;
 
 public class WarAttackBuilder
 {
@@ -23,13 +23,11 @@ public class WarAttackBuilder
         WarAttack.Duration = warAttack.Duration;
     }
 
-    public void SetEnemyWarMember()
+    public void SetEnemyWarMember(WarMemberApi enemyWarMember)
     {
-
-    }
-
-    public void SetWarMember()
-    {
-
+        WarAttack.EnemyWarMember.Tag = enemyWarMember.Tag;
+        WarAttack.EnemyWarMember.Name = enemyWarMember.Name;
+        WarAttack.EnemyWarMember.THLevel = enemyWarMember.TownhallLevel;
+        WarAttack.EnemyWarMember.MapPosition = enemyWarMember.MapPosition;
     }
 }

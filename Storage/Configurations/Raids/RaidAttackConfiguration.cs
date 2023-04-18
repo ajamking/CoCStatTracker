@@ -9,7 +9,7 @@ namespace Storage.Configurations.ClanWars
         public void Configure(EntityTypeBuilder<RaidAttack> builder)
         {
             builder.ToTable("RaidAttacks");
-            builder.Property(p => p.DestructionPercentFrom).IsRequired();
+            // builder.Property(p => p.DestructionPercentFrom).IsRequired(); // Отказались пока
             builder.Property(p => p.DestructionPercentTo).IsRequired();
             builder.Property(p => p.RaidMemberId).IsRequired();
             builder.Property(p => p.EnemyDistricrId).IsRequired();

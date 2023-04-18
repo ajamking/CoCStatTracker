@@ -1,6 +1,7 @@
 ﻿using CoCStatsTracker.ApiEntities;
 using Domain.Entities;
 using System;
+using System.Collections.Generic;
 
 namespace CoCStatsTracker.Builders;
 
@@ -14,7 +15,6 @@ public class TrackedClanBuilder
         {
             TrackedClan = trackedClan;
         }
-
     }
 
     public void SetBaseProperties(ClanApi clanApi)
@@ -38,24 +38,23 @@ public class TrackedClanBuilder
         TrackedClan.CapitalHallLevel = clanApi.CapitalHallLevel;
     }
 
-    public void SetClanMembers()
+    public void SetClanMembers(ICollection<ClanMember> members)
     {
-
+        TrackedClan.ClanMembers = members;
     }
 
-    public void SetClanWars()
+    public void AddClanWar(ClanWar clanWar)
     {
-
+        TrackedClan.ClanWars.Add(clanWar);
     }
 
-    public void SetCapitalRaids()
+    public void AddCapitalRaid(CapitalRaid raid)
     {
-
+        TrackedClan.CapitalRaids.Add(raid);
     }
 
-    public void SetPrizeDraw()
+    public void AddPrizeDraw(PrizeDraw draw)
     {
-
+        TrackedClan.PrizeDraws.Add(draw);
     }
-
 }

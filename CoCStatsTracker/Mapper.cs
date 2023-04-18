@@ -164,7 +164,7 @@ public static class Mapper
                     {
                         PlayerName = attack.RaidMember.ClanMember.Name,
                         PlayerTag = attack.RaidMember.ClanMember.Tag,
-                        DestructionPercentFrom = attack.DestructionPercentFrom,
+                        // DestructionPercentFrom = attack.DestructionPercentFrom, //Отказались пока от этой идеи
                         DestructionPercentTo = attack.DestructionPercentTo,
                     });
                 }
@@ -352,11 +352,11 @@ public static class Mapper
         {
             attacks.Add(new RaidAttackUi
             {
-                DefendersTag = attack.EnemyDistrict.DefeatedClan.DefendersTag,
-                DefendersName = attack.EnemyDistrict.DefeatedClan.DefendersName,
-                DistrictName = attack.EnemyDistrict.Name,
-                DistrictLevel = attack.EnemyDistrict.Level,
-                DestructionPercentFrom = attack.DestructionPercentFrom,
+                DefendersTag = attack.OpponentDistrict.DefeatedClan.DefendersTag,
+                DefendersName = attack.OpponentDistrict.DefeatedClan.DefendersName,
+                DistrictName = attack.OpponentDistrict.Name,
+                DistrictLevel = attack.OpponentDistrict.Level,
+                //  DestructionPercentFrom = attack.DestructionPercentFrom, // Отказались пока от этой идеи, сложно реализовать
                 DestructionPercentTo = attack.DestructionPercentTo,
             });
         }

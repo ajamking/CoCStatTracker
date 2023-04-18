@@ -37,6 +37,6 @@ public class AttackOnDistrictUi
 {
     public string PlayerName { get; set; }
     public string PlayerTag { get; set; }
-    public int DestructionPercentFrom { get; set; }
+    // public int DestructionPercentFrom { get; set; } // Отказались пока от этой идеи
     public int DestructionPercentTo { get; set; }
 }

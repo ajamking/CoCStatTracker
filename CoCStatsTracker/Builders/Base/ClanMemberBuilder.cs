@@ -17,7 +17,6 @@ public class ClanMemberBuilder
         {
             ClanMember = clanMember;
         }
-
     }
 
     public void SetBaseProperties(PlayerApi playerApi)
@@ -48,17 +47,6 @@ public class ClanMemberBuilder
         ClanMember.TotalCapitalContributions = playerApi.ClanCapitalContributions;
 
         ClanMember.League = playerApi.League.Name;
-    }
-
-
-    public void SetTrackedClan()
-    {
-
-    }
-
-    public void SetCarma()
-    {
-
     }
 
     public void SetUnits(TroopApi[] troops, TroopApi[] heroes)
@@ -102,20 +90,13 @@ public class ClanMemberBuilder
         ClanMember.Units = units;
     }
 
-    public void SetWarMembership()
+    public void SetCarma(Carma carma)
     {
-
+        ClanMember.Carma = carma;
     }
 
-    public void SetRaidMembership()
+    public void AddDrawMembership(DrawMember membership)
     {
-
+        ClanMember.DrawMembership.Add(membership);
     }
-
-    public void SetDrawMembership()
-    {
-
-    }
-
-
 }

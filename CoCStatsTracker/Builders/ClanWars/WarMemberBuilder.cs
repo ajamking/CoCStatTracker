@@ -1,10 +1,10 @@
 ﻿using CoCStatsTracker.ApiEntities;
 using Domain.Entities;
+using System.Collections.Generic;
 
-namespace CoCStatsTracker.Builders;
+namespace CoCStatsTracker;
 public class WarMemberBuilder
 {
-
     public WarMember WarMember { get; } = new WarMember();
 
     public WarMemberBuilder(WarMember warMember = null)
@@ -17,28 +17,17 @@ public class WarMemberBuilder
 
     public void SetBaseProperties(WarMemberApi warMemberApi)
     {
-        WarMember.TownHallLevel = warMemberApi.TownhallLevel;
-        WarMember.MapPosition = warMemberApi.MapPosition;
         WarMember.Tag = warMemberApi.Tag;
         WarMember.Name = warMemberApi.Name;
+        WarMember.TownHallLevel = warMemberApi.TownhallLevel;
+        WarMember.MapPosition = warMemberApi.MapPosition;
         WarMember.BestOpponentStars = warMemberApi.BestOpponentAttack.Stars;
         WarMember.BestOpponentTime = warMemberApi.BestOpponentAttack.Duration;
         WarMember.BestOpponentPercent = warMemberApi.BestOpponentAttack.DestructionPercent;
     }
 
-    public void SetClanWar()
+    public void SetWarAttacks(ICollection<WarAttack> attacks)
     {
-
+        WarMember.WarAttacks = attacks;
     }
-
-    public void SetClanMember()
-    {
-
-    }
-
-    public void SetWarAttacks()
-    {
-
-    }
-
 }

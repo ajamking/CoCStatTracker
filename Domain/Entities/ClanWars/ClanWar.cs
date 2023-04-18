@@ -31,14 +31,14 @@ namespace Domain.Entities
         public int? TrackedClanId { get; set; }
         public TrackedClan TrackedClan { get; set; }
         public virtual ICollection<WarMember> WarMembers { get; set; }
-        public virtual ICollection<WarAttack> WarAttacks { get; set; }
-        public virtual ICollection<EnemyWarMember> EnemyWarMembers { get; set; }
+        // public virtual ICollection<WarAttack> WarAttacks { get; set; }
+        // public virtual ICollection<EnemyWarMember> EnemyWarMembers { get; set; }
 
         public ClanWar()
         {
             WarMembers = new HashSet<WarMember>();
-            WarAttacks = new HashSet<WarAttack>();
-            EnemyWarMembers = new HashSet<EnemyWarMember>();
+            // WarAttacks = new HashSet<WarAttack>();
+            // EnemyWarMembers = new HashSet<EnemyWarMember>();
         }
     }
 }

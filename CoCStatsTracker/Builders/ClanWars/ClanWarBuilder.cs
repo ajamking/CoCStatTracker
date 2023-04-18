@@ -17,18 +17,18 @@ public class ClanWarBuilder
         }
     }
 
-    public void SetBaseProperties(ClanWarApi clanWarApi)
+    public void SetBaseProperties(ClanWarApi clanWarApi, bool isCwl = false, string state = "War still goes on")
     {
-        ClanWar.IsCWL = false;
-        ClanWar.Result = "InWar";
+        ClanWar.IsCWL = isCwl;
+        ClanWar.Result = state;
 
         ClanWar.State = clanWarApi.State;
         ClanWar.TeamSize = clanWarApi.TeamSize;
         ClanWar.AttackPerMember = clanWarApi.AttacksPerMember;
 
-        ClanWar.PreparationStartTime = DateTimeParser.Parse(clanWarApi.PreparationStartTime);
-        ClanWar.StartTime = DateTimeParser.Parse(clanWarApi.StartTime);
-        ClanWar.EndTime = DateTimeParser.Parse(clanWarApi.EndTime);
+        ClanWar.PreparationStartTime = DateTimeParser.Parse(clanWarApi.PreparationStartTime).ToLocalTime();
+        ClanWar.StartTime = DateTimeParser.Parse(clanWarApi.StartTime).ToLocalTime();
+        ClanWar.EndTime = DateTimeParser.Parse(clanWarApi.EndTime).ToLocalTime();
 
         ClanWar.AttacksCount = clanWarApi.ClanResults.AttacksCount;
         ClanWar.StarsCount = clanWarApi.ClanResults.StarsCount;
@@ -40,29 +40,10 @@ public class ClanWarBuilder
         ClanWar.OpponentAttacksCount = clanWarApi.OpponentResults.AttacksCount;
         ClanWar.OpponentStarsCount = clanWarApi.OpponentResults.StarsCount;
         ClanWar.OpponentDestructionPercentage = clanWarApi.OpponentResults.DestructionPercentage;
-
-    }
-
-    public void SetTrackedClan()
-    {
-
     }
 
     public void SetWarMembers(ICollection<WarMember> warMembers)
     {
-        foreach (var member in warMembers)
-        {
-            ClanWar.WarMembers.Add(member);
-        }
-    }
-
-    public void SetWarAttacks()
-    {
-
-    }
-
-    public void SetEnemyWarMembers()
-    {
-
+        ClanWar.WarMembers = warMembers;
     }
 }
