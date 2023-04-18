@@ -3,6 +3,7 @@ using CoCStatsTracker.Helpers;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CoCStatsTracker.Builders;
 
@@ -60,7 +61,7 @@ public class ClanMemberBuilder
 
     }
 
-    public void SetUnits(TroopApi[] troops)
+    public void SetUnits(TroopApi[] troops, TroopApi[] heroes)
     {
         var units = new List<Troop>();
 
@@ -69,13 +70,36 @@ public class ClanMemberBuilder
             var unit = new Troop();
 
             unit.Name = troop.Name;
-            unit.Level = troop.Level;
+            if (TroopDefiner.BaseUnitsForSupers.ContainsKey(unit.Name))
+            {
+                unit.Level = troops.FirstOrDefault(x => x.Name == TroopDefiner.BaseUnitsForSupers[unit.Name]).Level;
+            }
+            else
+            {
+                unit.Level = troop.Level;
+            }
+
             unit.Village = troop.Village;
             unit.SuperTroopIsActivated = troop.SuperTroopIsActivated;
             unit.Type = TroopDefiner.DefineUnitType(troop.Name);
 
             units.Add(unit);
         }
+
+        foreach (var troop in heroes)
+        {
+            var hero = new Troop();
+
+            hero.Name = troop.Name;
+            hero.Level = troop.Level;
+            hero.Village = troop.Village;
+            hero.SuperTroopIsActivated = troop.SuperTroopIsActivated;
+            hero.Type = TroopDefiner.DefineUnitType(troop.Name);
+
+            units.Add(hero);
+        }
+
+        ClanMember.Units = units;
     }
 
     public void SetWarMembership()

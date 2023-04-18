@@ -1,5 +1,9 @@
-﻿using CoCApiDealer.UIEntities;
+﻿using CoCApiDealer.ApiRequests;
+using CoCApiDealer.UIEntities;
+using CoCStatsTracker.Builders;
+using OfficeOpenXml.Drawing.Chart;
 using Storage;
+using System.Collections.Immutable;
 
 public class Program
 {
@@ -12,35 +16,12 @@ public class Program
     {
         RunDb();
 
-        //var requesResult = new PlayerRequest().CallApi("#2VGG92CL9").Result;
+        var requesResult = new PlayerRequest().CallApi("#VUGGR9LR").Result;
 
-        //Console.WriteLine(requesResult.Tag);
-        //Console.WriteLine(requesResult.Name);
-        //Console.WriteLine(requesResult.TownHallLevel);
-        //Console.WriteLine(requesResult.TownHallWeaponLevel);
-        //Console.WriteLine(requesResult.DonationsSent);
-        //Console.WriteLine(requesResult.DonationsReceived);
-        //Console.WriteLine();
-        //Console.WriteLine("Heroes:");
-        //foreach (var item in requesResult.Heroes)
-        //{
-        //    Console.WriteLine(item.Name + " " + item.Level);
-        //}
-        //Console.WriteLine();
+        var clanMember = new ClanMemberBuilder();
+        clanMember.SetBaseProperties(requesResult);
+        clanMember.SetUnits(requesResult.Troops, requesResult.Heroes);
 
-
-
-
-
-       
-
-        //var excd = new ExcelDealer();
-
-
-
-        //excd.CreateExcelFile();
-
-        //Console.WriteLine();
     }
 
     static void RunDb()

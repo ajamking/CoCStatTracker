@@ -1,8 +1,29 @@
 ﻿using Domain.Entities;
+using System.Collections.Generic;
 
 namespace CoCStatsTracker.Helpers;
 public static class TroopDefiner
 {
+    public static Dictionary<string, string> BaseUnitsForSupers = new Dictionary<string, string>()
+    {
+        { "Super Barbarian","Barbarian" },
+        { "Super Archer","Archer" },
+        { "Super Wall Breaker","Wall Breaker" },
+        { "Super Giant","Giant" },
+        { "Sneaky Goblin","Goblin" },
+        { "Super Miner","Miner" },
+        { "Rocket Balloon","Balloon" },
+        { "Inferno Dragon","Baby Dragon" },
+        { "Super Valkyrie","Valkyrie" },
+        { "Super Witch","Witch" },
+        { "Ice Hound","Lava Hound" },
+        { "Super Bowler","Bowler" },
+        { "Super Dragon","Dragon" },
+        { "Super Wizard","Wizard" },
+        { "Super Minion","Minion" },
+    };
+
+
     public static UnitType DefineUnitType(string name)
     {
         if (name == "Barbarian King" || name == "Archer Queen" || name == "Grand Warden"

@@ -43,7 +43,7 @@ namespace Storage
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite(ConnectionString);
-            optionsBuilder.LogTo(Console.WriteLine); //удалить и сделать нормальный
+           // optionsBuilder.LogTo(Console.WriteLine); //удалить и сделать нормальный
 
         }
 
