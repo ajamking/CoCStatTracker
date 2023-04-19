@@ -2,6 +2,7 @@
 using Domain.Entities;
 
 namespace CoCStatsTracker.Builders;
+
 public class RaidAttackBuilder
 {
     public RaidAttack RaidAttack { get; } = new RaidAttack();
@@ -16,11 +17,9 @@ public class RaidAttackBuilder
 
     public void SetBaseProperties(AttackOnDistrictApi attack)
     {
+        
         RaidAttack.DestructionPercentTo = attack.DestructionPercentTo;
-    }
-
-    public void SetEnemyDistrict(OpponentDistrict district)
-    {
-        RaidAttack.OpponentDistrict = district;
+        RaidAttack.MemberTag = attack.Attacker.Tag;
+        RaidAttack.MemberName = attack.Attacker.Name;
     }
 }

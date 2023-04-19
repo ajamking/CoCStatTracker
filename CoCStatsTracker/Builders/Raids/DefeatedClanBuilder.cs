@@ -26,7 +26,7 @@ public class DefeatedClanBuilder
         Clan.AttacksSpentCount = clan.AttackCount;
     }
 
-    public void SetDefeatedDistricts(ICollection<OpponentDistrict> districts)
+    public void SetOpponentDistricts(ICollection<OpponentDistrict> districts)
     {
         Clan.DefeatedDistricts = districts;
     }

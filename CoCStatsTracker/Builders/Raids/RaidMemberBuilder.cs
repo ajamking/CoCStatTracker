@@ -23,8 +23,4 @@ public class RaidMemberBuilder
         Member.Name = member.Name;
     }
 
-    public void SetAttacks(ICollection<RaidAttack> attacks)
-    {
-        Member.Attacks = attacks;
-    }
 }

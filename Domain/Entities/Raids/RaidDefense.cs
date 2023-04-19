@@ -12,7 +12,7 @@ public class RaidDefense
     public int DistrictsDestroyed { get; set; }
 
     public int? CapitalRaidId { get; set; }
-    public CapitalRaid Raid { get; set; }
+    public CapitalRaid CapitalRaid { get; set; }
     public ICollection<DestroyedFriendlyDistrict> DestroyedFriendlyDistricts { get; set; }
 
     public RaidDefense()

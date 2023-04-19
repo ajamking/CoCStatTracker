@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 
 namespace CoCStatsTracker.ApiEntities;
+
 public class AttackOnDistrictApi
 {
     [JsonProperty("attacker")]
@@ -12,7 +13,7 @@ public class AttackOnDistrictApi
     // public int DestructionPercentForm { get =>  } //Отказались пока от этой идеи, сложно реализовать
 
     [JsonProperty("stars")]
-    public int StarsTo { get; set; } // В бд не идет
+    public int StarsTo { get; set; } // Не используем
 }
 
 public class AttackerShortInfoApi

@@ -19,7 +19,7 @@ public class TrackedClanBuilder
 
     public void SetBaseProperties(ClanApi clanApi)
     {
-        TrackedClan.UpdatedOn = DateTime.Now; ;
+        TrackedClan.UpdatedOn = DateTime.Now;
         TrackedClan.Tag = clanApi.Tag;
         TrackedClan.Name = clanApi.Name;
         TrackedClan.Type = clanApi.Type;
@@ -35,7 +35,7 @@ public class TrackedClanBuilder
         TrackedClan.WarWins = clanApi.WarWins;
         TrackedClan.WarTies = clanApi.WarTIes;
         TrackedClan.WarLoses = clanApi.WarLoses;
-        TrackedClan.CapitalHallLevel = clanApi.CapitalHallLevel;
+        TrackedClan.CapitalHallLevel = clanApi.ClanCapital.CapitalHallLevel;
     }
 
     public void SetClanMembers(ICollection<ClanMember> members)

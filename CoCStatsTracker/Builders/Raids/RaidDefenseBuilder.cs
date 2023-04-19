@@ -6,37 +6,50 @@ namespace CoCStatsTracker.Builders;
 
 public class RaidDefenseBuilder
 {
-    public RaidDefense Defense { get; set; } = new RaidDefense();
+    public ICollection<RaidDefense> Defenses { get; set; } = new List<RaidDefense>();
 
-    public RaidDefenseBuilder(RaidDefense defense = null)
+    public RaidDefenseBuilder(ICollection<RaidDefense> defenses = null)
     {
-        if (defense != null)
+        if (defenses != null)
         {
-            Defense = defense;
+            Defenses = defenses;
         }
     }
 
-    public void SetBaseProperties(RaidDefense defens)
+    public void SetBaseProperties(DefenseApi[] defenses)
     {
-        Defense.AttackerClanTag = defens.AttackerClanTag;
-        Defense.AttackerClanName = defens.AttackerClanName;
-        Defense.AttackerClanLevel = defens.AttackerClanLevel;
-        Defense.TotalAttacksCount = defens.TotalAttacksCount;
-        Defense.DistrictsDestroyed = defens.DistrictsDestroyed;
+        foreach (var defense in defenses)
+        {
+            var raidDefense = new RaidDefense();
+
+            raidDefense.AttackerClanTag = defense.AttackerClan.Tag;
+            raidDefense.AttackerClanName = defense.AttackerClan.Name;
+            raidDefense.AttackerClanLevel = defense.AttackerClan.Level;
+            raidDefense.TotalAttacksCount = defense.AttackCount;
+            raidDefense.DistrictsDestroyed = defense.DistrictsDestroyedCount;
+
+            raidDefense.DestroyedFriendlyDistricts = SetDestroyedFriendlyDistricts(defense.DistrictsDestroyed);
+
+            Defenses.Add(raidDefense);
+        }
     }
 
-    public void SetDestroyedFriendlyDistricts(ICollection<DistrictApi> destrpyedDistricts)
+    private List<DestroyedFriendlyDistrict> SetDestroyedFriendlyDistricts(DistrictApi[] destrpyedDistricts)
     {
-        var tempDistrict = new DestroyedFriendlyDistrict();
+        var districts = new List<DestroyedFriendlyDistrict>();
 
         foreach (var district in destrpyedDistricts)
         {
+            var tempDistrict = new DestroyedFriendlyDistrict();
+
             tempDistrict.Name = district.Name;
             tempDistrict.Level = district.DistrictLevel;
             tempDistrict.AttacksSpent = district.AttackCount;
             tempDistrict.TotalDestructionPersent = district.DestructionPercent;
 
-            Defense.DestroyedFriendlyDistricts.Add(tempDistrict);
+            districts.Add(tempDistrict);
         }
+
+        return districts;
     }
 }

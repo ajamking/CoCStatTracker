@@ -1,5 +1,6 @@
 ﻿using CoCStatsTracker.ApiEntities;
 using Domain.Entities;
+using System.Collections.Generic;
 
 namespace CoCStatsTracker.Builders;
 public class OpponentDistrictBuilder
@@ -18,5 +19,12 @@ public class OpponentDistrictBuilder
     {
         District.Name = district.Name;
         District.Level = district.DistrictLevel;
+
+    }
+
+    public void SetAttacks(ICollection<RaidAttack> attacks)
+    {
+
+        District.Attacks = attacks;
     }
 }

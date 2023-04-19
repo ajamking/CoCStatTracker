@@ -27,7 +27,7 @@ namespace Storage
 
         public DbSet<CapitalRaid> CapitalRaids { get; set; }
         public DbSet<DefeatedClan> DefeatedClans { get; set; }
-        public DbSet<OpponentDistrict> EnemyDistricts { get; set; }
+        public DbSet<OpponentDistrict> OpponentDistricts { get; set; }
         public DbSet<RaidAttack> RaidAttacks { get; set; }
         public DbSet<RaidMember> RaidMembers { get; set; }
         public DbSet<RaidDefense> RaidDefenses { get; set; }
@@ -49,27 +49,27 @@ namespace Storage
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new ClanMemberConfiguration());
-            modelBuilder.ApplyConfiguration(new TrackedClanConfiguration());
-            modelBuilder.ApplyConfiguration(new UnitConfiguration());
+            //modelBuilder.ApplyConfiguration(new ClanMemberConfiguration());
+            //modelBuilder.ApplyConfiguration(new TrackedClanConfiguration());
+            //modelBuilder.ApplyConfiguration(new UnitConfiguration());
 
-            modelBuilder.ApplyConfiguration(new ClanWarConfiguration());
-            modelBuilder.ApplyConfiguration(new EnemyWarMemberConfiguration());
-            modelBuilder.ApplyConfiguration(new WarAttackConfiguration());
-            modelBuilder.ApplyConfiguration(new WarMemberConfiguration());
+            //modelBuilder.ApplyConfiguration(new ClanWarConfiguration());
+            //modelBuilder.ApplyConfiguration(new EnemyWarMemberConfiguration());
+            //modelBuilder.ApplyConfiguration(new WarAttackConfiguration());
+            //modelBuilder.ApplyConfiguration(new WarMemberConfiguration());
 
-            modelBuilder.ApplyConfiguration(new CarmaConfiguration());
-            modelBuilder.ApplyConfiguration(new CustomActivitiesConfiguration());
-            modelBuilder.ApplyConfiguration(new DrawMemberConfiguration());
-            modelBuilder.ApplyConfiguration(new PrizeDrawConfiguration());
+            //modelBuilder.ApplyConfiguration(new CarmaConfiguration());
+            //modelBuilder.ApplyConfiguration(new CustomActivitiesConfiguration());
+            //modelBuilder.ApplyConfiguration(new DrawMemberConfiguration());
+            //modelBuilder.ApplyConfiguration(new PrizeDrawConfiguration());
 
-            modelBuilder.ApplyConfiguration(new CapitalRaidConfigurartion());
-            modelBuilder.ApplyConfiguration(new DefeatedClanConfiguration());
-            modelBuilder.ApplyConfiguration(new EnemyDistrictConfiguration());
-            modelBuilder.ApplyConfiguration(new RaidAttackConfiguration());
-            modelBuilder.ApplyConfiguration(new RaidMemberConfiguration());
-            modelBuilder.ApplyConfiguration(new RaidDefenseConfiguration());
-            modelBuilder.ApplyConfiguration(new DestroyedFriendlyDistrictConfiguration());
+            //modelBuilder.ApplyConfiguration(new CapitalRaidConfigurartion());
+            //modelBuilder.ApplyConfiguration(new DefeatedClanConfiguration());
+            //modelBuilder.ApplyConfiguration(new EnemyDistrictConfiguration());
+            //modelBuilder.ApplyConfiguration(new RaidAttackConfiguration());
+            //modelBuilder.ApplyConfiguration(new RaidMemberConfiguration());
+            //modelBuilder.ApplyConfiguration(new RaidDefenseConfiguration());
+            //modelBuilder.ApplyConfiguration(new DestroyedFriendlyDistrictConfiguration());
         }
 
         public int Complete()

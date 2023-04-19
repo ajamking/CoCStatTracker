@@ -43,7 +43,7 @@ public class ClanApi
     [JsonProperty("warTies")]
     public int WarTIes { get; set; }
 
-    [JsonProperty("warLoses")]
+    [JsonProperty("warLosses")]
     public int WarLoses { get; set; }
 
     [JsonProperty("isWarLogPublic")]
@@ -52,8 +52,8 @@ public class ClanApi
     [JsonProperty("warLeague")]
     public LeagueApi WarLeague { get; set; }
 
-    [JsonProperty("clanCapital.capitalHallLevel")]
-    public int CapitalHallLevel { get; set; }
+    [JsonProperty("clanCapital")]
+    public ClanCapitalApi ClanCapital { get; set; }
 
     [JsonProperty("members")]
     public int MembersCount { get; set; }
@@ -62,5 +62,12 @@ public class ClanApi
     public ClanMemberApi[] Members { get; set; }
 }
 
+public class ClanCapitalApi
+{
+    [JsonProperty("capitalHallLevel")]
+    public int CapitalHallLevel { get; set; }
+
+
+}
 
 

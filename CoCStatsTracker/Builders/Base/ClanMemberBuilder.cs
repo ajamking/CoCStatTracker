@@ -94,6 +94,10 @@ public class ClanMemberBuilder
     {
         ClanMember.Carma = carma;
     }
+    public void AddRaidMembership(RaidMember membership)
+    {
+        ClanMember.RaidMembership.Add(membership);
+    }
 
     public void AddDrawMembership(DrawMember membership)
     {

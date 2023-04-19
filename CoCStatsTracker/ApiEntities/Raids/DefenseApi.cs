@@ -4,7 +4,7 @@ namespace CoCStatsTracker.ApiEntities;
 public class DefenseApi
 {
     [JsonProperty("attacker")]
-    public AttackedClanInfoApi DefenderClan { get; set; }
+    public AttackedClanInfoApi AttackerClan { get; set; }
 
     [JsonProperty("attackCount")]
     public int AttackCount { get; set; }
