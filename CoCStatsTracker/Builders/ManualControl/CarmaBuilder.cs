@@ -16,6 +16,12 @@ public class CarmaBuilder
         }
     }
 
+    public void SetBaseProperties()
+    {
+        PlayersCarma.TotalCarma = 0;
+        PlayersCarma.UpdatedOn = DateTime.Now.ToLocalTime();
+    }
+
     public void SetActivity(string name, string description, int points)
     {
         PlayersCarma.PlayerActivities.Add(new CustomActivity

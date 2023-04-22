@@ -27,7 +27,7 @@ public class PrizeDrawBuilder
 
     public void SetDrawMembers(ICollection<DrawMember> members)
     {
-        Draw.Participants = members;
+        Draw.Members = members;
     }
 
     public void SetWinner(string name, int totalPointsEarned)

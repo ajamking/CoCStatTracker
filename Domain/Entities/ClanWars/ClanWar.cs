@@ -32,7 +32,7 @@ namespace Domain.Entities
         public TrackedClan TrackedClan { get; set; }
         public virtual ICollection<WarMember> WarMembers { get; set; }
         // public virtual ICollection<WarAttack> WarAttacks { get; set; }
-        // public virtual ICollection<EnemyWarMember> EnemyWarMembers { get; set; }
+        public virtual ICollection<EnemyWarMember> EnemyWarMembers { get; set; }
 
         public ClanWar()
         {

@@ -24,9 +24,9 @@ public class Program
         trackedClanBuilder.SetBaseProperties(clanInfoFromApi);
 
 
-        //Сделали запрос к апи ручке player и заполнили данными наш трекед клан
+        //Сделали запрос к апи ручке player и заполнили участниками наш трекед клан
         var clanMembers = new List<ClanMember>();
-
+            
         foreach (var member in clanInfoFromApi.Members)
         {
             var playerInfoFromApi = new PlayerRequest().CallApi(member.Tag).Result;
@@ -106,7 +106,7 @@ public class Program
             members.Add(raidMemberBuilder.Member);
         }
 
-        foreach (var member in trackedClanBuilder.TrackedClan.ClanMembers)
+        foreach (var member in trackedClanBuilder.Clan.ClanMembers)
         {
             var clanMemberBuilder = new ClanMemberBuilder(member);
             if (members.FirstOrDefault(x => x.Tag == member.Tag) != null)
@@ -123,7 +123,7 @@ public class Program
 
         Console.WriteLine("Api mapping etc. compleeted");
 
-        RunDb(clanMembers, trackedClanBuilder.TrackedClan, raidBuilder.Raid);
+        RunDb(clanMembers, trackedClanBuilder.Clan, raidBuilder.Raid);
     }
 
     static void RunDb(List<ClanMember> members, TrackedClan clan, CapitalRaid raid)
@@ -145,7 +145,7 @@ public class Program
 
             foreach (var user in users)
             {
-                Console.WriteLine($"{user.Id}.{user.Name} - {user.WarStars} - {user.RaidMembership}");
+                Console.WriteLine($"{user.Id}.{user.Name} - {user.WarStars} - {user.TotalCapitalContributions}");
             }
         }
     }

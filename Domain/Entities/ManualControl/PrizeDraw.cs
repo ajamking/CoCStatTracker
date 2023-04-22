@@ -13,11 +13,11 @@ namespace Domain.Entities
         public string Description { get; set; }
         public int TrackedClanId { get; set; }
         public TrackedClan TrackedClan { get; set; }
-        public virtual ICollection<DrawMember> Participants { get; set; }
+        public virtual ICollection<DrawMember> Members { get; set; }
 
         public PrizeDraw()
         {
-            Participants = new HashSet<DrawMember>();
+            Members = new HashSet<DrawMember>();
         }
     }
 }

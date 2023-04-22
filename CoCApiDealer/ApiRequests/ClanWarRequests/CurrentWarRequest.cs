@@ -3,6 +3,7 @@ using CoCStatsTracker.ApiEntities;
 using Newtonsoft.Json;
 
 namespace CoCApiDealer.ApiRequests;
+
 public class CurrentWarRequest : BaseApiRequest
 {
     public async Task<ClanWarApi> CallApi(string clanTag)
@@ -27,7 +28,6 @@ public class CurrentWarRequest : BaseApiRequest
         }
         catch (Exception ex)
         {
-
             throw new ApiErrorException(ex.Message);
         }
     }

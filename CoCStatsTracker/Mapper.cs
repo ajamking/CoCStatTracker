@@ -301,7 +301,7 @@ public static class Mapper
 
     public static DrawMembershipUi MapToDrawMembershipUi(DrawMember drawMember)
     {
-        var target = drawMember.PrizeDraw.Participants
+        var target = drawMember.PrizeDraw.Members
             .OrderBy(x => x.TotalPointsEarned)
             .Select((x, i) => new { Position = i, x.Member.Name, x.TotalPointsEarned })
             .First(x => x.Name == drawMember.Member.Name);
@@ -395,7 +395,7 @@ public static class Mapper
     {
         var participants = new List<ParticipantsUi>();
 
-        foreach (var participant in prizeDraw.Participants)
+        foreach (var participant in prizeDraw.Members)
         {
             participants.Add(new ParticipantsUi
             {
@@ -425,7 +425,7 @@ public static class Mapper
     {
         var participants = new Dictionary<string, int>();
 
-        foreach (var participant in prizeDraw.Participants)
+        foreach (var participant in prizeDraw.Members)
         {
             participants.Add(participant.Member.Name, participant.TotalPointsEarned);
         }

@@ -23,11 +23,8 @@ public class WarAttackBuilder
         WarAttack.Duration = warAttack.Duration;
     }
 
-    public void SetEnemyWarMember(WarMemberApi enemyWarMember)
+    public void SetEnemyWarMember(EnemyWarMember enemyWarMember)
     {
-        WarAttack.EnemyWarMember.Tag = enemyWarMember.Tag;
-        WarAttack.EnemyWarMember.Name = enemyWarMember.Name;
-        WarAttack.EnemyWarMember.THLevel = enemyWarMember.TownhallLevel;
-        WarAttack.EnemyWarMember.MapPosition = enemyWarMember.MapPosition;
+        WarAttack.EnemyWarMember = enemyWarMember;
     }
 }

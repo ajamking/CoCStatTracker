@@ -46,4 +46,9 @@ public class ClanWarBuilder
     {
         ClanWar.WarMembers = warMembers;
     }
+
+    public void SetEnemyWarMembers(ICollection<EnemyWarMember> warMembers)
+    {
+        ClanWar.EnemyWarMembers = warMembers;
+    }
 }

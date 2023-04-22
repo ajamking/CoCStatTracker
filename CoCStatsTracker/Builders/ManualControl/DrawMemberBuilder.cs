@@ -20,13 +20,8 @@ public class DrawMemberBuilder
         Member.TotalPointsEarned = 0;
     }
 
-    public void SetTotalPointsEarned(ICollection<int> drawIndicators, int carmaindocator)
+    public void SetTotalPointsEarned(int currentDrawScore, int carmaindocator)
     {
-        foreach (var indicator in drawIndicators)
-        {
-            Member.TotalPointsEarned += indicator;
-        }
-
-        Member.TotalPointsEarned += carmaindocator;
+        Member.TotalPointsEarned += (currentDrawScore + carmaindocator);
     }
 }
