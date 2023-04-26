@@ -46,7 +46,14 @@ public class ClanMemberBuilder
         ClanMember.DonationsRecieved = playerApi.DonationsReceived;
         ClanMember.TotalCapitalContributions = playerApi.ClanCapitalContributions;
 
-        ClanMember.League = playerApi.League.Name;
+        if (playerApi.League != null)
+        {
+            ClanMember.League = playerApi.League.Name;
+        }
+        else
+        {
+            ClanMember.League = "Not Defined Yet";
+        }
     }
 
     public void SetUnits(TroopApi[] troops, TroopApi[] heroes)

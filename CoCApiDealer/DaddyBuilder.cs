@@ -7,6 +7,7 @@ using CoCStatsTracker.UIEntities;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Storage;
+using System.Diagnostics.Metrics;
 
 namespace CoCApiDealer;
 
@@ -40,9 +41,9 @@ public class DaddyBuilder
     {
         var clanMembers = new List<ClanMember>();
 
-        foreach (var member in _clanInfoFromApi.Members)
+        var tasks = _clanInfoFromApi.Members.Select(async x =>
         {
-            var playerInfoFromApi = new PlayerRequest().CallApi(member.Tag).Result;
+            var playerInfoFromApi = await (new PlayerRequest().CallApi(x.Tag));
 
             var clanMemberBuilder = new ClanMemberBuilder();
 
@@ -51,13 +52,28 @@ public class DaddyBuilder
             clanMemberBuilder.SetUnits(playerInfoFromApi.Troops, playerInfoFromApi.Heroes);
 
             clanMembers.Add(clanMemberBuilder.ClanMember);
-        }
+        }).ToList();
+
+        Task.WhenAll(tasks).GetAwaiter().GetResult();
+
+        //foreach (var member in _clanInfoFromApi.Members)
+        //{
+        //    var playerInfoFromApi = new PlayerRequest().CallApi(member.Tag).Result;
+
+        //    var clanMemberBuilder = new ClanMemberBuilder();
+
+        //    clanMemberBuilder.SetBaseProperties(playerInfoFromApi);
+
+        //    clanMemberBuilder.SetUnits(playerInfoFromApi.Troops, playerInfoFromApi.Heroes);
+
+        //    clanMembers.Add(clanMemberBuilder.ClanMember);
+        //}
 
         _trackedClanBuilder.SetClanMembers(clanMembers);
     }
 
     //Подтянули информацию о последнем рейде, создали домейнный объект со всеми связями
-    public void AddRaid(string clanTag)
+    public void AddLastRaid(string clanTag)
     {
         var raidInfoFromApi = new CapitalRaidsRequest().CallApi(clanTag, 1).Result.RaidsInfo.First();
 
@@ -152,7 +168,7 @@ public class DaddyBuilder
         //Определяем тип войны
         if (isCwLWar)
         {
-            clanWarInfoFromApi = new CwlWarRequest().CallApi(clanTag).Result;
+            clanWarInfoFromApi = new CwlWarRequest().CallApi(cwlWarTag).Result;
         }
         else
         {
@@ -187,18 +203,21 @@ public class DaddyBuilder
             warMemberBuilder.SetBaseProperties(warMember);
 
             var warMemberAttacks = new List<WarAttack>();
-
-            foreach (var warAttack in warMember.Attacks)
+            if (warMember.Attacks != null)
             {
-                var warMemberAttack = new WarAttackBuilder();
+                foreach (var warAttack in warMember.Attacks)
+                {
+                    var warMemberAttack = new WarAttackBuilder();
 
-                warMemberAttack.SetBaseProperties(warAttack);
+                    warMemberAttack.SetBaseProperties(warAttack);
 
-                warMemberAttack.SetEnemyWarMember(clanWarBuilder.ClanWar.EnemyWarMembers
-                    .FirstOrDefault(x => x.Tag == warAttack.DefenderTag));
+                    warMemberAttack.SetEnemyWarMember(clanWarBuilder.ClanWar.EnemyWarMembers
+                        .FirstOrDefault(x => x.Tag == warAttack.DefenderTag));
 
-                warMemberAttacks.Add(warMemberAttack.WarAttack);
+                    warMemberAttacks.Add(warMemberAttack.WarAttack);
+                }
             }
+            
 
             warMemberBuilder.SetWarAttacks(warMemberAttacks);
 
@@ -261,7 +280,7 @@ public class DaddyBuilder
 
         var prizeDrawBuilder = new PrizeDrawBuilder();
 
-        prizeDrawBuilder.SetBaseProperties(start,end,desctiption);
+        prizeDrawBuilder.SetBaseProperties(start, end, desctiption);
 
         prizeDrawBuilder.SetDrawMembers(drawMembers);
 

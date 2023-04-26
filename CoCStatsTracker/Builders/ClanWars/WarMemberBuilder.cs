@@ -21,9 +21,12 @@ public class WarMemberBuilder
         WarMember.Name = warMemberApi.Name;
         WarMember.TownHallLevel = warMemberApi.TownhallLevel;
         WarMember.MapPosition = warMemberApi.MapPosition;
-        WarMember.BestOpponentStars = warMemberApi.BestOpponentAttack.Stars;
-        WarMember.BestOpponentTime = warMemberApi.BestOpponentAttack.Duration;
-        WarMember.BestOpponentPercent = warMemberApi.BestOpponentAttack.DestructionPercent;
+        if (warMemberApi.BestOpponentAttack != null)
+        {
+            WarMember.BestOpponentStars = warMemberApi.BestOpponentAttack.Stars;
+            WarMember.BestOpponentTime = warMemberApi.BestOpponentAttack.Duration;
+            WarMember.BestOpponentPercent = warMemberApi.BestOpponentAttack.DestructionPercent;
+        }
     }
 
     public void SetWarAttacks(ICollection<WarAttack> attacks)
