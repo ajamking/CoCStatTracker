@@ -13,8 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCApiDealer", "CoCApiDeale
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CocBotWebApi", "CocBotWebApi\CocBotWebApi.csproj", "{3531B066-94D7-4619-9DB3-C35E50736B9D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCStatsTracker.Tests", "CoCStatsTracker.Tests\CoCStatsTracker.Tests.csproj", "{57041033-6884-4BEC-A0A7-646C8DFC33D4}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,10 +39,6 @@ Global
 		{3531B066-94D7-4619-9DB3-C35E50736B9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3531B066-94D7-4619-9DB3-C35E50736B9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3531B066-94D7-4619-9DB3-C35E50736B9D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{57041033-6884-4BEC-A0A7-646C8DFC33D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{57041033-6884-4BEC-A0A7-646C8DFC33D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{57041033-6884-4BEC-A0A7-646C8DFC33D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{57041033-6884-4BEC-A0A7-646C8DFC33D4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

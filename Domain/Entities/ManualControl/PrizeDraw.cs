@@ -8,7 +8,7 @@ namespace Domain.Entities
         public int Id { get; set; }
         public DateTime StartedOn { get; set; }
         public DateTime EndedOn { get; set; }
-        public string Winner { get; set; }
+        public string WinnerName { get; set; }
         public int WinnerTotalScore { get; set; }
         public string Description { get; set; }
         public int TrackedClanId { get; set; }

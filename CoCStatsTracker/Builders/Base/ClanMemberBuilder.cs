@@ -77,7 +77,7 @@ public class ClanMemberBuilder
             unit.Village = troop.Village;
             unit.SuperTroopIsActivated = troop.SuperTroopIsActivated;
             unit.Type = TroopDefiner.DefineUnitType(troop.Name);
-
+            unit.ClanMember = ClanMember;
             units.Add(unit);
         }
 
@@ -101,9 +101,15 @@ public class ClanMemberBuilder
     {
         ClanMember.Carma = carma;
     }
+
     public void AddRaidMembership(RaidMember membership)
     {
         ClanMember.RaidMembership.Add(membership);
+    }
+
+    public void AddWarMembership(WarMember warMember)
+    {
+        ClanMember.WarMembership.Add(warMember);
     }
 
     public void AddDrawMembership(DrawMember membership)

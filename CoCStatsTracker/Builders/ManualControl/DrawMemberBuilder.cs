@@ -20,6 +20,16 @@ public class DrawMemberBuilder
         Member.TotalPointsEarned = 0;
     }
 
+    public void SetClanMember(ClanMember clanMember)
+    {
+        Member.ClanMember = clanMember;
+    }
+
+    public void SetDraw(PrizeDraw draw)
+    {
+        Member.PrizeDraw = draw;
+    }
+
     public void SetTotalPointsEarned(int currentDrawScore, int carmaindocator)
     {
         Member.TotalPointsEarned += (currentDrawScore + carmaindocator);

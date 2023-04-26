@@ -30,7 +30,7 @@ public class DrawDealer
         var drawMembersWithUpdatedScores = new List<DrawMember>();
 
         var tempClanMembers = drawMembers
-            .Select(x => x.Member)
+            .Select(x => x.ClanMember)
             .IntersectBy(previousClanInfo.ClanMembers.Select(x => x.Tag), x => x.Tag)
             .IntersectBy(currentClanInfo.ClanMembers.Select(x => x.Tag), x => x.Tag)
             .ToList();
@@ -49,7 +49,7 @@ public class DrawDealer
 
             var newCarma = clanMember.Carma.TotalCarma;
 
-            var updatedDrawMember = drawMembers.First(x => x.Member.Tag == clanMember.Tag);
+            var updatedDrawMember = drawMembers.First(x => x.ClanMember.Tag == clanMember.Tag);
 
             updatedDrawMember.TotalPointsEarned = (int)(newWarStars + newCapitalContributions + newDonationsSent + newCarma);
 
@@ -71,7 +71,7 @@ public class DrawDealer
             }
         }
 
-        draw.Winner = @$"{bestScoreMember.Member.Name} [{bestScoreMember.Member.Tag}]";
+        draw.WinnerName = @$"{bestScoreMember.ClanMember.Name} [{bestScoreMember.ClanMember.Tag}]";
         draw.WinnerTotalScore = bestScoreMember.TotalPointsEarned;
 
         return draw;

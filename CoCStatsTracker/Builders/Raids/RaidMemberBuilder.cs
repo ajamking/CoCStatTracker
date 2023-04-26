@@ -23,4 +23,18 @@ public class RaidMemberBuilder
         Member.Name = member.Name;
     }
 
+    public void SetRaidMemberAttacks(ICollection<RaidAttack> attacks)
+    {
+        Member.Attacks = attacks;
+    }
+
+    public void SetRaid(CapitalRaid raid)
+    {
+        Member.Raid = raid;
+    }
+
+    public void SetClanMember(ClanMember clanMember)
+    {
+        Member.ClanMember = clanMember;
+    }
 }

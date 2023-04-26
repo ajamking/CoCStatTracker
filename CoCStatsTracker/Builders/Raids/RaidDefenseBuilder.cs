@@ -34,6 +34,14 @@ public class RaidDefenseBuilder
         }
     }
 
+    public void SetRaid(CapitalRaid raid)
+    {
+        foreach (var defence in Defenses)
+        {
+            defence.CapitalRaid = raid;
+        }
+    }
+
     private List<DestroyedFriendlyDistrict> SetDestroyedFriendlyDistricts(DistrictApi[] destrpyedDistricts)
     {
         var districts = new List<DestroyedFriendlyDistrict>();

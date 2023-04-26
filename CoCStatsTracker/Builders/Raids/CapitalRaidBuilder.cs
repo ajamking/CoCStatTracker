@@ -29,6 +29,11 @@ public class CapitalRaidBuilder
         Raid.DefenSiveReward = raidApi.DefensiveReward;
     }
 
+    public void SetTrackedClan(TrackedClan clan)
+    {
+        Raid.TrackedClan = clan;
+    }
+
     public void SetRaidMembers(ICollection<RaidMember> members)
     {
         Raid.RaidMembers = members;

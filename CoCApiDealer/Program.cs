@@ -19,21 +19,26 @@ public class Program
     {
         Console.WriteLine(DateTime.Now);
         var daddyBuilder = new DaddyBuilder();
-        daddyBuilder.SetClanProperties("#YPPGCCY8");
+        daddyBuilder.SetClanProperties("#UQQGYJJP");
         Console.WriteLine(DateTime.Now);
-        daddyBuilder.AddLastRaid(daddyBuilder._trackedClanBuilder.Clan.Tag);
+        daddyBuilder.AddCurrentRaid(daddyBuilder._trackedClanBuilder.Clan.Tag);
         Console.WriteLine(DateTime.Now);
-        daddyBuilder.AddClanWar(false, daddyBuilder._trackedClanBuilder.Clan.Tag);
+        daddyBuilder.AddCurrentClanWar(false, daddyBuilder._trackedClanBuilder.Clan.Tag);
         Console.WriteLine(DateTime.Now);
         daddyBuilder.AddEmptyCarmaToAllPlayers();
         Console.WriteLine(DateTime.Now);
         daddyBuilder.AddPrizeDraw(DateTime.Now, DateTime.Now.AddDays(30), "testPrizeDraw");
         Console.WriteLine(DateTime.Now);
 
+
         Console.WriteLine();
+
+        RunDb(daddyBuilder._trackedClanBuilder.Clan);
+
+        Console.WriteLine("ДБ успешно запущена");
     }
 
-    static void RunDb(List<ClanMember> members, TrackedClan clan, CapitalRaid raid)
+    static void RunDb(TrackedClan clan)
     {
         using (AppDbContext db = new AppDbContext("Data Source=CoCStatsTracker.db"))
         {

@@ -51,29 +51,18 @@ public class DaddyBuilder
 
             clanMemberBuilder.SetUnits(playerInfoFromApi.Troops, playerInfoFromApi.Heroes);
 
+            clanMemberBuilder.ClanMember.Clan = _trackedClanBuilder.Clan;
+
             clanMembers.Add(clanMemberBuilder.ClanMember);
         }).ToList();
 
         Task.WhenAll(tasks).GetAwaiter().GetResult();
 
-        //foreach (var member in _clanInfoFromApi.Members)
-        //{
-        //    var playerInfoFromApi = new PlayerRequest().CallApi(member.Tag).Result;
-
-        //    var clanMemberBuilder = new ClanMemberBuilder();
-
-        //    clanMemberBuilder.SetBaseProperties(playerInfoFromApi);
-
-        //    clanMemberBuilder.SetUnits(playerInfoFromApi.Troops, playerInfoFromApi.Heroes);
-
-        //    clanMembers.Add(clanMemberBuilder.ClanMember);
-        //}
-
         _trackedClanBuilder.SetClanMembers(clanMembers);
     }
 
     //Подтянули информацию о последнем рейде, создали домейнный объект со всеми связями
-    public void AddLastRaid(string clanTag)
+    public void AddCurrentRaid(string clanTag)
     {
         var raidInfoFromApi = new CapitalRaidsRequest().CallApi(clanTag, 1).Result.RaidsInfo.First();
 
@@ -81,12 +70,46 @@ public class DaddyBuilder
 
         raidBuilder.SetBaseProperties(raidInfoFromApi);
 
+        raidBuilder.SetTrackedClan(_trackedClanBuilder.Clan);
+
         //Добавляем информацию о защитах
         var raidDefenseBuilder = new RaidDefenseBuilder();
 
         raidDefenseBuilder.SetBaseProperties(raidInfoFromApi.RaidDefenses);
 
+        raidDefenseBuilder.SetRaid(raidBuilder.Raid);
+
         raidBuilder.SetRaidDefenses(raidDefenseBuilder.Defenses);
+
+        // Добавляем RaidMembers-ов в клан и в игроков
+        var members = new List<RaidMember>();
+
+        foreach (var member in raidInfoFromApi.RaidMembers)
+        {
+            var attacks = raidBuilder.Raid.RaidAttacks.Where(x => x.MemberTag == member.Tag).ToList();
+
+            var raidMemberBuilder = new RaidMemberBuilder();
+
+            raidMemberBuilder.SetBaseProperties(member);
+
+            raidMemberBuilder.SetRaidMemberAttacks(attacks);
+
+            raidMemberBuilder.SetRaid(raidBuilder.Raid);
+
+            var clanMemberOnRaid = _trackedClanBuilder.Clan.ClanMembers
+               .FirstOrDefault(x => x.Tag == raidMemberBuilder.Member.Tag);
+
+            raidMemberBuilder.SetClanMember(clanMemberOnRaid);
+
+            if (clanMemberOnRaid != null)
+            {
+                clanMemberOnRaid.RaidMembership.Add(raidMemberBuilder.Member);
+            }
+
+            members.Add(raidMemberBuilder.Member);
+        }
+
+        raidBuilder.SetRaidMembers(members);
 
         //Добавляем информацию о побежденных кланах и рейд атаках
         var defeatedClans = new List<DefeatedClan>();
@@ -99,28 +122,42 @@ public class DaddyBuilder
 
             defeatedClanBuilder.SetBaseProperties(defeatedClanApi);
 
+            defeatedClanBuilder.SetCapitalRaid(raidBuilder.Raid);
+
             var destroyedDistricts = new List<OpponentDistrict>();
 
             foreach (var defeatedDistrict in defeatedClanApi.DistrictsDestroyed)
             {
-                var defeatedDistrictBuilder = new OpponentDistrictBuilder();
+                var opponentDistrictBuilder = new OpponentDistrictBuilder();
 
-                defeatedDistrictBuilder.SetBaseProperties(defeatedDistrict);
+                opponentDistrictBuilder.SetBaseProperties(defeatedDistrict);
+
+                var sortedAttacks = new List<AttackOnDistrictApi>();
+
+                var previousDestructionPercent = 0;
 
                 if (defeatedDistrict.MemberAttacks != null)
                 {
-                    foreach (var attack in defeatedDistrict.MemberAttacks)
+                    sortedAttacks = defeatedDistrict.MemberAttacks.OrderBy(x => x.DestructionPercentTo).ToList();
+
+                    foreach (var attack in sortedAttacks)
                     {
                         var raidAttackBuilder = new RaidAttackBuilder();
-                        raidAttackBuilder.SetBaseProperties(attack);
+
+                        raidAttackBuilder.SetBaseProperties(attack, previousDestructionPercent);
+
+                        raidAttackBuilder.SetRaidMember(raidBuilder.Raid.RaidMembers
+                            .FirstOrDefault(x => x.Tag == attack.Attacker.Tag));
+
+                        raidAttackBuilder.RaidAttack.OpponentDistrict = opponentDistrictBuilder.District;
 
                         raidAttacks.Add(raidAttackBuilder.RaidAttack);
 
-                        raidAttacks.Last().OpponentDistrict = defeatedDistrictBuilder.District;
+                        previousDestructionPercent = attack.DestructionPercentTo;
                     }
                 }
 
-                destroyedDistricts.Add(defeatedDistrictBuilder.District);
+                destroyedDistricts.Add(opponentDistrictBuilder.District);
             }
 
             defeatedClanBuilder.SetOpponentDistricts(destroyedDistricts);
@@ -129,39 +166,29 @@ public class DaddyBuilder
         }
 
         raidBuilder.SetDefeatedClans(defeatedClans);
+
         raidBuilder.SetAttacks(raidAttacks);
 
-        // Добавляем RaidMembers-ов в клан и в игроков
-        var members = new List<RaidMember>();
 
-        foreach (var member in raidInfoFromApi.RaidMembers)
-        {
-            var raidMemberBuilder = new RaidMemberBuilder();
+        //foreach (var member in _trackedClanBuilder.Clan.ClanMembers)
+        //{
+        //    var clanMemberBuilder = new ClanMemberBuilder(member);
 
-            raidMemberBuilder.SetBaseProperties(member);
+        //    if (members.FirstOrDefault(x => x.Tag == member.Tag) != null)
+        //    {
+        //        clanMemberBuilder.AddRaidMembership(
+        //            members.FirstOrDefault(x => x.Tag == member.Tag));
+        //    }
 
-            members.Add(raidMemberBuilder.Member);
-        }
+        //}
 
-        foreach (var member in _trackedClanBuilder.Clan.ClanMembers)
-        {
-            var clanMemberBuilder = new ClanMemberBuilder(member);
-
-            if (members.FirstOrDefault(x => x.Tag == member.Tag) != null)
-            {
-                clanMemberBuilder.AddRaidMembership(
-                    members.FirstOrDefault(x => x.Tag == member.Tag));
-            }
-
-        }
-
-        raidBuilder.SetRaidMembers(members);
+        
 
         _trackedClanBuilder.AddCapitalRaid(raidBuilder.Raid);
     }
 
     //Подтянули информацию о последней войне, создали домейнный объект со всеми связями
-    public void AddClanWar(bool isCwLWar, string clanTag = "", string cwlWarTag = "")
+    public void AddCurrentClanWar(bool isCwLWar, string clanTag = "", string cwlWarTag = "")
     {
         ClanWarApi clanWarInfoFromApi;
 
@@ -186,7 +213,11 @@ public class DaddyBuilder
         foreach (var enemyWarmember in clanWarInfoFromApi.OpponentResults.WarMembers)
         {
             var enemyWarMemberBuilder = new EnemyWarMemberBuilder();
+
             enemyWarMemberBuilder.SetBaseProperties(enemyWarmember);
+
+            enemyWarMemberBuilder.SetClanWar(clanWarBuilder.ClanWar);
+
             enemyWarmembers.Add(enemyWarMemberBuilder.EnemyWarMember);
         }
 
@@ -196,30 +227,44 @@ public class DaddyBuilder
         //в ClanwarBuilder
         var warMembers = new List<WarMember>();
 
-        foreach (var warMember in clanWarInfoFromApi.ClanResults.WarMembers)
+        foreach (var warMemberApi in clanWarInfoFromApi.ClanResults.WarMembers)
         {
             var warMemberBuilder = new WarMemberBuilder();
 
-            warMemberBuilder.SetBaseProperties(warMember);
+            warMemberBuilder.SetBaseProperties(warMemberApi);
 
             var warMemberAttacks = new List<WarAttack>();
-            if (warMember.Attacks != null)
+
+            if (warMemberApi.Attacks != null)
             {
-                foreach (var warAttack in warMember.Attacks)
+                foreach (var warAttack in warMemberApi.Attacks)
                 {
                     var warMemberAttack = new WarAttackBuilder();
 
                     warMemberAttack.SetBaseProperties(warAttack);
 
+                    warMemberAttack.SetWarMember(warMemberBuilder.WarMember);
+
                     warMemberAttack.SetEnemyWarMember(clanWarBuilder.ClanWar.EnemyWarMembers
-                        .FirstOrDefault(x => x.Tag == warAttack.DefenderTag));
+                        .First(x => x.Tag == warAttack.DefenderTag));
 
                     warMemberAttacks.Add(warMemberAttack.WarAttack);
                 }
             }
-            
 
             warMemberBuilder.SetWarAttacks(warMemberAttacks);
+
+            warMemberBuilder.SetClanWar(clanWarBuilder.ClanWar);
+
+            var ClanMemberOnWar = _trackedClanBuilder.Clan.ClanMembers
+               .FirstOrDefault(x => x.Tag == warMemberBuilder.WarMember.Tag);
+
+            warMemberBuilder.SetClanMember(ClanMemberOnWar);
+
+            if (ClanMemberOnWar != null)
+            {
+                ClanMemberOnWar.WarMembership.Add(warMemberBuilder.WarMember);
+            }
 
             warMembers.Add(warMemberBuilder.WarMember);
         }
@@ -267,6 +312,10 @@ public class DaddyBuilder
     //Добавляем отслеживаемый розыгрыш
     public void AddPrizeDraw(DateTime start, DateTime end, string desctiption)
     {
+        var prizeDrawBuilder = new PrizeDrawBuilder();
+
+        prizeDrawBuilder.SetBaseProperties(start, end, desctiption);
+
         var drawMembers = new List<DrawMember>();
 
         foreach (var clanMember in _trackedClanBuilder.Clan.ClanMembers)
@@ -275,14 +324,18 @@ public class DaddyBuilder
 
             drawMemberBuilder.SetBaseProperties();
 
+            drawMemberBuilder.SetClanMember(clanMember);
+
+            drawMemberBuilder.SetDraw(prizeDrawBuilder.Draw);
+
             clanMember.DrawMembership.Add(drawMemberBuilder.Member);
+
+            drawMembers.Add(drawMemberBuilder.Member);
         }
 
-        var prizeDrawBuilder = new PrizeDrawBuilder();
-
-        prizeDrawBuilder.SetBaseProperties(start, end, desctiption);
-
         prizeDrawBuilder.SetDrawMembers(drawMembers);
+
+        prizeDrawBuilder.SetTrackedClan(_trackedClanBuilder.Clan);
 
         _trackedClanBuilder.AddPrizeDraw(prizeDrawBuilder.Draw);
     }

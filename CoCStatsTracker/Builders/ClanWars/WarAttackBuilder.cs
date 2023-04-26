@@ -23,6 +23,11 @@ public class WarAttackBuilder
         WarAttack.Duration = warAttack.Duration;
     }
 
+    public void SetWarMember(WarMember warMember)
+    {
+        WarAttack.WarMember = warMember;
+    }
+
     public void SetEnemyWarMember(EnemyWarMember enemyWarMember)
     {
         WarAttack.EnemyWarMember = enemyWarMember;

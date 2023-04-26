@@ -33,4 +33,14 @@ public class WarMemberBuilder
     {
         WarMember.WarAttacks = attacks;
     }
+
+    public void SetClanWar(ClanWar clanWar)
+    {
+        WarMember.ClanWar = clanWar;
+    }
+
+    public void SetClanMember(ClanMember clanMember)
+    {
+        WarMember.ClanMember = clanMember;
+    }
 }

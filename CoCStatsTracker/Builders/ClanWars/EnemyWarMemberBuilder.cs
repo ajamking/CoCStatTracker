@@ -22,10 +22,15 @@ public class EnemyWarMemberBuilder
 
     public void SetBaseProperties(WarMemberApi enemyWarMember)
     {
-        enemyWarMember.Tag = enemyWarMember.Tag;
-        enemyWarMember.Name = enemyWarMember.Name;
-        enemyWarMember.TownhallLevel = enemyWarMember.TownhallLevel;
-        enemyWarMember.MapPosition = enemyWarMember.MapPosition;
+        EnemyWarMember.Tag = enemyWarMember.Tag;
+        EnemyWarMember.Name = enemyWarMember.Name;
+        EnemyWarMember.THLevel = enemyWarMember.TownhallLevel;
+        EnemyWarMember.MapPosition = enemyWarMember.MapPosition;
+    }
+
+    public void SetClanWar(ClanWar clanWar)
+    {
+        EnemyWarMember.ClanWar = clanWar;
     }
 
 }

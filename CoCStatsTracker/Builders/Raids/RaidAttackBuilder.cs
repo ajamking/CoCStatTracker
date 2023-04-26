@@ -15,11 +15,16 @@ public class RaidAttackBuilder
         }
     }
 
-    public void SetBaseProperties(AttackOnDistrictApi attack)
+    public void SetBaseProperties(AttackOnDistrictApi attack, int destructionPercentFrom)
     {
-        
         RaidAttack.DestructionPercentTo = attack.DestructionPercentTo;
         RaidAttack.MemberTag = attack.Attacker.Tag;
         RaidAttack.MemberName = attack.Attacker.Name;
+        RaidAttack.DestructionPercentFrom = destructionPercentFrom;
+    }
+
+    public void SetRaidMember(RaidMember raidMember)
+    {
+        RaidAttack.RaidMember = raidMember;
     }
 }

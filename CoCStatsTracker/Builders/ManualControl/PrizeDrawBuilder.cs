@@ -21,8 +21,13 @@ public class PrizeDrawBuilder
         Draw.StartedOn = start;
         Draw.EndedOn = end;
         Draw.Description = desctiption;
-        Draw.Winner = "Not determined yet";
+        Draw.WinnerName = "Not determined yet";
         Draw.WinnerTotalScore = 0;
+    }
+
+    public void SetTrackedClan(TrackedClan clan)
+    {
+        Draw.TrackedClan = clan;
     }
 
     public void SetDrawMembers(ICollection<DrawMember> members)
