@@ -1,4 +1,5 @@
-﻿using CoCApiDealer.ApiRequests;
+﻿using CoCApiDealer;
+using CoCApiDealer.ApiRequests;
 using CoCStatsTracker.ApiEntities;
 using CoCStatsTracker.Builders;
 using Domain.Entities;
@@ -16,6 +17,7 @@ public class Program
 
     static async Task Main(string[] args)
     {
+
         //Подтянули информацию о клане, создали объект домейнного типа
         var clanInfoFromApi = new ClanInfoRequest().CallApi("#YPPGCCY8").Result;
 
@@ -26,7 +28,7 @@ public class Program
 
         //Сделали запрос к апи ручке player и заполнили участниками наш трекед клан
         var clanMembers = new List<ClanMember>();
-            
+
         foreach (var member in clanInfoFromApi.Members)
         {
             var playerInfoFromApi = new PlayerRequest().CallApi(member.Tag).Result;

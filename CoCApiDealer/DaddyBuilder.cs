@@ -17,7 +17,7 @@ public class DaddyBuilder
     private ClanApi _clanInfoFromApi = new ClanApi();
 
     //На случай, если создаем не с нуля.
-    public DaddyBuilder(TrackedClanBuilder _existingTrackedClan = null)
+    public DaddyBuilder(TrackedClanBuilder? _existingTrackedClan = null)
     {
         if (_existingTrackedClan != null)
         {

@@ -29,10 +29,4 @@ public class PrizeDrawBuilder
     {
         Draw.Members = members;
     }
-
-    public void SetWinner(string name, int totalPointsEarned)
-    {
-        Draw.Winner = name;
-        Draw.WinnerTotalScore = totalPointsEarned;
-    }
 }
