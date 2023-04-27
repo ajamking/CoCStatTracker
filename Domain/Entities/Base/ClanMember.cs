@@ -34,9 +34,10 @@ namespace Domain.Entities
         public string League { get; set; }
 
         public int? TrackedClanId { get; set; }
-        public TrackedClan Clan { get; set; }
+        public virtual TrackedClan Clan { get; set; }
         public int? CarmaId { get; set; }
-        public Carma Carma { get; set; }
+        public virtual Carma Carma { get; set; }
+
         public virtual ICollection<Troop> Units { get; set; }
         public virtual ICollection<WarMember> WarMembership { get; set; }
         public virtual ICollection<RaidMember> RaidMembership { get; set; }

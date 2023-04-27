@@ -11,7 +11,6 @@ namespace Storage.Configurations.ClanWars
             builder.ToTable("CapitalRaids");
             builder.Property(p => p.StartedOn).IsRequired();
             builder.Property(p => p.EndedOn).IsRequired();
-            builder.Property(p => p.TrackedClanId).IsRequired();
         }
     }
 }

@@ -9,9 +9,8 @@
         public int Duration { get; set; }
 
         public int? EnemyWarMemberId { get; set; }
-        public EnemyWarMember EnemyWarMember { get; set; }
-
+        public virtual EnemyWarMember EnemyWarMember { get; set; }
         public int? WarMemberId { get; set; }
-        public WarMember WarMember { get; set; }
+        public virtual WarMember WarMember { get; set; }
     }
 }

@@ -13,7 +13,8 @@ namespace Domain.Entities
         public int AttacksSpentCount { get; set; }
 
         public int? CapitalRaidId { get; set; }
-        public CapitalRaid CapitalRaid { get; set; }
+        public virtual CapitalRaid CapitalRaid { get; set; }
+
         public virtual ICollection<OpponentDistrict> DefeatedDistricts { get; set; }
 
         public DefeatedClan()

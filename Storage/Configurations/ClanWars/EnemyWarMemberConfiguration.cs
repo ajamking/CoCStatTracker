@@ -11,7 +11,6 @@ namespace Storage.Configurations.ClanWars
             builder.ToTable("EnenemyWarMembers");
             builder.Property(p => p.Tag).IsRequired();
             builder.Property(p => p.Name).IsRequired();
-            builder.Property(p => p.ClanWarId).IsRequired();
         }
     }
 }

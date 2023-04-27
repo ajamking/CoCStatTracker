@@ -9,7 +9,6 @@ namespace Storage.Configurations.ClanWars
         public void Configure(EntityTypeBuilder<DrawMember> builder)
         {
             builder.ToTable("DrawMembers");
-            builder.Property(p => p.ClanMemberId).IsRequired();
         }
     }
 }

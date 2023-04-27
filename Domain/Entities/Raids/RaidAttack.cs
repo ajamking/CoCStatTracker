@@ -12,9 +12,9 @@ namespace Domain.Entities
         public string MemberName { get; set; }
 
         public int? RaidMemberId { get; set; }
-        public RaidMember RaidMember { get; set; }
+        public virtual RaidMember RaidMember { get; set; }
         public int? OpponentDistrictId { get; set; }
-        public OpponentDistrict OpponentDistrict { get; set; }
+        public virtual OpponentDistrict OpponentDistrict { get; set; }
 
     }
 }

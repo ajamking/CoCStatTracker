@@ -13,7 +13,7 @@ namespace CoCApiDealer;
 
 public class DaddyBuilder
 {
-    public TrackedClanBuilder _trackedClanBuilder { get; private set; } = new TrackedClanBuilder();
+    public TrackedClanBuilder TrackedClanBuilder { get; private set; } = new TrackedClanBuilder();
 
     private ClanApi _clanInfoFromApi = new ClanApi();
 
@@ -22,7 +22,7 @@ public class DaddyBuilder
     {
         if (_existingTrackedClan != null)
         {
-            _trackedClanBuilder = _existingTrackedClan;
+            TrackedClanBuilder = _existingTrackedClan;
         }
     }
 
@@ -31,7 +31,7 @@ public class DaddyBuilder
     {
         _clanInfoFromApi = new ClanInfoRequest().CallApi(clanTag).Result;
 
-        _trackedClanBuilder.SetBaseProperties(_clanInfoFromApi);
+        TrackedClanBuilder.SetBaseProperties(_clanInfoFromApi);
 
         SetClanMembers(_clanInfoFromApi);
     }
@@ -51,14 +51,14 @@ public class DaddyBuilder
 
             clanMemberBuilder.SetUnits(playerInfoFromApi.Troops, playerInfoFromApi.Heroes);
 
-            clanMemberBuilder.ClanMember.Clan = _trackedClanBuilder.Clan;
+            clanMemberBuilder.ClanMember.Clan = TrackedClanBuilder.Clan;
 
             clanMembers.Add(clanMemberBuilder.ClanMember);
         }).ToList();
 
         Task.WhenAll(tasks).GetAwaiter().GetResult();
 
-        _trackedClanBuilder.SetClanMembers(clanMembers);
+        TrackedClanBuilder.SetClanMembers(clanMembers);
     }
 
     //Подтянули информацию о последнем рейде, создали домейнный объект со всеми связями
@@ -70,7 +70,7 @@ public class DaddyBuilder
 
         raidBuilder.SetBaseProperties(raidInfoFromApi);
 
-        raidBuilder.SetTrackedClan(_trackedClanBuilder.Clan);
+        raidBuilder.SetTrackedClan(TrackedClanBuilder.Clan);
 
         //Добавляем информацию о защитах
         var raidDefenseBuilder = new RaidDefenseBuilder();
@@ -96,7 +96,7 @@ public class DaddyBuilder
 
             raidMemberBuilder.SetRaid(raidBuilder.Raid);
 
-            var clanMemberOnRaid = _trackedClanBuilder.Clan.ClanMembers
+            var clanMemberOnRaid = TrackedClanBuilder.Clan.ClanMembers
                .FirstOrDefault(x => x.Tag == raidMemberBuilder.Member.Tag);
 
             raidMemberBuilder.SetClanMember(clanMemberOnRaid);
@@ -184,7 +184,7 @@ public class DaddyBuilder
 
         
 
-        _trackedClanBuilder.AddCapitalRaid(raidBuilder.Raid);
+        TrackedClanBuilder.AddCapitalRaid(raidBuilder.Raid);
     }
 
     //Подтянули информацию о последней войне, создали домейнный объект со всеми связями
@@ -256,7 +256,7 @@ public class DaddyBuilder
 
             warMemberBuilder.SetClanWar(clanWarBuilder.ClanWar);
 
-            var ClanMemberOnWar = _trackedClanBuilder.Clan.ClanMembers
+            var ClanMemberOnWar = TrackedClanBuilder.Clan.ClanMembers
                .FirstOrDefault(x => x.Tag == warMemberBuilder.WarMember.Tag);
 
             warMemberBuilder.SetClanMember(ClanMemberOnWar);
@@ -271,13 +271,13 @@ public class DaddyBuilder
 
         clanWarBuilder.SetWarMembers(warMembers);
 
-        _trackedClanBuilder.AddClanWar(clanWarBuilder.ClanWar);
+        TrackedClanBuilder.AddClanWar(clanWarBuilder.ClanWar);
     }
 
     //Присваиваем каждому игроку начальную карму
     public void AddEmptyCarmaToAllPlayers()
     {
-        foreach (var member in _trackedClanBuilder.Clan.ClanMembers)
+        foreach (var member in TrackedClanBuilder.Clan.ClanMembers)
         {
             var emptyCarma = new CarmaBuilder();
 
@@ -290,7 +290,7 @@ public class DaddyBuilder
     public void AddPlayerActivity(string playerTag,
         string activityName, string description, int points)
     {
-        var targetMember = _trackedClanBuilder.Clan
+        var targetMember = TrackedClanBuilder.Clan
           .ClanMembers.FirstOrDefault(x => x.Tag == playerTag);
 
         if (targetMember != null)
@@ -318,7 +318,7 @@ public class DaddyBuilder
 
         var drawMembers = new List<DrawMember>();
 
-        foreach (var clanMember in _trackedClanBuilder.Clan.ClanMembers)
+        foreach (var clanMember in TrackedClanBuilder.Clan.ClanMembers)
         {
             var drawMemberBuilder = new DrawMemberBuilder();
 
@@ -335,8 +335,8 @@ public class DaddyBuilder
 
         prizeDrawBuilder.SetDrawMembers(drawMembers);
 
-        prizeDrawBuilder.SetTrackedClan(_trackedClanBuilder.Clan);
+        prizeDrawBuilder.SetTrackedClan(TrackedClanBuilder.Clan);
 
-        _trackedClanBuilder.AddPrizeDraw(prizeDrawBuilder.Draw);
+        TrackedClanBuilder.AddPrizeDraw(prizeDrawBuilder.Draw);
     }
 }

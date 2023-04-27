@@ -10,7 +10,7 @@
         public UnitType Type { get; set; }
 
         public int? ClanMemberId { get; set; }
-        public ClanMember ClanMember { get; set; }
+        public virtual ClanMember ClanMember { get; set; }
     }
 
     public enum UnitType

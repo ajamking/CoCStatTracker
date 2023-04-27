@@ -11,7 +11,6 @@ namespace Storage.Configurations.ClanWars
             builder.ToTable("DefeatedClans");
             builder.Property(p => p.DefendersTag).IsRequired();
             builder.Property(p => p.DefendersName).IsRequired();
-            builder.Property(p => p.CapitalRaidId).IsRequired();
         }
     }
 }

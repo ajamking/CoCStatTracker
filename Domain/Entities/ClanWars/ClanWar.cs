@@ -29,16 +29,17 @@ namespace Domain.Entities
         public double OpponentDestructionPercentage { get; set; }
 
         public int? TrackedClanId { get; set; }
-        public TrackedClan TrackedClan { get; set; }
+        public virtual TrackedClan TrackedClan { get; set; }
+
         public virtual ICollection<WarMember> WarMembers { get; set; }
-        // public virtual ICollection<WarAttack> WarAttacks { get; set; }
         public virtual ICollection<EnemyWarMember> EnemyWarMembers { get; set; }
+        // public virtual ICollection<WarAttack> WarAttacks { get; set; }
 
         public ClanWar()
         {
             WarMembers = new HashSet<WarMember>();
+            EnemyWarMembers = new HashSet<EnemyWarMember>();
             // WarAttacks = new HashSet<WarAttack>();
-            // EnemyWarMembers = new HashSet<EnemyWarMember>();
         }
     }
 }

@@ -14,7 +14,6 @@ namespace Storage.Configurations.Base
             builder.Property(p => p.Type).IsRequired().HasConversion(new EnumToStringConverter<UnitType>());
             builder.Property(p => p.Village).IsRequired();
             builder.Property(p => p.Level).IsRequired();
-            builder.Property(p => p.ClanMemberId).IsRequired();
         }
     }
 }

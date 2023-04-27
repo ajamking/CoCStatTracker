@@ -9,7 +9,6 @@ namespace Storage.Configurations.ClanWars
         public void Configure(EntityTypeBuilder<DestroyedFriendlyDistrict> builder)
         {
             builder.ToTable("DestroyedFriendlyDistrict");
-            builder.Property(p => p.RaidDefenseId).IsRequired();
         }
     }
 }

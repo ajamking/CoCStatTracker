@@ -9,8 +9,6 @@ namespace Storage.Configurations.ClanWars
         public void Configure(EntityTypeBuilder<WarMember> builder)
         {
             builder.ToTable("WarMembers");
-            builder.Property(p => p.ClanWarId).IsRequired();
-            builder.Property(p => p.ClanMemberId).IsRequired();
         }
     }
 }

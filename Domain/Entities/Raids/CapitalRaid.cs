@@ -16,7 +16,8 @@ namespace Domain.Entities
         public int DefenSiveReward { get; set; }
 
         public int? TrackedClanId { get; set; }
-        public TrackedClan TrackedClan { get; set; }
+        public virtual TrackedClan TrackedClan { get; set; }
+
         public virtual ICollection<RaidMember> RaidMembers { get; set; }
         public virtual ICollection<RaidAttack> RaidAttacks { get; set; }
         public virtual ICollection<DefeatedClan> DefeatedClans { get; set; }

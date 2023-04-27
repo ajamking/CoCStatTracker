@@ -6,8 +6,8 @@
         public int TotalPointsEarned { get; set; }
 
         public int? ClanMemberId { get; set; }
-        public ClanMember ClanMember { get; set; }
+        public virtual ClanMember ClanMember { get; set; }
         public int PrizeDrawId { get; set; }
-        public PrizeDraw PrizeDraw { get; set; }
+        public virtual PrizeDraw PrizeDraw { get; set; }
     }
 }

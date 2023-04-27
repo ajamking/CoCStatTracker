@@ -11,8 +11,10 @@ namespace Domain.Entities
         public string WinnerName { get; set; }
         public int WinnerTotalScore { get; set; }
         public string Description { get; set; }
+
         public int TrackedClanId { get; set; }
-        public TrackedClan TrackedClan { get; set; }
+        public virtual TrackedClan TrackedClan { get; set; }
+
         public virtual ICollection<DrawMember> Members { get; set; }
 
         public PrizeDraw()

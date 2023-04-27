@@ -9,7 +9,6 @@ public class RaidDefenseConfiguration : IEntityTypeConfiguration<RaidDefense>
     public void Configure(EntityTypeBuilder<RaidDefense> builder)
     {
         builder.ToTable("RaidDefense");
-        builder.Property(p => p.CapitalRaidId).IsRequired();
     }
 }
 

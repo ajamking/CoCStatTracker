@@ -12,7 +12,6 @@ namespace Storage.Configurations.ClanWars
             builder.Property(p => p.UpdatedOn).IsRequired();
             builder.Property(p => p.Name).IsRequired();
             builder.Property(p => p.EarnedPoints).IsRequired();
-            builder.Property(p => p.CarmaId).IsRequired();
         }
     }
 }

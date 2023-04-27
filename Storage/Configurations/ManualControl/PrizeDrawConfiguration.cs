@@ -10,7 +10,6 @@ namespace Storage.Configurations.ClanWars
         {
             builder.ToTable("PrizeDraws");
             builder.Property(p => p.StartedOn).IsRequired();
-            builder.Property(p => p.TrackedClanId).IsRequired();
             builder.Property(p => p.EndedOn).IsRequired();
         }
     }

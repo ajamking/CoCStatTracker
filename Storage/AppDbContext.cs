@@ -33,43 +33,50 @@ namespace Storage
         public DbSet<RaidDefense> RaidDefenses { get; set; }
         public DbSet<DestroyedFriendlyDistrict> DestroyedFriendlyDistricts { get; set; }
 
-        public AppDbContext(string connectionString)
+        public AppDbContext(string connectionString, bool firstStrat = false)
         {
             ConnectionString = connectionString;
-            Database.EnsureDeleted(); // Не забыть убрать!!
+
+            if (firstStrat)
+            {
+                Database.EnsureDeleted();
+            }
+          
             Database.EnsureCreated();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(ConnectionString);
+            optionsBuilder
+                .UseLazyLoadingProxies()
+                .UseSqlite(ConnectionString);
             // optionsBuilder.LogTo(Console.WriteLine); //удалить и сделать нормальный
 
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.ApplyConfiguration(new ClanMemberConfiguration());
-            //modelBuilder.ApplyConfiguration(new TrackedClanConfiguration());
-            //modelBuilder.ApplyConfiguration(new UnitConfiguration());
+            modelBuilder.ApplyConfiguration(new ClanMemberConfiguration());
+            modelBuilder.ApplyConfiguration(new TrackedClanConfiguration());
+            modelBuilder.ApplyConfiguration(new UnitConfiguration());
 
-            //modelBuilder.ApplyConfiguration(new ClanWarConfiguration());
-            //modelBuilder.ApplyConfiguration(new EnemyWarMemberConfiguration());
-            //modelBuilder.ApplyConfiguration(new WarAttackConfiguration());
-            //modelBuilder.ApplyConfiguration(new WarMemberConfiguration());
+            modelBuilder.ApplyConfiguration(new ClanWarConfiguration());
+            modelBuilder.ApplyConfiguration(new EnemyWarMemberConfiguration());
+            modelBuilder.ApplyConfiguration(new WarAttackConfiguration());
+            modelBuilder.ApplyConfiguration(new WarMemberConfiguration());
 
-            //modelBuilder.ApplyConfiguration(new CarmaConfiguration());
-            //modelBuilder.ApplyConfiguration(new CustomActivitiesConfiguration());
-            //modelBuilder.ApplyConfiguration(new DrawMemberConfiguration());
-            //modelBuilder.ApplyConfiguration(new PrizeDrawConfiguration());
+            modelBuilder.ApplyConfiguration(new CarmaConfiguration());
+            modelBuilder.ApplyConfiguration(new CustomActivitiesConfiguration());
+            modelBuilder.ApplyConfiguration(new DrawMemberConfiguration());
+            modelBuilder.ApplyConfiguration(new PrizeDrawConfiguration());
 
-            //modelBuilder.ApplyConfiguration(new CapitalRaidConfigurartion());
-            //modelBuilder.ApplyConfiguration(new DefeatedClanConfiguration());
-            //modelBuilder.ApplyConfiguration(new EnemyDistrictConfiguration());
-            //modelBuilder.ApplyConfiguration(new RaidAttackConfiguration());
-            //modelBuilder.ApplyConfiguration(new RaidMemberConfiguration());
-            //modelBuilder.ApplyConfiguration(new RaidDefenseConfiguration());
-            //modelBuilder.ApplyConfiguration(new DestroyedFriendlyDistrictConfiguration());
+            modelBuilder.ApplyConfiguration(new CapitalRaidConfigurartion());
+            modelBuilder.ApplyConfiguration(new DefeatedClanConfiguration());
+            modelBuilder.ApplyConfiguration(new EnemyDistrictConfiguration());
+            modelBuilder.ApplyConfiguration(new RaidAttackConfiguration());
+            modelBuilder.ApplyConfiguration(new RaidMemberConfiguration());
+            modelBuilder.ApplyConfiguration(new RaidDefenseConfiguration());
+            modelBuilder.ApplyConfiguration(new DestroyedFriendlyDistrictConfiguration());
         }
 
         public int Complete()

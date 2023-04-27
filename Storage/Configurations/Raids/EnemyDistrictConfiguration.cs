@@ -10,7 +10,6 @@ namespace Storage.Configurations.ClanWars
         {
             builder.ToTable("EnemyDistricts");
             builder.Property(p => p.Name).IsRequired();
-            builder.Property(p => p.DefeatedCLanId).IsRequired();
         }
     }
 }

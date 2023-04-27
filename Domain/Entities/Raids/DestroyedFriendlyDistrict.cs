@@ -9,5 +9,5 @@ public class DestroyedFriendlyDistrict
     public int TotalDestructionPersent { get; set; }
 
     public int? RaidDefenseId { get; set; }
-    public RaidDefense RaidDefense { get; set; }
+    public virtual RaidDefense RaidDefense { get; set; }
 }

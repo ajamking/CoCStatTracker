@@ -14,10 +14,11 @@ namespace Domain.Entities
         public int BestOpponentPercent { get; set; }
 
         public int? ClanWarId { get; set; }
-        public ClanWar ClanWar { get; set; }
+        public virtual ClanWar ClanWar { get; set; }
         public int? ClanMemberId { get; set; }
-        public ClanMember ClanMember { get; set; }
-        public ICollection<WarAttack> WarAttacks { get; set; }
+        public virtual ClanMember ClanMember { get; set; }
+
+        public virtual ICollection<WarAttack> WarAttacks { get; set; }
 
         public WarMember()
         {

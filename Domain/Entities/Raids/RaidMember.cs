@@ -10,9 +10,10 @@ namespace Domain.Entities
         public string Name { get; set; }
 
         public int? ClanMemberId { get; set; }
-        public ClanMember ClanMember { get; set; }
+        public virtual ClanMember ClanMember { get; set; }
         public int? CapitalRaidId { get; set; }
-        public CapitalRaid Raid { get; set; }
+        public virtual CapitalRaid Raid { get; set; }
+
         public virtual ICollection<RaidAttack> Attacks { get; set; }
 
         public RaidMember()
