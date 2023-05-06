@@ -258,7 +258,7 @@ public static class Mapper
         {
             PlayersName = member.Name,
             PlayersTag = member.Tag,
-            TotalCarma = member.Carma.TotalCarma,
+            CurrentCarma = member.Carma.TotalCarma,
             Activities = activities,
         };
 
@@ -337,7 +337,7 @@ public static class Mapper
             VersusTrophies = clanMember.VersusTrophies,
             BestVersusTrophies = clanMember.BestVersusTrophies,
             AttackWins = clanMember.AttackWins,
-            DefenceWins = clanMember.DefenceWins,
+            DefenseWins = clanMember.DefenceWins,
             WarPreference = clanMember.WarPreference,
             DonationsSent = clanMember.DonationsSent,
             DonationsRecieved = clanMember.DonationsRecieved,
@@ -389,6 +389,7 @@ public static class Mapper
             TotalCapitalContributions = clanMember.TotalCapitalContributions,
         };
     }
+
     //
     //PrizeDrawInfoUi
     //

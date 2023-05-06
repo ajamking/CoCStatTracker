@@ -7,7 +7,7 @@ public class CarmaUi
 {
     public string PlayersName { get; set; }
     public string PlayersTag { get; set; }
-    public int TotalCarma { get; set; }
+    public int CurrentCarma { get; set; }
     public ICollection<ActivityUi> Activities { get; set; }
 }
 

@@ -15,7 +15,7 @@ public class PlayerInfoUi
     public int VersusTrophies { get; set; }
     public int BestVersusTrophies { get; set; }
     public int AttackWins { get; set; }
-    public int DefenceWins { get; set; }
+    public int DefenseWins { get; set; }
     public string WarPreference { get; set; }
     public int DonationsSent { get; set; }
     public int DonationsRecieved { get; set; }

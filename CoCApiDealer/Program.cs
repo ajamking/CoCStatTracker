@@ -8,15 +8,18 @@ using Storage;
 using System.Diagnostics.Metrics;
 using System.Security.Cryptography.X509Certificates;
 using CoCStatsTracker;
+using System.Text.RegularExpressions;
 
 public class Program
 {
-
+    /// <summary>
+    /// #YPPGCCY8 - тег клана
+    /// #2VGG92CL9 - тег игрока
+    /// </summary>
+    
     static async Task Main(string[] args)
     {
-     
+        
     }
-
- 
 
 }
