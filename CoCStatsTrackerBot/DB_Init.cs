@@ -34,7 +34,7 @@ public class DBInit
 
         daddyBuilder.AddCurrentRaid(daddyBuilder.TrackedClanBuilder.Clan.Tag);
 
-        daddyBuilder.AddCurrentClanWar(false, daddyBuilder.TrackedClanBuilder.Clan.Tag);
+        daddyBuilder.AddCurrentClanWar(true, daddyBuilder.TrackedClanBuilder.Clan.Tag, "#82GP2J298");
 
         daddyBuilder.AddEmptyCarmaToAllPlayers();
 
