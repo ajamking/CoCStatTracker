@@ -51,7 +51,6 @@ public static class Menu
 
     public static List<string> Lvl3PlayerInfoWords { get; set; } = new List<string>()
     {
-        "Игрок",
     "Главное об игроке", "Все об игроке",
     "Показатели войн", "Показатели рейдов" ,
     "Розыгрыш", "Войска",
@@ -59,7 +58,6 @@ public static class Menu
     };
     public static List<string> Lvl3ClanInfoWords { get; set; } = new List<string>()
     {
-        "Клан",
     "Главное о клане", "Члены клана" ,
     "История войн", "История рейдов",
     "Осадные машины", "Активные супер юниты",
@@ -67,19 +65,17 @@ public static class Menu
     };
     public static List<string> Lvl3CurrentWarInfoWords { get; set; } = new List<string>()
     {
-        "Текущая война",
     "Главное", "Показатели",
     "Карта", "Назад",
     };
     public static List<string> Lvl3CurrentRaidInfoWords { get; set; } = new List<string>()
     {
-        "Текущий рейд",
     "Главное", "Показатели",
-    "Средние показатели", "Назад",
+    "Средние показатели", "Статистика по районам",
+    "Назад",
     };
     public static List<string> Lvl3CurrentPrizeDrawInfoWords { get; set; } = new List<string>()
     {
-        "Текущий розыгрыш",
     "Главное", "Показатели",
     "Описание", "Назад",
     };

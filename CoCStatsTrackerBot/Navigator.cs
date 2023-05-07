@@ -15,11 +15,6 @@ public static class Navigator
 {
     public static Dictionary<long, MenuLevel> CurrentUserMenuLevel = new Dictionary<long, MenuLevel>();
 
-    static Navigator()
-    {
-
-    }
-
     public async static Task HandleMessage(ITelegramBotClient botClient, Message message)
     {
         CurrentUserMenuLevel.TryAdd(message.Chat.Id, MenuLevel.Main);
@@ -124,8 +119,6 @@ public static class Navigator
                 }
             case string msg when MemberRequestHandler.PlayerRegex.IsMatch(msg):
                 {
-                    await botClient.SendTextMessageAsync(message.Chat.Id, text: "Тег игрока задан в корректной форме!");
-                   
                     if (MemberRequestHandler.LastUserPlayerTags.ContainsKey(message.Chat.Id))
                     {
                         MemberRequestHandler.LastUserPlayerTags[message.Chat.Id] = msg;
@@ -135,7 +128,10 @@ public static class Navigator
                         MemberRequestHandler.LastUserPlayerTags.Add(message.Chat.Id, msg);
                     }
 
-                    await MemberRequestHandler.HandlePlayerInfoLvl3(botClient, message);
+                    await botClient.SendTextMessageAsync(message.Chat.Id, text: "Тег игрока задан в корректной форме!");
+
+
+                    await MemberRequestHandler.HandlePlayerInfoLvl3(botClient, message, false);
 
                     return;
                 }
@@ -152,7 +148,8 @@ public static class Navigator
 
                     await botClient.SendTextMessageAsync(message.Chat.Id, text: "Тег клана задан в корректной форме!");
 
-                    await MemberRequestHandler.HandlePlayerInfoLvl3(botClient, message);
+
+                    await MemberRequestHandler.HandleClanInfoLvl3(botClient, message, false);
 
                     return;
                 }
@@ -192,18 +189,37 @@ public static class Navigator
                     return;
                 }
 
-            //case string msg when Menu.Lvl2MemberWords.Contains(msg):
-            //    {
-            //        if (CurrentUserMenuLevel.ContainsKey(message.Chat.Id))
-            //        {
-            //            CurrentUserMenuLevel[message.Chat.Id] = MenuLevel.Member3;
-            //        }
+            case string msg when Menu.Lvl2MemberWords.Contains(msg):
+                {
+                    if (CurrentUserMenuLevel.ContainsKey(message.Chat.Id))
+                    {
+                        CurrentUserMenuLevel[message.Chat.Id] = MenuLevel.Member3;
+                    }
 
-            //        await MemberRequestHandler.HandlePlayerInfoLvl3(botClient, message);
+                    switch (msg)
+                    {
+                        case "Игрок":
+                            await MemberRequestHandler.HandlePlayerInfoLvl3(botClient, message, true);
+                            return;
+                        case "Клан":
+                            await MemberRequestHandler.HandleClanInfoLvl3(botClient, message, true);
+                            return;
+                        case "Текущая война":
+                            await MemberRequestHandler.HandleCurrentWarInfoLvl3(botClient, message, true);
+                            return;
+                        case "Текущий рейд":
+                            await MemberRequestHandler.HandleCurrentRaidInfoLvl3(botClient, message, true);
+                            return;
+                        case "Текущий розыгрыш":
+                            await MemberRequestHandler.HandleCurrentPrizeDrawInfoLvl3(botClient, message, true);
+                            return;
 
-            //        return;
-            //    }
-            
+                        default:
+                            await botClient.SendTextMessageAsync(message.Chat.Id, text: "Сломался в case Lvl2MemberWords");
+                            return;
+                    }
+                }
+
             case string msg when Menu.Lvl3PlayerInfoWords.Contains(msg):
                 {
                     await MemberRequestHandler.HandlePlayerInfoLvl3(botClient, message);
@@ -259,10 +275,10 @@ public static class Navigator
 
                     return;
                 }
-           
+
             case string msg when Menu.Lvl4WarStatisticsWords.Contains(msg):
                 {
-                    await MemberRequestHandler.HandleWarStatisticsLvl4(botClient, message);
+                    await MemberRequestHandler.HandlePlayerWarStatisticsLvl4(botClient, message);
 
                     if (CurrentUserMenuLevel.ContainsKey(message.Chat.Id))
                     {
@@ -273,7 +289,7 @@ public static class Navigator
                 }
             case string msg when Menu.Lvl4WarHistoryWords.Contains(msg):
                 {
-                    await MemberRequestHandler.HandleWarHistoryLvl4(botClient, message);
+                    await MemberRequestHandler.HandleClanWarHistoryLvl4(botClient, message);
 
                     if (CurrentUserMenuLevel.ContainsKey(message.Chat.Id))
                     {
@@ -295,7 +311,7 @@ public static class Navigator
                 }
             case string msg when Menu.Lvl4RaidHistoryWords.Contains(msg):
                 {
-                    await MemberRequestHandler.HandleRaidHistoryLvl4(botClient, message);
+                    await MemberRequestHandler.HandleClanRaidHistoryLvl4(botClient, message);
 
                     if (CurrentUserMenuLevel.ContainsKey(message.Chat.Id))
                     {
@@ -317,7 +333,7 @@ public static class Navigator
                 }
             case string msg when Menu.Lvl4PrizeDrawHistoryWords.Contains(msg):
                 {
-                    await MemberRequestHandler.HandlePrizeDrawHistoryLvl4(botClient, message);
+                    await MemberRequestHandler.HandleClanPrizeDrawHistoryLvl4(botClient, message);
 
                     if (CurrentUserMenuLevel.ContainsKey(message.Chat.Id))
                     {
@@ -328,7 +344,7 @@ public static class Navigator
                 }
             case string msg when Menu.Lvl4DistrictsStatisticsWords.Contains(msg):
                 {
-                    await MemberRequestHandler.HandleDistrictStatisticsLvl4(botClient, message);
+                    await MemberRequestHandler.HandleClanDistrictStatisticsLvl4(botClient, message);
 
                     if (CurrentUserMenuLevel.ContainsKey(message.Chat.Id))
                     {
@@ -337,6 +353,7 @@ public static class Navigator
 
                     return;
                 }
+
 
             case string msg when Menu.Lvl2LeaderWords.Contains(msg):
                 {
@@ -395,5 +412,4 @@ public static class Navigator
                         text: "Меню",
                         replyMarkup: Menu.MainKeyboards[0]);
     }
-
 }

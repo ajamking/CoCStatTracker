@@ -49,7 +49,8 @@ public class ThirdLevelMenu
         ReplyKeyboardMarkup currentRaidInfo = new(new[]
              {
              new KeyboardButton[] { "Главное", "Показатели" },
-             new KeyboardButton[] { "Средние показатели", "Назад" },
+             new KeyboardButton[] { "Средние показатели", "Статистика по районам" },
+              new KeyboardButton[] { "Назад" },
        })
         {
             ResizeKeyboard = true

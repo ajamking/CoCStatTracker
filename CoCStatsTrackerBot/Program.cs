@@ -20,6 +20,7 @@ namespace CoCStatsTrackerBot;
 class Program
 {
     private static TelegramBotClient client = new TelegramBotClient(token: "6148969149:AAF_Vrsf0NZZRp3PMl30s1VGhtctj2hPU4k");
+    public static List<TrackedClan> TrackedClans { get; set; } = new List<TrackedClan>();
 
     //static Program()
     //{
@@ -32,8 +33,18 @@ class Program
 
     async static Task Main(string[] args)
     {
+        using var db = new AppDbContext("Data Source=CoCStatsTracker.db");
+
+        TrackedClans = db.TrackedClans.ToList();
+
+        db.Complete();
+
+        Console.WriteLine("Connection winh DB in MemberRequestHandler sucsessful");
+
         client.StartReceiving(HandleUpdateAsync, HandleError);
+
         Console.WriteLine("Bot started");
+
         Console.ReadLine();
 
         await Task.CompletedTask;
