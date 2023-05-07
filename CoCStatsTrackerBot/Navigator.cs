@@ -117,24 +117,6 @@ public static class Navigator
 
                     return;
                 }
-            case string msg when MemberRequestHandler.PlayerRegex.IsMatch(msg):
-                {
-                    if (MemberRequestHandler.LastUserPlayerTags.ContainsKey(message.Chat.Id))
-                    {
-                        MemberRequestHandler.LastUserPlayerTags[message.Chat.Id] = msg;
-                    }
-                    else
-                    {
-                        MemberRequestHandler.LastUserPlayerTags.Add(message.Chat.Id, msg);
-                    }
-
-                    await botClient.SendTextMessageAsync(message.Chat.Id, text: "Тег игрока задан в корректной форме!");
-
-
-                    await MemberRequestHandler.HandlePlayerInfoLvl3(botClient, message, false);
-
-                    return;
-                }
             case string msg when MemberRequestHandler.ClanRegex.IsMatch(msg):
                 {
                     if (MemberRequestHandler.LastUserClanTags.ContainsKey(message.Chat.Id))
@@ -153,6 +135,25 @@ public static class Navigator
 
                     return;
                 }
+            case string msg when MemberRequestHandler.PlayerRegex.IsMatch(msg):
+                {
+                    if (MemberRequestHandler.LastUserPlayerTags.ContainsKey(message.Chat.Id))
+                    {
+                        MemberRequestHandler.LastUserPlayerTags[message.Chat.Id] = msg;
+                    }
+                    else
+                    {
+                        MemberRequestHandler.LastUserPlayerTags.Add(message.Chat.Id, msg);
+                    }
+
+                    await botClient.SendTextMessageAsync(message.Chat.Id, text: "Тег игрока задан в корректной форме!");
+
+
+                    await MemberRequestHandler.HandlePlayerInfoLvl3(botClient, message, false);
+
+                    return;
+                }
+           
 
 
             case "Член клана":

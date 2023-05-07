@@ -8,12 +8,13 @@ using System.Threading.Tasks;
 using Telegram.Bot.Types;
 using Telegram.Bot;
 using Storage;
+using Telegram.Bot.Types.Enums;
 
 namespace CoCStatsTrackerBot;
 
 public static class MemberRequestHandler
 {
-    public static Regex PlayerRegex { get; set; } = new Regex(@"^#(\w{9})$");
+    public static Regex PlayerRegex { get; set; } = new Regex(@"^#(\w{6,9})$");
 
     public static Regex ClanRegex { get; set; } = new Regex(@"^#(\w{8})$");
 
@@ -53,13 +54,15 @@ public static class MemberRequestHandler
                 case "Главное об игроке":
                     {
                         await botClient.SendTextMessageAsync(message.Chat.Id,
-                   text: "" /*Тут функция вывода*/);
+                   text: MemberFunctions.ShortPlayerInfo(LastUserPlayerTags[message.Chat.Id], Program.TrackedClans),
+                   parseMode: ParseMode.MarkdownV2);
                         return;
                     }
                 case "Все об игроке":
                     {
                         await botClient.SendTextMessageAsync(message.Chat.Id,
-                  text: "" /*Тут функция вывода*/);
+                  text: MemberFunctions.FullPlayerInfo(LastUserPlayerTags[message.Chat.Id], Program.TrackedClans),
+                   parseMode: ParseMode.MarkdownV2);
                         return;
                     }
                 case "Показатели войн":
@@ -75,7 +78,8 @@ public static class MemberRequestHandler
                 case "Розыгрыш":
                     {
                         await botClient.SendTextMessageAsync(message.Chat.Id,
-                 text: "" /*Тут функция вывода*/);
+                text: MemberFunctions.MemberDrawMembership(LastUserPlayerTags[message.Chat.Id], Program.TrackedClans),
+                   parseMode: ParseMode.MarkdownV2);
                         return;
                     }
                 case "Войска":
@@ -86,7 +90,8 @@ public static class MemberRequestHandler
                 case "История кармы":
                     {
                         await botClient.SendTextMessageAsync(message.Chat.Id,
-                  text: "" /*Тут функция вывода*/);
+                  text: MemberFunctions.MemberCarmaHistory(LastUserPlayerTags[message.Chat.Id], Program.TrackedClans),
+                   parseMode: ParseMode.MarkdownV2);
                         return;
                     }
 
@@ -192,7 +197,7 @@ public static class MemberRequestHandler
         }
 
 
-      
+
 
         try
         {
@@ -316,7 +321,7 @@ public static class MemberRequestHandler
         }
 
 
-     
+
         try
         {
             switch (message.Text)
@@ -377,7 +382,7 @@ public static class MemberRequestHandler
         }
 
 
-      
+
         try
         {
             switch (message.Text)
@@ -392,19 +397,22 @@ public static class MemberRequestHandler
                 case "Последняя война":
                     {
                         await botClient.SendTextMessageAsync(message.Chat.Id,
-                        text: "" /*Тут функция вывода*/);
+                       text: MemberFunctions.WarStatistics(LastUserPlayerTags[message.Chat.Id], Program.TrackedClans, 1),
+                   parseMode: ParseMode.MarkdownV2);
                         return;
                     }
                 case "Последние 3":
                     {
                         await botClient.SendTextMessageAsync(message.Chat.Id,
-                        text: "" /*Тут функция вывода*/);
+                        text: MemberFunctions.WarStatistics(LastUserPlayerTags[message.Chat.Id], Program.TrackedClans, 3),
+                   parseMode: ParseMode.MarkdownV2);
                         return;
                     }
                 case "Последние 5":
                     {
                         await botClient.SendTextMessageAsync(message.Chat.Id,
-                        text: "" /*Тут функция вывода*/);
+                        text: MemberFunctions.WarStatistics(LastUserPlayerTags[message.Chat.Id], Program.TrackedClans, 5),
+                   parseMode: ParseMode.MarkdownV2);
                         return;
                     }
 
@@ -435,7 +443,7 @@ public static class MemberRequestHandler
         }
 
 
-   
+
 
         try
         {
@@ -557,7 +565,7 @@ public static class MemberRequestHandler
         }
 
 
-       
+
         try
         {
             switch (message.Text)
@@ -684,7 +692,7 @@ public static class MemberRequestHandler
         }
 
 
-       
+
 
         try
         {
@@ -740,14 +748,14 @@ public static class MemberRequestHandler
 
         if (justMenu)
         {
-         await botClient.SendTextMessageAsync(message.Chat.Id,
-         text: "Меню",
-         replyMarkup: Menu.MemberKeyboards4[KeyboardType.ClanWarsHistory]);
+            await botClient.SendTextMessageAsync(message.Chat.Id,
+            text: "Меню",
+            replyMarkup: Menu.MemberKeyboards4[KeyboardType.ClanWarsHistory]);
 
             return;
         }
 
-      
+
 
         try
         {

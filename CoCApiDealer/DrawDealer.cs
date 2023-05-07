@@ -14,16 +14,16 @@ namespace CoCApiDealer;
 3.  Пожертвования в столице – 1000 золота столицы – 0,5 балла.
  */
 
-public class DrawDealer
+public static class DrawDealer
 {
-    public Dictionary<string, double> Coefficients { get; set; } = new Dictionary<string, double>()
+    public static Dictionary<string, double> Coefficients { get; set; } = new Dictionary<string, double>()
     {
         {"WarStars", 0.5 },
         {"DonationsSent", 0.01 },
         {"TotalCapitalContributions", 0.0005 },
     };
 
-    public List<DrawMember> RecalculatePrizeDrawScores(TrackedClan previousClanInfo, TrackedClan currentClanInfo,
+    public static List<DrawMember> RecalculatePrizeDrawScores(TrackedClan previousClanInfo, TrackedClan currentClanInfo,
         ICollection<DrawMember> drawMembers)
     {
 
@@ -59,7 +59,7 @@ public class DrawDealer
         return drawMembersWithUpdatedScores;
     }
 
-    public PrizeDraw ChoseDrawWinner(PrizeDraw draw)
+    public static PrizeDraw ChoseDrawWinner(PrizeDraw draw)
     {
         var bestScoreMember = new DrawMember() { TotalPointsEarned = 0 };
 

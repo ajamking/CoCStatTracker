@@ -103,7 +103,7 @@ public class DaddyBuilder
 
             if (clanMemberOnRaid != null)
             {
-                clanMemberOnRaid.RaidMembership.Add(raidMemberBuilder.Member);
+                clanMemberOnRaid.RaidMemberships.Add(raidMemberBuilder.Member);
             }
 
             members.Add(raidMemberBuilder.Member);
@@ -263,7 +263,7 @@ public class DaddyBuilder
 
             if (ClanMemberOnWar != null)
             {
-                ClanMemberOnWar.WarMembership.Add(warMemberBuilder.WarMember);
+                ClanMemberOnWar.WarMemberships.Add(warMemberBuilder.WarMember);
             }
 
             warMembers.Add(warMemberBuilder.WarMember);
@@ -328,7 +328,7 @@ public class DaddyBuilder
 
             drawMemberBuilder.SetDraw(prizeDrawBuilder.Draw);
 
-            clanMember.DrawMembership.Add(drawMemberBuilder.Member);
+            clanMember.DrawMemberships.Add(drawMemberBuilder.Member);
 
             drawMembers.Add(drawMemberBuilder.Member);
         }

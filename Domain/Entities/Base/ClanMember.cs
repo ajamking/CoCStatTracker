@@ -39,16 +39,16 @@ namespace Domain.Entities
         public virtual Carma Carma { get; set; }
 
         public virtual ICollection<Troop> Units { get; set; }
-        public virtual ICollection<WarMember> WarMembership { get; set; }
-        public virtual ICollection<RaidMember> RaidMembership { get; set; }
-        public virtual ICollection<DrawMember> DrawMembership { get; set; }
+        public virtual ICollection<WarMember> WarMemberships { get; set; }
+        public virtual ICollection<RaidMember> RaidMemberships { get; set; }
+        public virtual ICollection<DrawMember> DrawMemberships { get; set; }
 
         public ClanMember()
         {
             Units = new HashSet<Troop>();
-            WarMembership = new HashSet<WarMember>();
-            RaidMembership = new HashSet<RaidMember>();
-            DrawMembership = new HashSet<DrawMember>();
+            WarMemberships = new HashSet<WarMember>();
+            RaidMemberships = new HashSet<RaidMember>();
+            DrawMemberships = new HashSet<DrawMember>();
         }
 
     }

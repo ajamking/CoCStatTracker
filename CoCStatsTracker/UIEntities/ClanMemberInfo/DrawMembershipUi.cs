@@ -2,6 +2,8 @@
 
 public class DrawMembershipUi
 {
+    public string Start { get; set; }
+    public string End { get; set; }
     public string PlayersName { get; set; }
     public string PlayersTag { get; set; }
     public string ClanName { get; set; }

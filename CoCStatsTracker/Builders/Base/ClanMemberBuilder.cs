@@ -104,16 +104,16 @@ public class ClanMemberBuilder
 
     public void AddRaidMembership(RaidMember membership)
     {
-        ClanMember.RaidMembership.Add(membership);
+        ClanMember.RaidMemberships.Add(membership);
     }
 
     public void AddWarMembership(WarMember warMember)
     {
-        ClanMember.WarMembership.Add(warMember);
+        ClanMember.WarMemberships.Add(warMember);
     }
 
     public void AddDrawMembership(DrawMember membership)
     {
-        ClanMember.DrawMembership.Add(membership);
+        ClanMember.DrawMemberships.Add(membership);
     }
 }

@@ -249,8 +249,8 @@ public static class Mapper
             {
                 Name = activity.Name,
                 Description = activity.Description,
-                EarnedPoints = activity.EarnedPoints,
-                UpdatedOn = activity.UpdatedOn
+                EarnedPoints = activity.EarnedPoints.ToString(),
+                UpdatedOn = activity.UpdatedOn.ToShortDateString(),
             });
         }
 
@@ -258,7 +258,7 @@ public static class Mapper
         {
             PlayersName = member.Name,
             PlayersTag = member.Tag,
-            CurrentCarma = member.Carma.TotalCarma,
+            CurrentCarma = member.Carma.TotalCarma.ToString(),
             Activities = activities,
         };
 
@@ -274,12 +274,12 @@ public static class Mapper
             {
                 EnemyTag = attack.EnemyWarMember.Tag,
                 EnemyName = attack.EnemyWarMember.Name,
-                AttackOrder = attack.AttackOrder,
-                Stars = attack.Stars,
-                DestructionPercent = attack.DestructionPercent,
-                Duration = attack.Duration,
-                EnemyTHLevel = attack.EnemyWarMember.THLevel,
-                EnemyMapPosition = attack.EnemyWarMember.MapPosition,
+                AttackOrder = attack.AttackOrder.ToString(),
+                Stars = attack.Stars.ToString(),
+                DestructionPercent = attack.DestructionPercent.ToString(),
+                Duration = attack.Duration.ToString(),
+                EnemyTHLevel = attack.EnemyWarMember.THLevel.ToString(),
+                EnemyMapPosition = attack.EnemyWarMember.MapPosition.ToString(),
             });
         }
 
@@ -288,14 +288,14 @@ public static class Mapper
             Tag = member.Tag,
             Name = member.Name,
             ClanTag = member.ClanWar.TrackedClan.Tag,
-            ClanName = member.ClanWar.TrackedClan.Tag,
-            StartedOn = member.ClanWar.StartTime,
-            EndedOn = member.ClanWar.EndTime,
-            TownHallLevel = member.TownHallLevel,
-            MapPosition = member.MapPosition,
-            BestOpponentStars = member.BestOpponentStars,
-            BestOpponentsTime = member.BestOpponentTime,
-            BestOpponentsPercent = member.BestOpponentPercent,
+            ClanName = member.ClanWar.TrackedClan.Name,
+            StartedOn = member.ClanWar.StartTime.ToString(),
+            EndedOn = member.ClanWar.EndTime.ToString(),
+            TownHallLevel = member.TownHallLevel.ToString(),
+            MapPosition = member.MapPosition.ToString(),
+            BestOpponentStars = member.BestOpponentStars.ToString(),
+            BestOpponentsTime = member.BestOpponentTime.ToString(),
+            BestOpponentsPercent = member.BestOpponentPercent.ToString(),
             Attacks = attacks,
         };
     }
@@ -303,12 +303,14 @@ public static class Mapper
     public static DrawMembershipUi MapToDrawMembershipUi(DrawMember drawMember)
     {
         var target = drawMember.PrizeDraw.Members
-            .OrderBy(x => x.TotalPointsEarned)
-            .Select((x, i) => new { Position = i, x.ClanMember.Name, x.TotalPointsEarned })
+            .OrderByDescending(x => x.TotalPointsEarned)
+            .Select((x, i) => new { Position = i+1, x.ClanMember.Name, x.TotalPointsEarned })
             .First(x => x.Name == drawMember.ClanMember.Name);
 
         return new DrawMembershipUi
         {
+            Start = drawMember.PrizeDraw.StartedOn.ToShortDateString(),
+            End = drawMember.PrizeDraw.EndedOn.Date.ToShortDateString(),
             PlayersName = drawMember.ClanMember.Name,
             PlayersTag = drawMember.ClanMember.Tag,
             ClanName = drawMember.PrizeDraw.TrackedClan.Name,
