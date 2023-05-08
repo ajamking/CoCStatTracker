@@ -53,8 +53,8 @@ public class FourthLevelMenu
 
         ReplyKeyboardMarkup army = new(new[]
             {
-             new KeyboardButton[] { "Герои", "Осадные машины" },
-             new KeyboardButton[] { "Супер юниты", "Все юниты" },
+             new KeyboardButton[] { "Герои игрока", "Осадные машины игрока" },
+             new KeyboardButton[] { "Супер юниты игрока", "Все войска игрока" },
              new KeyboardButton[] { "Назад" },
         })
         {

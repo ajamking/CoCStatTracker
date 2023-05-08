@@ -107,8 +107,8 @@ public static class Menu
     };
     public static List<string> Lvl4ArmyWords { get; set; } = new List<string>()
     {
-    "Герои", "Осадные машины",
-    "Супер юниты", "Все юниты",
+    "Герои игрока", "Осадные машины игрока",
+    "Супер юниты игрока", "Все войска игрока",
     "Назад",
     };
     public static List<string> Lvl4PrizeDrawHistoryWords { get; set; } = new List<string>()

@@ -201,30 +201,59 @@ public static class Mapper
 
     public static ArmyUi MapToArmyUi(ICollection<Troop> troops)
     {
-        var superUnits = new Dictionary<string, int>();
-        var siegeMachines = new Dictionary<string, int>();
-        var heroes = new Dictionary<string, int>();
-        var pets = new Dictionary<string, int>();
-        var units = new Dictionary<string, int>();
+        var superUnits = new List<TroopUi>();
+        var siegeMachines = new List<TroopUi>();
+        var heroes = new List<TroopUi>();
+        var pets = new List<TroopUi>();
+        var units = new List<TroopUi>();
 
         foreach (var troop in troops)
         {
             switch (troop.Type)
             {
                 case UnitType.SuperUnit:
-                    superUnits.Add(troop.Name, troop.Level);
+                    superUnits.Add(new TroopUi 
+                    { 
+                        Name = troop.Name, 
+                        Lvl = troop.Level.ToString(), 
+                        SuperTroopIsActivated = troop.SuperTroopIsActivated.ToString()
+                    });
                     break;
+
                 case UnitType.SiegeMachine:
-                    siegeMachines.Add(troop.Name, troop.Level);
+                    siegeMachines.Add(new TroopUi
+                    {
+                        Name = troop.Name,
+                        Lvl = troop.Level.ToString(),
+                        SuperTroopIsActivated = troop.SuperTroopIsActivated.ToString()
+                    });
                     break;
+
                 case UnitType.Hero:
-                    heroes.Add(troop.Name, troop.Level);
+                    heroes.Add(new TroopUi
+                    {
+                        Name = troop.Name,
+                        Lvl = troop.Level.ToString(),
+                        SuperTroopIsActivated = troop.SuperTroopIsActivated.ToString()
+                    });
                     break;
+
                 case UnitType.Pet:
-                    pets.Add(troop.Name, troop.Level);
+                    pets.Add(new TroopUi
+                    {
+                        Name = troop.Name,
+                        Lvl = troop.Level.ToString(),
+                        SuperTroopIsActivated = troop.SuperTroopIsActivated.ToString()
+                    });
                     break;
+
                 default:
-                    units.Add(troop.Name, troop.Level);
+                    units.Add(new TroopUi
+                    {
+                        Name = troop.Name,
+                        Lvl = troop.Level.ToString(),
+                        SuperTroopIsActivated = troop.SuperTroopIsActivated.ToString()
+                    });
                     break;
             }
         }
@@ -304,7 +333,7 @@ public static class Mapper
     {
         var target = drawMember.PrizeDraw.Members
             .OrderByDescending(x => x.TotalPointsEarned)
-            .Select((x, i) => new { Position = i+1, x.ClanMember.Name, x.TotalPointsEarned })
+            .Select((x, i) => new { Position = i + 1, x.ClanMember.Name, x.TotalPointsEarned })
             .First(x => x.Name == drawMember.ClanMember.Name);
 
         return new DrawMembershipUi
@@ -359,9 +388,9 @@ public static class Mapper
                 DefendersTag = attack.OpponentDistrict.DefeatedClan.DefendersTag,
                 DefendersName = attack.OpponentDistrict.DefeatedClan.DefendersName,
                 DistrictName = attack.OpponentDistrict.Name,
-                DistrictLevel = attack.OpponentDistrict.Level,
-                DestructionPercentFrom = attack.DestructionPercentFrom, // Отказались пока от этой идеи, сложно реализовать
-                DestructionPercentTo = attack.DestructionPercentTo,
+                DistrictLevel = attack.OpponentDistrict.Level.ToString(),
+                DestructionPercentFrom = attack.DestructionPercentFrom.ToString(),
+                DestructionPercentTo = attack.DestructionPercentTo.ToString(),
             });
         }
 
@@ -371,9 +400,9 @@ public static class Mapper
             Name = raidMember.ClanMember.Name,
             ClanTag = raidMember.Raid.TrackedClan.Tag,
             ClanName = raidMember.Raid.TrackedClan.Name,
-            StartedOn = raidMember.Raid.StartedOn,
-            EndedOn = raidMember.Raid.EndedOn,
-            TotalLoot = raidMember.TotalLoot,
+            StartedOn = raidMember.Raid.StartedOn.ToString(),
+            EndedOn = raidMember.Raid.EndedOn.ToString(),
+            TotalLoot = raidMember.TotalLoot.ToString(),
             Attacks = attacks,
         };
     }

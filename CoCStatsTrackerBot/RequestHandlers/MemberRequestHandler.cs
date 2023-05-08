@@ -517,22 +517,25 @@ public static class MemberRequestHandler
                         return;
                     }
 
-                case "Последний Рейд":
+                case "Последний рейд":
                     {
                         await botClient.SendTextMessageAsync(message.Chat.Id,
-                        text: "" /*Тут функция вывода*/);
+                        text: MemberFunctions.RaidStatistics(LastUserPlayerTags[message.Chat.Id], Program.TrackedClans, 1),
+                   parseMode: ParseMode.MarkdownV2);
                         return;
                     }
                 case "Последние 3":
                     {
                         await botClient.SendTextMessageAsync(message.Chat.Id,
-                        text: "" /*Тут функция вывода*/);
+                        text: MemberFunctions.RaidStatistics(LastUserPlayerTags[message.Chat.Id], Program.TrackedClans, 3),
+                   parseMode: ParseMode.MarkdownV2);
                         return;
                     }
                 case "Последние 5":
                     {
                         await botClient.SendTextMessageAsync(message.Chat.Id,
-                        text: "" /*Тут функция вывода*/);
+                         text: MemberFunctions.RaidStatistics(LastUserPlayerTags[message.Chat.Id], Program.TrackedClans, 5),
+                   parseMode: ParseMode.MarkdownV2);
                         return;
                     }
 
@@ -639,28 +642,32 @@ public static class MemberRequestHandler
                         return;
                     }
 
-                case "Герои":
+                case "Герои игрока":
                     {
                         await botClient.SendTextMessageAsync(message.Chat.Id,
-                        text: "" /*Тут функция вывода*/);
+                       text: MemberFunctions.MembersArmyInfo(LastUserPlayerTags[message.Chat.Id], Program.TrackedClans, UnitType.Hero),
+                   parseMode: ParseMode.MarkdownV2);
                         return;
                     }
-                case "Осадные машины":
+                case "Осадные машины игрока":
                     {
                         await botClient.SendTextMessageAsync(message.Chat.Id,
-                        text: "" /*Тут функция вывода*/);
+                         text: MemberFunctions.MembersArmyInfo(LastUserPlayerTags[message.Chat.Id], Program.TrackedClans, UnitType.SiegeMachine),
+                   parseMode: ParseMode.MarkdownV2);
                         return;
                     }
-                case "Супер юниты":
+                case "Супер юниты игрока":
                     {
                         await botClient.SendTextMessageAsync(message.Chat.Id,
-                        text: "" /*Тут функция вывода*/);
+                        text: MemberFunctions.MembersArmyInfo(LastUserPlayerTags[message.Chat.Id], Program.TrackedClans, UnitType.SuperUnit),
+                   parseMode: ParseMode.MarkdownV2);
                         return;
                     }
-                case "Все юниты":
+                case "Все войска игрока":
                     {
                         await botClient.SendTextMessageAsync(message.Chat.Id,
-                        text: "" /*Тут функция вывода*/);
+                       text: MemberFunctions.MembersArmyInfo(LastUserPlayerTags[message.Chat.Id], Program.TrackedClans, UnitType.Unit),
+                   parseMode: ParseMode.MarkdownV2);
                         return;
                     }
 
@@ -672,7 +679,7 @@ public static class MemberRequestHandler
 
         catch (Exception e)
         {
-            Console.WriteLine("Exception" + e.Message + " in MemberRequestHandler HandleRaidStatisticsLvl4");
+            Console.WriteLine("Exception" + e.Message + " in MemberRequestHandler HandleArmyLvl4");
             return;
         }
 

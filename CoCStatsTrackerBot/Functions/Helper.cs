@@ -33,6 +33,19 @@ public class Helper
             }
         }
 
-        return null;
+        Console.WriteLine("Не удалось вытянуть игрока с таким тегом, возвращаю пустого");
+
+        return new ClanMember();
+    }
+
+   
+}
+
+public static class Extensions
+{
+    public static void Append<K, V>(this Dictionary<K, V> first, Dictionary<K, V> second)
+    {
+        List<KeyValuePair<K, V>> pairs = second.ToList();
+        pairs.ForEach(pair => first.Add(pair.Key, pair.Value));
     }
 }

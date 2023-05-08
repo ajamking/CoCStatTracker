@@ -19,7 +19,9 @@ public class Program
     
     static async Task Main(string[] args)
     {
-        
+        var str = "12345";
+
+        Console.WriteLine(str.Substring(0, 10));
     }
 
 }
