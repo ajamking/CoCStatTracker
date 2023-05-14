@@ -1,9 +1,14 @@
 ﻿using CoCApiDealer;
+using CoCApiDealer.ApiRequests;
+using CoCStatsTracker.Helpers;
 using Domain.Entities;
 using Microsoft.Extensions.Primitives;
 using Storage;
+using System.Diagnostics.Metrics;
+using System.Drawing;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Text.RegularExpressions;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
@@ -23,87 +28,6 @@ class Program
 {
     private static TelegramBotClient client = new TelegramBotClient(token: "6148969149:AAF_Vrsf0NZZRp3PMl30s1VGhtctj2hPU4k");
     public static List<TrackedClan> TrackedClans { get; set; } = new List<TrackedClan>();
-
-    //public static void InitializeDb()
-    //{
-    //    var clanTag = "#YPPGCCY8";
-
-    //    var TrackedClans = new DBInit(clanTag).TrackedClans;
-
-    //    Console.WriteLine(@$"Two versions of {TrackedClans.First(x => x.Tag == clanTag).Name} clan added to DB {DateTime.Now} ");
-    //}
-
-    public static void AddActivity()
-    {
-        //using var db = new AppDbContext("Data Source=CoCStatsTracker.db");
-
-        //TrackedClans = db.TrackedClans.ToList();
-
-        //foreach (var clan in TrackedClans)
-        //{
-        //    if (clan.IsCurrent == true)
-        //    {
-        //        clan.ClanMembers.FirstOrDefault(x => x.Tag == "#2VGG92CL9")
-        //        .Carma
-        //        .PlayerActivities.Add(
-        //        new CustomActivity
-        //        {
-        //            Name = "TestActivity123123",
-        //            EarnedPoints = 100,
-        //            UpdatedOn = DateTime.Now,
-        //            Description = "Тестирую как в кайф"
-        //        });
-
-        //        clan.ClanMembers.FirstOrDefault(x => x.Tag == "#G8P9Q299R")
-        //           .Carma
-        //           .PlayerActivities.Add(
-        //           new CustomActivity
-        //           {
-        //               Name = "TestActivity123123",
-        //               EarnedPoints = 20,
-        //               UpdatedOn = DateTime.Now,
-        //               Description = "Тестирую как в кайф"
-        //           });
-
-        //        clan.ClanMembers.FirstOrDefault(x => x.Tag == "#RV9JP9Y")
-        //           .Carma
-        //           .PlayerActivities.Add(
-        //           new CustomActivity
-        //           {
-        //               Name = "TestActivity123123",
-        //               EarnedPoints = 15,
-        //               UpdatedOn = DateTime.Now,
-        //               Description = "Тестирую как в кайф"
-        //           });
-        //    }
-
-        //    foreach (var member in clan.ClanMembers)
-        //    {
-        //        foreach (var activity in member.Carma.PlayerActivities)
-        //        {
-        //            member.Carma.TotalCarma += activity.EarnedPoints;
-        //        }
-        //    }
-        //}
-      
-
-        //db.Complete();
-    }
-
-    //public static void RecalculateDrawScores()
-    //{
-    //    using var db = new AppDbContext("Data Source=CoCStatsTracker.db");
-
-    //    TrackedClans = db.TrackedClans.ToList();
-
-    //    var first = TrackedClans.FirstOrDefault(x => x.IsCurrent == true);
-    //    var second = TrackedClans.FirstOrDefault(x => x.IsCurrent == true);
-    //    second.PrizeDraws.First().Members = DrawDealer.RecalculatePrizeDrawScores(first, second, second.PrizeDraws.First().Members);
-
-    //    var Q12 = first.ClanMembers.FirstOrDefault(x => x.Tag == "#2VGG92CL9");
-
-    //    db.Complete();
-    //}
 
     async static Task Main(string[] args)
     {
