@@ -20,8 +20,9 @@ using Telegram.Bot.Types.ReplyMarkups;
 namespace CoCStatsTrackerBot;
 
 /// <summary>
-/// #YPPGCCY8 - тег клана
-/// #2VGG92CL9 - тег игрока
+/// Тег клана:	#YPPGCCY8   #UQQGYJJP
+/// 
+/// Тег игрока: #2VGG92CL9  #LRPLYJ9U2
 /// </summary>
 
 class Program
@@ -31,6 +32,8 @@ class Program
 
     async static Task Main(string[] args)
     {
+        TempFunctions.GetCwMembers("#YPPGCCY8");
+
         using var db = new AppDbContext("Data Source=CoCStatsTracker.db");
 
         TrackedClans = db.TrackedClans.ToList();

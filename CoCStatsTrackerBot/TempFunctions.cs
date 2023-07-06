@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace CoCStatsTrackerBot;
+
 public static class TempFunctions
 {
     public static void InitializeDb(string clanTag)
@@ -96,7 +97,7 @@ public static class TempFunctions
 
         var keResult = cwRequest.CallApi(clanTag).Result;
 
-        var str = new StringBuilder($"\n  {keResult.State}\n  {DateTimeParser.Parse(keResult.StartTime)} - {DateTimeParser.Parse(keResult.EndTime)}\n");
+        var str = new StringBuilder($"\n```  {keResult.State}\n  {DateTimeParser.Parse(keResult.StartTime)} - {DateTimeParser.Parse(keResult.EndTime)}\n\n");
 
         var sortedClanMembers = keResult.ClanResults.WarMembers.OrderBy(x => x.MapPosition);
 
@@ -104,6 +105,8 @@ public static class TempFunctions
 
         foreach (var member in sortedClanMembers)
         {
+            member.Name = Helper.ChangeInvalidSymbols(member.Name);
+
             if (member.Name.Length > maxNameLenght)
             {
                 maxNameLenght = member.Name.Length;
@@ -112,6 +115,8 @@ public static class TempFunctions
 
         foreach (var member in keResult.OpponentResults.WarMembers)
         {
+            member.Name = Helper.ChangeInvalidSymbols(member.Name);
+
             if (member.Name.Length > maxNameLenght)
             {
                 maxNameLenght = member.Name.Length;
@@ -126,6 +131,8 @@ public static class TempFunctions
                 $"{Helper.CenteredString(keResult.OpponentResults.WarMembers.FirstOrDefault(x => x.MapPosition == member.MapPosition).Name, maxNameLenght)}");
         }
 
+        str.AppendLine("```");
+
         Console.WriteLine(str.ToString());
     }
 
@@ -135,7 +142,7 @@ public static class TempFunctions
 
         var keResult = cwRequest.CallApi(clanTag).Result;
 
-        var str = new StringBuilder("\n\n  Не провели атаки на КВ: ");
+        var str = new StringBuilder("\n\n```  Не провели атаки на КВ: ");
 
         var count = 0;
 
@@ -143,11 +150,13 @@ public static class TempFunctions
         {
             if (member.Attacks == null)
             {
-                str.AppendLine($"  {member.Name}");
+                str.AppendLine($"  {Helper.ChangeInvalidSymbols(member.Name)}");
 
                 count++;
             }
         }
+
+        str.AppendLine("```");
 
         Console.WriteLine(str);
 
@@ -161,26 +170,40 @@ public static class TempFunctions
     {
         var raidRequest = new CapitalRaidsRequest();
 
-        var keResult = raidRequest.CallApi(clanTag, 1).Result;
+        var raidMembers = raidRequest.CallApi(clanTag, 1).Result.RaidsInfo.First().RaidMembers;
 
-        var str = new StringBuilder("\n\n  Следующие игроки провели не все атаки на рейдах: \n\n");
+        var clanRequest = new ClanInfoRequest();
+
+        var clanInfo = clanRequest.CallApi(clanTag).Result;
 
         var count = 0;
 
-        foreach (var raids in keResult.RaidsInfo)
+        var str = new StringBuilder($"\n\n```  Краткая информация об участниках последних рейдов \n");
+
+        str.AppendLine($"\n  Следующие игроки не участвовали в рейдах в клане {clanInfo.Name}: \n");
+
+        foreach (var member in clanInfo.Members)
         {
-
-
-            foreach (var member in raids.RaidMembers)
+            if (!raidMembers.Any(x => x.Tag == member.Tag))
             {
-                if (member.AttacksCount != 6)
-                {
-                    str.AppendLine($"  {member.Name} Атак осталось {6 - member.AttacksCount}");
+                str.AppendLine($"  {Helper.ChangeInvalidSymbols(member.Name)} ");
 
-                    count++;
-                }
+                count++;
             }
         }
+
+        str.AppendLine("\n  Следующие игроки провели не все атаки на рейдах: \n");
+
+        foreach (var member in raidMembers)
+        {
+            if (member.AttacksCount != 6)
+            {
+                str.AppendLine($"  {Helper.ChangeInvalidSymbols(member.Name)} Атак осталось {6 - member.AttacksCount}");
+
+                count++;
+            }
+        }
+        str.AppendLine("```");
 
         Console.WriteLine(str);
 

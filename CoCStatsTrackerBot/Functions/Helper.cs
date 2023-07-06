@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace CoCStatsTrackerBot;
@@ -38,7 +39,20 @@ public class Helper
         return new ClanMember();
     }
 
-   
+    public static string ChangeInvalidSymbols(string name)
+    {
+        var ebala = Regex.Matches(name, @"\W+");
+
+        var result = name;
+
+        foreach (Match item in ebala)
+        {
+            result = result.Replace(item.Value, "▯");
+        }
+
+        return result;
+    }
+
 }
 
 public static class Extensions
