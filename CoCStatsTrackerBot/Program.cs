@@ -32,7 +32,7 @@ class Program
 
     async static Task Main(string[] args)
     {
-        TempFunctions.GetCwMembers("#YPPGCCY8");
+        //TempFunctions.GetCwMembers("#YPPGCCY8");
 
         using var db = new AppDbContext("Data Source=CoCStatsTracker.db");
 

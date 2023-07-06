@@ -25,9 +25,8 @@ public class Menues
         AllMenues.Add(new ClanWarHistory3());
         AllMenues.Add(new ClanRaidHistory3());
         AllMenues.Add(new ClanPrizeDrawHistory3());
-        AllMenues.Add(new CurrentDistrictStatistics());
+        AllMenues.Add(new CurrentDistrictStatistics3());
     }
-
 }
 
 public class BaseMenu
@@ -61,38 +60,18 @@ public enum MenuLevels
     Main0,
 
     Member1,
-    Member2,
-    Member3,
 
-    Leader1,
-    Leader2,
-    Leader3,
+    PlayerInfo2,
+    ClanInfo2,
+    CurrentWarInfo2,
+    CurrentRaidInfo2,
+    CurrentPrizedrawInfo2,
 
-    Other1,
-    Other2,
-    Other3
-}
-
-public enum KeyboardType
-{
-    MainMenu,
-
-    Member,
-    Leader,
-    OtherInfo,
-
-    PlayerInfo,
-    ClanInfo,
-    CurrentWarInfo,
-    CurrentRaidInfo,
-    CurrentPrizedrawInfo,
-    LeaderChangeConfirmation,
-
-    PlayerWarStatistics,
-    PlayerRaidStatistics,
-    PlayerArmy,
-    ClanWarsHistory,
-    ClanRaidsHistory,
-    ClanPrizeDrawHistory,
-    RaidDistrictsStatistics
+    PlayerWarStatistics3,
+    PlayerRaidStatistics3,
+    PlayerArmy3,
+    ClanWarsHistory3,
+    ClanRaidsHistory3,
+    ClanPrizeDrawHistory3,
+    CurrentDistrictStatistics3
 }
