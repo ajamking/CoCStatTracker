@@ -51,17 +51,6 @@ public static class TempFunctions
                        UpdatedOn = DateTime.Now,
                        Description = "Тестирую как в кайф"
                    });
-
-                clan.ClanMembers.FirstOrDefault(x => x.Tag == "#RV9JP9Y")
-                   .Carma
-                   .PlayerActivities.Add(
-                   new CustomActivity
-                   {
-                       Name = "TestActivity123123",
-                       EarnedPoints = 15,
-                       UpdatedOn = DateTime.Now,
-                       Description = "Тестирую как в кайф"
-                   });
             }
 
             foreach (var member in clan.ClanMembers)
@@ -82,11 +71,11 @@ public static class TempFunctions
         using var db = new AppDbContext("Data Source=CoCStatsTracker.db");
         Program.TrackedClans = db.TrackedClans.ToList();
 
-        var first = Program.TrackedClans.FirstOrDefault(x => x.IsCurrent == true);
+        var first = Program.TrackedClans.FirstOrDefault(x => x.IsCurrent == false);
         var second = Program.TrackedClans.FirstOrDefault(x => x.IsCurrent == true);
         second.PrizeDraws.First().Members = DrawDealer.RecalculatePrizeDrawScores(first, second, second.PrizeDraws.First().Members);
 
-        var Q12 = first.ClanMembers.FirstOrDefault(x => x.Tag == "#2VGG92CL9");
+        var Q12 = second.ClanMembers.FirstOrDefault(x => x.Tag == "#2VGG92CL9");
 
         db.Complete();
     }
@@ -105,7 +94,7 @@ public static class TempFunctions
 
         foreach (var member in sortedClanMembers)
         {
-            member.Name = Helper.ChangeInvalidSymbols(member.Name);
+            member.Name = UiHelper.ChangeInvalidSymbols(member.Name);
 
             if (member.Name.Length > maxNameLenght)
             {
@@ -115,7 +104,7 @@ public static class TempFunctions
 
         foreach (var member in keResult.OpponentResults.WarMembers)
         {
-            member.Name = Helper.ChangeInvalidSymbols(member.Name);
+            member.Name = UiHelper.ChangeInvalidSymbols(member.Name);
 
             if (member.Name.Length > maxNameLenght)
             {
@@ -125,10 +114,10 @@ public static class TempFunctions
 
         foreach (var member in sortedClanMembers)
         {
-            str.AppendLine($"  {Helper.CenteredString(member.Name, maxNameLenght)} ТХ {Helper.CenteredString(member.TownhallLevel.ToString(), 2)}" +
-                $" Поз |{Helper.CenteredString(member.MapPosition.ToString(), 2)}| " +
+            str.AppendLine($"  {UiHelper.GetCenteredString(member.Name, maxNameLenght)} ТХ {UiHelper.GetCenteredString(member.TownhallLevel.ToString(), 2)}" +
+                $" Поз |{UiHelper.GetCenteredString(member.MapPosition.ToString(), 2)}| " +
                 $"Th {keResult.OpponentResults.WarMembers.FirstOrDefault(x => x.MapPosition == member.MapPosition).TownhallLevel} " +
-                $"{Helper.CenteredString(keResult.OpponentResults.WarMembers.FirstOrDefault(x => x.MapPosition == member.MapPosition).Name, maxNameLenght)}");
+                $"{UiHelper.GetCenteredString(keResult.OpponentResults.WarMembers.FirstOrDefault(x => x.MapPosition == member.MapPosition).Name, maxNameLenght)}");
         }
 
         str.AppendLine("```");
@@ -150,7 +139,7 @@ public static class TempFunctions
         {
             if (member.Attacks == null)
             {
-                str.AppendLine($"  {Helper.ChangeInvalidSymbols(member.Name)}");
+                str.AppendLine($"  {UiHelper.ChangeInvalidSymbols(member.Name)}");
 
                 count++;
             }
@@ -186,7 +175,7 @@ public static class TempFunctions
         {
             if (!raidMembers.Any(x => x.Tag == member.Tag))
             {
-                str.AppendLine($"  {Helper.ChangeInvalidSymbols(member.Name)} ");
+                str.AppendLine($"  {UiHelper.ChangeInvalidSymbols(member.Name)} ");
 
                 count++;
             }
@@ -198,7 +187,7 @@ public static class TempFunctions
         {
             if (member.AttacksCount != 6)
             {
-                str.AppendLine($"  {Helper.ChangeInvalidSymbols(member.Name)} Атак осталось {6 - member.AttacksCount}");
+                str.AppendLine($"  {UiHelper.ChangeInvalidSymbols(member.Name)} Атак осталось {6 - member.AttacksCount}");
 
                 count++;
             }

@@ -22,7 +22,7 @@ namespace CoCStatsTrackerBot;
 /// <summary>
 /// Тег клана:	#YPPGCCY8   #UQQGYJJP
 /// 
-/// Тег игрока: #2VGG92CL9  #LRPLYJ9U2
+/// Тег игрока: #2VGG92CL9  #LRPLYJ9U2 #G8P9Q299R
 /// </summary>
 
 class Program
@@ -33,7 +33,9 @@ class Program
     async static Task Main(string[] args)
     {
         //TempFunctions.GetCwMembers("#YPPGCCY8");
-
+        //var dbinit = new DBInit("#YPPGCCY8");
+        //TempFunctions.AddActivity();
+        //TempFunctions.RecalculateDrawScores();
         using var db = new AppDbContext("Data Source=CoCStatsTracker.db");
 
         TrackedClans = db.TrackedClans.ToList();
@@ -57,6 +59,8 @@ class Program
         {
             if (update.Type == UpdateType.Message && update?.Message?.Text != null)
             {
+                Console.WriteLine(update.Message.Chat.Username + "  Отправил сообщение " + update.Message.Text + " " + DateTime.Now);
+
                 await Navigator.HandleMessage(botClient, update.Message);
 
                 return;

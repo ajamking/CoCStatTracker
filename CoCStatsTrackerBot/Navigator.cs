@@ -23,7 +23,7 @@ public static class Navigator
     {
         CurrentUserMenuLevel.TryAdd(message.Chat.Id, MenuLevels.Main0);
 
-        if (message.Text == "Назад" && CurrentUserMenuLevel.ContainsKey(message.Chat.Id))
+        if (message.Text.ToLower() == "назад")
         {
             switch (CurrentUserMenuLevel[message.Chat.Id])
             {
@@ -38,7 +38,7 @@ public static class Navigator
                         return;
                     }
                 case MenuLevels.PlayerInfo2 or MenuLevels.ClanInfo2 or MenuLevels.CurrentWarInfo2 or
-                     MenuLevels.CurrentRaidInfo2 or MenuLevels.CurrentPrizedrawInfo2:
+                     MenuLevels.CurrentRaidInfo2:
                     {
                         await botClient.SendTextMessageAsync(message.Chat.Id,
                         text: "Воспользуйтесь меню.",
@@ -58,13 +58,23 @@ public static class Navigator
 
                         return;
                     }
-                case MenuLevels.ClanWarsHistory3 or MenuLevels.ClanRaidsHistory3 or MenuLevels.ClanPrizeDrawHistory3:
+                case MenuLevels.ClanWarsHistory3 or MenuLevels.ClanRaidsHistory3:
                     {
                         await botClient.SendTextMessageAsync(message.Chat.Id,
                         text: "Воспользуйтесь меню.",
                         replyMarkup: Menues.First(x => x.MenuLevel == MenuLevels.ClanInfo2).Keyboard);
 
                         CurrentUserMenuLevel[message.Chat.Id] = MenuLevels.ClanInfo2;
+
+                        return;
+                    }
+                case MenuLevels.CurrentDistrictStatistics3:
+                    {
+                        await botClient.SendTextMessageAsync(message.Chat.Id,
+                        text: "Воспользуйтесь меню.",
+                        replyMarkup: Menues.First(x => x.MenuLevel == MenuLevels.CurrentRaidInfo2).Keyboard);
+
+                        CurrentUserMenuLevel[message.Chat.Id] = MenuLevels.CurrentRaidInfo2;
 
                         return;
                     }
@@ -131,19 +141,19 @@ public static class Navigator
             }
         }
 
-        foreach (var item in Menues)
+        foreach (var menu in Menues)
         {
-            if (item.Header == message.Text)
+            if (menu.Header == message.Text)
             {
-                switch (item.MenuLevel)
+                switch (menu.MenuLevel)
                 {
                     case MenuLevels.Main0:
                         {
                             await botClient.SendTextMessageAsync(message.Chat.Id,
                                text: "Приветствую! Я уникальный бот вашего клана в Clash of Clans. Выберите интересующий вас вариант из меню",
-                               replyMarkup: item.Keyboard);
+                               replyMarkup: menu.Keyboard);
 
-                            CurrentUserMenuLevel[message.Chat.Id] = item.MenuLevel;
+                            CurrentUserMenuLevel[message.Chat.Id] = menu.MenuLevel;
 
                             return;
                         }
@@ -151,167 +161,94 @@ public static class Navigator
                         {
                             await botClient.SendTextMessageAsync(message.Chat.Id,
                                text: "Выберите интересующий пункт из меню",
-                               replyMarkup: item.Keyboard);
+                               replyMarkup: menu.Keyboard);
 
-                            CurrentUserMenuLevel[message.Chat.Id] = item.MenuLevel;
+                            CurrentUserMenuLevel[message.Chat.Id] = menu.MenuLevel;
 
                             return;
                         }
                 }
             }
+
+
         }
 
-        foreach (var item in Menues)
+        foreach (var menu in Menues)
         {
-            if (item.KeyWords.Contains(message.Text))
+            if (menu.KeyWords.Contains(message.Text) && menu.MenuLevel == CurrentUserMenuLevel[message.Chat.Id])
             {
-                switch (item.MenuLevel)
+                switch (CurrentUserMenuLevel[message.Chat.Id])
                 {
                     case MenuLevels.PlayerInfo2:
                         {
-                            await MemberRequestHandler.HandlePlayerInfoLvl2(botClient, message, item.KeyWords);
-
-                            if (CurrentUserMenuLevel.ContainsKey(message.Chat.Id))
-                            {
-                                CurrentUserMenuLevel[message.Chat.Id] = MenuLevels.PlayerInfo2;
-                            }
+                            await MemberRequestHandler.HandlePlayerInfoLvl2(botClient, message, menu.KeyWords);
 
                             return;
                         }
                     case MenuLevels.ClanInfo2:
                         {
-                            await MemberRequestHandler.HandleClanInfoLvl2(botClient, message, item.KeyWords);
-
-                            if (CurrentUserMenuLevel.ContainsKey(message.Chat.Id))
-                            {
-                                CurrentUserMenuLevel[message.Chat.Id] = MenuLevels.ClanInfo2;
-                            }
+                            await MemberRequestHandler.HandleClanInfoLvl2(botClient, message, menu.KeyWords);
 
                             return;
                         }
                     case MenuLevels.CurrentWarInfo2:
                         {
-                            await MemberRequestHandler.HandleCurrentWarInfoLvl2(botClient, message, item.KeyWords);
-
-                            if (CurrentUserMenuLevel.ContainsKey(message.Chat.Id))
-                            {
-                                CurrentUserMenuLevel[message.Chat.Id] = MenuLevels.CurrentWarInfo2;
-                            }
+                            await MemberRequestHandler.HandleCurrentWarInfoLvl2(botClient, message, menu.KeyWords);
 
                             return;
                         }
                     case MenuLevels.CurrentRaidInfo2:
                         {
-                            await MemberRequestHandler.HandleCurrentRaidInfoLvl2(botClient, message, item.KeyWords);
-
-                            if (CurrentUserMenuLevel.ContainsKey(message.Chat.Id))
-                            {
-                                CurrentUserMenuLevel[message.Chat.Id] = MenuLevels.CurrentRaidInfo2;
-                            }
+                            await MemberRequestHandler.HandleCurrentRaidInfoLvl2(botClient, message, menu.KeyWords);
 
                             return;
                         }
-                    case MenuLevels.CurrentPrizedrawInfo2:
-                        {
-                            await MemberRequestHandler.HandleCurrentPrizeDrawInfoLvl2(botClient, message, item.KeyWords);
 
-                            if (CurrentUserMenuLevel.ContainsKey(message.Chat.Id))
-                            {
-                                CurrentUserMenuLevel[message.Chat.Id] = MenuLevels.CurrentPrizedrawInfo2;
-                            }
 
-                            return;
-                        }
 
                     case MenuLevels.PlayerWarStatistics3:
                         {
-                            await MemberRequestHandler.HandlePlayerWarStatisticsLvl3(botClient, message, item.KeyWords);
-
-                            if (CurrentUserMenuLevel.ContainsKey(message.Chat.Id))
-                            {
-                                CurrentUserMenuLevel[message.Chat.Id] = MenuLevels.PlayerWarStatistics3;
-                            }
+                            await MemberRequestHandler.HandlePlayerWarStatisticsLvl3(botClient, message, menu.KeyWords);
 
                             return;
                         }
                     case MenuLevels.PlayerRaidStatistics3:
                         {
-                            await MemberRequestHandler.HandlePlayerRaidStatisticsLvl3(botClient, message, item.KeyWords);
-
-                            if (CurrentUserMenuLevel.ContainsKey(message.Chat.Id))
-                            {
-                                CurrentUserMenuLevel[message.Chat.Id] = MenuLevels.PlayerRaidStatistics3;
-                            }
+                            await MemberRequestHandler.HandlePlayerRaidStatisticsLvl3(botClient, message, menu.KeyWords);
 
                             return;
                         }
                     case MenuLevels.PlayerArmy3:
                         {
-                            await MemberRequestHandler.HandlePlayerArmyLvl3(botClient, message, item.KeyWords);
-
-                            if (CurrentUserMenuLevel.ContainsKey(message.Chat.Id))
-                            {
-                                CurrentUserMenuLevel[message.Chat.Id] = MenuLevels.PlayerArmy3;
-                            }
+                            await MemberRequestHandler.HandlePlayerArmyLvl3(botClient, message, menu.KeyWords);
 
                             return;
                         }
                     case MenuLevels.ClanWarsHistory3:
                         {
-                            await MemberRequestHandler.HandleClanWarHistoryLvl3(botClient, message, item.KeyWords);
-
-                            if (CurrentUserMenuLevel.ContainsKey(message.Chat.Id))
-                            {
-                                CurrentUserMenuLevel[message.Chat.Id] = MenuLevels.ClanWarsHistory3;
-                            }
+                            await MemberRequestHandler.HandleClanWarHistoryLvl3(botClient, message, menu.KeyWords);
 
                             return;
                         }
                     case MenuLevels.ClanRaidsHistory3:
                         {
-                            await MemberRequestHandler.HandleClanRaidHistoryLvl3(botClient, message, item.KeyWords);
-
-                            if (CurrentUserMenuLevel.ContainsKey(message.Chat.Id))
-                            {
-                                CurrentUserMenuLevel[message.Chat.Id] = MenuLevels.ClanRaidsHistory3;
-                            }
-
-                            return;
-                        }
-                    case MenuLevels.ClanPrizeDrawHistory3:
-                        {
-                            await MemberRequestHandler.HandleClanPrizeDrawHistoryLvl3(botClient, message, item.KeyWords);
-
-                            if (CurrentUserMenuLevel.ContainsKey(message.Chat.Id))
-                            {
-                                CurrentUserMenuLevel[message.Chat.Id] = MenuLevels.ClanPrizeDrawHistory3;
-                            }
+                            await MemberRequestHandler.HandleClanRaidHistoryLvl3(botClient, message, menu.KeyWords);
 
                             return;
                         }
                     case MenuLevels.CurrentDistrictStatistics3:
                         {
-                            await MemberRequestHandler.HandleCurrentDistrictStatistics3(botClient, message, item.KeyWords);
-
-                            if (CurrentUserMenuLevel.ContainsKey(message.Chat.Id))
-                            {
-                                CurrentUserMenuLevel[message.Chat.Id] = MenuLevels.CurrentDistrictStatistics3;
-                            }
+                            await MemberRequestHandler.HandleCurrentDistrictStatistics3(botClient, message, menu.KeyWords);
 
                             return;
                         }
                     default:
                         {
+                            Console.WriteLine("Ошбика при орпеделении уровня меню сообщения");
                             continue;
                         }
                 }
             }
-
-            //else
-            //{
-
-            //    break;
-            //}
         }
 
         await botClient.SendTextMessageAsync(message.Chat.Id,

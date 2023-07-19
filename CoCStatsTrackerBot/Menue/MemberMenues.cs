@@ -17,14 +17,14 @@ public class MemberMenu1 : BaseMenu
         {
             "Игрок", "Клан",
             "Текущая война", "Текущий рейд",
-            "Текущий розыгрыш", "Назад"
+            "Назад"
         };
 
         Keyboard = new(new[]
         {
         new KeyboardButton[] { KeyWords[0], KeyWords[1] },
         new KeyboardButton[] { KeyWords[2], KeyWords[3] },
-        new KeyboardButton[] { KeyWords[4], KeyWords[5] }
+        new KeyboardButton[] { KeyWords[4] }
         })
         { ResizeKeyboard = true };
 
@@ -42,8 +42,7 @@ public class PlayerInfo2 : BaseMenu
         {
             "Главное об игроке", "Все об игроке",
             "Показатели войн", "Показатели рейдов",
-            "Розыгрыш", "Войска",
-            "История кармы", "Назад"
+            "Войска", "Назад"
         };
 
         Keyboard = new(new[]
@@ -51,7 +50,6 @@ public class PlayerInfo2 : BaseMenu
         new KeyboardButton[] { KeyWords[0], KeyWords[1] },
         new KeyboardButton[] { KeyWords[2], KeyWords[3] },
         new KeyboardButton[] { KeyWords[4], KeyWords[5] },
-        new KeyboardButton[] { KeyWords[6], KeyWords[7] }
         })
         { ResizeKeyboard = true };
 
@@ -70,7 +68,7 @@ public class ClanInfo2 : BaseMenu
             "Главное о клане", "Члены клана",
             "История войн", "История рейдов",
             "Осадные машины", "Активные супер юниты",
-            "История розыгрышей", "Назад"
+            "Показатели месяца", "Назад"
         };
 
         Keyboard = new(new[]
@@ -118,45 +116,19 @@ public class CurrentRaidInfo2 : BaseMenu
         KeyWords = new string[]
         {
             "Главное", "Показатели",
-            "Средние показатели", "Статистика по районам",
-            "Назад",
+            "Статистика по районам", "Назад",
         };
 
         Keyboard = new(new[]
         {
         new KeyboardButton[] { KeyWords[0], KeyWords[1] },
         new KeyboardButton[] { KeyWords[2], KeyWords[3] },
-        new KeyboardButton[] { KeyWords[4], }
         })
         { ResizeKeyboard = true };
 
         MenuLevel = MenuLevels.CurrentRaidInfo2;
     }
 }
-
-public class CurrentPrizeDrawInfo2 : BaseMenu
-{
-    public CurrentPrizeDrawInfo2()
-    {
-        Header = "Текущий розыгрыш";
-
-        KeyWords = new string[]
-        {
-            "Главное", "Показатели",
-            "Описание", "Назад"
-        };
-
-        Keyboard = new(new[]
-        {
-        new KeyboardButton[] { KeyWords[0], KeyWords[1] },
-        new KeyboardButton[] { KeyWords[2], KeyWords[3] },
-        })
-        { ResizeKeyboard = true };
-
-        MenuLevel = MenuLevels.CurrentPrizedrawInfo2;
-    }
-}
-
 
 public class PlayerWarStatistics3 : BaseMenu
 {
@@ -213,7 +185,7 @@ public class PlayerArmy3 : BaseMenu
         KeyWords = new string[]
         {
              "Герои", "Осадные машины",
-             "Супер юниты", "Все войска",
+             "Активные супер юниты", "Все войска",
              "Назад",
         };
 
@@ -261,40 +233,19 @@ public class ClanRaidHistory3 : BaseMenu
         KeyWords = new string[]
         {
            "Последний рейд", "Последние 3",
-           "Последние 5", "Назад",
+           "Последние 5", "Средние показатели игроков",
+           "Назад",
         };
 
         Keyboard = new(new[]
         {
         new KeyboardButton[] { KeyWords[0], KeyWords[1] },
         new KeyboardButton[] { KeyWords[2], KeyWords[3] },
+        new KeyboardButton[] { KeyWords[4]},
         })
         { ResizeKeyboard = true };
 
         MenuLevel = MenuLevels.ClanRaidsHistory3;
-    }
-}
-
-public class ClanPrizeDrawHistory3 : BaseMenu
-{
-    public ClanPrizeDrawHistory3()
-    {
-        Header = "История розыгрышей";
-
-        KeyWords = new string[]
-        {
-           "Последний розыгрыш", "Последние 3",
-           "Последние 5", "Назад",
-        };
-
-        Keyboard = new(new[]
-        {
-        new KeyboardButton[] { KeyWords[0], KeyWords[1] },
-        new KeyboardButton[] { KeyWords[2], KeyWords[3] },
-        })
-        { ResizeKeyboard = true };
-
-        MenuLevel = MenuLevels.ClanPrizeDrawHistory3;
     }
 }
 

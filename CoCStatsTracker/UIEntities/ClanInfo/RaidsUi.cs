@@ -16,13 +16,22 @@ public class RaidsUi
     public int OffensiveReward { get; set; }
     public int RaidsCompleted { get; set; }
     public ICollection<RaidDefenseUi> Defenses { get; set; }
-    public ICollection<DistrictUi> AttackedDistricts { get; set; } // Для графика по всему клану
+
+    public ICollection<DefeatedClanUi> DefeatedClans { get; set; }
 }
 
 public class RaidDefenseUi
 {
     public string AttackersTag { get; set; }
     public string AttackersName { get; set; }
+    public int TotalAttacksCount { get; set; }
+}
+
+public class DefeatedClanUi
+{
+    public ICollection<DistrictUi> AttackedDistricts { get; set; }
+    public string ClanName { get; set; }
+    public string ClanTag { get; set; }
     public int TotalAttacksCount { get; set; }
 }
 

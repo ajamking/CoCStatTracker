@@ -21,13 +21,14 @@ public static class TroopDefiner
         { "Super Dragon","Dragon" },
         { "Super Wizard","Wizard" },
         { "Super Minion","Minion" },
+        { "Super Hog Rider","Hog Rider"}
     };
 
 
     public static UnitType DefineUnitType(string name)
     {
         if (name == "Barbarian King" || name == "Archer Queen" || name == "Grand Warden"
-            || name == "Royal Champion" || name == "Battle Machine")
+            || name == "Royal Champion" || name == "Battle Machine" || name == "Battle Copter")
         {
             return UnitType.Hero;
         }
@@ -43,7 +44,7 @@ public static class TroopDefiner
             || name == "Super Giant" || name == "Rocket Balloon" || name == "Sneaky Goblin"
             || name == "Super Miner" || name == "Inferno Dragon" || name == "Super Valkyrie"
             || name == "Super Witch" || name == "Ice Hound" || name == "Super Bowler"
-            || name == "Super Dragon" || name == "Super Wizard" || name == "Super Minion")
+            || name == "Super Dragon" || name == "Super Wizard" || name == "Super Minion" || name == "Super Hog Rider")
         {
             return UnitType.SuperUnit;
         }

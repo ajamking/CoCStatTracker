@@ -1,4 +1,7 @@
-﻿namespace CoCStatsTracker.UIEntities;
+﻿using System.Collections.Generic;
+
+namespace CoCStatsTracker.UIEntities;
+
 public class ClanUi
 {
     public string Tag { get; set; }
@@ -18,4 +21,5 @@ public class ClanUi
     public int WarTies { get; set; }
     public int WarLoses { get; set; }
     public int CapitalHallLevel { get; set; }
+    public List<ClanMemberUi> ClanMembers { get; set; }
 }

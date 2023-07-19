@@ -18,13 +18,11 @@ public class Menues
         AllMenues.Add(new ClanInfo2());
         AllMenues.Add(new CurrentWarInfo2());
         AllMenues.Add(new CurrentRaidInfo2());
-        AllMenues.Add(new CurrentPrizeDrawInfo2());
         AllMenues.Add(new PlayerWarStatistics3());
         AllMenues.Add(new PlayerRaidStatistics3());
         AllMenues.Add(new PlayerArmy3());
         AllMenues.Add(new ClanWarHistory3());
         AllMenues.Add(new ClanRaidHistory3());
-        AllMenues.Add(new ClanPrizeDrawHistory3());
         AllMenues.Add(new CurrentDistrictStatistics3());
     }
 }
@@ -65,13 +63,14 @@ public enum MenuLevels
     ClanInfo2,
     CurrentWarInfo2,
     CurrentRaidInfo2,
-    CurrentPrizedrawInfo2,
+   
 
     PlayerWarStatistics3,
     PlayerRaidStatistics3,
     PlayerArmy3,
+
     ClanWarsHistory3,
     ClanRaidsHistory3,
-    ClanPrizeDrawHistory3,
+    
     CurrentDistrictStatistics3
 }
