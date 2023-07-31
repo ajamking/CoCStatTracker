@@ -1,4 +1,6 @@
-﻿using Domain.Entities;
+﻿using CoCStatsTracker.UIEntities;
+using CoCStatsTracker;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,8 +14,29 @@ namespace CoCStatsTrackerBot;
 
 public class UiHelper
 {
+    public static string MakeItStyled(string str, UiTextStyle textStyle)
+    {
+        switch (textStyle)
+        {
+            case UiTextStyle.Header:
+                return $@"_*{Ecranize(str)}*_".ToUpper();
+            case UiTextStyle.Subtitle:
+                return $@"_*{Ecranize(str)}*_";
+            case UiTextStyle.TableAnnotation:
+                return $@"__*{Ecranize(str)}*__";
+            case UiTextStyle.Name:
+                return $@"*{Ecranize(str)}*";
+            case UiTextStyle.Default:
+                return Ecranize(str);
+            default:
+                return Ecranize($@"Text Style Error");
+        }
+    }
 
-    public static string GetTrimmedString(string str)
+    /// <summary>
+    /// Возвращает первое слово в строке
+    /// </summary>
+    public static string GetFirstWord(string str)
     {
         try
         {
@@ -26,9 +49,8 @@ public class UiHelper
         }
     }
 
-
     /// <summary>
-    /// Позволяет центрировать строку по заданной ширине.
+    /// Вовзращает центрированную по заданной ширине строку
     /// </summary>
     public static string GetCenteredString(string s, int width)
     {
@@ -45,7 +67,7 @@ public class UiHelper
     }
 
     /// <summary>
-    /// Метод пытается найти игрока с заданным тегом в отслеживаемом кланах, если такого нет - возвращает пустого игрока.
+    /// Пытается найти игрока с заданным тегом в отслеживаемом кланах, если такого нет - возвращает null.
     /// </summary>
     public static ClanMember GetClanMember(ICollection<TrackedClan> trackedClans, string playerTag)
     {
@@ -59,11 +81,31 @@ public class UiHelper
 
         Console.WriteLine("Не удалось вытянуть игрока с таким тегом, возвращаю пустого");
 
-        return new ClanMember();
+        return null;
+    }
+
+
+    /// <summary>
+    /// Пытается найти активный клан с заданным тегом в отслеживаемом кланах, если такого нет - возвращает null.
+    /// </summary>
+    public static ClanUi GetActiveClanUi(string clanTag, ICollection<TrackedClan> trackedClans)
+    {
+        var activeTrackedClans = trackedClans.Where(x => x.IsCurrent).ToList();
+
+        var targetClan = activeTrackedClans.FirstOrDefault(x => x.Tag == clanTag);
+
+        if (targetClan != null)
+        {
+            return Mapper.MapToUi(targetClan);
+        }
+        else
+        {
+            return null;
+        }
     }
 
     /// <summary>
-    /// Заменяет различные смайлики и т.д. в строке на символ ▯ с фиксированной шириной.
+    /// Заменяет различные смайлики и т.д. в строке на символ ! с фиксированной шириной.
     /// </summary>
     public static string ChangeInvalidSymbols(string name)
     {
@@ -108,7 +150,10 @@ public class UiHelper
         return newStr.ToString();
     }
 
-    public static UiTableMaxSize DefineTableMaxSize(Dictionary<string, string> dic, string firstColumnName, string secondColumnName) 
+    /// <summary>
+    /// Определяет максимальную длину строки для двух ячеек UI таблицы.
+    /// </summary>
+    public static UiTableMaxSize DefineTableMaxSize(Dictionary<string, string> dic, string firstColumnName, string secondColumnName)
     {
         var uiTablemaxSize = new UiTableMaxSize();
 
@@ -138,18 +183,21 @@ public class UiHelper
     }
 }
 
+/// <summary>
+/// Вспомогательный класс, определяющий длину(ширину) двух столбцов.
+/// </summary>
 public class UiTableMaxSize
 {
     public int KeyMaxLength { get; set; }
     public int ValueMaxLength { get; set; }
 }
 
-
-public static class Extensions
+public enum UiTextStyle
 {
-    public static void Append<K, V>(this Dictionary<K, V> first, Dictionary<K, V> second)
-    {
-        List<KeyValuePair<K, V>> pairs = second.ToList();
-        pairs.ForEach(pair => first.Add(pair.Key, pair.Value));
-    }
+    Header,
+    TableAnnotation,
+    Name,
+    Subtitle,
+    Default
 }
+

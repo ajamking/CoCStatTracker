@@ -15,9 +15,11 @@ namespace CoCStatsTrackerBot;
 
 public static class Navigator
 {
-    public static Dictionary<long, MenuLevels> CurrentUserMenuLevel = new Dictionary<long, MenuLevels>();
+
 
     public static List<BaseMenu> Menues = new Menues().AllMenues;
+
+    public static Dictionary<long, MenuLevels> CurrentUserMenuLevel = new Dictionary<long, MenuLevels>();
 
     public async static Task HandleMessage(ITelegramBotClient botClient, Message message)
     {
@@ -95,49 +97,28 @@ public static class Navigator
         {
             switch (message.Text)
             {
-                case string msg when MemberRequestHandler.ClanRegex.IsMatch(msg):
+                case string msg when MemberRequestHandler.TagRegex.IsMatch(msg):
                     {
-                        if (MemberRequestHandler.LastUserClanTags.ContainsKey(message.Chat.Id))
+                        if (MemberRequestHandler.UsersLastTags.ContainsKey(message.Chat.Id))
                         {
-                            MemberRequestHandler.LastUserClanTags[message.Chat.Id] = msg;
+                            MemberRequestHandler.UsersLastTags[message.Chat.Id] = msg;
                         }
                         else
                         {
-                            MemberRequestHandler.LastUserClanTags.Add(message.Chat.Id, msg);
+                            MemberRequestHandler.UsersLastTags.Add(message.Chat.Id, msg);
                         }
 
-                        await botClient.SendTextMessageAsync(message.Chat.Id, text: "Тег клана задан в корректной форме!");
-
-                        //await MemberRequestHandler.HandleClanInfoLvl2(botClient, message, );
+                        await botClient.SendTextMessageAsync(message.Chat.Id, text: "Тег задан в корректной форме!");
 
                         return;
                     }
-                case string msg when MemberRequestHandler.PlayerRegex.IsMatch(msg):
-                    {
-                        if (MemberRequestHandler.LastUserPlayerTags.ContainsKey(message.Chat.Id))
-                        {
-                            MemberRequestHandler.LastUserPlayerTags[message.Chat.Id] = msg;
-                        }
-                        else
-                        {
-                            MemberRequestHandler.LastUserPlayerTags.Add(message.Chat.Id, msg);
-                        }
-
-                        await botClient.SendTextMessageAsync(message.Chat.Id, text: "Тег игрока задан в корректной форме!");
-
-                        //await MemberRequestHandler.HandlePlayerInfoLvl2(botClient, message,);
-
-                        return;
-                    }
-
                 default:
                     {
-                        await botClient.SendTextMessageAsync(message.Chat.Id, text: "Если вы пытались задать тег игрока или клана," +
+                        await botClient.SendTextMessageAsync(message.Chat.Id, text: "Если вы пытались задать тег игрока или клана, " +
                           "то не вышло, задайте тег в корректной форме или выберите другуо опцию из меню.");
 
-                        break;
+                        return;
                     }
-
             }
         }
 

@@ -19,12 +19,9 @@ public static class MemberRequestHandler
 {
     private static string messageSplitToken = "answerReservedSplitter";
 
-    public static Regex PlayerRegex { get; set; } = new Regex(@"^#(\w{6,9})$");
+    public static Regex TagRegex { get; set; } = new Regex(@"^#(\w{6,9})$");
 
-    public static Regex ClanRegex { get; set; } = new Regex(@"^#(\w{8})$");
-
-    public static Dictionary<long, string> LastUserPlayerTags { get; set; } = new Dictionary<long, string>();
-    public static Dictionary<long, string> LastUserClanTags { get; set; } = new Dictionary<long, string>();
+    public static Dictionary<long, string> UsersLastTags { get; set; } = new Dictionary<long, string>();
 
     public async static Task HandlePlayerInfoLvl2(ITelegramBotClient botClient, Message message, string[] keywords)
     {
@@ -32,7 +29,7 @@ public static class MemberRequestHandler
 
         try
         {
-            if (PlayerRegex.IsMatch(message.Text))
+            if (TagRegex.IsMatch(message.Text))
             {
                 await CheckMemberExist(botClient, message);
 
@@ -41,7 +38,7 @@ public static class MemberRequestHandler
             if (message.Text == keywords[0])
             {
                 await botClient.SendTextMessageAsync(message.Chat.Id,
-                  text: PlayerFunctions.GetShortPlayerInfo(LastUserPlayerTags[message.Chat.Id], Program.TrackedClans),
+                  text: PlayerFunctions.GetShortPlayerInfo(UsersLastTags[message.Chat.Id], Program.TrackedClans),
                   parseMode: ParseMode.MarkdownV2);
 
                 return;
@@ -49,7 +46,7 @@ public static class MemberRequestHandler
             if (message.Text == keywords[1])
             {
                 await botClient.SendTextMessageAsync(message.Chat.Id,
-                  text: PlayerFunctions.GetFullPlayerInfo(LastUserPlayerTags[message.Chat.Id], Program.TrackedClans),
+                  text: PlayerFunctions.GetFullPlayerInfo(UsersLastTags[message.Chat.Id], Program.TrackedClans),
                   parseMode: ParseMode.MarkdownV2);
 
                 return;
@@ -86,7 +83,7 @@ public static class MemberRequestHandler
 
         try
         {
-            if (ClanRegex.IsMatch(message.Text))
+            if (TagRegex.IsMatch(message.Text))
             {
                 await CheckClanExist(botClient, message);
 
@@ -95,7 +92,7 @@ public static class MemberRequestHandler
             if (message.Text == keywords[0])
             {
                 await botClient.SendTextMessageAsync(message.Chat.Id,
-                  text: ClanFunctions.GetClanShortInfo(LastUserClanTags[message.Chat.Id], Program.TrackedClans),
+                  text: ClanFunctions.GetClanShortInfo(UsersLastTags[message.Chat.Id], Program.TrackedClans),
                   parseMode: ParseMode.MarkdownV2);
 
                 return;
@@ -103,7 +100,7 @@ public static class MemberRequestHandler
             if (message.Text == keywords[1])
             {
                 await botClient.SendTextMessageAsync(message.Chat.Id,
-                 text: ClanFunctions.GetClanMembers(LastUserClanTags[message.Chat.Id], Program.TrackedClans),
+                 text: ClanFunctions.GetClanMembers(UsersLastTags[message.Chat.Id], Program.TrackedClans),
                   parseMode: ParseMode.MarkdownV2);
 
                 return;
@@ -119,7 +116,7 @@ public static class MemberRequestHandler
             if (message.Text == keywords[4])
             {
                 await botClient.SendTextMessageAsync(message.Chat.Id,
-                  text: ClanFunctions.GetClanSiegeMachines(LastUserClanTags[message.Chat.Id], Program.TrackedClans),
+                  text: ClanFunctions.GetClanSiegeMachines(UsersLastTags[message.Chat.Id], Program.TrackedClans),
                   parseMode: ParseMode.MarkdownV2);
 
                 return;
@@ -127,7 +124,7 @@ public static class MemberRequestHandler
             if (message.Text == keywords[5])
             {
                 await botClient.SendTextMessageAsync(message.Chat.Id,
-                  text: ClanFunctions.GetClanActiveeSuperUnits(LastUserClanTags[message.Chat.Id], Program.TrackedClans),
+                  text: ClanFunctions.GetClanActiveeSuperUnits(UsersLastTags[message.Chat.Id], Program.TrackedClans),
                   parseMode: ParseMode.MarkdownV2);
 
                 return;
@@ -135,7 +132,7 @@ public static class MemberRequestHandler
             if (message.Text == keywords[6])
             {
                 await botClient.SendTextMessageAsync(message.Chat.Id,
-                text: ClanFunctions.GetMonthStatistcs(LastUserClanTags[message.Chat.Id], Program.TrackedClans),
+                text: ClanFunctions.GetMonthStatistcs(UsersLastTags[message.Chat.Id], Program.TrackedClans),
                   parseMode: ParseMode.MarkdownV2);
 
                 return;
@@ -160,7 +157,7 @@ public static class MemberRequestHandler
 
         try
         {
-            if (ClanRegex.IsMatch(message.Text))
+            if (TagRegex.IsMatch(message.Text))
             {
                 await CheckClanExist(botClient, message);
 
@@ -169,14 +166,14 @@ public static class MemberRequestHandler
             if (message.Text == keywords[0])
             {
                 await botClient.SendTextMessageAsync(message.Chat.Id,
-                 text: CurrentStatisticsFunctions.GetCurrentWarShortInfo(LastUserClanTags[message.Chat.Id], Program.TrackedClans),
+                 text: CurrentStatisticsFunctions.GetCurrentWarShortInfo(UsersLastTags[message.Chat.Id], Program.TrackedClans),
                  parseMode: ParseMode.MarkdownV2);
 
                 return;
             }
             if (message.Text == keywords[1])
             {
-                var answer = ClanFunctions.GetWarHistory(LastUserClanTags[message.Chat.Id], Program.TrackedClans, 1, messageSplitToken);
+                var answer = ClanFunctions.GetWarHistory(UsersLastTags[message.Chat.Id], Program.TrackedClans, 1, messageSplitToken);
 
                 var newAnswers = answer.Split(new[] { messageSplitToken }, StringSplitOptions.None);
 
@@ -192,7 +189,7 @@ public static class MemberRequestHandler
             if (message.Text == keywords[2])
             {
                 await botClient.SendTextMessageAsync(message.Chat.Id,
-                 text: CurrentStatisticsFunctions.GetCurrentWarMap(LastUserClanTags[message.Chat.Id], Program.TrackedClans),
+                 text: CurrentStatisticsFunctions.GetCurrentWarMap(UsersLastTags[message.Chat.Id], Program.TrackedClans),
                  parseMode: ParseMode.MarkdownV2);
 
                 return;
@@ -217,7 +214,7 @@ public static class MemberRequestHandler
 
         try
         {
-            if (ClanRegex.IsMatch(message.Text))
+            if (TagRegex.IsMatch(message.Text))
             {
                 await CheckClanExist(botClient, message);
 
@@ -226,14 +223,14 @@ public static class MemberRequestHandler
             if (message.Text == keywords[0])
             {
                 await botClient.SendTextMessageAsync(message.Chat.Id,
-                  text: CurrentStatisticsFunctions.GetCurrentRaidShortInfo(LastUserClanTags[message.Chat.Id], Program.TrackedClans),
+                  text: CurrentStatisticsFunctions.GetCurrentRaidShortInfo(UsersLastTags[message.Chat.Id], Program.TrackedClans),
                   parseMode: ParseMode.MarkdownV2);
 
                 return;
             }
             if (message.Text == keywords[1])
             {
-                var answer = ClanFunctions.GetRaidsHistory(LastUserClanTags[message.Chat.Id], Program.TrackedClans, 1, messageSplitToken);
+                var answer = ClanFunctions.GetRaidsHistory(UsersLastTags[message.Chat.Id], Program.TrackedClans, 1, messageSplitToken);
 
                 var newAnswers = answer.Split(new[] { messageSplitToken }, StringSplitOptions.None);
 
@@ -277,7 +274,7 @@ public static class MemberRequestHandler
 
         try
         {
-            if (PlayerRegex.IsMatch(message.Text))
+            if (TagRegex.IsMatch(message.Text))
             {
                 await CheckMemberExist(botClient, message);
 
@@ -285,7 +282,7 @@ public static class MemberRequestHandler
             }
             if (message.Text == keywords[0])
             {
-                var answer = PlayerFunctions.GetWarStatistics(LastUserPlayerTags[message.Chat.Id], Program.TrackedClans, 1, messageSplitToken);
+                var answer = PlayerFunctions.GetWarStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, 1, messageSplitToken);
 
                 var newAnswers = answer.Split(new[] { messageSplitToken }, StringSplitOptions.None);
 
@@ -300,7 +297,7 @@ public static class MemberRequestHandler
             }
             if (message.Text == keywords[1])
             {
-                var answer = PlayerFunctions.GetWarStatistics(LastUserPlayerTags[message.Chat.Id], Program.TrackedClans, 3, messageSplitToken);
+                var answer = PlayerFunctions.GetWarStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, 3, messageSplitToken);
 
                 var newAnswers = answer.Split(new[] { messageSplitToken }, StringSplitOptions.None);
 
@@ -315,7 +312,7 @@ public static class MemberRequestHandler
             }
             if (message.Text == keywords[2])
             {
-                var answer = PlayerFunctions.GetWarStatistics(LastUserPlayerTags[message.Chat.Id], Program.TrackedClans, 5, messageSplitToken);
+                var answer = PlayerFunctions.GetWarStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, 5, messageSplitToken);
 
                 var newAnswers = answer.Split(new[] { messageSplitToken }, StringSplitOptions.None);
 
@@ -348,7 +345,7 @@ public static class MemberRequestHandler
 
         try
         {
-            if (PlayerRegex.IsMatch(message.Text))
+            if (TagRegex.IsMatch(message.Text))
             {
                 await CheckMemberExist(botClient, message);
 
@@ -356,7 +353,7 @@ public static class MemberRequestHandler
             }
             if (message.Text == keywords[0])
             {
-                var answer = PlayerFunctions.GetRaidStatistics(LastUserPlayerTags[message.Chat.Id], Program.TrackedClans, 1, messageSplitToken);
+                var answer = PlayerFunctions.GetRaidStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, 1, messageSplitToken);
 
                 var newAnswers = answer.Split(new[] { messageSplitToken }, StringSplitOptions.None);
 
@@ -371,7 +368,7 @@ public static class MemberRequestHandler
             }
             if (message.Text == keywords[1])
             {
-                var answer = PlayerFunctions.GetRaidStatistics(LastUserPlayerTags[message.Chat.Id], Program.TrackedClans, 3, messageSplitToken);
+                var answer = PlayerFunctions.GetRaidStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, 3, messageSplitToken);
 
                 var newAnswers = answer.Split(new[] { messageSplitToken }, StringSplitOptions.None);
 
@@ -386,7 +383,7 @@ public static class MemberRequestHandler
             }
             if (message.Text == keywords[2])
             {
-                var answer = PlayerFunctions.GetRaidStatistics(LastUserPlayerTags[message.Chat.Id], Program.TrackedClans, 5, messageSplitToken);
+                var answer = PlayerFunctions.GetRaidStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, 5, messageSplitToken);
 
                 var newAnswers = answer.Split(new[] { messageSplitToken }, StringSplitOptions.None);
 
@@ -419,7 +416,7 @@ public static class MemberRequestHandler
 
         try
         {
-            if (PlayerRegex.IsMatch(message.Text))
+            if (TagRegex.IsMatch(message.Text))
             {
                 await CheckMemberExist(botClient, message);
 
@@ -428,7 +425,7 @@ public static class MemberRequestHandler
             if (message.Text == keywords[0])
             {
                 await botClient.SendTextMessageAsync(message.Chat.Id,
-                  text: PlayerFunctions.GetMembersArmyInfo(LastUserPlayerTags[message.Chat.Id], Program.TrackedClans, UnitType.Hero),
+                  text: PlayerFunctions.GetMembersArmyInfo(UsersLastTags[message.Chat.Id], Program.TrackedClans, UnitType.Hero),
                   parseMode: ParseMode.MarkdownV2);
 
                 return;
@@ -436,7 +433,7 @@ public static class MemberRequestHandler
             if (message.Text == keywords[1])
             {
                 await botClient.SendTextMessageAsync(message.Chat.Id,
-                  text: PlayerFunctions.GetMembersArmyInfo(LastUserPlayerTags[message.Chat.Id], Program.TrackedClans, UnitType.SiegeMachine),
+                  text: PlayerFunctions.GetMembersArmyInfo(UsersLastTags[message.Chat.Id], Program.TrackedClans, UnitType.SiegeMachine),
                   parseMode: ParseMode.MarkdownV2);
 
                 return;
@@ -444,7 +441,7 @@ public static class MemberRequestHandler
             if (message.Text == keywords[2])
             {
                 await botClient.SendTextMessageAsync(message.Chat.Id,
-                  text: PlayerFunctions.GetMembersArmyInfo(LastUserPlayerTags[message.Chat.Id], Program.TrackedClans, UnitType.SuperUnit),
+                  text: PlayerFunctions.GetMembersArmyInfo(UsersLastTags[message.Chat.Id], Program.TrackedClans, UnitType.SuperUnit),
                   parseMode: ParseMode.MarkdownV2);
 
                 return;
@@ -452,7 +449,7 @@ public static class MemberRequestHandler
             if (message.Text == keywords[3])
             {
                 await botClient.SendTextMessageAsync(message.Chat.Id,
-                  text: PlayerFunctions.GetMembersArmyInfo(LastUserPlayerTags[message.Chat.Id], Program.TrackedClans, UnitType.Unit),
+                  text: PlayerFunctions.GetMembersArmyInfo(UsersLastTags[message.Chat.Id], Program.TrackedClans, UnitType.Unit),
                   parseMode: ParseMode.MarkdownV2);
 
                 return;
@@ -477,7 +474,7 @@ public static class MemberRequestHandler
 
         try
         {
-            if (PlayerRegex.IsMatch(message.Text))
+            if (TagRegex.IsMatch(message.Text))
             {
                 await CheckClanExist(botClient, message);
 
@@ -485,7 +482,7 @@ public static class MemberRequestHandler
             }
             if (message.Text == keywords[0])
             {
-                var answer = ClanFunctions.GetWarHistory(LastUserClanTags[message.Chat.Id], Program.TrackedClans, 1, messageSplitToken);
+                var answer = ClanFunctions.GetWarHistory(UsersLastTags[message.Chat.Id], Program.TrackedClans, 1, messageSplitToken);
 
                 var newAnswers = answer.Split(new[] { messageSplitToken }, StringSplitOptions.None);
 
@@ -500,7 +497,7 @@ public static class MemberRequestHandler
             }
             if (message.Text == keywords[1])
             {
-                var answer = ClanFunctions.GetWarHistory(LastUserClanTags[message.Chat.Id], Program.TrackedClans, 3, messageSplitToken);
+                var answer = ClanFunctions.GetWarHistory(UsersLastTags[message.Chat.Id], Program.TrackedClans, 3, messageSplitToken);
 
                 var newAnswers = answer.Split(new[] { messageSplitToken }, StringSplitOptions.None);
 
@@ -515,7 +512,7 @@ public static class MemberRequestHandler
             }
             if (message.Text == keywords[2])
             {
-                var answer = ClanFunctions.GetWarHistory(LastUserClanTags[message.Chat.Id], Program.TrackedClans, 5, messageSplitToken);
+                var answer = ClanFunctions.GetWarHistory(UsersLastTags[message.Chat.Id], Program.TrackedClans, 5, messageSplitToken);
 
                 var newAnswers = answer.Split(new[] { messageSplitToken }, StringSplitOptions.None);
 
@@ -548,7 +545,7 @@ public static class MemberRequestHandler
 
         try
         {
-            if (PlayerRegex.IsMatch(message.Text))
+            if (TagRegex.IsMatch(message.Text))
             {
                 await CheckClanExist(botClient, message);
 
@@ -556,7 +553,7 @@ public static class MemberRequestHandler
             }
             if (message.Text == keywords[0])
             {
-                var answer = ClanFunctions.GetRaidsHistory(LastUserClanTags[message.Chat.Id], Program.TrackedClans, 1, messageSplitToken);
+                var answer = ClanFunctions.GetRaidsHistory(UsersLastTags[message.Chat.Id], Program.TrackedClans, 1, messageSplitToken);
 
                 var newAnswers = answer.Split(new[] { messageSplitToken }, StringSplitOptions.None);
 
@@ -571,7 +568,7 @@ public static class MemberRequestHandler
             }
             if (message.Text == keywords[1])
             {
-                var answer = ClanFunctions.GetRaidsHistory(LastUserClanTags[message.Chat.Id], Program.TrackedClans, 3, messageSplitToken);
+                var answer = ClanFunctions.GetRaidsHistory(UsersLastTags[message.Chat.Id], Program.TrackedClans, 3, messageSplitToken);
 
                 var newAnswers = answer.Split(new[] { messageSplitToken }, StringSplitOptions.None);
 
@@ -586,7 +583,7 @@ public static class MemberRequestHandler
             }
             if (message.Text == keywords[2])
             {
-                var answer = ClanFunctions.GetRaidsHistory(LastUserClanTags[message.Chat.Id], Program.TrackedClans, 5, messageSplitToken);
+                var answer = ClanFunctions.GetRaidsHistory(UsersLastTags[message.Chat.Id], Program.TrackedClans, 5, messageSplitToken);
 
                 var newAnswers = answer.Split(new[] { messageSplitToken }, StringSplitOptions.None);
 
@@ -602,7 +599,7 @@ public static class MemberRequestHandler
             if (message.Text == keywords[3])
             {
                 await botClient.SendTextMessageAsync(message.Chat.Id,
-                  text: ClanFunctions.GetMembersAverageRaidsPerfomance(LastUserClanTags[message.Chat.Id], Program.TrackedClans, messageSplitToken),
+                  text: ClanFunctions.GetMembersAverageRaidsPerfomance(UsersLastTags[message.Chat.Id], Program.TrackedClans),
                   parseMode: ParseMode.MarkdownV2);
 
                 return;
@@ -627,7 +624,7 @@ public static class MemberRequestHandler
 
         try
         {
-            if (PlayerRegex.IsMatch(message.Text))
+            if (TagRegex.IsMatch(message.Text))
             {
                 await CheckClanExist(botClient, message);
 
@@ -636,7 +633,7 @@ public static class MemberRequestHandler
             if (message.Text == keywords[0])
             {
                 await botClient.SendTextMessageAsync(message.Chat.Id,
-                  text: CurrentStatisticsFunctions.GetCDistrictStatistics(LastUserClanTags[message.Chat.Id], Program.TrackedClans, DistrictType.Capital_Peak),
+                  text: CurrentStatisticsFunctions.GetCDistrictStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, DistrictType.Capital_Peak),
                   parseMode: ParseMode.MarkdownV2);
 
                 return;
@@ -644,7 +641,7 @@ public static class MemberRequestHandler
             if (message.Text == keywords[1])
             {
                 await botClient.SendTextMessageAsync(message.Chat.Id,
-                  text: CurrentStatisticsFunctions.GetCDistrictStatistics(LastUserClanTags[message.Chat.Id], Program.TrackedClans, DistrictType.Barbarian_Camp),
+                  text: CurrentStatisticsFunctions.GetCDistrictStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, DistrictType.Barbarian_Camp),
                   parseMode: ParseMode.MarkdownV2);
 
                 return;
@@ -652,7 +649,7 @@ public static class MemberRequestHandler
             if (message.Text == keywords[2])
             {
                 await botClient.SendTextMessageAsync(message.Chat.Id,
-                    text: CurrentStatisticsFunctions.GetCDistrictStatistics(LastUserClanTags[message.Chat.Id], Program.TrackedClans, DistrictType.Wizard_Valley),
+                    text: CurrentStatisticsFunctions.GetCDistrictStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, DistrictType.Wizard_Valley),
                     parseMode: ParseMode.MarkdownV2);
 
                 return;
@@ -660,7 +657,7 @@ public static class MemberRequestHandler
             if (message.Text == keywords[3])
             {
                 await botClient.SendTextMessageAsync(message.Chat.Id,
-                    text: CurrentStatisticsFunctions.GetCDistrictStatistics(LastUserClanTags[message.Chat.Id], Program.TrackedClans, DistrictType.Balloon_Lagoon),
+                    text: CurrentStatisticsFunctions.GetCDistrictStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, DistrictType.Balloon_Lagoon),
                     parseMode: ParseMode.MarkdownV2);
 
                 return;
@@ -668,7 +665,7 @@ public static class MemberRequestHandler
             if (message.Text == keywords[4])
             {
                 await botClient.SendTextMessageAsync(message.Chat.Id,
-                         text: CurrentStatisticsFunctions.GetCDistrictStatistics(LastUserClanTags[message.Chat.Id], Program.TrackedClans, DistrictType.Builders_Workshop),
+                         text: CurrentStatisticsFunctions.GetCDistrictStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, DistrictType.Builders_Workshop),
                          parseMode: ParseMode.MarkdownV2);
 
                 return;
@@ -676,7 +673,7 @@ public static class MemberRequestHandler
             if (message.Text == keywords[5])
             {
                 await botClient.SendTextMessageAsync(message.Chat.Id,
-                    text: CurrentStatisticsFunctions.GetCDistrictStatistics(LastUserClanTags[message.Chat.Id], Program.TrackedClans, DistrictType.Dragon_Cliffs),
+                    text: CurrentStatisticsFunctions.GetCDistrictStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, DistrictType.Dragon_Cliffs),
                     parseMode: ParseMode.MarkdownV2);
 
                 return;
@@ -684,7 +681,7 @@ public static class MemberRequestHandler
             if (message.Text == keywords[6])
             {
                 await botClient.SendTextMessageAsync(message.Chat.Id,
-                               text: CurrentStatisticsFunctions.GetCDistrictStatistics(LastUserClanTags[message.Chat.Id], Program.TrackedClans, DistrictType.Golem_Quarry),
+                               text: CurrentStatisticsFunctions.GetCDistrictStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, DistrictType.Golem_Quarry),
                                parseMode: ParseMode.MarkdownV2);
 
                 return;
@@ -692,7 +689,7 @@ public static class MemberRequestHandler
             if (message.Text == keywords[7])
             {
                 await botClient.SendTextMessageAsync(message.Chat.Id,
-                     text: CurrentStatisticsFunctions.GetCDistrictStatistics(LastUserClanTags[message.Chat.Id], Program.TrackedClans, DistrictType.Skeleton_Park),
+                     text: CurrentStatisticsFunctions.GetCDistrictStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, DistrictType.Skeleton_Park),
                      parseMode: ParseMode.MarkdownV2);
 
                 return;
@@ -714,7 +711,7 @@ public static class MemberRequestHandler
 
     public async static Task CheckMemberTagMessageExist(ITelegramBotClient botClient, Message message)
     {
-        if (!LastUserPlayerTags.ContainsKey(message.Chat.Id))
+        if (!UsersLastTags.ContainsKey(message.Chat.Id))
         {
             await botClient.SendTextMessageAsync(message.Chat.Id,
             text: "Введите тег игрока в формате #123456789, а затем выберите пункт из меню");
@@ -723,7 +720,7 @@ public static class MemberRequestHandler
 
     public async static Task CheckClanTagMessageExist(ITelegramBotClient botClient, Message message)
     {
-        if (!LastUserClanTags.ContainsKey(message.Chat.Id))
+        if (!UsersLastTags.ContainsKey(message.Chat.Id))
         {
             var str = new StringBuilder("Введите один из тегов отслеживаемых кланов: ");
 
@@ -748,7 +745,7 @@ public static class MemberRequestHandler
         {
             try
             {
-                var member = clan.ClanMembers.First(x => x.Tag == LastUserPlayerTags[message.Chat.Id]);
+                var member = clan.ClanMembers.First(x => x.Tag == UsersLastTags[message.Chat.Id]);
                 await botClient.SendTextMessageAsync(message.Chat.Id,
                 text: $"У меня есть информация об этом игроке. Что бы вы хотели узнать?");
                 break;

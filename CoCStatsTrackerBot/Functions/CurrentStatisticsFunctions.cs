@@ -1,13 +1,8 @@
-﻿using CoCStatsTracker.UIEntities;
+﻿using CoCApiDealer.ApiRequests;
 using CoCStatsTracker;
+using CoCStatsTracker.UIEntities;
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Reflection.Metadata.Ecma335;
-using System.Collections;
 
 namespace CoCStatsTrackerBot.Functions;
 
@@ -17,8 +12,8 @@ public class CurrentStatisticsFunctions
     {
         if (trackedClans.FirstOrDefault(x => x.Tag == clanTag) == null || trackedClans.First(x => x.Tag == clanTag)?.ClanWars == null)
         {
-            return "Клан с таким тегом не отслеживается или еще не принимал участия в войнах.";
-        }
+            return UiHelper.Ecranize($"Клан с тегом {clanTag} не отслеживается или еще не принимал участия в войнах. Введите корректный тег клана");
+        };
 
         var trackedClan = trackedClans.First(x => x.Tag == clanTag && x.IsCurrent == true);
 
@@ -26,29 +21,29 @@ public class CurrentStatisticsFunctions
 
         var str = new StringBuilder();
 
-        str.AppendLine($@"```  Общая информация о последней войне клана```");
-        str.AppendLine($@"     *{UiHelper.Ecranize(trackedClan.Name + " - " + trackedClan.Tag)}*");
+        str.AppendLine(UiHelper.MakeItStyled("Общая информация о последней войне клана", UiTextStyle.Header));
+        str.AppendLine(UiHelper.MakeItStyled(trackedClan.Name + " - " + trackedClan.Tag, UiTextStyle.Name));
         str.AppendLine();
-
-        str.AppendLine($@"```  Противник```");
-        str.AppendLine($@"     *{UiHelper.Ecranize(clanWarUi.OpponentName + " - " + clanWarUi.OpponentTag)}*");
+        str.AppendLine(UiHelper.MakeItStyled("Противник: ", UiTextStyle.Subtitle));
+        str.AppendLine(UiHelper.MakeItStyled(clanWarUi.OpponentName + " - " + clanWarUi.OpponentTag, UiTextStyle.Name));
         str.AppendLine();
-        str.AppendLine($@"```  Даты войны:```");
-        str.AppendLine($@"     *{UiHelper.Ecranize(clanWarUi.StartedOn + " - ")}*");
-        str.AppendLine($@"     *{UiHelper.Ecranize(clanWarUi.EndedOn.ToString())}*");
+        str.AppendLine(UiHelper.MakeItStyled("Даты войны: ", UiTextStyle.Subtitle));
+        str.AppendLine(UiHelper.MakeItStyled(clanWarUi.StartedOn + " - ", UiTextStyle.Default));
+        str.AppendLine(UiHelper.MakeItStyled(clanWarUi.EndedOn.ToString(), UiTextStyle.Default));
         str.AppendLine();
-        str.AppendLine($@"```  Состояние:```");
-        str.AppendLine($@"     *{UiHelper.Ecranize(clanWarUi.Result)}*");
+        str.AppendLine(UiHelper.MakeItStyled("Состояние: ", UiTextStyle.Subtitle));
+        str.AppendLine(UiHelper.MakeItStyled(clanWarUi.Result, UiTextStyle.Default));
         str.AppendLine();
-        str.AppendLine($@"     Доступно атак участникам \- {clanWarUi.AttackPerMember}");
+        str.AppendLine(UiHelper.MakeItStyled("Доступно атак участникам - " + clanWarUi.AttackPerMember, UiTextStyle.Default));
         str.AppendLine();
-        str.AppendLine($@"```  Суммарное число атак:```");
-        str.AppendLine($@"     *{UiHelper.Ecranize(clanWarUi.AttacksCount + " : " + clanWarUi.OpponentAttacksCount)}*");
-        str.AppendLine($@"```  Суммарное количество звезд:```");
-        str.AppendLine($@"     *{UiHelper.Ecranize(clanWarUi.TotalStarsEarned + " : " + clanWarUi.OpponentStarsCount)}*");
-        str.AppendLine($@"```  Суммарный процент разрушений:```");
-        str.AppendLine($@"     *{UiHelper.Ecranize(Math.Round(clanWarUi.DestructionPercentage, 1) + " : " + Math.Round(clanWarUi.OpponentDestructionPercentage, 1))}*");
+        str.AppendLine(UiHelper.MakeItStyled("Суммарное число атак: ", UiTextStyle.Subtitle));
+        str.AppendLine(UiHelper.MakeItStyled(clanWarUi.AttacksCount + " : " + clanWarUi.OpponentAttacksCount, UiTextStyle.Default));
+        str.AppendLine(UiHelper.MakeItStyled("Суммарное количество звезд: ", UiTextStyle.Subtitle));
+        str.AppendLine(UiHelper.MakeItStyled(clanWarUi.TotalStarsEarned + " : " + clanWarUi.OpponentStarsCount, UiTextStyle.Default));
+        str.AppendLine(UiHelper.MakeItStyled("Суммарный процент разрушений: ", UiTextStyle.Subtitle));
+        str.AppendLine(UiHelper.MakeItStyled(Math.Round(clanWarUi.DestructionPercentage, 1) + " : " + Math.Round(clanWarUi.OpponentDestructionPercentage, 1), UiTextStyle.Default));
         str.AppendLine();
+        str.AppendLine(GetNonAttackersCw(clanWarUi));
 
         return str.ToString();
     }
@@ -57,7 +52,7 @@ public class CurrentStatisticsFunctions
     {
         if (trackedClans.FirstOrDefault(x => x.Tag == clanTag) == null || trackedClans.First(x => x.Tag == clanTag)?.ClanWars == null)
         {
-            return "Клан с таким тегом не отслеживается или еще не принимал участия в войнах.";
+            return UiHelper.Ecranize($"Клан с тегом {clanTag} не отслеживается или еще не принимал участия в войнах. Введите корректный тег клана");
         }
 
         var trackedClan = trackedClans.First(x => x.Tag == clanTag && x.IsCurrent == true);
@@ -72,15 +67,15 @@ public class CurrentStatisticsFunctions
 
         var str = new StringBuilder();
 
-        str.AppendLine($@"```  Карта текущей войны клана```");
-        str.AppendLine($@"     *{UiHelper.Ecranize(trackedClan.Name + " - " + trackedClan.Tag)}*");
+        str.AppendLine(UiHelper.MakeItStyled("Карта текущей войны клана", UiTextStyle.Header));
+        str.AppendLine(UiHelper.MakeItStyled(trackedClan.Name + " - " + trackedClan.Tag, UiTextStyle.Name));
         str.AppendLine();
-        str.AppendLine($@"```  Противник```");
-        str.AppendLine($@"     *{UiHelper.Ecranize(clanWar.OpponentClanName + " - " + clanWar.OpponentClanTag)}*");
+        str.AppendLine(UiHelper.MakeItStyled("Противник:", UiTextStyle.Subtitle));
+        str.AppendLine(UiHelper.MakeItStyled(clanWar.OpponentClanName + " - " + clanWar.OpponentClanTag, UiTextStyle.Name));
         str.AppendLine();
-        str.AppendLine($@"```  Даты войны:```");
-        str.AppendLine($@"     *{UiHelper.Ecranize(clanWar.StartTime + " - ")}*");
-        str.AppendLine($@"     *{UiHelper.Ecranize(clanWar.EndTime.ToString())}*");
+        str.AppendLine(UiHelper.MakeItStyled("Даты войны::", UiTextStyle.Subtitle));
+        str.AppendLine(UiHelper.MakeItStyled(clanWar.StartTime + " - ", UiTextStyle.Default));
+        str.AppendLine(UiHelper.MakeItStyled(clanWar.EndTime.ToString(), UiTextStyle.Default));
         str.AppendLine();
 
         for (int i = 0; i <= warMembers?.Count; i++)
@@ -124,12 +119,11 @@ public class CurrentStatisticsFunctions
         return str.ToString();
     }
 
-
     public static string GetCurrentRaidShortInfo(string clanTag, ICollection<TrackedClan> trackedClans)
     {
         if (trackedClans.FirstOrDefault(x => x.Tag == clanTag) == null || trackedClans.First(x => x.Tag == clanTag)?.CapitalRaids == null)
         {
-            return "Клан с таким тегом не отслеживается или еще не принимал участия в рейдах.";
+            return UiHelper.Ecranize($"Клан с тегом {clanTag} не отслеживается или еще не принимал участия в рейдах. Введите корректный тег клана");
         }
 
         var trackedClan = trackedClans.First(x => x.Tag == clanTag && x.IsCurrent == true);
@@ -149,50 +143,53 @@ public class CurrentStatisticsFunctions
             totalAttacksCount += defeatedClan.TotalAttacksCount;
         }
 
-        str.AppendLine($@"```  Общая информация о последнем рейде клана```");
-        str.AppendLine($@"     *{UiHelper.Ecranize(trackedClan.Name + " - " + trackedClan.Tag)}*");
+        str.AppendLine(UiHelper.MakeItStyled("Общая информация о последнем рейде клана", UiTextStyle.Header));
+        str.AppendLine(UiHelper.MakeItStyled(trackedClan.Name + " - " + trackedClan.Tag, UiTextStyle.Name));
         str.AppendLine();
-
-        str.AppendLine($@"```  Даты дней рейдов:```");
-        str.AppendLine($@"     *{UiHelper.Ecranize(raid.StartedOn + " - ")}*");
-        str.AppendLine($@"     *{UiHelper.Ecranize(raid.EndedOn.ToString())}*");
+        str.AppendLine(UiHelper.MakeItStyled("Даты дней рейдов:", UiTextStyle.Subtitle));
+        str.AppendLine(UiHelper.MakeItStyled(raid.StartedOn + " - ", UiTextStyle.Default));
+        str.AppendLine(UiHelper.MakeItStyled(raid.EndedOn.ToString(), UiTextStyle.Default));
         str.AppendLine();
-        str.AppendLine($@"     Проведено атак: *{totalAttacksCount}*");
-        str.AppendLine($@"     Повержено кланов: *{raid.RaidsCompleted}*");
-        str.AppendLine($@"     Разрушено районов: *{raid.DefeatedDistrictsCount}*");
-        str.AppendLine($@"     Награблено золота: *{raid.TotalCapitalLoot}*");
+        str.AppendLine(UiHelper.MakeItStyled("Проведено атак: " + totalAttacksCount, UiTextStyle.Subtitle));
+        str.AppendLine(UiHelper.MakeItStyled("Повержено кланов: " + raid.RaidsCompleted, UiTextStyle.Subtitle));
+        str.AppendLine(UiHelper.MakeItStyled("Разрушено районов: " + raid.DefeatedDistrictsCount, UiTextStyle.Subtitle));
+        str.AppendLine(UiHelper.MakeItStyled("Награблено золота: " + raid.TotalCapitalLoot, UiTextStyle.Subtitle));
         str.AppendLine();
-        str.AppendLine($@"```  Медали рейдов:```");
-        str.AppendLine($@"     За атаку: {offensiveReward}");
-        str.AppendLine($@"     За защиту: {raid.DefensiveReward}");
-        str.AppendLine($@"     Суммарно: {totalReward}");
+        str.AppendLine(UiHelper.MakeItStyled("Медали рейдов: ", UiTextStyle.Subtitle));
+        str.AppendLine(UiHelper.MakeItStyled("За атаку: " + offensiveReward, UiTextStyle.Default));
+        str.AppendLine(UiHelper.MakeItStyled("За защиту: " + raid.DefensiveReward, UiTextStyle.Default));
+        str.AppendLine(UiHelper.MakeItStyled("Суммарно: " + totalReward, UiTextStyle.Default));
         str.AppendLine();
-        str.AppendLine($@"```  Общие показатели обороны:```");
+        str.AppendLine(UiHelper.MakeItStyled("Общие показатели обороны: ", UiTextStyle.Subtitle));
 
         var averageDefenses = 0.0;
 
         foreach (var defense in raid.Defenses)
         {
-            str.AppendLine($@"     {UiHelper.Ecranize("[" + defense.AttackersTag + "] " + "[" + defense.AttackersName + "] " + "[" + defense.TotalAttacksCount + "]")}");
+            str.AppendLine(UiHelper.MakeItStyled("[" + defense.AttackersTag + "] " + "[" + defense.AttackersName + "] " +
+                "[" + defense.TotalAttacksCount + "]", UiTextStyle.Name));
 
             averageDefenses += defense.TotalAttacksCount;
         }
 
-        str.AppendLine($@"     Выдержано атак в среднем: {Math.Round(averageDefenses / raid.Defenses.Count, 2)}");
+        str.AppendLine(UiHelper.MakeItStyled("Выдержано атак в среднем: " + Math.Round(averageDefenses / raid.Defenses.Count, 2), UiTextStyle.Subtitle));
         str.AppendLine();
-
-        str.AppendLine($@"```  Общие показатели нападения:```");
+        str.AppendLine(UiHelper.MakeItStyled("Общие показатели нападения: ", UiTextStyle.Subtitle));
 
         var averageAttacks = 0.0;
 
         foreach (var defeatedClan in raid.DefeatedClans)
         {
-            str.AppendLine($@"     {UiHelper.Ecranize("[" + defeatedClan.ClanTag + "] " + "[" + defeatedClan.ClanName + "] " + "[" + defeatedClan.TotalAttacksCount + "]")}");
+            str.AppendLine(UiHelper.MakeItStyled("[" + defeatedClan.ClanTag + "] " + "[" + defeatedClan.ClanName + "] " +
+                "[" + defeatedClan.TotalAttacksCount + "]", UiTextStyle.Name));
 
             averageAttacks += defeatedClan.TotalAttacksCount;
         }
 
-        str.AppendLine($@"     Потрачено атак в среднем: {Math.Round(averageAttacks / raid.DefeatedClans.Count, 2)}");
+        str.AppendLine(UiHelper.MakeItStyled("Потрачено атак в среднем: " + Math.Round(averageAttacks / raid.DefeatedClans.Count, 2), UiTextStyle.Subtitle));
+        str.AppendLine();
+        str.AppendLine(GetNonAttackersRaids(trackedClan));
+        str.AppendLine();
 
         return str.ToString();
     }
@@ -201,13 +198,12 @@ public class CurrentStatisticsFunctions
     {
         if (trackedClans.FirstOrDefault(x => x.Tag == clanTag) == null || trackedClans.First(x => x.Tag == clanTag)?.CapitalRaids == null)
         {
-            return "Клан с таким тегом не отслеживается или еще не принимал участия в рейдах.";
+            return UiHelper.Ecranize($"Клан с тегом {clanTag} не отслеживается или еще не принимал участия в рейдах. Введите корректный тег клана");
         }
 
         var trackedClan = trackedClans.First(x => x.Tag == clanTag && x.IsCurrent == true);
 
         var raid = Mapper.MapToUi(trackedClan.CapitalRaids.OrderByDescending(x => x.StartedOn).FirstOrDefault());
-
 
         var maxNameLength = 18;
         var max2ColumnLength = 3;
@@ -239,7 +235,6 @@ public class CurrentStatisticsFunctions
                     avgPercent += attack.DestructionPercentTo - attack.DestructionPercentFrom;
                     counter++;
                 }
-
             }
         }
 
@@ -249,18 +244,22 @@ public class CurrentStatisticsFunctions
         }
         catch (Exception e)
         {
-
+            Console.WriteLine(e.Message);
         }
 
         var str = new StringBuilder();
 
-        str.AppendLine($@"```  Показатели игроков клана```");
-        str.AppendLine($@"     *{UiHelper.Ecranize(trackedClan.Name + " - " + trackedClan.Tag)}*");
+        str.AppendLine(UiHelper.MakeItStyled("Показатели игроков клана", UiTextStyle.Header));
+        str.AppendLine(UiHelper.MakeItStyled(trackedClan.Name + " - " + trackedClan.Tag, UiTextStyle.Name));
         str.AppendLine();
-        str.AppendLine($@"```  В атаках на район```");
-        str.AppendLine($@"     *{UiHelper.Ecranize(chosenDistrictName)}*");
-        str.AppendLine($@"     *{UiHelper.Ecranize("Разрушений за атаку в среднем: " + avgPercent + "%")}*");
+        str.AppendLine(UiHelper.MakeItStyled("В атаках на район", UiTextStyle.Subtitle));
+        str.AppendLine(UiHelper.MakeItStyled(chosenDistrictName, UiTextStyle.Name));
         str.AppendLine();
+        str.AppendLine(UiHelper.MakeItStyled("Разрушений за атаку в среднем: " + avgPercent + "%", UiTextStyle.Default));
+        str.AppendLine();
+        str.AppendLine(UiHelper.MakeItStyled("Показатели атак", UiTextStyle.Subtitle));
+        str.AppendLine();
+
         str.AppendLine($"``` " +
                            $"|{UiHelper.GetCenteredString("Игрок", maxNameLength)}" +
                            $"|{UiHelper.GetCenteredString("%От", max2ColumnLength)}" +
@@ -303,6 +302,117 @@ public class CurrentStatisticsFunctions
         return str.ToString();
     }
 
+
+    public static string GetNonAttackersCw(CwCwlUi clanWar)
+    {
+        try
+        {
+            var str = new StringBuilder();
+
+            var count = 0;
+
+            if (clanWar.MembersResults.Any(x => x.FirstDestructionPercent != 0))
+            {
+                str.AppendLine(UiHelper.MakeItStyled("Не провели атаки на КВ: ", UiTextStyle.Subtitle));
+
+                foreach (var memberAttack in clanWar.MembersResults)
+                {
+                    if (memberAttack.FirstDestructionPercent == 0)
+                    {
+                        str.AppendLine(UiHelper.MakeItStyled(memberAttack.PlayerName, UiTextStyle.Name));
+
+                        count++;
+                    }
+                }
+            }
+            else
+            {
+                str.Append(UiHelper.MakeItStyled("Никто еще не провел атак, вероятно идет день подготовки.", UiTextStyle.Default));
+            }
+
+            if (clanWar.MembersResults.Any(x => x.SecondDestructionpercent != 0))
+            {
+                str.AppendLine(UiHelper.MakeItStyled("Не провели вторую атаку КВ: ", UiTextStyle.Subtitle));
+
+                foreach (var memberAttack in clanWar.MembersResults)
+                {
+                    if (memberAttack.SecondDestructionpercent == 0)
+                    {
+                        str.AppendLine(UiHelper.MakeItStyled(memberAttack.PlayerName, UiTextStyle.Name));
+
+                        count++;
+                    }
+                }
+            }
+
+            if (count == 0)
+            {
+                return "Все атаки проведены";
+            }
+
+            return str.ToString();
+        }
+        catch (Exception e)
+        {
+
+            return e.Message;
+        }
+    }
+
+    public static string GetNonAttackersRaids(TrackedClan clan)
+    {
+        try
+        {
+            var str = new StringBuilder();
+
+            var count = 0;
+
+            var raid = clan.CapitalRaids.OrderByDescending(x => x.StartedOn).FirstOrDefault();
+
+            if (clan.ClanMembers.Any(x => x.RaidMemberships.FirstOrDefault(x => x.Raid.StartedOn == raid.StartedOn) == null))
+            {
+                str.AppendLine(UiHelper.MakeItStyled("Не участвовали в рейдах в этом клане:", UiTextStyle.Subtitle));
+
+                foreach (var clanMember in clan.ClanMembers)
+                {
+                    if (raid.RaidMembers.FirstOrDefault(x => x.Tag == clanMember.Tag) == null)
+                    {
+                        str.AppendLine(UiHelper.MakeItStyled(clanMember.Name, UiTextStyle.Name));
+
+                        count++;
+                    }
+                }
+            }
+
+            if (raid.RaidMembers.Any(x=>x.Attacks.Count != 6))
+            {
+                str.AppendLine();
+                str.AppendLine(UiHelper.MakeItStyled("Провели не все доступные атаки:", UiTextStyle.Subtitle));
+
+                foreach (var raidMember in raid.RaidMembers)
+                {
+                    if (raidMember.Attacks.Count != 6)
+                    {
+                        str.AppendLine(UiHelper.MakeItStyled(raidMember.Name, UiTextStyle.Name));
+
+                        count++;
+                    }
+                }
+            }
+
+            if (count == 0)
+            {
+                return "Все игроки провели атаки";
+            }
+            
+            return str.ToString();
+        }
+        catch (Exception e)
+        {
+            return e.Message;
+        }
+
+    }
 
     public enum DistrictType
     {

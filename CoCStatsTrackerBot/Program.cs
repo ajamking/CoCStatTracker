@@ -1,5 +1,6 @@
 ﻿using CoCApiDealer;
 using CoCApiDealer.ApiRequests;
+using CoCStatsTracker.Builders;
 using CoCStatsTracker.Helpers;
 using Domain.Entities;
 using Microsoft.Extensions.Primitives;
@@ -32,13 +33,18 @@ class Program
 
     async static Task Main(string[] args)
     {
-        //TempFunctions.GetCwMembers("#YPPGCCY8");
+        //TempFunctions.GetNonAttackersRaids("#UQQGYJJP");
         //var dbinit = new DBInit("#YPPGCCY8");
-        //TempFunctions.AddActivity();
-        //TempFunctions.RecalculateDrawScores();
+
         using var db = new AppDbContext("Data Source=CoCStatsTracker.db");
 
         TrackedClans = db.TrackedClans.ToList();
+
+        var clanBuilder = new TrackedClanBuilder(TrackedClans.FirstOrDefault(x => x.IsCurrent == true));
+
+        var daddyBuilder = new DaddyBuilder(clanBuilder);
+
+        daddyBuilder.AddCurrentRaid("#YPPGCCY8");
 
         db.Complete();
 
