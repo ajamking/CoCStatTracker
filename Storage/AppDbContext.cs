@@ -20,11 +20,6 @@ namespace Storage
         public DbSet<WarAttack> WarAttacks { get; set; }
         public DbSet<WarMember> WarMembers { get; set; }
 
-        public DbSet<Carma> Carmas { get; set; }
-        public DbSet<CustomActivity> CustomActivities { get; set; }
-        public DbSet<PrizeDraw> PrizeDraws { get; set; }
-        public DbSet<DrawMember> DrawMembers { get; set; }
-
         public DbSet<CapitalRaid> CapitalRaids { get; set; }
         public DbSet<DefeatedClan> DefeatedClans { get; set; }
         public DbSet<OpponentDistrict> OpponentDistricts { get; set; }
@@ -65,11 +60,6 @@ namespace Storage
             modelBuilder.ApplyConfiguration(new WarAttackConfiguration());
             modelBuilder.ApplyConfiguration(new WarMemberConfiguration());
 
-            modelBuilder.ApplyConfiguration(new CarmaConfiguration());
-            modelBuilder.ApplyConfiguration(new CustomActivitiesConfiguration());
-            modelBuilder.ApplyConfiguration(new DrawMemberConfiguration());
-            modelBuilder.ApplyConfiguration(new PrizeDrawConfiguration());
-
             modelBuilder.ApplyConfiguration(new CapitalRaidConfigurartion());
             modelBuilder.ApplyConfiguration(new DefeatedClanConfiguration());
             modelBuilder.ApplyConfiguration(new EnemyDistrictConfiguration());
@@ -83,6 +73,5 @@ namespace Storage
         {
             return SaveChanges();
         }
-
     }
 }

@@ -158,9 +158,10 @@ public static class PlayerFunctions
             {
                 return UiHelper.Ecranize($"Игрока с тегом {playerTag} нет в отслеживаемых кланах, введите корректный тег игрока.");
             }
+
             if (member.WarMemberships.Count == 0)
             {
-                return UiHelper.Ecranize($"Игрок {playerTag} пока не принимал участия в войнах");
+                return UiHelper.Ecranize($"Информация об участии в войнах игрока с тегом {playerTag} не найдена");
             }
 
             var uiMemberships = new List<CwCwlMembershipUi>();
@@ -276,9 +277,10 @@ public static class PlayerFunctions
             {
                 return UiHelper.Ecranize($"Игрока с тегом {playerTag} нет в отслеживаемых кланах, введите корректный тег игрока.");
             }
+
             if (member.RaidMemberships.Count == 0)
             {
-                return UiHelper.Ecranize($"Игрок {playerTag} пока не принимал участия в рейдах");
+                return UiHelper.Ecranize($"Информация об участии в рейдах игрока с тегом {playerTag} не найдена");
             }
 
             var uiMemberships = new List<RaidMembershipUi>();
@@ -377,7 +379,7 @@ public static class PlayerFunctions
             }
             if (member.Units.Count == 0)
             {
-                return UiHelper.Ecranize($"Игрок {playerTag} пока не обзавелся юнитами");
+                return UiHelper.Ecranize($"Информация о войске игрока с тегом {playerTag} не найдена");
             }
 
             var armyUi = Mapper.MapToArmyUi(member.Units);
@@ -463,7 +465,6 @@ public static class PlayerFunctions
             return "Bad Response";
         }
     }
-
 
     public static string CalculateAveragePercent(ClanMember member, AvgType avgType)
     {

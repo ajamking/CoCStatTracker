@@ -26,27 +26,22 @@ public class DBInit
         TrackedClans = RunDb(clanRepresentations);
     }
 
-
     public TrackedClan BuildClan(string tag)
     {
         var daddyBuilder = new DaddyBuilder();
         daddyBuilder.SetClanProperties(tag);
 
-        daddyBuilder.AddCurrentRaid(daddyBuilder.TrackedClanBuilder.Clan.Tag);
+        daddyBuilder.AddCurrentRaid(tag);
         
         //Если вылетает null exc, возможно дело в устаревшем теге войны
-        daddyBuilder.AddCurrentClanWar(true, tag, "#88RPULYC9");
-        daddyBuilder.AddCurrentClanWar(true, tag, "#88RLJYULY");
-        daddyBuilder.AddCurrentClanWar(true, tag, "#88RRPGV99");
-        daddyBuilder.AddCurrentClanWar(true, tag, "#88RCVRYPV");
-        daddyBuilder.AddCurrentClanWar(true, tag, "#88J0QRJ9Q");
+        //daddyBuilder.AddCurrentClanWar(true, tag, "#88RPULYC9");
+        //daddyBuilder.AddCurrentClanWar(true, tag, "#88RLJYULY");
+        //daddyBuilder.AddCurrentClanWar(true, tag, "#88RRPGV99");
+        //daddyBuilder.AddCurrentClanWar(true, tag, "#88RCVRYPV");
+        //daddyBuilder.AddCurrentClanWar(true, tag, "#88J0QRJ9Q");
         //Закомментил тут, потому что не понял нафига тут именно так передается тег.
         //Если работает вариант с передачей просто тега из этой же функции.
         //daddyBuilder.AddCurrentClanWar(true, daddyBuilder.TrackedClanBuilder.Clan.Tag, "#88J98LL2C");
-
-        daddyBuilder.AddEmptyCarmaToAllPlayers();
-
-        daddyBuilder.AddPrizeDraw(DateTime.Now, DateTime.Now.AddDays(30), "testPrizeDraw");
 
         return daddyBuilder.TrackedClanBuilder.Clan;
     }

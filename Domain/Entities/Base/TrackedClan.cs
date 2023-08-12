@@ -28,14 +28,11 @@ namespace Domain.Entities
         public virtual ICollection<ClanMember> ClanMembers { get; set; }
         public virtual ICollection<ClanWar> ClanWars { get; set; }
         public virtual ICollection<CapitalRaid> CapitalRaids { get; set; }
-        public virtual ICollection<PrizeDraw> PrizeDraws { get; set; }
-
         public TrackedClan()
         {
             ClanMembers = new HashSet<ClanMember>();
             ClanWars = new HashSet<ClanWar>();
             CapitalRaids = new HashSet<CapitalRaid>();
-            PrizeDraws = new HashSet<PrizeDraw>();
         }
 
     }

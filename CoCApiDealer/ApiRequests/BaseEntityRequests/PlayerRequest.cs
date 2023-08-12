@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace CoCApiDealer.ApiRequests;
 
-internal class PlayerRequest : BaseApiRequest
+public class PlayerRequest : BaseApiRequest
 {
     public async Task<PlayerApi> CallApi(string clanTag)
     {

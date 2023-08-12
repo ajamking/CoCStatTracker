@@ -105,11 +105,6 @@ public class ClanMemberBuilder
         ClanMember.Units = units;
     }
 
-    public void SetCarma(Carma carma)
-    {
-        ClanMember.Carma = carma;
-    }
-
     public void AddRaidMembership(RaidMember membership)
     {
         ClanMember.RaidMemberships.Add(membership);
@@ -118,10 +113,5 @@ public class ClanMemberBuilder
     public void AddWarMembership(WarMember warMember)
     {
         ClanMember.WarMemberships.Add(warMember);
-    }
-
-    public void AddDrawMembership(DrawMember membership)
-    {
-        ClanMember.DrawMemberships.Add(membership);
     }
 }

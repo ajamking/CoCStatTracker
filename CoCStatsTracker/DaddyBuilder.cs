@@ -2,12 +2,10 @@
 using CoCStatsTracker;
 using CoCStatsTracker.ApiEntities;
 using CoCStatsTracker.Builders;
-using CoCStatsTracker.Builders.ManualControl;
-using CoCStatsTracker.UIEntities;
 using Domain.Entities;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using Storage;
-using System.Diagnostics.Metrics;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CoCApiDealer;
 
@@ -272,71 +270,5 @@ public class DaddyBuilder
         clanWarBuilder.SetWarMembers(warMembers);
 
         TrackedClanBuilder.AddClanWar(clanWarBuilder.ClanWar);
-    }
-
-    //Присваиваем каждому игроку начальную карму
-    public void AddEmptyCarmaToAllPlayers()
-    {
-        foreach (var member in TrackedClanBuilder.Clan.ClanMembers)
-        {
-            var emptyCarma = new CarmaBuilder();
-
-            emptyCarma.SetBaseProperties();
-
-            member.Carma = emptyCarma.PlayersCarma;
-        }
-    }
-
-    public void AddPlayerActivity(string playerTag,
-        string activityName, string description, int points)
-    {
-        var targetMember = TrackedClanBuilder.Clan
-          .ClanMembers.FirstOrDefault(x => x.Tag == playerTag);
-
-        if (targetMember != null)
-        {
-            var tempCarma = targetMember.Carma;
-
-            var carmaBuilder = new CarmaBuilder(tempCarma);
-
-            carmaBuilder.SetActivity(activityName, description, points);
-
-            targetMember.Carma = carmaBuilder.PlayersCarma;
-        }
-        else
-        {
-            throw new ArgumentNullException(nameof(playerTag));
-        }
-    }
-
-    //Добавляем отслеживаемый розыгрыш
-    public void AddPrizeDraw(DateTime start, DateTime end, string desctiption)
-    {
-        var prizeDrawBuilder = new PrizeDrawBuilder();
-
-        prizeDrawBuilder.SetBaseProperties(start, end, desctiption);
-
-        var drawMembers = new List<DrawMember>();
-
-        foreach (var clanMember in TrackedClanBuilder.Clan.ClanMembers)
-        {
-            var drawMemberBuilder = new DrawMemberBuilder();
-
-            drawMemberBuilder.SetBaseProperties();
-
-            drawMemberBuilder.SetClanMember(clanMember);
-
-            drawMemberBuilder.SetDraw(prizeDrawBuilder.Draw);
-
-            clanMember.DrawMemberships.Add(drawMemberBuilder.Member);
-
-            drawMembers.Add(drawMemberBuilder.Member);
-        }
-
-        prizeDrawBuilder.SetDrawMembers(drawMembers);
-
-        prizeDrawBuilder.SetTrackedClan(TrackedClanBuilder.Clan);
-
-        TrackedClanBuilder.AddPrizeDraw(prizeDrawBuilder.Draw);
     }
 }

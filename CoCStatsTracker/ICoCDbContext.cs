@@ -14,10 +14,6 @@ namespace CoCStatTracker
         public DbSet<WarAttack> WarAttacks { get; set; }
         public DbSet<WarMember> WarMembers { get; set; }
 
-        public DbSet<Carma> Carmas { get; set; }
-        public DbSet<CustomActivity> CustomActivities { get; set; }
-        public DbSet<PrizeDraw> PrizeDraws { get; set; }
-
         public DbSet<CapitalRaid> CapitalRaids { get; set; }
         public DbSet<DefeatedClan> DefeatedClans { get; set; }
         public DbSet<OpponentDistrict> OpponentDistricts { get; set; }

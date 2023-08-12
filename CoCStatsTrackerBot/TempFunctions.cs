@@ -20,66 +20,6 @@ public static class TempFunctions
         Console.WriteLine(@$"Two versions of {TrackedClans.First(x => x.Tag == clanTag).Name} clan added to DB {DateTime.Now} ");
     }
 
-    public static void AddActivity()
-    {
-        using var db = new AppDbContext("Data Source=CoCStatsTracker.db");
-
-        Program.TrackedClans = db.TrackedClans.ToList();
-
-        foreach (var clan in Program.TrackedClans)
-        {
-            if (clan.IsCurrent == true)
-            {
-                clan.ClanMembers.FirstOrDefault(x => x.Tag == "#2VGG92CL9")
-                .Carma
-                .PlayerActivities.Add(
-                new CustomActivity
-                {
-                    Name = "TestActivity123123",
-                    EarnedPoints = 100,
-                    UpdatedOn = DateTime.Now,
-                    Description = "Тестирую как в кайф"
-                });
-
-                clan.ClanMembers.FirstOrDefault(x => x.Tag == "#G8P9Q299R")
-                   .Carma
-                   .PlayerActivities.Add(
-                   new CustomActivity
-                   {
-                       Name = "TestActivity123123",
-                       EarnedPoints = 20,
-                       UpdatedOn = DateTime.Now,
-                       Description = "Тестирую как в кайф"
-                   });
-            }
-
-            foreach (var member in clan.ClanMembers)
-            {
-                foreach (var activity in member.Carma.PlayerActivities)
-                {
-                    member.Carma.TotalCarma += activity.EarnedPoints;
-                }
-            }
-        }
-
-
-        db.Complete();
-    }
-
-    public static void RecalculateDrawScores()
-    {
-        using var db = new AppDbContext("Data Source=CoCStatsTracker.db");
-        Program.TrackedClans = db.TrackedClans.ToList();
-
-        var first = Program.TrackedClans.FirstOrDefault(x => x.IsCurrent == false);
-        var second = Program.TrackedClans.FirstOrDefault(x => x.IsCurrent == true);
-        second.PrizeDraws.First().Members = DrawDealer.RecalculatePrizeDrawScores(first, second, second.PrizeDraws.First().Members);
-
-        var Q12 = second.ClanMembers.FirstOrDefault(x => x.Tag == "#2VGG92CL9");
-
-        db.Complete();
-    }
-
     public static void GetCwMembers(string clanTag)
     {
         var cwRequest = new CurrentWarRequest();

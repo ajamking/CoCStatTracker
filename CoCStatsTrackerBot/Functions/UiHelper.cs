@@ -84,7 +84,6 @@ public class UiHelper
         return null;
     }
 
-
     /// <summary>
     /// Пытается найти активный клан с заданным тегом в отслеживаемом кланах, если такого нет - возвращает null.
     /// </summary>
@@ -181,6 +180,7 @@ public class UiHelper
 
         return uiTablemaxSize;
     }
+
 }
 
 /// <summary>
@@ -200,4 +200,3 @@ public enum UiTextStyle
     Subtitle,
     Default
 }
-

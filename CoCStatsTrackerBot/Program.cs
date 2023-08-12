@@ -1,22 +1,9 @@
-﻿using CoCApiDealer;
-using CoCApiDealer.ApiRequests;
-using CoCStatsTracker.Builders;
-using CoCStatsTracker.Helpers;
-using Domain.Entities;
-using Microsoft.Extensions.Primitives;
+﻿using Domain.Entities;
 using Storage;
-using System.Diagnostics.Metrics;
-using System.Drawing;
-using System.IO;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Text.RegularExpressions;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
-using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace CoCStatsTrackerBot;
 
@@ -33,18 +20,19 @@ class Program
 
     async static Task Main(string[] args)
     {
-        //TempFunctions.GetNonAttackersRaids("#UQQGYJJP");
-        //var dbinit = new DBInit("#YPPGCCY8");
+        //TempFunctions.GetNonAttackersRaids("#YPPGCCY8");
+
+        //var dbinit = new DBInit("#UQQGYJJP");
 
         using var db = new AppDbContext("Data Source=CoCStatsTracker.db");
-
+      
         TrackedClans = db.TrackedClans.ToList();
 
-        var clanBuilder = new TrackedClanBuilder(TrackedClans.FirstOrDefault(x => x.IsCurrent == true));
+        //var clanBuilder = new TrackedClanBuilder(TrackedClans.FirstOrDefault(x => x.IsCurrent == true));
 
-        var daddyBuilder = new DaddyBuilder(clanBuilder);
+        //var daddyBuilder = new DaddyBuilder(clanBuilder);
 
-        daddyBuilder.AddCurrentRaid("#YPPGCCY8");
+        //daddyBuilder.AddCurrentRaid("#YPPGCCY8");
 
         db.Complete();
 

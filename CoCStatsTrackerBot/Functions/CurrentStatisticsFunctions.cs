@@ -2,20 +2,26 @@
 using CoCStatsTracker;
 using CoCStatsTracker.UIEntities;
 using Domain.Entities;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
-namespace CoCStatsTrackerBot.Functions;
+namespace CoCStatsTrackerBot;
 
 public class CurrentStatisticsFunctions
 {
     public static string GetCurrentWarShortInfo(string clanTag, ICollection<TrackedClan> trackedClans)
     {
-        if (trackedClans.FirstOrDefault(x => x.Tag == clanTag) == null || trackedClans.First(x => x.Tag == clanTag)?.ClanWars == null)
+        if (trackedClans.FirstOrDefault(x => x.Tag == clanTag) == null)
         {
-            return UiHelper.Ecranize($"Клан с тегом {clanTag} не отслеживается или еще не принимал участия в войнах. Введите корректный тег клана");
-        };
+            return UiHelper.Ecranize($"Клан с тегом {clanTag} не отслеживается. Введите корректный тег клана");
+        }
 
         var trackedClan = trackedClans.First(x => x.Tag == clanTag && x.IsCurrent == true);
+
+        if (trackedClan?.ClanWars.Count == 0)
+        {
+            return UiHelper.Ecranize($"Нет записей о войнах клана с тегом {clanTag} ");
+        }
 
         var clanWarUi = Mapper.MapToUi(trackedClan.ClanWars.OrderByDescending(x => x.EndTime).FirstOrDefault());
 
@@ -50,12 +56,17 @@ public class CurrentStatisticsFunctions
 
     public static string GetCurrentWarMap(string clanTag, ICollection<TrackedClan> trackedClans)
     {
-        if (trackedClans.FirstOrDefault(x => x.Tag == clanTag) == null || trackedClans.First(x => x.Tag == clanTag)?.ClanWars == null)
+        if (trackedClans.FirstOrDefault(x => x.Tag == clanTag) == null)
         {
-            return UiHelper.Ecranize($"Клан с тегом {clanTag} не отслеживается или еще не принимал участия в войнах. Введите корректный тег клана");
+            return UiHelper.Ecranize($"Клан с тегом {clanTag} не отслеживается. Введите корректный тег клана");
         }
 
         var trackedClan = trackedClans.First(x => x.Tag == clanTag && x.IsCurrent == true);
+
+        if (trackedClan?.ClanWars.Count == 0)
+        {
+            return UiHelper.Ecranize($"Нет записей о войнах клана с тегом {clanTag} ");
+        }
 
         var clanWar = trackedClan.ClanWars.OrderByDescending(x => x.StartTime).FirstOrDefault();
 
@@ -121,12 +132,17 @@ public class CurrentStatisticsFunctions
 
     public static string GetCurrentRaidShortInfo(string clanTag, ICollection<TrackedClan> trackedClans)
     {
-        if (trackedClans.FirstOrDefault(x => x.Tag == clanTag) == null || trackedClans.First(x => x.Tag == clanTag)?.CapitalRaids == null)
+        if (trackedClans.FirstOrDefault(x => x.Tag == clanTag) == null)
         {
-            return UiHelper.Ecranize($"Клан с тегом {clanTag} не отслеживается или еще не принимал участия в рейдах. Введите корректный тег клана");
+            return UiHelper.Ecranize($"Клан с тегом {clanTag} не отслеживается. Введите корректный тег клана");
         }
 
         var trackedClan = trackedClans.First(x => x.Tag == clanTag && x.IsCurrent == true);
+
+        if (trackedClan?.CapitalRaids.Count == 0)
+        {
+            return UiHelper.Ecranize($"Нет записей о рейдах клана с тегом {clanTag} ");
+        }
 
         var raid = Mapper.MapToUi(trackedClan.CapitalRaids.OrderByDescending(x => x.StartedOn).FirstOrDefault());
 
@@ -196,12 +212,17 @@ public class CurrentStatisticsFunctions
 
     public static string GetCDistrictStatistics(string clanTag, ICollection<TrackedClan> trackedClans, DistrictType districtType)
     {
-        if (trackedClans.FirstOrDefault(x => x.Tag == clanTag) == null || trackedClans.First(x => x.Tag == clanTag)?.CapitalRaids == null)
+        if (trackedClans.FirstOrDefault(x => x.Tag == clanTag) == null)
         {
-            return UiHelper.Ecranize($"Клан с тегом {clanTag} не отслеживается или еще не принимал участия в рейдах. Введите корректный тег клана");
+            return UiHelper.Ecranize($"Клан с тегом {clanTag} не отслеживается. Введите корректный тег клана");
         }
 
         var trackedClan = trackedClans.First(x => x.Tag == clanTag && x.IsCurrent == true);
+
+        if (trackedClan?.CapitalRaids.Count == 0)
+        {
+            return UiHelper.Ecranize($"Нет записей о рейдах клана с тегом {clanTag} ");
+        }
 
         var raid = Mapper.MapToUi(trackedClan.CapitalRaids.OrderByDescending(x => x.StartedOn).FirstOrDefault());
 
@@ -384,7 +405,7 @@ public class CurrentStatisticsFunctions
                 }
             }
 
-            if (raid.RaidMembers.Any(x=>x.Attacks.Count != 6))
+            if (raid.RaidMembers.Any(x => x.Attacks.Count != 6))
             {
                 str.AppendLine();
                 str.AppendLine(UiHelper.MakeItStyled("Провели не все доступные атаки:", UiTextStyle.Subtitle));
@@ -404,7 +425,7 @@ public class CurrentStatisticsFunctions
             {
                 return "Все игроки провели атаки";
             }
-            
+
             return str.ToString();
         }
         catch (Exception e)
@@ -413,16 +434,16 @@ public class CurrentStatisticsFunctions
         }
 
     }
+}
 
-    public enum DistrictType
-    {
-        Capital_Peak,
-        Barbarian_Camp,
-        Wizard_Valley,
-        Balloon_Lagoon,
-        Builders_Workshop,
-        Dragon_Cliffs,
-        Golem_Quarry,
-        Skeleton_Park,
-    }
+public enum DistrictType
+{
+    Capital_Peak,
+    Barbarian_Camp,
+    Wizard_Valley,
+    Balloon_Lagoon,
+    Builders_Workshop,
+    Dragon_Cliffs,
+    Golem_Quarry,
+    Skeleton_Park,
 }

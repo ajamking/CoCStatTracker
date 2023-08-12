@@ -119,12 +119,17 @@ public static class ClanFunctions
     {
         try
         {
-            if (trackedClans.FirstOrDefault(x => x.Tag == clanTag) == null || trackedClans.First(x => x.Tag == clanTag)?.ClanWars == null)
+            if (trackedClans.FirstOrDefault(x => x.Tag == clanTag) == null)
             {
-                return UiHelper.Ecranize($"Клан с тегом {clanTag} не отслеживается или не принимал участия в войнах. Введите корректный тег клана");
+                return UiHelper.Ecranize($"Клан с тегом {clanTag} не отслеживается. Введите корректный тег клана");
             }
 
             var trackedClan = trackedClans.First(x => x.Tag == clanTag && x.IsCurrent == true);
+
+            if (trackedClan?.ClanWars.Count == 0)
+            {
+                return UiHelper.Ecranize($"Нет записей о войнах клана с тегом {clanTag} ");
+            }
 
             var clanWarsUi = new List<CwCwlUi>();
 
@@ -220,12 +225,17 @@ public static class ClanFunctions
     {
         try
         {
-            if (trackedClans.FirstOrDefault(x => x.Tag == clanTag) == null || trackedClans.First(x => x.Tag == clanTag)?.CapitalRaids == null)
+            if (trackedClans.FirstOrDefault(x => x.Tag == clanTag) == null)
             {
-                return UiHelper.Ecranize($"Клан с тегом {clanTag} не отслеживается или не принимал участия в рейдах. Введите корректный тег клана");
+                return UiHelper.Ecranize($"Клан с тегом {clanTag} не отслеживается. Введите корректный тег клана");
             }
 
             var trackedClan = trackedClans.First(x => x.Tag == clanTag && x.IsCurrent == true);
+
+            if (trackedClan?.CapitalRaids.Count == 0)
+            {
+                return UiHelper.Ecranize($"Нет записей о рейдах клана с тегом {clanTag} ");
+            }
 
             var raidUi = new List<RaidsUi>();
 
@@ -248,7 +258,7 @@ public static class ClanFunctions
 
             foreach (var raid in raidUi.OrderByDescending(x => x.StartedOn))
             {
-                var offensiveReward = raid.OffensiveReward * 6;
+                var offensiveReward = raid.OffensiveReward;
                 var totalReward = offensiveReward + raid.DefensiveReward;
 
                 if (counter < recordsCount)
@@ -367,16 +377,21 @@ public static class ClanFunctions
     {
         try
         {
-            if (trackedClans.FirstOrDefault(x => x.Tag == clanTag) == null || trackedClans.First(x => x.Tag == clanTag)?.CapitalRaids == null)
+            if (trackedClans.FirstOrDefault(x => x.Tag == clanTag) == null)
             {
-                return UiHelper.Ecranize($"Клан с тегом {clanTag} не отслеживается или не принимал участия в рейдах. Введите корректный тег клана");
+                return UiHelper.Ecranize($"Клан с тегом {clanTag} не отслеживается. Введите корректный тег клана");
+            }
+
+            var trackedClan = trackedClans.First(x => x.Tag == clanTag && x.IsCurrent == true);
+
+            if (trackedClan?.CapitalRaids.Count == 0)
+            {
+                return UiHelper.Ecranize($"Нет записей о рейдах клана с тегом {clanTag} ");
             }
 
             var maxNameLength = 15;
             var maxDestructionPercentLength = 5;
             var maxCapitalLootLength = 5;
-
-            var trackedClan = trackedClans.First(x => x.Tag == clanTag && x.IsCurrent == true);
 
             var str = new StringBuilder();
 

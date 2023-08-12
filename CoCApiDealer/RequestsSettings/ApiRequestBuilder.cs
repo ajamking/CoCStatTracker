@@ -1,6 +1,5 @@
 ﻿namespace CoCApiDealer.RequestsSettings;
 
-
 public class ApiRequestBuilder
 {
     private string _tag = string.Empty;
@@ -37,5 +36,4 @@ public class ApiRequestBuilder
 
         return responce.Content.ReadAsStringAsync().Result;
     }
-
 }

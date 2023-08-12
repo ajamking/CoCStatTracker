@@ -190,7 +190,7 @@ public static class Mapper
             TotalCapitalLoot = raid.TotalLoot,
             DefeatedDistrictsCount = raid.EnemyDistrictsDestoyed,
             DefensiveReward = raid.DefenSiveReward,
-            OffensiveReward = raid.OffensiveReward * 6,
+            OffensiveReward = raid.OffensiveReward,
             RaidsCompleted = raid.DefeatedClans.Count,
             Defenses = defenses,
             DefeatedClans = defeatedClans,

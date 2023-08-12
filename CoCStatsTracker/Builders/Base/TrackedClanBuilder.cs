@@ -52,9 +52,4 @@ public class TrackedClanBuilder
     {
         Clan.CapitalRaids.Add(raid);
     }
-
-    public void AddPrizeDraw(PrizeDraw draw)
-    {
-        Clan.PrizeDraws.Add(draw);
-    }
 }
