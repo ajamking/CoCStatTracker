@@ -5,14 +5,11 @@ using System.Collections.Generic;
 namespace CoCStatsTracker;
 public class WarMemberBuilder
 {
-    public WarMember WarMember { get; } = new WarMember();
+    public WarMember WarMember { get; }
 
     public WarMemberBuilder(WarMember warMember = null)
     {
-        if (warMember != null)
-        {
-            WarMember = warMember;
-        }
+        WarMember = warMember ?? new WarMember();
     }
 
     public void SetBaseProperties(WarMemberApi warMemberApi)

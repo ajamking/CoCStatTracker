@@ -13,7 +13,7 @@ namespace Storage.Configurations.Base
             builder.Property(p => p.UpdatedOn).IsRequired();
             builder.Property(p => p.Tag).IsRequired();
             builder.Property(p => p.Name).IsRequired();
-            builder.Property(p => p.IsCurrent).HasConversion( new BoolToStringConverter("Current", "Obsolete")). IsRequired();
+            builder.Property(p => p.IsCurrent).HasConversion(new BoolToStringConverter("Current", "Obsolete")).IsRequired();
         }
     }
 }

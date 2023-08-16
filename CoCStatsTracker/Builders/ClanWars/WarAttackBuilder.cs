@@ -5,14 +5,11 @@ namespace CoCStatsTracker;
 
 public class WarAttackBuilder
 {
-    public WarAttack WarAttack { get; } = new WarAttack();
+    public WarAttack WarAttack { get; }
 
     public WarAttackBuilder(WarAttack warAttack = null)
     {
-        if (warAttack != null)
-        {
-            WarAttack = warAttack;
-        }
+        WarAttack = warAttack ?? new WarAttack();
     }
 
     public void SetBaseProperties(WarAttackApi warAttack)

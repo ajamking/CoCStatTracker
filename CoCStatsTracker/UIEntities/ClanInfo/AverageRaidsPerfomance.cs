@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace CoCStatsTracker.UIEntities;
+﻿namespace CoCStatsTracker.UIEntities;
 
 public class AverageRaidsPerfomance
 {

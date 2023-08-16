@@ -1,15 +1,6 @@
-﻿using Domain.Entities;
-using Storage;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Telegram.Bot.Types;
+﻿using CoCStatsTrackerBot.Menue;
 using Telegram.Bot;
-using System.Text.RegularExpressions;
-using CoCStatsTrackerBot.Menue;
-using System.Security.Cryptography.X509Certificates;
+using Telegram.Bot.Types;
 
 namespace CoCStatsTrackerBot;
 

@@ -1,8 +1,6 @@
-﻿using CoCApiDealer.ApiRequests;
-using CoCStatsTracker;
+﻿using CoCStatsTracker;
 using CoCStatsTracker.UIEntities;
 using Domain.Entities;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace CoCStatsTrackerBot;
@@ -23,7 +21,7 @@ public class CurrentStatisticsFunctions
             return UiHelper.Ecranize($"Нет записей о войнах клана с тегом {clanTag} ");
         }
 
-        var clanWarUi = Mapper.MapToUi(trackedClan.ClanWars.OrderByDescending(x => x.EndTime).FirstOrDefault());
+        var clanWarUi = Mapper.MapToUi(trackedClan.ClanWars.OrderByDescending(x => x.EndedOn).FirstOrDefault());
 
         var str = new StringBuilder();
 
@@ -68,13 +66,13 @@ public class CurrentStatisticsFunctions
             return UiHelper.Ecranize($"Нет записей о войнах клана с тегом {clanTag} ");
         }
 
-        var clanWar = trackedClan.ClanWars.OrderByDescending(x => x.StartTime).FirstOrDefault();
+        var clanWar = trackedClan.ClanWars.OrderByDescending(x => x.StartedOn).FirstOrDefault();
 
         var maxNameLength = 8;
 
-        var warMembers = clanWar?.WarMembers.OrderBy(x => x.MapPosition).ToList();
+        var warMembers = clanWar.WarMembers.OrderBy(x => x.MapPosition).ToList();
 
-        var enemyWarMembers = clanWar?.EnemyWarMembers.OrderBy(x => x.MapPosition).ToList();
+        var enemyWarMembers = clanWar.EnemyWarMembers.OrderBy(x => x.MapPosition).ToList();
 
         var str = new StringBuilder();
 
@@ -85,8 +83,8 @@ public class CurrentStatisticsFunctions
         str.AppendLine(UiHelper.MakeItStyled(clanWar.OpponentClanName + " - " + clanWar.OpponentClanTag, UiTextStyle.Name));
         str.AppendLine();
         str.AppendLine(UiHelper.MakeItStyled("Даты войны::", UiTextStyle.Subtitle));
-        str.AppendLine(UiHelper.MakeItStyled(clanWar.StartTime + " - ", UiTextStyle.Default));
-        str.AppendLine(UiHelper.MakeItStyled(clanWar.EndTime.ToString(), UiTextStyle.Default));
+        str.AppendLine(UiHelper.MakeItStyled(clanWar.StartedOn + " - ", UiTextStyle.Default));
+        str.AppendLine(UiHelper.MakeItStyled(clanWar.EndedOn.ToString(), UiTextStyle.Default));
         str.AppendLine();
 
         for (int i = 0; i <= warMembers?.Count; i++)
@@ -95,7 +93,7 @@ public class CurrentStatisticsFunctions
             {
                 var mate = warMembers[i];
 
-                var opponent = enemyWarMembers?[i];
+                var opponent = enemyWarMembers[i];
 
                 var properMateName = UiHelper.ChangeInvalidSymbols(mate.Name);
 

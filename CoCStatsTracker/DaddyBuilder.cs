@@ -2,6 +2,7 @@
 using CoCStatsTracker;
 using CoCStatsTracker.ApiEntities;
 using CoCStatsTracker.Builders;
+using CoCStatsTracker.Helpers;
 using Domain.Entities;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,39 +12,37 @@ namespace CoCApiDealer;
 
 public class DaddyBuilder
 {
-    public TrackedClanBuilder TrackedClanBuilder { get; private set; } = new TrackedClanBuilder();
+    public TrackedClanBuilder TrackedClanBuilder { get; }
 
-    private ClanApi _clanInfoFromApi = new ClanApi();
-
-    //На случай, если создаем не с нуля.
-    public DaddyBuilder(TrackedClanBuilder? _existingTrackedClan = null)
+    public DaddyBuilder(TrackedClan existingTrackedClan)
     {
-        if (_existingTrackedClan != null)
-        {
-            TrackedClanBuilder = _existingTrackedClan;
-        }
+        TrackedClanBuilder = new TrackedClanBuilder(existingTrackedClan);
     }
 
-    //Подтянули из API информацию о клане, записали в TCBuilder.
-    public void SetClanProperties(string clanTag)
+    //Заполняем базовую информацию о клане из API ответа
+    public void UpdateClanBaseProperties()
     {
-        _clanInfoFromApi = new ClanInfoRequest().CallApi(clanTag).Result;
+        var clanInfoFromApi = new ClanInfoRequest().CallApi(TrackedClanBuilder.Clan.Tag).Result;
 
-        TrackedClanBuilder.SetBaseProperties(_clanInfoFromApi);
-
-        SetClanMembers(_clanInfoFromApi);
+        TrackedClanBuilder.SetBaseProperties(clanInfoFromApi);
     }
 
-    //Поочереди подтянули из API информацию о каждом игроке, вернули.
-    private void SetClanMembers(ClanApi _clanInfoFromApi)
+    //Поочередно заполняем базовую информацию и юнитов игроков из APi ответов
+    public void UpdateClanMembersBasePropertiesAndUnits()
     {
-        var clanMembers = new List<ClanMember>();
+        var clanMembersFromApi = new ClanInfoRequest().CallApi(TrackedClanBuilder.Clan.Tag).Result.Members;
 
-        var tasks = _clanInfoFromApi.Members.Select(async x =>
+        var obsoleteClanMembers = TrackedClanBuilder.Clan.ClanMembers.ToList();
+
+        var updatedClanMembers = new List<ClanMember>();
+
+        var SetMemberPropertyTasks = clanMembersFromApi.Select(async x =>
         {
             var playerInfoFromApi = await (new PlayerRequest().CallApi(x.Tag));
 
-            var clanMemberBuilder = new ClanMemberBuilder();
+            var oldClanMember = obsoleteClanMembers.FirstOrDefault(x => x.Tag == playerInfoFromApi.Tag);
+
+            var clanMemberBuilder = new ClanMemberBuilder(oldClanMember);
 
             clanMemberBuilder.SetBaseProperties(playerInfoFromApi);
 
@@ -51,26 +50,53 @@ public class DaddyBuilder
 
             clanMemberBuilder.ClanMember.Clan = TrackedClanBuilder.Clan;
 
-            clanMembers.Add(clanMemberBuilder.ClanMember);
+            updatedClanMembers.Add(clanMemberBuilder.ClanMember);
         }).ToList();
 
-        Task.WhenAll(tasks).GetAwaiter().GetResult();
+        Task.WhenAll(SetMemberPropertyTasks).GetAwaiter().GetResult();
 
-        TrackedClanBuilder.SetClanMembers(clanMembers);
+        TrackedClanBuilder.SetClanMembers(updatedClanMembers);
     }
 
-    //Подтянули информацию о последнем рейде, создали домейнный объект со всеми связями
-    public void AddCurrentRaid(string clanTag)
-    {
-        var raidInfoFromApi = new CapitalRaidsRequest().CallApi(clanTag, 1).Result.RaidsInfo.First();
 
-        var raidBuilder = new CapitalRaidBuilder();
+    /// <summary>
+    /// Обновляем последний рейд если нашлось совпадение по времени начала, если нет - создаем новый.
+    /// </summary>
+    public void UpdateCurrentRaid()
+    {
+        var raidInfoFromApi = new CapitalRaidsRequest().CallApi(TrackedClanBuilder.Clan.Tag, 1).Result.RaidsInfo.First();
+
+        var raidStartedOn = DateTimeParser.Parse(raidInfoFromApi.StartTime);
+
+        var existingCurrentRaid = TrackedClanBuilder.Clan.CapitalRaids.FirstOrDefault(
+            x => x.StartedOn == raidStartedOn);
+
+        var raidBuilder = new CapitalRaidBuilder(existingCurrentRaid);
 
         raidBuilder.SetBaseProperties(raidInfoFromApi);
 
         raidBuilder.SetTrackedClan(TrackedClanBuilder.Clan);
 
-        //Добавляем информацию о защитах
+        raidBuilder = AddRaidDefenses(raidBuilder, raidInfoFromApi);
+
+        raidBuilder = AddRaidMembersWithAttacks(raidBuilder, raidInfoFromApi);
+
+        raidBuilder = AddDefeatedClansAndRaidAttacks(raidBuilder, raidInfoFromApi);
+
+        if (existingCurrentRaid == null)
+        {
+            TrackedClanBuilder.AddCapitalRaid(raidBuilder.Raid);
+        }
+        else
+        {
+            TrackedClanBuilder.Clan.CapitalRaids.Remove(existingCurrentRaid);
+            TrackedClanBuilder.AddCapitalRaid(raidBuilder.Raid);
+        }
+    }
+
+    //Добавляем защиты с рейдов.
+    private CapitalRaidBuilder AddRaidDefenses(CapitalRaidBuilder raidBuilder, RaidApi raidInfoFromApi)
+    {
         var raidDefenseBuilder = new RaidDefenseBuilder();
 
         raidDefenseBuilder.SetBaseProperties(raidInfoFromApi.RaidDefenses);
@@ -79,7 +105,12 @@ public class DaddyBuilder
 
         raidBuilder.SetRaidDefenses(raidDefenseBuilder.Defenses);
 
-        // Добавляем RaidMembers-ов в клан и в игроков
+        return raidBuilder;
+    }
+
+    //Добавляем атаки участников рейдов и связываем все сущности включающие RaidMembers.
+    private CapitalRaidBuilder AddRaidMembersWithAttacks(CapitalRaidBuilder raidBuilder, RaidApi raidInfoFromApi)
+    {
         var members = new List<RaidMember>();
 
         foreach (var member in raidInfoFromApi.RaidMembers)
@@ -97,19 +128,24 @@ public class DaddyBuilder
             var clanMemberOnRaid = TrackedClanBuilder.Clan.ClanMembers
                .FirstOrDefault(x => x.Tag == raidMemberBuilder.Member.Tag);
 
-            raidMemberBuilder.SetClanMember(clanMemberOnRaid);
-
             if (clanMemberOnRaid != null)
             {
                 clanMemberOnRaid.RaidMemberships.Add(raidMemberBuilder.Member);
             }
+
+            raidMemberBuilder.SetClanMember(clanMemberOnRaid);
 
             members.Add(raidMemberBuilder.Member);
         }
 
         raidBuilder.SetRaidMembers(members);
 
-        //Добавляем информацию о побежденных кланах и рейд атаках
+        return raidBuilder;
+    }
+
+    //Добавляем информацию о побежденных кланах и связываем атаки с атакуемым кланом.
+    private CapitalRaidBuilder AddDefeatedClansAndRaidAttacks(CapitalRaidBuilder raidBuilder, RaidApi raidInfoFromApi)
+    {
         var defeatedClans = new List<DefeatedClan>();
 
         var raidAttacks = new List<RaidAttack>();
@@ -142,12 +178,10 @@ public class DaddyBuilder
                     {
                         var raidAttackBuilder = new RaidAttackBuilder();
 
-                        raidAttackBuilder.SetBaseProperties(attack, previousDestructionPercent);
+                        raidAttackBuilder.SetBaseProperties(previousDestructionPercent, attack, opponentDistrictBuilder.District);
 
                         raidAttackBuilder.SetRaidMember(raidBuilder.Raid.RaidMembers
                             .FirstOrDefault(x => x.Tag == attack.Attacker.Tag));
-
-                        raidAttackBuilder.RaidAttack.OpponentDistrict = opponentDistrictBuilder.District;
 
                         raidAttacks.Add(raidAttackBuilder.RaidAttack);
 
@@ -167,45 +201,50 @@ public class DaddyBuilder
 
         raidBuilder.SetAttacks(raidAttacks);
 
-
-        //foreach (var member in _trackedClanBuilder.Clan.ClanMembers)
-        //{
-        //    var clanMemberBuilder = new ClanMemberBuilder(member);
-
-        //    if (members.FirstOrDefault(x => x.Tag == member.Tag) != null)
-        //    {
-        //        clanMemberBuilder.AddRaidMembership(
-        //            members.FirstOrDefault(x => x.Tag == member.Tag));
-        //    }
-
-        //}
-
-        
-
-        TrackedClanBuilder.AddCapitalRaid(raidBuilder.Raid);
+        return raidBuilder;
     }
 
-    //Подтянули информацию о последней войне, создали домейнный объект со всеми связями
-    public void AddCurrentClanWar(bool isCwLWar, string clanTag = "", string cwlWarTag = "")
+    /// <summary>
+    /// Обновляем последний КВ если нашлось совпадение по времени начала, если нет - создаем новый.
+    /// </summary>
+    /// <param name="isCwLWar"> Флаг для определения типа войны </param>
+    /// <param name="cwlWarTag"> Тег войны ЛВК. Нужно вводить если война все-таки в рамках ЛВК</param>
+    public void UpdateCurrentClanWar(bool isCwLWar, string cwlWarTag = "")
     {
-        ClanWarApi clanWarInfoFromApi;
-
         //Определяем тип войны
-        if (isCwLWar)
-        {
-            clanWarInfoFromApi = new CwlWarRequest().CallApi(cwlWarTag).Result;
-        }
-        else
-        {
-            clanWarInfoFromApi = new CurrentWarRequest().CallApi(clanTag).Result;
-        }
+        var clanWarInfoFromApi = isCwLWar ?
+            new CwlWarRequest().CallApi(cwlWarTag).Result :
+            new CurrentWarRequest().CallApi(TrackedClanBuilder.Clan.Tag).Result;
 
-        //Устанавливаем основные поля
-        var clanWarBuilder = new ClanWarBuilder();
+        var cwStartedOn = DateTimeParser.Parse(clanWarInfoFromApi.StartTime);
+
+        var existingCurrentCw = TrackedClanBuilder.Clan.ClanWars.FirstOrDefault(
+           x => x.StartedOn == cwStartedOn);
+
+        var clanWarBuilder = new ClanWarBuilder(existingCurrentCw);
 
         clanWarBuilder.SetBaseProperties(clanWarInfoFromApi);
 
-        //Заполняем список противников
+        clanWarBuilder.SetTrackedClan(TrackedClanBuilder.Clan);
+
+        clanWarBuilder = AddEnemyWarMembers(clanWarBuilder, clanWarInfoFromApi);
+
+        clanWarBuilder = AddCwMembersWithAttacks(clanWarBuilder, clanWarInfoFromApi);
+
+        if (existingCurrentCw == null)
+        {
+            TrackedClanBuilder.AddClanWar(clanWarBuilder.ClanWar);
+        }
+        else
+        {
+            TrackedClanBuilder.Clan.ClanWars.Remove(existingCurrentCw);
+            TrackedClanBuilder.AddClanWar(clanWarBuilder.ClanWar);
+        }
+    }
+
+    //Добавляем список противников на КВ.
+    private ClanWarBuilder AddEnemyWarMembers(ClanWarBuilder clanWarBuilder, ClanWarApi clanWarInfoFromApi)
+    {
         var enemyWarmembers = new List<EnemyWarMember>();
 
         foreach (var enemyWarmember in clanWarInfoFromApi.OpponentResults.WarMembers)
@@ -221,8 +260,12 @@ public class DaddyBuilder
 
         clanWarBuilder.SetEnemyWarMembers(enemyWarmembers);
 
-        //Создаем и заполняем участников войны вместе с их атаками и кладем
-        //в ClanwarBuilder
+        return clanWarBuilder;
+    }
+
+    //Создаем и заполняем участников войны вместе с их атаками.
+    private ClanWarBuilder AddCwMembersWithAttacks(ClanWarBuilder clanWarBuilder, ClanWarApi clanWarInfoFromApi)
+    {
         var warMembers = new List<WarMember>();
 
         foreach (var warMemberApi in clanWarInfoFromApi.ClanResults.WarMembers)
@@ -269,6 +312,6 @@ public class DaddyBuilder
 
         clanWarBuilder.SetWarMembers(warMembers);
 
-        TrackedClanBuilder.AddClanWar(clanWarBuilder.ClanWar);
+        return clanWarBuilder;
     }
 }

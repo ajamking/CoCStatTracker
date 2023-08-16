@@ -7,14 +7,11 @@ namespace CoCStatsTracker.Builders;
 
 public class CapitalRaidBuilder
 {
-    public CapitalRaid Raid { get; } = new CapitalRaid();
+    public CapitalRaid Raid { get; }
 
     public CapitalRaidBuilder(CapitalRaid raid = null)
     {
-        if (raid != null)
-        {
-            Raid = raid;
-        }
+        Raid = raid ?? new CapitalRaid();
     }
 
     public void SetBaseProperties(RaidApi raidApi)

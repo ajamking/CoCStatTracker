@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using CoCApiDealer;
+using Domain.Entities;
 using Storage;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
@@ -22,17 +23,17 @@ class Program
     {
         //TempFunctions.GetNonAttackersRaids("#YPPGCCY8");
 
-        //var dbinit = new DBInit("#UQQGYJJP");
+        //var dbinit = new DBInit("#YPPGCCY8");
 
         using var db = new AppDbContext("Data Source=CoCStatsTracker.db");
-      
+
         TrackedClans = db.TrackedClans.ToList();
 
-        //var clanBuilder = new TrackedClanBuilder(TrackedClans.FirstOrDefault(x => x.IsCurrent == true));
+        var testDaddyBuilder = new DaddyBuilder(TrackedClans[0]);
 
-        //var daddyBuilder = new DaddyBuilder(clanBuilder);
+        testDaddyBuilder.UpdateCurrentRaid();
 
-        //daddyBuilder.AddCurrentRaid("#YPPGCCY8");
+        TrackedClans[0] = testDaddyBuilder.TrackedClanBuilder.Clan;
 
         db.Complete();
 
@@ -62,8 +63,7 @@ class Program
         }
         catch (Exception e)
         {
-
-            Console.WriteLine("ignored exception" + e.Message + "in chat " + update.Message.Chat.Id);
+            Console.WriteLine("ignored exception" + e.Message + "in chat " + update.Message);
         }
     }
 

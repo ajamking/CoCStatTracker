@@ -6,14 +6,11 @@ namespace CoCStatsTracker.Builders;
 
 public class RaidMemberBuilder
 {
-    public RaidMember Member { get; } = new RaidMember();
+    public RaidMember Member { get; }
 
     public RaidMemberBuilder(RaidMember raidMember = null)
     {
-        if (raidMember != null)
-        {
-            Member = raidMember;
-        }
+        Member = raidMember ?? new RaidMember();
     }
 
     public void SetBaseProperties(RaidMemberApi member)

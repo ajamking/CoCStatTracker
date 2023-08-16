@@ -3,7 +3,6 @@ using CoCStatsTracker.UIEntities;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Metrics;
 using System.Linq;
 
 namespace CoCStatsTracker;
@@ -102,8 +101,8 @@ public static class Mapper
         return new CwCwlUi
         {
 
-            StartedOn = clanWar.StartTime,
-            EndedOn = clanWar.EndTime,
+            StartedOn = clanWar.StartedOn,
+            EndedOn = clanWar.EndedOn,
             WarMembersCount = clanWar.WarMembers.Count(),
             AttackPerMember = clanWar.AttackPerMember,
             ClanTag = clanWar.TrackedClan.Tag,
@@ -294,8 +293,8 @@ public static class Mapper
             Name = member.Name,
             ClanTag = member.ClanWar.TrackedClan.Tag,
             ClanName = member.ClanWar.TrackedClan.Name,
-            StartedOn = member.ClanWar.StartTime.ToString(),
-            EndedOn = member.ClanWar.EndTime.ToString(),
+            StartedOn = member.ClanWar.StartedOn.ToString(),
+            EndedOn = member.ClanWar.EndedOn.ToString(),
             TownHallLevel = member.TownHallLevel.ToString(),
             MapPosition = member.MapPosition.ToString(),
             BestOpponentStars = member.BestOpponentStars.ToString(),

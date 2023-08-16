@@ -62,7 +62,7 @@ public static class PlayerFunctions
 
             return str.ToString();
         }
-        catch (Exception e)
+        catch (Exception)
         {
             return "Bad Response";
         }
@@ -135,7 +135,7 @@ public static class PlayerFunctions
 
             return str.ToString();
         }
-        catch (Exception e)
+        catch (Exception)
         {
             return "Bad Response";
         }
@@ -166,7 +166,7 @@ public static class PlayerFunctions
 
             var uiMemberships = new List<CwCwlMembershipUi>();
 
-            foreach (var warMembership in member.WarMemberships.OrderByDescending(cw => cw.ClanWar.EndTime))
+            foreach (var warMembership in member.WarMemberships.OrderByDescending(cw => cw.ClanWar.EndedOn))
             {
                 uiMemberships.Add(Mapper.MapToCwCwlMembershipUi(warMembership));
             }
@@ -255,7 +255,7 @@ public static class PlayerFunctions
             return str.ToString();
         }
 
-        catch (Exception e)
+        catch (Exception)
         {
             return "Bad Response";
         }
@@ -361,7 +361,7 @@ public static class PlayerFunctions
             return str.ToString();
         }
 
-        catch (Exception e)
+        catch (Exception)
         {
             return "Bad Response";
         }
@@ -426,7 +426,7 @@ public static class PlayerFunctions
                         }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return "Этот игрок пока не обзавелся юнитами такого типа";
             }
@@ -460,7 +460,7 @@ public static class PlayerFunctions
             return str.ToString();
         }
 
-        catch (Exception e)
+        catch (Exception)
         {
             return "Bad Response";
         }
@@ -548,7 +548,7 @@ public static class PlayerFunctions
                     return ("WTF");
             }
         }
-        catch (Exception e)
+        catch (Exception)
         {
             return ("0");
         }

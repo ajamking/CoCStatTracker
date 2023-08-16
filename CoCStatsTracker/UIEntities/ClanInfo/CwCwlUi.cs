@@ -28,7 +28,7 @@ public class ClanWarAttackUi
 {
     public string PlayerName { get; set; }
     public int ThLevel { get; set; }
-    
+
     public int FirstEnemyThLevel { get; set; }
     public int FirstStarsCount { get; set; }
     public int FirstDestructionPercent { get; set; }

@@ -5,14 +5,11 @@ using System.Collections.Generic;
 namespace CoCStatsTracker.Builders;
 public class OpponentDistrictBuilder
 {
-    public OpponentDistrict District { get; } = new OpponentDistrict();
+    public OpponentDistrict District { get; }
 
     public OpponentDistrictBuilder(OpponentDistrict district = null)
     {
-        if (district != null)
-        {
-            District = district;
-        }
+        District = district ?? new OpponentDistrict();
     }
 
     public void SetBaseProperties(DistrictApi district)

@@ -1,11 +1,6 @@
 ﻿using CoCApiDealer;
 using Domain.Entities;
 using Storage;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoCStatsTrackerBot;
 
@@ -28,11 +23,14 @@ public class DBInit
 
     public TrackedClan BuildClan(string tag)
     {
-        var daddyBuilder = new DaddyBuilder();
-        daddyBuilder.SetClanProperties(tag);
+        var daddyBuilder = new DaddyBuilder(new TrackedClan() { Tag = tag });
 
-        daddyBuilder.AddCurrentRaid(tag);
-        
+        daddyBuilder.UpdateClanBaseProperties();
+
+        daddyBuilder.UpdateClanMembersBasePropertiesAndUnits();
+
+        daddyBuilder.UpdateCurrentRaid();
+
         //Если вылетает null exc, возможно дело в устаревшем теге войны
         //daddyBuilder.AddCurrentClanWar(true, tag, "#88RPULYC9");
         //daddyBuilder.AddCurrentClanWar(true, tag, "#88RLJYULY");

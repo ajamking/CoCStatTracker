@@ -9,14 +9,11 @@ namespace CoCStatsTracker.Builders;
 
 public class ClanMemberBuilder
 {
-    public ClanMember ClanMember { get; } = new ClanMember();
+    public ClanMember ClanMember { get; }
 
     public ClanMemberBuilder(ClanMember clanMember = null)
     {
-        if (clanMember != null)
-        {
-            ClanMember = clanMember;
-        }
+        ClanMember = clanMember ?? new ClanMember();
     }
 
     public void SetBaseProperties(PlayerApi playerApi)
@@ -65,6 +62,7 @@ public class ClanMemberBuilder
             var unit = new Troop();
 
             unit.Name = troop.Name;
+
             if (TroopDefiner.BaseUnitsForSupers.ContainsKey(unit.Name))
             {
                 try
@@ -73,8 +71,7 @@ public class ClanMemberBuilder
                 }
                 catch (Exception e)
                 {
-
-                    throw;
+                    Console.WriteLine("Ошибка при попытке присвоения уровня супер юниту:\n" + e.Message);
                 }
             }
             else

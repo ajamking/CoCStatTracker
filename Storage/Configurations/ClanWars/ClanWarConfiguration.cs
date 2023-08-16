@@ -11,8 +11,8 @@ namespace Storage.Configurations.ClanWars
             builder.ToTable("ClanWars");
             builder.Property(p => p.IsCWL).IsRequired();
             builder.Property(p => p.PreparationStartTime).IsRequired();
-            builder.Property(p => p.StartTime).IsRequired();
-            builder.Property(p => p.EndTime).IsRequired();
+            builder.Property(p => p.StartedOn).IsRequired();
+            builder.Property(p => p.EndedOn).IsRequired();
             builder.Property(p => p.OpponentClanTag).IsRequired();
             builder.Property(p => p.OpponentClanName).IsRequired();
             builder.Property(p => p.OpponentClanLevel).IsRequired();

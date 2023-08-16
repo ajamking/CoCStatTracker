@@ -7,7 +7,7 @@
         public string Name { get; set; }
         public int THLevel { get; set; }
         public int MapPosition { get; set; }
-        
+
         public int? ClanWarId { get; set; }
         public virtual ClanWar ClanWar { get; set; }
     }

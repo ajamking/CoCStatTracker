@@ -1,24 +1,17 @@
 ﻿using CoCApiDealer.ApiRequests;
-using CoCApiDealer;
 using CoCStatsTracker.Helpers;
-using Domain.Entities;
-using Storage;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace CoCStatsTrackerBot;
 
 public static class TempFunctions
 {
-    public static void InitializeDb(string clanTag)
-    {
-        var TrackedClans = new DBInit(clanTag).TrackedClans;
+    //public static void InitializeDb(string clanTag)
+    //{
+    //    var TrackedClans = new DBInit(clanTag).TrackedClans;
 
-        Console.WriteLine(@$"Two versions of {TrackedClans.First(x => x.Tag == clanTag).Name} clan added to DB {DateTime.Now} ");
-    }
+    //    Console.WriteLine(@$"Two versions of {TrackedClans.First(x => x.Tag == clanTag).Name} clan added to DB {DateTime.Now} ");
+    //}
 
     public static void GetCwMembers(string clanTag)
     {

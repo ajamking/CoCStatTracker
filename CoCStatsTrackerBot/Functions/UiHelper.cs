@@ -1,14 +1,7 @@
-﻿using CoCStatsTracker.UIEntities;
-using CoCStatsTracker;
+﻿using CoCStatsTracker;
+using CoCStatsTracker.UIEntities;
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.Metrics;
-using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace CoCStatsTrackerBot;
 
@@ -43,7 +36,7 @@ public class UiHelper
             string[] cleaned = str.Split(new char[] { ' ' });
             return cleaned[0];
         }
-        catch (Exception e)
+        catch (Exception)
         {
             return str;
         }
@@ -69,7 +62,7 @@ public class UiHelper
     /// <summary>
     /// Пытается найти игрока с заданным тегом в отслеживаемом кланах, если такого нет - возвращает null.
     /// </summary>
-    public static ClanMember GetClanMember(ICollection<TrackedClan> trackedClans, string playerTag)
+    public static ClanMember? GetClanMember(ICollection<TrackedClan> trackedClans, string playerTag)
     {
         foreach (var clan in trackedClans)
         {
@@ -87,7 +80,7 @@ public class UiHelper
     /// <summary>
     /// Пытается найти активный клан с заданным тегом в отслеживаемом кланах, если такого нет - возвращает null.
     /// </summary>
-    public static ClanUi GetActiveClanUi(string clanTag, ICollection<TrackedClan> trackedClans)
+    public static ClanUi? GetActiveClanUi(string clanTag, ICollection<TrackedClan> trackedClans)
     {
         var activeTrackedClans = trackedClans.Where(x => x.IsCurrent).ToList();
 

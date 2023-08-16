@@ -6,14 +6,11 @@ namespace CoCStatsTracker.Builders;
 
 public class DefeatedClanBuilder
 {
-    public DefeatedClan Clan { get; } = new DefeatedClan();
+    public DefeatedClan Clan { get; }
 
     public DefeatedClanBuilder(DefeatedClan clan = null)
     {
-        if (clan != null)
-        {
-            Clan = clan;
-        }
+        Clan = clan ?? new DefeatedClan();
     }
 
     public void SetBaseProperties(AttackedCapitalApi clan)

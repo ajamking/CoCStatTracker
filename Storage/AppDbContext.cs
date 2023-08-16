@@ -36,7 +36,7 @@ namespace Storage
             {
                 Database.EnsureDeleted();
             }
-          
+
             Database.EnsureCreated();
         }
 

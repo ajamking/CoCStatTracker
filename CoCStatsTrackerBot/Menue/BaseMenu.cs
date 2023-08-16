@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Telegram.Bot.Types.ReplyMarkups;
+﻿using Telegram.Bot.Types.ReplyMarkups;
 
 namespace CoCStatsTrackerBot.Menue;
 
@@ -63,7 +58,7 @@ public enum MenuLevels
     ClanInfo2,
     CurrentWarInfo2,
     CurrentRaidInfo2,
-   
+
 
     PlayerWarStatistics3,
     PlayerRaidStatistics3,
@@ -71,6 +66,6 @@ public enum MenuLevels
 
     ClanWarsHistory3,
     ClanRaidsHistory3,
-    
+
     CurrentDistrictStatistics3
 }

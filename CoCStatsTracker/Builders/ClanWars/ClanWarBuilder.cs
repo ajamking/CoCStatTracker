@@ -7,14 +7,11 @@ namespace CoCStatsTracker.Builders;
 
 public class ClanWarBuilder
 {
-    public ClanWar ClanWar { get; } = new ClanWar();
+    public ClanWar ClanWar { get; }
 
     public ClanWarBuilder(ClanWar clanWar = null)
     {
-        if (clanWar != null)
-        {
-            ClanWar = clanWar;
-        }
+        ClanWar = clanWar ?? new ClanWar();
     }
 
     public void SetBaseProperties(ClanWarApi clanWarApi, bool isCwl = false, string state = "War still goes on")
@@ -27,8 +24,8 @@ public class ClanWarBuilder
         ClanWar.AttackPerMember = clanWarApi.AttacksPerMember;
 
         ClanWar.PreparationStartTime = DateTimeParser.Parse(clanWarApi.PreparationStartTime).ToLocalTime();
-        ClanWar.StartTime = DateTimeParser.Parse(clanWarApi.StartTime).ToLocalTime();
-        ClanWar.EndTime = DateTimeParser.Parse(clanWarApi.EndTime).ToLocalTime();
+        ClanWar.StartedOn = DateTimeParser.Parse(clanWarApi.StartTime).ToLocalTime();
+        ClanWar.EndedOn = DateTimeParser.Parse(clanWarApi.EndTime).ToLocalTime();
 
         ClanWar.AttacksCount = clanWarApi.ClanResults.AttacksCount;
         ClanWar.StarsCount = clanWarApi.ClanResults.StarsCount;
@@ -40,6 +37,11 @@ public class ClanWarBuilder
         ClanWar.OpponentAttacksCount = clanWarApi.OpponentResults.AttacksCount;
         ClanWar.OpponentStarsCount = clanWarApi.OpponentResults.StarsCount;
         ClanWar.OpponentDestructionPercentage = clanWarApi.OpponentResults.DestructionPercentage;
+    }
+
+    public void SetTrackedClan(TrackedClan clan)
+    {
+        ClanWar.TrackedClan = clan;
     }
 
     public void SetWarMembers(ICollection<WarMember> warMembers)

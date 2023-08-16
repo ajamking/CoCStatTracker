@@ -6,18 +6,17 @@ namespace CoCStatsTracker.Builders;
 
 public class RaidDefenseBuilder
 {
-    public ICollection<RaidDefense> Defenses { get; set; } = new List<RaidDefense>();
+    public ICollection<RaidDefense> Defenses { get; set; }
 
     public RaidDefenseBuilder(ICollection<RaidDefense> defenses = null)
     {
-        if (defenses != null)
-        {
-            Defenses = defenses;
-        }
+        Defenses = defenses ?? new List<RaidDefense>();
     }
 
     public void SetBaseProperties(DefenseApi[] defenses)
     {
+        var raidDefenses = new List<RaidDefense>();
+
         foreach (var defense in defenses)
         {
             var raidDefense = new RaidDefense();
@@ -27,11 +26,12 @@ public class RaidDefenseBuilder
             raidDefense.AttackerClanLevel = defense.AttackerClan.Level;
             raidDefense.TotalAttacksCount = defense.AttackCount;
             raidDefense.DistrictsDestroyed = defense.DistrictsDestroyedCount;
-
             raidDefense.DestroyedFriendlyDistricts = SetDestroyedFriendlyDistricts(defense.DistrictsDestroyed);
 
-            Defenses.Add(raidDefense);
+            raidDefenses.Add(raidDefense);
         }
+
+        Defenses = raidDefenses;
     }
 
     public void SetRaid(CapitalRaid raid)

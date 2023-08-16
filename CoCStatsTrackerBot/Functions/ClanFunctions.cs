@@ -1,5 +1,4 @@
-﻿using CoCApiDealer.ApiRequests;
-using CoCStatsTracker;
+﻿using CoCStatsTracker;
 using CoCStatsTracker.UIEntities;
 using Domain.Entities;
 using System.Text;
@@ -124,9 +123,9 @@ public static class ClanFunctions
                 return UiHelper.Ecranize($"Клан с тегом {clanTag} не отслеживается. Введите корректный тег клана");
             }
 
-            var trackedClan = trackedClans.First(x => x.Tag == clanTag && x.IsCurrent == true);
+            var trackedClan = trackedClans.FirstOrDefault(x => x.Tag == clanTag && x.IsCurrent == true);
 
-            if (trackedClan?.ClanWars.Count == 0)
+            if (trackedClan?.ClanWars is { Count: 0 })
             {
                 return UiHelper.Ecranize($"Нет записей о войнах клана с тегом {clanTag} ");
             }
@@ -175,7 +174,7 @@ public static class ClanFunctions
                     str.AppendLine(UiHelper.MakeItStyled("Пояснение таблицы:", UiTextStyle.TableAnnotation));
                     str.AppendLine(UiHelper.MakeItStyled("Атаки - ТХ/Проценты/Звезды", UiTextStyle.Default));
                     str.AppendLine();
-                    
+
                     str.AppendLine(UiHelper.MakeItStyled("Показатели атак:", UiTextStyle.Subtitle));
                     str.AppendLine();
 
@@ -574,19 +573,19 @@ public static class ClanFunctions
                 { "Super Barbarian", "Суперварвар"},
                 { "Super Archer", "Суперлучница"},
                 { "Super Giant", "Супергигант"},
-                
+
                 { "Sneaky Goblin", "Коварный гоблин"},
                 { "Super Wall Breaker", "Суперстенобой"},
                 { "Rocket Balloon", "Ракетный шар"},
-                
+
                 { "Super Wizard", "Суперколдун"},
                 { "Super Dragon", "Супердракон"},
                 { "Inferno Dragon", "Пламенный дракон"},
-                
+
                 { "Super Minion", "Суперминьон"},
                 { "Super Valkyrie", "Супервалькирия"},
                 { "Super Witch", "Суперведьма"},
-                
+
                 { "Ice Hound", "Ледяная гончая"},
                 { "Super Bowler", "Супервышибала"},
                 { "Super Miner", "Супершахтер"},

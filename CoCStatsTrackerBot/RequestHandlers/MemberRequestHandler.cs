@@ -743,7 +743,7 @@ public static class MemberRequestHandler
                 break;
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 await botClient.SendTextMessageAsync(message.Chat.Id,
                 text: $"Игрока с таки тегом нет в отслеживаемых кланах, попробуйте ввести тег повторно");

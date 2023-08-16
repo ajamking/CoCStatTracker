@@ -14,8 +14,8 @@ namespace Domain.Entities
         public int AttackPerMember { get; set; }
 
         public DateTime PreparationStartTime { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+        public DateTime StartedOn { get; set; }
+        public DateTime EndedOn { get; set; }
 
         public int AttacksCount { get; set; }
         public int StarsCount { get; set; }

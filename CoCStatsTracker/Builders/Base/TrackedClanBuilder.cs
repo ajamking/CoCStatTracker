@@ -7,14 +7,11 @@ namespace CoCStatsTracker.Builders;
 
 public class TrackedClanBuilder
 {
-    public TrackedClan Clan { get; } = new TrackedClan();
+    public TrackedClan Clan { get; }
 
     public TrackedClanBuilder(TrackedClan trackedClan = null)
     {
-        if (trackedClan != null)
-        {
-            Clan = trackedClan;
-        }
+        Clan = trackedClan ?? new TrackedClan();
     }
 
     public void SetBaseProperties(ClanApi clanApi)
