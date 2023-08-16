@@ -46,7 +46,7 @@ public class DBInit
 
     static List<TrackedClan> RunDb(ICollection<TrackedClan> clans)
     {
-        using (AppDbContext db = new AppDbContext("Data Source=CoCStatsTracker.db", true))
+        using (AppDbContext db = new AppDbContext("Data Source=./../../../../CustomSolutionElements/CoCStatsTracker.db", true))
         {
             db.TrackedClans.AddRange(clans);
 

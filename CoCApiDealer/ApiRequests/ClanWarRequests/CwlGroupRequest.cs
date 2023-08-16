@@ -16,7 +16,10 @@ public class CwlGroupRequest : BaseApiRequest
 
             var cwlGroup = JsonConvert.DeserializeObject<CwlGroupApi>(apiRequestResult);
 
-            if (cwlGroup == null)
+            if (cwlGroup.Season == null && 
+                cwlGroup.ParticipantClans == null && 
+                cwlGroup.Rounds == null && 
+                cwlGroup.State == null)
             {
                 throw new Exception("Nothing came from API");
             }
@@ -28,8 +31,7 @@ public class CwlGroupRequest : BaseApiRequest
         }
         catch (Exception ex)
         {
-
-            throw new ApiErrorException(ex.Message);
+            throw new ApiErrorException(ex);
         }
     }
 }

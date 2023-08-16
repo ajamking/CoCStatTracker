@@ -6,8 +6,6 @@ namespace CoCStatsTrackerBot;
 
 public static class Navigator
 {
-
-
     public static List<BaseMenu> Menues = new Menues().AllMenues;
 
     public static Dictionary<long, MenuLevels> CurrentUserMenuLevel = new Dictionary<long, MenuLevels>();

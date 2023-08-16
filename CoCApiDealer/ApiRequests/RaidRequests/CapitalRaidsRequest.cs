@@ -29,7 +29,7 @@ public class CapitalRaidsRequest : BaseApiRequest
         catch (Exception ex)
         {
 
-            throw new ApiErrorException(ex.Message);
+            throw new ApiErrorException(ex);
         }
     }
 }

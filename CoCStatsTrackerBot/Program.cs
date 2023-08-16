@@ -1,6 +1,9 @@
 ﻿using CoCApiDealer;
+using CoCApiDealer.ApiRequests;
 using Domain.Entities;
+using Microsoft.Extensions.DependencyInjection;
 using Storage;
+using System.Reflection;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
@@ -9,6 +12,8 @@ using Telegram.Bot.Types.Enums;
 namespace CoCStatsTrackerBot;
 
 /// <summary>
+/// CЕрилог добавить ВЕЗДЕ.
+/// 
 /// Тег клана:	#YPPGCCY8   #UQQGYJJP
 /// 
 /// Тег игрока: #2VGG92CL9  #LRPLYJ9U2 #G8P9Q299R
@@ -16,7 +21,8 @@ namespace CoCStatsTrackerBot;
 
 class Program
 {
-    private static TelegramBotClient client = new TelegramBotClient(token: "6148969149:AAF_Vrsf0NZZRp3PMl30s1VGhtctj2hPU4k");
+    private static TelegramBotClient client = new TelegramBotClient(token: System.IO.File.ReadAllText(@"./../../../../CustomSolutionElements/TelegramBotClientToken.txt"));
+
     public static List<TrackedClan> TrackedClans { get; set; } = new List<TrackedClan>();
 
     async static Task Main(string[] args)
@@ -25,7 +31,11 @@ class Program
 
         //var dbinit = new DBInit("#YPPGCCY8");
 
-        using var db = new AppDbContext("Data Source=CoCStatsTracker.db");
+        var asf = new CwlGroupRequest();
+
+        var answ = asf.CallApi("#YPPGCCY8");
+
+        using var db = new AppDbContext("Data Source=./../../../../CustomSolutionElements/CoCStatsTracker.db");
 
         TrackedClans = db.TrackedClans.ToList();
 

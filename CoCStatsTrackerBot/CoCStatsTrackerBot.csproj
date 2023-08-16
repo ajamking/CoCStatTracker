@@ -17,10 +17,4 @@
     <ProjectReference Include="..\Storage\Storage.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="LeaderKeys.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>
