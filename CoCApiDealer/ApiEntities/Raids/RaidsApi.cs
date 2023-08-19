@@ -6,7 +6,6 @@ public class RaidsApi
 {
     [JsonProperty("items")]
     public RaidApi[] RaidsInfo { get; set; }
-
 }
 
 public class RaidApi

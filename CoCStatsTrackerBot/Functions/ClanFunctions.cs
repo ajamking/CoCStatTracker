@@ -310,7 +310,7 @@ public static class ClanFunctions
                     str.AppendLine(UiHelper.MakeItStyled("Показатели атак:", UiTextStyle.Subtitle));
                     str.AppendLine();
 
-                    var clanCounter = 0;
+                    var defeatedClansCounter = 0;
 
                     foreach (var defeatedClan in raid.DefeatedClans)
                     {
@@ -350,13 +350,13 @@ public static class ClanFunctions
 
                         str.Append("```\n");
 
-                        clanCounter++;
+                        defeatedClansCounter++;
 
                         var optimalRecordsCount = 2;
 
-                        if (clanCounter > 0 && clanCounter % optimalRecordsCount == 0)
+                        if (defeatedClansCounter > 0 && defeatedClansCounter % optimalRecordsCount == 0)
                         {
-                            str.AppendLine($@"{messageSplitToken}");
+                            str.Append($@"{messageSplitToken}");
                         }
                     }
 

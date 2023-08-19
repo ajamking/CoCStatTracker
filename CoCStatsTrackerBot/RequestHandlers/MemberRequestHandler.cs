@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using CoCStatsTrackerBot.Exceptions;
+using Domain.Entities;
 using System.Text;
 using System.Text.RegularExpressions;
 using Telegram.Bot;
@@ -63,7 +64,7 @@ public static class MemberRequestHandler
 
         catch (Exception e)
         {
-            Console.WriteLine("Exception in MemberRequestHandler" + e.Message);
+            new RequestHandlerException(e);
 
             return;
         }
@@ -137,7 +138,7 @@ public static class MemberRequestHandler
 
         catch (Exception e)
         {
-            Console.WriteLine("Exception in MemberRequestHandler" + e.Message);
+            new RequestHandlerException(e);
 
             return;
         }
@@ -167,14 +168,7 @@ public static class MemberRequestHandler
             {
                 var answer = ClanFunctions.GetWarHistory(UsersLastTags[message.Chat.Id], Program.TrackedClans, 1, messageSplitToken);
 
-                var newAnswers = answer.Split(new[] { messageSplitToken }, StringSplitOptions.None);
-
-                foreach (var answ in newAnswers)
-                {
-                    await botClient.SendTextMessageAsync(message.Chat.Id,
-                      text: answ,
-                      parseMode: ParseMode.MarkdownV2);
-                }
+                await SendSplitedAnswer(botClient, message, answer);
 
                 return;
             }
@@ -194,7 +188,7 @@ public static class MemberRequestHandler
 
         catch (Exception e)
         {
-            Console.WriteLine("Exception in MemberRequestHandler" + e.Message);
+            new RequestHandlerException(e);
 
             return;
         }
@@ -224,14 +218,7 @@ public static class MemberRequestHandler
             {
                 var answer = ClanFunctions.GetRaidsHistory(UsersLastTags[message.Chat.Id], Program.TrackedClans, 1, messageSplitToken);
 
-                var newAnswers = answer.Split(new[] { messageSplitToken }, StringSplitOptions.None);
-
-                foreach (var answ in newAnswers)
-                {
-                    await botClient.SendTextMessageAsync(message.Chat.Id,
-                      text: answ,
-                      parseMode: ParseMode.MarkdownV2);
-                }
+                await SendSplitedAnswer(botClient, message, answer);
 
                 return;
             }
@@ -252,7 +239,7 @@ public static class MemberRequestHandler
 
         catch (Exception e)
         {
-            Console.WriteLine("Exception in MemberRequestHandler" + e.Message);
+            new RequestHandlerException(e);
 
             return;
         }
@@ -276,14 +263,7 @@ public static class MemberRequestHandler
             {
                 var answer = PlayerFunctions.GetWarStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, 1, messageSplitToken);
 
-                var newAnswers = answer.Split(new[] { messageSplitToken }, StringSplitOptions.None);
-
-                foreach (var answ in newAnswers)
-                {
-                    await botClient.SendTextMessageAsync(message.Chat.Id,
-                      text: answ,
-                      parseMode: ParseMode.MarkdownV2);
-                }
+                await SendSplitedAnswer(botClient, message, answer);
 
                 return;
             }
@@ -291,14 +271,7 @@ public static class MemberRequestHandler
             {
                 var answer = PlayerFunctions.GetWarStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, 3, messageSplitToken);
 
-                var newAnswers = answer.Split(new[] { messageSplitToken }, StringSplitOptions.None);
-
-                foreach (var answ in newAnswers)
-                {
-                    await botClient.SendTextMessageAsync(message.Chat.Id,
-                      text: answ,
-                      parseMode: ParseMode.MarkdownV2);
-                }
+                await SendSplitedAnswer(botClient, message, answer);
 
                 return;
             }
@@ -306,14 +279,7 @@ public static class MemberRequestHandler
             {
                 var answer = PlayerFunctions.GetWarStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, 5, messageSplitToken);
 
-                var newAnswers = answer.Split(new[] { messageSplitToken }, StringSplitOptions.None);
-
-                foreach (var answ in newAnswers)
-                {
-                    await botClient.SendTextMessageAsync(message.Chat.Id,
-                      text: answ,
-                      parseMode: ParseMode.MarkdownV2);
-                }
+                await SendSplitedAnswer(botClient, message, answer);
 
                 return; ;
             }
@@ -325,7 +291,7 @@ public static class MemberRequestHandler
 
         catch (Exception e)
         {
-            Console.WriteLine("Exception in MemberRequestHandler" + e.Message);
+            new RequestHandlerException(e);
 
             return;
         }
@@ -347,14 +313,7 @@ public static class MemberRequestHandler
             {
                 var answer = PlayerFunctions.GetRaidStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, 1, messageSplitToken);
 
-                var newAnswers = answer.Split(new[] { messageSplitToken }, StringSplitOptions.None);
-
-                foreach (var answ in newAnswers)
-                {
-                    await botClient.SendTextMessageAsync(message.Chat.Id,
-                      text: answ,
-                      parseMode: ParseMode.MarkdownV2);
-                }
+                await SendSplitedAnswer(botClient, message, answer);
 
                 return;
             }
@@ -362,14 +321,7 @@ public static class MemberRequestHandler
             {
                 var answer = PlayerFunctions.GetRaidStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, 3, messageSplitToken);
 
-                var newAnswers = answer.Split(new[] { messageSplitToken }, StringSplitOptions.None);
-
-                foreach (var answ in newAnswers)
-                {
-                    await botClient.SendTextMessageAsync(message.Chat.Id,
-                      text: answ,
-                      parseMode: ParseMode.MarkdownV2);
-                }
+                await SendSplitedAnswer(botClient, message, answer);
 
                 return;
             }
@@ -377,14 +329,7 @@ public static class MemberRequestHandler
             {
                 var answer = PlayerFunctions.GetRaidStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, 5, messageSplitToken);
 
-                var newAnswers = answer.Split(new[] { messageSplitToken }, StringSplitOptions.None);
-
-                foreach (var answ in newAnswers)
-                {
-                    await botClient.SendTextMessageAsync(message.Chat.Id,
-                      text: answ,
-                      parseMode: ParseMode.MarkdownV2);
-                }
+                await SendSplitedAnswer(botClient, message, answer);
 
                 return;
             }
@@ -396,7 +341,7 @@ public static class MemberRequestHandler
 
         catch (Exception e)
         {
-            Console.WriteLine("Exception in MemberRequestHandler" + e.Message);
+            new RequestHandlerException(e);
 
             return;
         }
@@ -454,7 +399,7 @@ public static class MemberRequestHandler
 
         catch (Exception e)
         {
-            Console.WriteLine("Exception in MemberRequestHandler" + e.Message);
+            new RequestHandlerException(e);
 
             return;
         }
@@ -476,14 +421,7 @@ public static class MemberRequestHandler
             {
                 var answer = ClanFunctions.GetWarHistory(UsersLastTags[message.Chat.Id], Program.TrackedClans, 1, messageSplitToken);
 
-                var newAnswers = answer.Split(new[] { messageSplitToken }, StringSplitOptions.None);
-
-                foreach (var answ in newAnswers)
-                {
-                    await botClient.SendTextMessageAsync(message.Chat.Id,
-                      text: answ,
-                      parseMode: ParseMode.MarkdownV2);
-                }
+                await SendSplitedAnswer(botClient, message, answer);
 
                 return;
             }
@@ -491,14 +429,7 @@ public static class MemberRequestHandler
             {
                 var answer = ClanFunctions.GetWarHistory(UsersLastTags[message.Chat.Id], Program.TrackedClans, 3, messageSplitToken);
 
-                var newAnswers = answer.Split(new[] { messageSplitToken }, StringSplitOptions.None);
-
-                foreach (var answ in newAnswers)
-                {
-                    await botClient.SendTextMessageAsync(message.Chat.Id,
-                      text: answ,
-                      parseMode: ParseMode.MarkdownV2);
-                }
+                await SendSplitedAnswer(botClient, message, answer);
 
                 return;
             }
@@ -506,14 +437,7 @@ public static class MemberRequestHandler
             {
                 var answer = ClanFunctions.GetWarHistory(UsersLastTags[message.Chat.Id], Program.TrackedClans, 5, messageSplitToken);
 
-                var newAnswers = answer.Split(new[] { messageSplitToken }, StringSplitOptions.None);
-
-                foreach (var answ in newAnswers)
-                {
-                    await botClient.SendTextMessageAsync(message.Chat.Id,
-                      text: answ,
-                      parseMode: ParseMode.MarkdownV2);
-                }
+                await SendSplitedAnswer(botClient, message, answer);
 
                 return;
             }
@@ -525,7 +449,7 @@ public static class MemberRequestHandler
 
         catch (Exception e)
         {
-            Console.WriteLine("Exception in MemberRequestHandler" + e.Message);
+            new RequestHandlerException(e);
 
             return;
         }
@@ -547,14 +471,7 @@ public static class MemberRequestHandler
             {
                 var answer = ClanFunctions.GetRaidsHistory(UsersLastTags[message.Chat.Id], Program.TrackedClans, 1, messageSplitToken);
 
-                var newAnswers = answer.Split(new[] { messageSplitToken }, StringSplitOptions.None);
-
-                foreach (var answ in newAnswers)
-                {
-                    await botClient.SendTextMessageAsync(message.Chat.Id,
-                      text: answ,
-                      parseMode: ParseMode.MarkdownV2);
-                }
+                await SendSplitedAnswer(botClient, message, answer);
 
                 return;
             }
@@ -562,14 +479,7 @@ public static class MemberRequestHandler
             {
                 var answer = ClanFunctions.GetRaidsHistory(UsersLastTags[message.Chat.Id], Program.TrackedClans, 3, messageSplitToken);
 
-                var newAnswers = answer.Split(new[] { messageSplitToken }, StringSplitOptions.None);
-
-                foreach (var answ in newAnswers)
-                {
-                    await botClient.SendTextMessageAsync(message.Chat.Id,
-                      text: answ,
-                      parseMode: ParseMode.MarkdownV2);
-                }
+                await SendSplitedAnswer(botClient, message, answer);
 
                 return;
             }
@@ -577,14 +487,7 @@ public static class MemberRequestHandler
             {
                 var answer = ClanFunctions.GetRaidsHistory(UsersLastTags[message.Chat.Id], Program.TrackedClans, 5, messageSplitToken);
 
-                var newAnswers = answer.Split(new[] { messageSplitToken }, StringSplitOptions.None);
-
-                foreach (var answ in newAnswers)
-                {
-                    await botClient.SendTextMessageAsync(message.Chat.Id,
-                      text: answ,
-                      parseMode: ParseMode.MarkdownV2);
-                }
+                await SendSplitedAnswer(botClient, message, answer);
 
                 return;
             }
@@ -604,7 +507,7 @@ public static class MemberRequestHandler
 
         catch (Exception e)
         {
-            Console.WriteLine("Exception in MemberRequestHandler" + e.Message);
+            new RequestHandlerException(e);
 
             return;
         }
@@ -622,70 +525,79 @@ public static class MemberRequestHandler
 
                 return;
             }
-            if (message.Text == keywords[0])
+            if (keywords.Any(x => x == message.Text))
             {
-                await botClient.SendTextMessageAsync(message.Chat.Id,
-                  text: CurrentStatisticsFunctions.GetCDistrictStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, DistrictType.Capital_Peak),
-                  parseMode: ParseMode.MarkdownV2);
+                var enumIndex = Array.FindIndex(keywords, x => x == message.Text);
 
-                return;
-            }
-            if (message.Text == keywords[1])
-            {
                 await botClient.SendTextMessageAsync(message.Chat.Id,
-                  text: CurrentStatisticsFunctions.GetCDistrictStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, DistrictType.Barbarian_Camp),
-                  parseMode: ParseMode.MarkdownV2);
-
-                return;
-            }
-            if (message.Text == keywords[2])
-            {
-                await botClient.SendTextMessageAsync(message.Chat.Id,
-                    text: CurrentStatisticsFunctions.GetCDistrictStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, DistrictType.Wizard_Valley),
-                    parseMode: ParseMode.MarkdownV2);
-
-                return;
-            }
-            if (message.Text == keywords[3])
-            {
-                await botClient.SendTextMessageAsync(message.Chat.Id,
-                    text: CurrentStatisticsFunctions.GetCDistrictStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, DistrictType.Balloon_Lagoon),
-                    parseMode: ParseMode.MarkdownV2);
-
-                return;
-            }
-            if (message.Text == keywords[4])
-            {
-                await botClient.SendTextMessageAsync(message.Chat.Id,
-                         text: CurrentStatisticsFunctions.GetCDistrictStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, DistrictType.Builders_Workshop),
-                         parseMode: ParseMode.MarkdownV2);
-
-                return;
-            }
-            if (message.Text == keywords[5])
-            {
-                await botClient.SendTextMessageAsync(message.Chat.Id,
-                    text: CurrentStatisticsFunctions.GetCDistrictStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, DistrictType.Dragon_Cliffs),
-                    parseMode: ParseMode.MarkdownV2);
-
-                return;
-            }
-            if (message.Text == keywords[6])
-            {
-                await botClient.SendTextMessageAsync(message.Chat.Id,
-                               text: CurrentStatisticsFunctions.GetCDistrictStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, DistrictType.Golem_Quarry),
-                               parseMode: ParseMode.MarkdownV2);
-
-                return;
-            }
-            if (message.Text == keywords[7])
-            {
-                await botClient.SendTextMessageAsync(message.Chat.Id,
-                     text: CurrentStatisticsFunctions.GetCDistrictStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, DistrictType.Skeleton_Park),
+                     text: CurrentStatisticsFunctions.GetCDistrictStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, (DistrictType)enumIndex),
                      parseMode: ParseMode.MarkdownV2);
 
-                return;
             }
+            //if (message.Text == keywords[0])
+            //{
+            //    await botClient.SendTextMessageAsync(message.Chat.Id,
+            //      text: CurrentStatisticsFunctions.GetCDistrictStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, DistrictType.Capital_Peak),
+            //      parseMode: ParseMode.MarkdownV2);
+
+            //    return;
+            //}
+            //if (message.Text == keywords[1])
+            //{
+            //    await botClient.SendTextMessageAsync(message.Chat.Id,
+            //      text: CurrentStatisticsFunctions.GetCDistrictStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, DistrictType.Barbarian_Camp),
+            //      parseMode: ParseMode.MarkdownV2);
+
+            //    return;
+            //}
+            //if (message.Text == keywords[2])
+            //{
+            //    await botClient.SendTextMessageAsync(message.Chat.Id,
+            //        text: CurrentStatisticsFunctions.GetCDistrictStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, DistrictType.Wizard_Valley),
+            //        parseMode: ParseMode.MarkdownV2);
+
+            //    return;
+            //}
+            //if (message.Text == keywords[3])
+            //{
+            //    await botClient.SendTextMessageAsync(message.Chat.Id,
+            //        text: CurrentStatisticsFunctions.GetCDistrictStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, DistrictType.Balloon_Lagoon),
+            //        parseMode: ParseMode.MarkdownV2);
+
+            //    return;
+            //}
+            //if (message.Text == keywords[4])
+            //{
+            //    await botClient.SendTextMessageAsync(message.Chat.Id,
+            //             text: CurrentStatisticsFunctions.GetCDistrictStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, DistrictType.Builders_Workshop),
+            //             parseMode: ParseMode.MarkdownV2);
+
+            //    return;
+            //}
+            //if (message.Text == keywords[5])
+            //{
+            //    await botClient.SendTextMessageAsync(message.Chat.Id,
+            //        text: CurrentStatisticsFunctions.GetCDistrictStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, DistrictType.Dragon_Cliffs),
+            //        parseMode: ParseMode.MarkdownV2);
+
+            //    return;
+            //}
+            //if (message.Text == keywords[6])
+            //{
+            //    await botClient.SendTextMessageAsync(message.Chat.Id,
+            //                   text: CurrentStatisticsFunctions.GetCDistrictStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, DistrictType.Golem_Quarry),
+            //                   parseMode: ParseMode.MarkdownV2);
+
+            //    return;
+            //}
+            //if (message.Text == keywords[7])
+            //{
+            //    await botClient.SendTextMessageAsync(message.Chat.Id,
+            //         text: CurrentStatisticsFunctions.GetCDistrictStatistics(UsersLastTags[message.Chat.Id], Program.TrackedClans, DistrictType.Skeleton_Park),
+            //         parseMode: ParseMode.MarkdownV2);
+
+            //    return;
+            //}
             if (message.Text == keywords[8])
             {
                 return;
@@ -694,7 +606,7 @@ public static class MemberRequestHandler
 
         catch (Exception e)
         {
-            Console.WriteLine("Exception in MemberRequestHandler" + e.Message);
+            new RequestHandlerException(e);
 
             return;
         }
@@ -714,20 +626,19 @@ public static class MemberRequestHandler
     {
         if (!UsersLastTags.ContainsKey(message.Chat.Id))
         {
-            var str = new StringBuilder("Введите один из тегов отслеживаемых кланов: ");
+            var str = new StringBuilder("Введите ТЕГ одного из тегов отслеживаемых кланов, а затем выберите пункт из меню:\n");
 
             foreach (var clan in Program.TrackedClans)
             {
                 if (clan.IsCurrent)
                 {
-                    str.Append($"\n{clan.Name} - {clan.Tag} ");
+                    str.AppendLine(UiHelper.MakeItStyled(clan.Name + " - " + clan.Tag, UiTextStyle.Name));
                 }
             }
 
-            str.Append(", а затем выберите пункт из меню");
-
             await botClient.SendTextMessageAsync(message.Chat.Id,
-            text: str.ToString());
+            text: str.ToString(),
+            parseMode: ParseMode.MarkdownV2);
         }
     }
 
@@ -754,21 +665,39 @@ public static class MemberRequestHandler
 
     public async static Task CheckClanExist(ITelegramBotClient botClient, Message message)
     {
-        foreach (var clan in Program.TrackedClans.Where(x => x.IsCurrent == true))
+        if (Program.TrackedClans.Where(x => x.IsCurrent == true).Any(x => x.Tag == message.Text))
         {
-            if (clan.Tag == message.Text)
-            {
-                await botClient.SendTextMessageAsync(message.Chat.Id,
+            await botClient.SendTextMessageAsync(message.Chat.Id,
                     text: $"У меня есть информация об этом клане. Что бы вы хотели узнать?");
-                break;
-
-            }
-            else
-            {
-                await botClient.SendTextMessageAsync(message.Chat.Id,
-              text: $"Я не отслеживаю клан с таким тегом, попробуйте ввести тег повторно");
-                break;
-            }
         }
+        else
+        {
+            var str = new StringBuilder("Я не отслеживаю клан с таким тегом, попробуйте ввести тег одного из отслеживаемых кланов:\n");
+
+            foreach (var clan in Program.TrackedClans)
+            {
+                if (clan.IsCurrent)
+                {
+                    str.AppendLine(UiHelper.MakeItStyled(clan.Name + " - " + clan.Tag, UiTextStyle.Name));
+                }
+            }
+
+            await botClient.SendTextMessageAsync(message.Chat.Id,
+            text: str.ToString(),
+            parseMode: ParseMode.MarkdownV2);
+        }
+    }
+
+
+    private async static Task SendSplitedAnswer(ITelegramBotClient botClient, Message message, string answer)
+    {
+        var newAnswers = answer.Split(new[] { messageSplitToken }, StringSplitOptions.RemoveEmptyEntries);
+
+        foreach (var answ in newAnswers)
+        {
+            await botClient.SendTextMessageAsync(message.Chat.Id,
+                text: answ,
+                parseMode: ParseMode.MarkdownV2);
+            }
     }
 }

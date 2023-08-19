@@ -87,7 +87,7 @@ public class CurrentStatisticsFunctions
         str.AppendLine(UiHelper.MakeItStyled(clanWar.EndedOn.ToString(), UiTextStyle.Default));
         str.AppendLine();
 
-        for (int i = 0; i <= warMembers?.Count; i++)
+        for (int i = 0; i < warMembers.Count; i++)
         {
             try
             {
@@ -351,6 +351,7 @@ public class CurrentStatisticsFunctions
 
             if (clanWar.MembersResults.Any(x => x.SecondDestructionpercent != 0))
             {
+                str.AppendLine();
                 str.AppendLine(UiHelper.MakeItStyled("Не провели вторую атаку КВ: ", UiTextStyle.Subtitle));
 
                 foreach (var memberAttack in clanWar.MembersResults)
@@ -388,7 +389,17 @@ public class CurrentStatisticsFunctions
 
             var raid = clan.CapitalRaids.OrderByDescending(x => x.StartedOn).FirstOrDefault();
 
-            if (clan.ClanMembers.Any(x => x.RaidMemberships.FirstOrDefault(x => x.Raid.StartedOn == raid.StartedOn) == null))
+            var isAnyApsent = false;
+
+            foreach (var member in clan.ClanMembers)
+            {
+                if (member.RaidMemberships.FirstOrDefault(x => x.Raid.StartedOn == raid.StartedOn) == null)
+                {
+                    isAnyApsent = true;
+                }
+            }
+            
+            if (isAnyApsent)
             {
                 str.AppendLine(UiHelper.MakeItStyled("Не участвовали в рейдах в этом клане:", UiTextStyle.Subtitle));
 
@@ -436,7 +447,7 @@ public class CurrentStatisticsFunctions
 
 public enum DistrictType
 {
-    Capital_Peak,
+    Capital_Peak = 0,
     Barbarian_Camp,
     Wizard_Valley,
     Balloon_Lagoon,

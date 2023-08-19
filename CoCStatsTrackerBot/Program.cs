@@ -13,7 +13,7 @@ namespace CoCStatsTrackerBot;
 
 /// <summary>
 /// CЕрилог добавить ВЕЗДЕ.
-/// 
+/// НЕ ЗАБЫТЬ ОБЫГРАТЬ РЕКВЕСТ ЦВЛ ГРУППЫ
 /// Тег клана:	#YPPGCCY8   #UQQGYJJP
 /// 
 /// Тег игрока: #2VGG92CL9  #LRPLYJ9U2 #G8P9Q299R
@@ -27,25 +27,32 @@ class Program
 
     async static Task Main(string[] args)
     {
-        //TempFunctions.GetNonAttackersRaids("#YPPGCCY8");
+        //var dbinit = new DBInit("#YPPGCCY8", "#UQQGYJJP");
 
-        //var dbinit = new DBInit("#YPPGCCY8");
+        //var asf = new CwlGroupRequest();
 
-        var asf = new CwlGroupRequest();
-
-        var answ = asf.CallApi("#YPPGCCY8");
+        //var answ = asf.CallApi("#YPPGCCY8");
 
         using var db = new AppDbContext("Data Source=./../../../../CustomSolutionElements/CoCStatsTracker.db");
 
         TrackedClans = db.TrackedClans.ToList();
 
-        var testDaddyBuilder = new DaddyBuilder(TrackedClans[0]);
+        foreach (var activeClan in TrackedClans.Where(x => x.IsCurrent == true))
+        {
+            //TempFunctions.GetNonAttackersRaids(activeClan.Tag);
+            //TempFunctions.GetNonAttackersCw(activeClan.Tag);
 
-        testDaddyBuilder.UpdateCurrentRaid();
+            var testDaddyBuilder = new DaddyBuilder(activeClan);
 
-        TrackedClans[0] = testDaddyBuilder.TrackedClanBuilder.Clan;
+            testDaddyBuilder.UpdateCurrentRaid();
+
+            testDaddyBuilder.UpdateCurrentClanWar();
+        }
+
+        var abs = db.ChangeTracker.Entries<RaidDefense>();
 
         db.Complete();
+
 
         Console.WriteLine("Connection winh DB in MemberRequestHandler sucsessful");
 

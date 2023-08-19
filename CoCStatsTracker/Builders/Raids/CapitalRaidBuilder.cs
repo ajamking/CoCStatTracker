@@ -1,6 +1,7 @@
 ﻿using CoCStatsTracker.ApiEntities;
 using CoCStatsTracker.Helpers;
 using Domain.Entities;
+using System;
 using System.Collections.Generic;
 
 namespace CoCStatsTracker.Builders;
@@ -45,6 +46,7 @@ public class CapitalRaidBuilder
     {
         Raid.RaidAttacks = attacks;
     }
+
     public void SetRaidDefenses(ICollection<RaidDefense> defenses)
     {
         Raid.RaidDefenses = defenses;

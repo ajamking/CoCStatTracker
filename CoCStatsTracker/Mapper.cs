@@ -4,6 +4,7 @@ using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace CoCStatsTracker;
 
@@ -89,7 +90,7 @@ public static class Mapper
                 {
                     playerPerfomance.SecondEnemyThLevel = attack.EnemyWarMember.THLevel;
                     playerPerfomance.SecondStarsCount = attack.Stars;
-                    playerPerfomance.SecondStarsCount = attack.DestructionPercent;
+                    playerPerfomance.SecondDestructionpercent = attack.DestructionPercent;
                 }
 
                 counter++;
@@ -287,21 +288,38 @@ public static class Mapper
             });
         }
 
-        return new CwCwlMembershipUi
-        {
-            Tag = member.Tag,
-            Name = member.Name,
-            ClanTag = member.ClanWar.TrackedClan.Tag,
-            ClanName = member.ClanWar.TrackedClan.Name,
-            StartedOn = member.ClanWar.StartedOn.ToString(),
-            EndedOn = member.ClanWar.EndedOn.ToString(),
-            TownHallLevel = member.TownHallLevel.ToString(),
-            MapPosition = member.MapPosition.ToString(),
-            BestOpponentStars = member.BestOpponentStars.ToString(),
-            BestOpponentsTime = member.BestOpponentTime.ToString(),
-            BestOpponentsPercent = member.BestOpponentPercent.ToString(),
-            Attacks = attacks,
-        };
+        var abc = new CwCwlMembershipUi();
+
+        abc.Tag = member.Tag;
+        abc.Name = member.Name;
+        abc.ClanTag = member.ClanMember.Clan.Tag;
+        abc.ClanName = member.ClanMember.Clan.Name;
+        abc.StartedOn = member.ClanWar.StartedOn.ToString();
+        abc.EndedOn = member.ClanWar.EndedOn.ToString();
+        abc.TownHallLevel = member.TownHallLevel.ToString();
+        abc.MapPosition = member.MapPosition.ToString();
+        abc.BestOpponentStars = member.BestOpponentStars.ToString();
+        abc.BestOpponentsTime = member.BestOpponentTime.ToString();
+        abc.BestOpponentsPercent = member.BestOpponentPercent.ToString();
+        abc.Attacks = attacks;
+
+        return abc;
+
+        //return new CwCwlMembershipUi
+        //{
+        //    Tag = member.Tag,
+        //    Name = member.Name,
+        //    ClanTag = member.ClanWar.TrackedClan.Tag,
+        //    ClanName = member.ClanWar.TrackedClan.Name,
+        //    StartedOn = member.ClanWar.StartedOn.ToString(),
+        //    EndedOn = member.ClanWar.EndedOn.ToString(),
+        //    TownHallLevel = member.TownHallLevel.ToString(),
+        //    MapPosition = member.MapPosition.ToString(),
+        //    BestOpponentStars = member.BestOpponentStars.ToString(),
+        //    BestOpponentsTime = member.BestOpponentTime.ToString(),
+        //    BestOpponentsPercent = member.BestOpponentPercent.ToString(),
+        //    Attacks = attacks,
+        //};
     }
 
     public static PlayerInfoUi MapToPlayerInfoUi(ClanMember clanMember)

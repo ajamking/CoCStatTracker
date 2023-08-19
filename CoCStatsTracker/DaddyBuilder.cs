@@ -3,9 +3,12 @@ using CoCStatsTracker;
 using CoCStatsTracker.ApiEntities;
 using CoCStatsTracker.Builders;
 using CoCStatsTracker.Helpers;
+using CoCStatsTracker.UIEntities;
 using Domain.Entities;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace CoCApiDealer;
@@ -32,15 +35,14 @@ public class DaddyBuilder
     {
         var clanMembersFromApi = new ClanInfoRequest().CallApi(TrackedClanBuilder.Clan.Tag).Result.Members;
 
-        var obsoleteClanMembers = TrackedClanBuilder.Clan.ClanMembers.ToList();
-
         var updatedClanMembers = new List<ClanMember>();
 
         var SetMemberPropertyTasks = clanMembersFromApi.Select(async x =>
         {
             var playerInfoFromApi = await (new PlayerRequest().CallApi(x.Tag));
 
-            var oldClanMember = obsoleteClanMembers.FirstOrDefault(x => x.Tag == playerInfoFromApi.Tag);
+            var oldClanMember = TrackedClanBuilder.Clan.ClanMembers
+                .FirstOrDefault(x => x.Tag == playerInfoFromApi.Tag);
 
             var clanMemberBuilder = new ClanMemberBuilder(oldClanMember);
 
@@ -59,6 +61,8 @@ public class DaddyBuilder
     }
 
 
+
+
     /// <summary>
     /// Обновляем последний рейд если нашлось совпадение по времени начала, если нет - создаем новый.
     /// </summary>
@@ -68,18 +72,18 @@ public class DaddyBuilder
 
         var raidStartedOn = DateTimeParser.Parse(raidInfoFromApi.StartTime);
 
-        var existingCurrentRaid = TrackedClanBuilder.Clan.CapitalRaids.FirstOrDefault(
-            x => x.StartedOn == raidStartedOn);
+        var existingCurrentRaid = TrackedClanBuilder.Clan.CapitalRaids
+            .FirstOrDefault(x => x.StartedOn == raidStartedOn);
 
         var raidBuilder = new CapitalRaidBuilder(existingCurrentRaid);
 
         raidBuilder.SetBaseProperties(raidInfoFromApi);
 
         raidBuilder.SetTrackedClan(TrackedClanBuilder.Clan);
-
+      
         raidBuilder = AddRaidDefenses(raidBuilder, raidInfoFromApi);
 
-        raidBuilder = AddRaidMembersWithAttacks(raidBuilder, raidInfoFromApi);
+        raidBuilder = AddRaidMembersWithoutAttacks(raidBuilder, raidInfoFromApi);
 
         raidBuilder = AddDefeatedClansAndRaidAttacks(raidBuilder, raidInfoFromApi);
 
@@ -90,6 +94,7 @@ public class DaddyBuilder
         else
         {
             TrackedClanBuilder.Clan.CapitalRaids.Remove(existingCurrentRaid);
+
             TrackedClanBuilder.AddCapitalRaid(raidBuilder.Raid);
         }
     }
@@ -97,7 +102,9 @@ public class DaddyBuilder
     //Добавляем защиты с рейдов.
     private CapitalRaidBuilder AddRaidDefenses(CapitalRaidBuilder raidBuilder, RaidApi raidInfoFromApi)
     {
-        var raidDefenseBuilder = new RaidDefenseBuilder();
+        var existingRaidDefences = raidBuilder.Raid.RaidDefenses;
+            
+        var raidDefenseBuilder = new RaidDefenseBuilder(existingRaidDefences);
 
         raidDefenseBuilder.SetBaseProperties(raidInfoFromApi.RaidDefenses);
 
@@ -109,19 +116,18 @@ public class DaddyBuilder
     }
 
     //Добавляем атаки участников рейдов и связываем все сущности включающие RaidMembers.
-    private CapitalRaidBuilder AddRaidMembersWithAttacks(CapitalRaidBuilder raidBuilder, RaidApi raidInfoFromApi)
+    private CapitalRaidBuilder AddRaidMembersWithoutAttacks(CapitalRaidBuilder raidBuilder, RaidApi raidInfoFromApi)
     {
-        var members = new List<RaidMember>();
+        var newRaidMembers = new List<RaidMember>();
 
-        foreach (var member in raidInfoFromApi.RaidMembers)
+        foreach (var raidMemberApi in raidInfoFromApi.RaidMembers)
         {
-            var attacks = raidBuilder.Raid.RaidAttacks.Where(x => x.MemberTag == member.Tag).ToList();
+            var existingRaidMember = raidBuilder.Raid.RaidMembers
+               .FirstOrDefault(x => x.Tag == raidMemberApi.Tag);
 
-            var raidMemberBuilder = new RaidMemberBuilder();
+            var raidMemberBuilder = new RaidMemberBuilder(existingRaidMember);
 
-            raidMemberBuilder.SetBaseProperties(member);
-
-            raidMemberBuilder.SetRaidMemberAttacks(attacks);
+            raidMemberBuilder.SetBaseProperties(raidMemberApi);
 
             raidMemberBuilder.SetRaid(raidBuilder.Raid);
 
@@ -135,10 +141,12 @@ public class DaddyBuilder
 
             raidMemberBuilder.SetClanMember(clanMemberOnRaid);
 
-            members.Add(raidMemberBuilder.Member);
+            var test = newRaidMembers;
+
+            newRaidMembers.Add(raidMemberBuilder.Member);
         }
 
-        raidBuilder.SetRaidMembers(members);
+        raidBuilder.SetRaidMembers(newRaidMembers);
 
         return raidBuilder;
     }
@@ -150,17 +158,20 @@ public class DaddyBuilder
 
         var raidAttacks = new List<RaidAttack>();
 
-        foreach (var defeatedClanApi in raidInfoFromApi.RaidOnClans)
+        foreach (var attackedClanApi in raidInfoFromApi.RaidOnClans)
         {
-            var defeatedClanBuilder = new DefeatedClanBuilder();
+            var existingDefeatedClan = raidBuilder.Raid.DefeatedClans
+                .FirstOrDefault(x => x.DefendersTag == attackedClanApi.DefenderClan.Tag);
 
-            defeatedClanBuilder.SetBaseProperties(defeatedClanApi);
+            var defeatedClanBuilder = new DefeatedClanBuilder(existingDefeatedClan);
+
+            defeatedClanBuilder.SetBaseProperties(attackedClanApi);
 
             defeatedClanBuilder.SetCapitalRaid(raidBuilder.Raid);
 
             var destroyedDistricts = new List<OpponentDistrict>();
 
-            foreach (var defeatedDistrict in defeatedClanApi.DistrictsDestroyed)
+            foreach (var defeatedDistrict in attackedClanApi.DestroyedDistricts)
             {
                 var opponentDistrictBuilder = new OpponentDistrictBuilder();
 
@@ -176,7 +187,10 @@ public class DaddyBuilder
 
                     foreach (var attack in sortedAttacks)
                     {
-                        var raidAttackBuilder = new RaidAttackBuilder();
+                        var tempRaidMember = raidBuilder.Raid.RaidMembers.FirstOrDefault(x => x.Tag == attack.Attacker.Tag);
+
+                        var raidAttackBuilder = new RaidAttackBuilder(tempRaidMember.Attacks?
+                            .FirstOrDefault(x=>x.DestructionPercentTo == attack.DestructionPercentTo));
 
                         raidAttackBuilder.SetBaseProperties(previousDestructionPercent, attack, opponentDistrictBuilder.District);
 
@@ -204,12 +218,16 @@ public class DaddyBuilder
         return raidBuilder;
     }
 
+
+
+
+
     /// <summary>
     /// Обновляем последний КВ если нашлось совпадение по времени начала, если нет - создаем новый.
     /// </summary>
     /// <param name="isCwLWar"> Флаг для определения типа войны </param>
     /// <param name="cwlWarTag"> Тег войны ЛВК. Нужно вводить если война все-таки в рамках ЛВК</param>
-    public void UpdateCurrentClanWar(bool isCwLWar, string cwlWarTag = "")
+    public void UpdateCurrentClanWar(bool isCwLWar = false, string cwlWarTag = "")
     {
         //Определяем тип войны
         var clanWarInfoFromApi = isCwLWar ?
@@ -218,8 +236,8 @@ public class DaddyBuilder
 
         var cwStartedOn = DateTimeParser.Parse(clanWarInfoFromApi.StartTime);
 
-        var existingCurrentCw = TrackedClanBuilder.Clan.ClanWars.FirstOrDefault(
-           x => x.StartedOn == cwStartedOn);
+        var existingCurrentCw = TrackedClanBuilder.Clan.ClanWars.
+            FirstOrDefault(x => x.StartedOn == cwStartedOn);
 
         var clanWarBuilder = new ClanWarBuilder(existingCurrentCw);
 
@@ -249,7 +267,10 @@ public class DaddyBuilder
 
         foreach (var enemyWarmember in clanWarInfoFromApi.OpponentResults.WarMembers)
         {
-            var enemyWarMemberBuilder = new EnemyWarMemberBuilder();
+            var existingEnemuWarMember = clanWarBuilder.ClanWar.EnemyWarMembers
+                .FirstOrDefault(x => x.Tag == enemyWarmember.Tag);
+
+            var enemyWarMemberBuilder = new EnemyWarMemberBuilder(existingEnemuWarMember);
 
             enemyWarMemberBuilder.SetBaseProperties(enemyWarmember);
 
@@ -270,7 +291,10 @@ public class DaddyBuilder
 
         foreach (var warMemberApi in clanWarInfoFromApi.ClanResults.WarMembers)
         {
-            var warMemberBuilder = new WarMemberBuilder();
+            var existingWarMember = clanWarBuilder.ClanWar.WarMembers
+                .FirstOrDefault(x => x.Tag == warMemberApi.Tag);
+
+            var warMemberBuilder = new WarMemberBuilder(existingWarMember);
 
             warMemberBuilder.SetBaseProperties(warMemberApi);
 
