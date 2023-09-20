@@ -8,9 +8,15 @@ namespace Storage.Configurations.ClanWars
     {
         public void Configure(EntityTypeBuilder<CapitalRaid> builder)
         {
+            builder.HasKey(x => x.Id);
             builder.ToTable("CapitalRaids");
             builder.Property(p => p.StartedOn).IsRequired();
             builder.Property(p => p.EndedOn).IsRequired();
+
+            builder
+               .HasOne<TrackedClan>(x => x.TrackedClan)
+               .WithMany(x => x.CapitalRaids)
+               .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

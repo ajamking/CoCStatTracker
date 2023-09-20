@@ -13,6 +13,16 @@ namespace Storage.Configurations.ClanWars
             builder.Property(p => p.Stars).IsRequired();
             builder.Property(p => p.DestructionPercent).IsRequired();
             builder.Property(p => p.Duration).IsRequired();
+
+            builder
+             .HasOne<EnemyWarMember>(x => x.EnemyWarMember)
+             .WithMany()
+             .OnDelete(DeleteBehavior.Cascade);
+
+            builder
+             .HasOne<WarMember>(x => x.WarMember)
+             .WithMany(x => x.WarAttacks)
+             .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

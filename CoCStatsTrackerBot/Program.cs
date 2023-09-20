@@ -1,9 +1,11 @@
 ﻿using CoCApiDealer;
 using CoCApiDealer.ApiRequests;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
 using Microsoft.Extensions.DependencyInjection;
 using Storage;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
@@ -27,7 +29,7 @@ class Program
 
     async static Task Main(string[] args)
     {
-        //var dbinit = new DBInit("#YPPGCCY8", "#UQQGYJJP");
+        var dbinit = new DBInit("#YPPGCCY8", "#UQQGYJJP");
 
         //var asf = new CwlGroupRequest();
 
@@ -39,17 +41,17 @@ class Program
 
         foreach (var activeClan in TrackedClans.Where(x => x.IsCurrent == true))
         {
-            //TempFunctions.GetNonAttackersRaids(activeClan.Tag);
+          //  TempFunctions.GetNonAttackersRaids(activeClan.Tag);
             //TempFunctions.GetNonAttackersCw(activeClan.Tag);
 
-            var testDaddyBuilder = new DaddyBuilder(activeClan);
+            //var testDaddyBuilder = new DaddyBuilder(activeClan);
 
-            testDaddyBuilder.UpdateCurrentRaid();
+            //testDaddyBuilder.UpdateCurrentRaid();
 
-            testDaddyBuilder.UpdateCurrentClanWar();
+            //testDaddyBuilder.UpdateCurrentClanWar();
         }
 
-        var abs = db.ChangeTracker.Entries<RaidDefense>();
+        var a = db.ChangeTracker.Entries<CapitalRaid>();
 
         db.Complete();
 

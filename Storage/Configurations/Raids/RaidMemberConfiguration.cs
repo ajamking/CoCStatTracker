@@ -9,6 +9,18 @@ namespace Storage.Configurations.ClanWars
         public void Configure(EntityTypeBuilder<RaidMember> builder)
         {
             builder.ToTable("RaidMembers");
+
+            builder.Property(p => p.CapitalRaidId).IsRequired();
+
+            builder
+           .HasOne<ClanMember>(x => x.ClanMember)
+           .WithMany(x => x.RaidMemberships)
+           .OnDelete(DeleteBehavior.Cascade);
+
+            builder
+           .HasOne<CapitalRaid>(x => x.Raid)
+           .WithMany(x => x.RaidMembers)
+           .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

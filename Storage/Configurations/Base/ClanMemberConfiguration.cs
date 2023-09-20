@@ -12,6 +12,11 @@ namespace Storage.Configurations.Base
             builder.Property(p => p.UpdatedOn).IsRequired();
             builder.Property(p => p.Tag).IsRequired();
             builder.Property(p => p.Name).IsRequired();
+
+            builder
+           .HasOne<TrackedClan>(x => x.Clan)
+           .WithMany(x => x.ClanMembers)
+           .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

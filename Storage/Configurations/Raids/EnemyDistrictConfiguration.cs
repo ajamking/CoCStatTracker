@@ -10,6 +10,11 @@ namespace Storage.Configurations.ClanWars
         {
             builder.ToTable("EnemyDistricts");
             builder.Property(p => p.Name).IsRequired();
+
+            builder
+                .HasOne<DefeatedClan>(x => x.DefeatedClan)
+                .WithMany(x => x.DefeatedDistricts)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

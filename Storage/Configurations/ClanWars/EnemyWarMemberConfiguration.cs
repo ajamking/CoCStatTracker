@@ -11,6 +11,11 @@ namespace Storage.Configurations.ClanWars
             builder.ToTable("EnenemyWarMembers");
             builder.Property(p => p.Tag).IsRequired();
             builder.Property(p => p.Name).IsRequired();
+
+            builder
+          .HasOne<ClanWar>(x => x.ClanWar)
+          .WithMany(x => x.EnemyWarMembers)
+          .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

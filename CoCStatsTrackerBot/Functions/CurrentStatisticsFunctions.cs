@@ -148,7 +148,7 @@ public class CurrentStatisticsFunctions
 
         var totalAttacksCount = 0;
 
-        var offensiveReward = raid.OffensiveReward * 6;
+        var offensiveReward = raid.OffensiveReward;
 
         var totalReward = offensiveReward + raid.DefensiveReward;
 
@@ -398,7 +398,7 @@ public class CurrentStatisticsFunctions
                     isAnyApsent = true;
                 }
             }
-            
+
             if (isAnyApsent)
             {
                 str.AppendLine(UiHelper.MakeItStyled("Не участвовали в рейдах в этом клане:", UiTextStyle.Subtitle));
@@ -423,7 +423,7 @@ public class CurrentStatisticsFunctions
                 {
                     if (raidMember.Attacks.Count != 6)
                     {
-                        str.AppendLine(UiHelper.MakeItStyled(raidMember.Name, UiTextStyle.Name));
+                        str.AppendLine(UiHelper.MakeItStyled(raidMember.Name + " не провел " + (6 - raidMember.Attacks.Count), UiTextStyle.Name));
 
                         count++;
                     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities
 {
@@ -28,6 +29,7 @@ namespace Domain.Entities
         public virtual ICollection<ClanMember> ClanMembers { get; set; }
         public virtual ICollection<ClanWar> ClanWars { get; set; }
         public virtual ICollection<CapitalRaid> CapitalRaids { get; set; }
+
         public TrackedClan()
         {
             ClanMembers = new HashSet<ClanMember>();

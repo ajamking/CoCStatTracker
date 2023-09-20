@@ -11,6 +11,11 @@ namespace Storage.Configurations.ClanWars
             builder.ToTable("DefeatedClans");
             builder.Property(p => p.DefendersTag).IsRequired();
             builder.Property(p => p.DefendersName).IsRequired();
+
+            builder
+               .HasOne<CapitalRaid>(x => x.CapitalRaid)
+               .WithMany(x => x.DefeatedClans)
+               .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

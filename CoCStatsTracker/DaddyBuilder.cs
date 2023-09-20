@@ -5,6 +5,7 @@ using CoCStatsTracker.Builders;
 using CoCStatsTracker.Helpers;
 using CoCStatsTracker.UIEntities;
 using Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
 using System.Linq;
@@ -60,9 +61,6 @@ public class DaddyBuilder
         TrackedClanBuilder.SetClanMembers(updatedClanMembers);
     }
 
-
-
-
     /// <summary>
     /// Обновляем последний рейд если нашлось совпадение по времени начала, если нет - создаем новый.
     /// </summary>
@@ -91,12 +89,12 @@ public class DaddyBuilder
         {
             TrackedClanBuilder.AddCapitalRaid(raidBuilder.Raid);
         }
-        else
-        {
-            TrackedClanBuilder.Clan.CapitalRaids.Remove(existingCurrentRaid);
+        //else
+        //{
+        //    TrackedClanBuilder.Clan.CapitalRaids.Remove(existingCurrentRaid);
 
-            TrackedClanBuilder.AddCapitalRaid(raidBuilder.Raid);
-        }
+        //    TrackedClanBuilder.AddCapitalRaid(raidBuilder.Raid);
+        //}
     }
 
     //Добавляем защиты с рейдов.

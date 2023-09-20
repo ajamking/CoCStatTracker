@@ -9,6 +9,11 @@ public class RaidDefenseConfiguration : IEntityTypeConfiguration<RaidDefense>
     public void Configure(EntityTypeBuilder<RaidDefense> builder)
     {
         builder.ToTable("RaidDefense");
+
+        builder
+            .HasOne<CapitalRaid>(x => x.CapitalRaid)
+            .WithMany(x => x.RaidDefenses)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
 

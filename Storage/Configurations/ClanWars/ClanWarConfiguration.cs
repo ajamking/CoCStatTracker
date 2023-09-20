@@ -16,6 +16,11 @@ namespace Storage.Configurations.ClanWars
             builder.Property(p => p.OpponentClanTag).IsRequired();
             builder.Property(p => p.OpponentClanName).IsRequired();
             builder.Property(p => p.OpponentClanLevel).IsRequired();
+
+            builder
+          .HasOne<TrackedClan>(x => x.TrackedClan)
+          .WithMany(x => x.ClanWars)
+          .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

@@ -14,6 +14,11 @@ namespace Storage.Configurations.Base
             builder.Property(p => p.Type).IsRequired().HasConversion(new EnumToStringConverter<UnitType>());
             builder.Property(p => p.Village).IsRequired();
             builder.Property(p => p.Level).IsRequired();
+
+            builder
+            .HasOne<ClanMember>(x => x.ClanMember)
+            .WithMany(x => x.Units)
+            .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

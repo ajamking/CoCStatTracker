@@ -9,6 +9,11 @@ namespace Storage.Configurations.ClanWars
         public void Configure(EntityTypeBuilder<DestroyedFriendlyDistrict> builder)
         {
             builder.ToTable("DestroyedFriendlyDistrict");
+
+            builder
+              .HasOne<RaidDefense>(x => x.RaidDefense)
+              .WithMany(x => x.DestroyedFriendlyDistricts)
+              .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
