@@ -3,9 +3,8 @@ using System.Collections.Generic;
 
 namespace Domain.Entities
 {
-    public class ClanWar
+    public class ClanWar : Entity
     {
-        public int Id { get; set; }
         public bool IsCWL { get; set; }
         public string Result { get; set; }
 

@@ -4,9 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities
 {
-    public class CapitalRaid
+    public class CapitalRaid : Entity
     {
-        public int Id { get; set; }
         public string State { get; set; }
         public DateTime StartedOn { get; set; }
         public DateTime EndedOn { get; set; }

@@ -4,9 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities
 {
-    public class TrackedClan
+    public class TrackedClan : Entity
     {
-        public int Id { get; set; }
         public DateTime UpdatedOn { get; set; }
         public bool IsCurrent { get; set; }
         public string Tag { get; set; }

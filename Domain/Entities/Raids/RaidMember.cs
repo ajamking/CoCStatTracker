@@ -2,9 +2,8 @@
 
 namespace Domain.Entities
 {
-    public class RaidMember
+    public class RaidMember : Entity
     {
-        public int Id { get; set; }
         public int TotalLoot { get; set; }
         public string Tag { get; set; }
         public string Name { get; set; }

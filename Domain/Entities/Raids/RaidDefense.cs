@@ -2,9 +2,8 @@
 
 namespace Domain.Entities;
 
-public class RaidDefense
+public class RaidDefense : Entity
 {
-    public int Id { get; set; }
     public string AttackerClanTag { get; set; }
     public string AttackerClanName { get; set; }
     public int AttackerClanLevel { get; set; }

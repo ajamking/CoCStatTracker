@@ -3,9 +3,8 @@ using System.Collections.Generic;
 
 namespace Domain.Entities
 {
-    public class ClanMember
+    public class ClanMember : Entity
     {
-        public int Id { get; set; }
         public DateTime UpdatedOn { get; set; }
         public string Tag { get; set; }
         public string Name { get; set; }

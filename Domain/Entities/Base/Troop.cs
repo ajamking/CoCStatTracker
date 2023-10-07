@@ -1,8 +1,7 @@
 ﻿namespace Domain.Entities
 {
-    public class Troop
+    public class Troop : Entity
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public int Level { get; set; }
         public string Village { get; set; }

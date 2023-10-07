@@ -2,9 +2,8 @@
 
 namespace Domain.Entities
 {
-    public class DefeatedClan
+    public class DefeatedClan : Entity
     {
-        public int Id { get; set; }
         public string DefendersTag { get; set; }
         public string DefendersName { get; set; }
         public int DefendersLevel { get; set; }

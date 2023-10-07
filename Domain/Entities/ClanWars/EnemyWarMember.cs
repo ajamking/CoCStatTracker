@@ -1,8 +1,7 @@
 ﻿namespace Domain.Entities
 {
-    public class EnemyWarMember
+    public class EnemyWarMember : Entity
     {
-        public int Id { get; set; }
         public string Tag { get; set; }
         public string Name { get; set; }
         public int THLevel { get; set; }

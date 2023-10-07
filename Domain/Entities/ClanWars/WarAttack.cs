@@ -1,8 +1,7 @@
 ﻿namespace Domain.Entities
 {
-    public class WarAttack
+    public class WarAttack : Entity
     {
-        public int Id { get; set; }
         public int AttackOrder { get; set; }
         public int Stars { get; set; }
         public int DestructionPercent { get; set; }

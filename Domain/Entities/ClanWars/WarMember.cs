@@ -2,9 +2,8 @@
 
 namespace Domain.Entities
 {
-    public class WarMember
+    public class WarMember : Entity
     {
-        public int Id { get; set; }
         public string Tag { get; set; }
         public string Name { get; set; }
         public int TownHallLevel { get; set; }

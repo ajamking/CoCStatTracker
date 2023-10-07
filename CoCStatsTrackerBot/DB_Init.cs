@@ -37,7 +37,7 @@ public class DBInit
 
         daddyBuilder.UpdateCurrentRaid();
 
-        daddyBuilder.UpdateCurrentClanWar();
+        //daddyBuilder.UpdateCurrentClanWar();
 
         return daddyBuilder.TrackedClanBuilder.Clan;
     }
