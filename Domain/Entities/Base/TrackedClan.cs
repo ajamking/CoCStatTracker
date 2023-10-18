@@ -24,6 +24,8 @@ namespace Domain.Entities
         public int WarTies { get; set; }
         public int WarLoses { get; set; }
         public int CapitalHallLevel { get; set; }
+        
+        public virtual InitialClanMembersStaticstics InitialClanMembersStaticstics { get; set; }
 
         public virtual ICollection<ClanMember> ClanMembers { get; set; }
         public virtual ICollection<ClanWar> ClanWars { get; set; }

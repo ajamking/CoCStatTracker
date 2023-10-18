@@ -13,10 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CoCApiDealer\CoCApiDealer.csproj" />
     <ProjectReference Include="..\Domain\Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Items\Queries\" />
+    <ProjectReference Include="..\Storage\Storage.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿using CoCApiDealer.UIEntities;
+﻿
 using CoCStatsTracker.UIEntities;
 using Domain.Entities;
 using System;
@@ -10,23 +10,6 @@ namespace CoCStatsTracker;
 
 public static class Mapper
 {
-    //
-    //ClanInfoUi
-    //
-    public static ClanMemberUi MapToUi(ClanMember clanMember)
-    {
-        return new ClanMemberUi
-        {
-            Tag = clanMember.Tag,
-            Name = clanMember.Name,
-            RoleInClan = clanMember.Role,
-            TownHallLevel = clanMember.TownHallLevel,
-            DonationsSent = clanMember.DonationsSent,
-            WarStars = clanMember.WarStars,
-            CapitalContributions = clanMember.TotalCapitalContributions
-        };
-    }
-
     public static ClanUi MapToUi(TrackedClan clan)
     {
         var warLogType = "";
@@ -200,7 +183,34 @@ public static class Mapper
     //
     //ClanMemberInfoUi
     //
-    public static ArmyUi MapToArmyUi(ICollection<Troop> troops)
+    public static ClanMemberUi MapToUi(ClanMember clanMember)
+    {
+        return new ClanMemberUi
+        {
+            Tag = clanMember.Tag,
+            Name = clanMember.Name,
+            ClanTag = clanMember.Clan.Tag,
+            ClanName = clanMember.Clan.Name,
+            RoleInClan = clanMember.Role,
+            ExpLevel = clanMember.ExpLevel,
+            TownHallLevel = clanMember.TownHallLevel,
+            TownHallWeaponLevel = clanMember.TownHallWeaponLevel,
+            Trophies = clanMember.Trophies,
+            BestTrophies = clanMember.BestTrophies,
+            League = clanMember.League,
+            VersusTrophies = clanMember.VersusTrophies,
+            BestVersusTrophies = clanMember.BestVersusTrophies,
+            AttackWins = clanMember.AttackWins,
+            DefenseWins = clanMember.DefenceWins,
+            WarPreference = clanMember.WarPreference,
+            DonationsSent = clanMember.DonationsSent,
+            DonationsRecieved = clanMember.DonationsRecieved,
+            WarStars = clanMember.WarStars,
+            TotalCapitalContributions = clanMember.TotalCapitalContributions,
+        };
+    }
+
+    public static ArmyUi MapToUi(ICollection<Troop> troops)
     {
         var superUnits = new List<TroopUi>();
         var siegeMachines = new List<TroopUi>();
@@ -269,7 +279,7 @@ public static class Mapper
         };
     }
 
-    public static CwCwlMembershipUi MapToCwCwlMembershipUi(WarMember member)
+    public static CwCwlMembershipUi MapToUi(WarMember member)
     {
         var attacks = new List<WarAttackUi>();
 
@@ -322,34 +332,7 @@ public static class Mapper
         //};
     }
 
-    public static PlayerInfoUi MapToPlayerInfoUi(ClanMember clanMember)
-    {
-        return new PlayerInfoUi
-        {
-            Tag = clanMember.Tag,
-            Name = clanMember.Name,
-            ClanTag = clanMember.Clan.Tag,
-            ClanName = clanMember.Clan.Name,
-            RoleInClan = clanMember.Role,
-            ExpLevel = clanMember.ExpLevel,
-            TownHallLevel = clanMember.TownHallLevel,
-            TownHallWeaponLevel = clanMember.TownHallWeaponLevel,
-            Trophies = clanMember.Trophies,
-            BestTrophies = clanMember.BestTrophies,
-            League = clanMember.League,
-            VersusTrophies = clanMember.VersusTrophies,
-            BestVersusTrophies = clanMember.BestVersusTrophies,
-            AttackWins = clanMember.AttackWins,
-            DefenseWins = clanMember.DefenceWins,
-            WarPreference = clanMember.WarPreference,
-            DonationsSent = clanMember.DonationsSent,
-            DonationsRecieved = clanMember.DonationsRecieved,
-            WarStars = clanMember.WarStars,
-            TotalCapitalContributions = clanMember.TotalCapitalContributions
-        };
-    }
-
-    public static RaidMembershipUi MapToRaidMembershipUi(RaidMember raidMember)
+    public static RaidMembershipUi MapToUi(RaidMember raidMember)
     {
         var attacks = new List<RaidAttackUi>();
 
@@ -379,7 +362,7 @@ public static class Mapper
         };
     }
 
-    public static AverageRaidsPerfomance MapToAverageRaidsPerfomance(ICollection<RaidMember> raidMemberships)
+    public static AverageRaidsPerfomanceUi MapToUi(ICollection<RaidMember> raidMemberships)
     {
         var avgCapitalLoot = 0.0;
         var avgDestructionPercent = 0.0;
@@ -406,26 +389,12 @@ public static class Mapper
 
         avgCapitalLoot /= raidMemberships.Count();
 
-        return new AverageRaidsPerfomance
+        return new AverageRaidsPerfomanceUi
         {
             Tag = playerTag,
             Name = playerName,
             AverageDestructionPercent = Math.Round(avgDestructionPercent, 2),
             AverageCapitalLoot = Math.Round(avgCapitalLoot, 2)
-        };
-    }
-
-    public static ShortPlayerInfoUi MapToShortPlayerInfoUi(ClanMember clanMember)
-    {
-        return new ShortPlayerInfoUi
-        {
-            Tag = clanMember.Tag,
-            Name = clanMember.Name,
-            WarPreference = clanMember.WarPreference,
-            DonationsSent = clanMember.DonationsSent,
-            DonationsRecieved = clanMember.DonationsRecieved,
-            WarStars = clanMember.WarStars,
-            TotalCapitalContributions = clanMember.TotalCapitalContributions,
         };
     }
 }

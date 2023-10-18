@@ -48,7 +48,7 @@ public class DBInit
         {
             db.TrackedClans.AddRange(clans);
 
-            db.Complete();
+            db.SaveChanges();
 
             return db.TrackedClans.ToList();
         }

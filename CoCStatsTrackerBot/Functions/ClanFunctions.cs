@@ -406,13 +406,13 @@ public static class ClanFunctions
             str.AppendLine(UiHelper.MakeItStyled("Средние показатели рейдеров:", UiTextStyle.Subtitle));
             str.AppendLine();
 
-            var playersPerfomances = new List<AverageRaidsPerfomance>();
+            var playersPerfomances = new List<AverageRaidsPerfomanceUi>();
 
             foreach (var member in trackedClan.ClanMembers)
             {
                 if (member.RaidMemberships != null && member.RaidMemberships.Count != 0)
                 {
-                    playersPerfomances.Add(Mapper.MapToAverageRaidsPerfomance(member.RaidMemberships));
+                    playersPerfomances.Add(Mapper.MapToUi(member.RaidMemberships));
                 }
             }
 
@@ -704,7 +704,7 @@ public static class ClanFunctions
 
                 str.Append($"{UiHelper.GetCenteredString((member.Key.WarStars - member.Value.WarStars).ToString(), maxStarsLength)}|");
 
-                str.Append($"{UiHelper.GetCenteredString((member.Key.CapitalContributions - member.Value.CapitalContributions).ToString(), maxCapitalLootLength)}|");
+                str.Append($"{UiHelper.GetCenteredString((member.Key.TotalCapitalContributions - member.Value.TotalCapitalContributions).ToString(), maxCapitalLootLength)}|");
 
                 str.AppendLine($"{UiHelper.GetCenteredString((member.Key.DonationsSent - member.Value.DonationsSent).ToString(), maxDonationsLength)}|");
             }

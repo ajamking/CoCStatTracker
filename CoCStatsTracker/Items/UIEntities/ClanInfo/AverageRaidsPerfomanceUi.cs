@@ -1,6 +1,6 @@
 ﻿namespace CoCStatsTracker.UIEntities;
 
-public class AverageRaidsPerfomance
+public class AverageRaidsPerfomanceUi : UiEntity
 {
     public string Name { get; set; }
     public string Tag { get; set; }

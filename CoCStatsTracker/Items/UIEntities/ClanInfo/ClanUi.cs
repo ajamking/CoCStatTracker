@@ -2,7 +2,7 @@
 
 namespace CoCStatsTracker.UIEntities;
 
-public class ClanUi
+public class ClanUi : UiEntity
 {
     public string Tag { get; set; }
     public string Name { get; set; }

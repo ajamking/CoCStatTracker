@@ -1,5 +1,4 @@
-﻿using CoCApiDealer.UIEntities;
-using CoCStatsTracker;
+﻿using CoCStatsTracker;
 using CoCStatsTracker.UIEntities;
 using Domain.Entities;
 using System.Text;
@@ -19,7 +18,7 @@ public static class PlayerFunctions
                 return UiHelper.Ecranize($"Игрока с тегом {playerTag} нет в отслеживаемых кланах, введите корректный тег игрока.");
             }
 
-            var shortPlayerInfoUi = Mapper.MapToShortPlayerInfoUi(member);
+            var shortPlayerInfoUi = Mapper.MapToUi(member);
 
             var dic = new Dictionary<string, string>()
         {
@@ -80,7 +79,7 @@ public static class PlayerFunctions
                 return UiHelper.Ecranize($"Игрока с тегом {playerTag} нет в отслеживаемых кланах, введите корректный тег игрока.");
             }
 
-            var playerInfoUi = Mapper.MapToPlayerInfoUi(member);
+            var playerInfoUi = Mapper.MapToUi(member);
 
             var dic = new Dictionary<string, string>()
         {
@@ -168,7 +167,7 @@ public static class PlayerFunctions
 
             foreach (var warMembership in member.WarMemberships.OrderByDescending(cw => cw.ClanWar.EndedOn))
             {
-                uiMemberships.Add(Mapper.MapToCwCwlMembershipUi(warMembership));
+                uiMemberships.Add(Mapper.MapToUi(warMembership));
             }
 
             var str = new StringBuilder();
@@ -287,7 +286,7 @@ public static class PlayerFunctions
 
             foreach (var raidMembership in member.RaidMemberships.OrderByDescending(cw => cw.Raid.StartedOn))
             {
-                uiMemberships.Add(Mapper.MapToRaidMembershipUi(raidMembership));
+                uiMemberships.Add(Mapper.MapToUi(raidMembership));
             }
 
             var str = new StringBuilder();
@@ -382,7 +381,7 @@ public static class PlayerFunctions
                 return UiHelper.Ecranize($"Информация о войске игрока с тегом {playerTag} не найдена");
             }
 
-            var armyUi = Mapper.MapToArmyUi(member.Units);
+            var armyUi = Mapper.MapToUi(member.Units);
 
             var chosenUnits = new List<TroopUi>();
 

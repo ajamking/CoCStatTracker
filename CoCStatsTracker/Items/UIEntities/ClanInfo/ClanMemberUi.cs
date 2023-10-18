@@ -1,5 +1,6 @@
-﻿namespace CoCApiDealer.UIEntities;
-public class PlayerInfoUi
+﻿namespace CoCStatsTracker.UIEntities;
+
+public class ClanMemberUi : UiEntity
 {
     public string Tag { get; set; }
     public string Name { get; set; }

@@ -1,5 +1,7 @@
 ﻿using CoCApiDealer;
 using CoCApiDealer.ApiRequests;
+using CoCStatsTracker;
+using CoCStatsTracker.UIEntities;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,9 +33,15 @@ class Program
     {
         var dbinit = new DBInit("#YPPGCCY8", "#UQQGYJJP");
 
-        //var asf = new CwlGroupRequest();
+        //var checkConnectRequest = new CwlGroupRequest();
 
-        //var answ = asf.CallApi("#YPPGCCY8");
+        //var checkConnect = asf.CallApi("#YPPGCCY8");
+
+        //var addCH = new AddToDbCommandHandler("Data Source=./../../../../CustomSolutionElements/CoCStatsTracker.db");
+
+        //addCH.CreateEmptyDb();
+        //addCH.AddTrackedClan("#YPPGCCY8");
+        //addCH.AddClanMembers("#YPPGCCY8");
 
         using var db = new AppDbContext("Data Source=./../../../../CustomSolutionElements/CoCStatsTracker.db");
 
@@ -41,7 +49,7 @@ class Program
 
         foreach (var activeClan in TrackedClans.Where(x => x.IsCurrent == true))
         {
-          //  TempFunctions.GetNonAttackersRaids(activeClan.Tag);
+            //  TempFunctions.GetNonAttackersRaids(activeClan.Tag);
             //TempFunctions.GetNonAttackersCw(activeClan.Tag);
 
             //var testDaddyBuilder = new DaddyBuilder(activeClan);
@@ -53,8 +61,7 @@ class Program
 
         var a = db.ChangeTracker.Entries<CapitalRaid>();
 
-        db.Complete();
-
+        db.SaveChanges();
 
         Console.WriteLine("Connection winh DB in MemberRequestHandler sucsessful");
 

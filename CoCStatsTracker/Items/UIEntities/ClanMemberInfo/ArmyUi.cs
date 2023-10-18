@@ -2,9 +2,8 @@
 
 namespace CoCStatsTracker.UIEntities;
 
-public class ArmyUi
+public class ArmyUi : UiEntity
 {
-
     public List<TroopUi> SuperUnits { get; set; } = new List<TroopUi>();
     public List<TroopUi> SiegeMachines { get; set; } = new List<TroopUi>();
     public List<TroopUi> Heroes { get; set; } = new List<TroopUi>();
@@ -12,7 +11,7 @@ public class ArmyUi
     public List<TroopUi> Units { get; set; } = new List<TroopUi>();
 }
 
-public class TroopUi
+public class TroopUi : UiEntity
 {
     public string Name { get; set; }
     public string Lvl { get; set; }

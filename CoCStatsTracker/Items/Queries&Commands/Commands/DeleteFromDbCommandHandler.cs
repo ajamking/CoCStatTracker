@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Entities;
+namespace CoCStatsTracker.Items.Queries_Commands.Commands;
 
-public abstract class Entity
+public class DeleteFromDbCommandHandler
 {
-    public int Id { get; set; }
+
 }

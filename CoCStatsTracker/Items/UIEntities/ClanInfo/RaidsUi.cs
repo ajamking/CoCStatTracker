@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace CoCStatsTracker.UIEntities;
 
-public class RaidsUi
+public class RaidsUi : UiEntity
 {
     public string State { get; set; }
     public DateTime StartedOn { get; set; }
@@ -20,14 +20,14 @@ public class RaidsUi
     public ICollection<DefeatedClanUi> DefeatedClans { get; set; }
 }
 
-public class RaidDefenseUi
+public class RaidDefenseUi : UiEntity
 {
     public string AttackersTag { get; set; }
     public string AttackersName { get; set; }
     public int TotalAttacksCount { get; set; }
 }
 
-public class DefeatedClanUi
+public class DefeatedClanUi : UiEntity
 {
     public ICollection<DistrictUi> AttackedDistricts { get; set; }
     public string ClanName { get; set; }
@@ -35,14 +35,14 @@ public class DefeatedClanUi
     public int TotalAttacksCount { get; set; }
 }
 
-public class DistrictUi
+public class DistrictUi : UiEntity
 {
     public string DistrictName { get; set; }
     public int DistrictLevel { get; set; }
     public ICollection<AttackOnDistrictUi> Attacks { get; set; }
 }
 
-public class AttackOnDistrictUi
+public class AttackOnDistrictUi : UiEntity
 {
     public string PlayerName { get; set; }
     public string PlayerTag { get; set; }

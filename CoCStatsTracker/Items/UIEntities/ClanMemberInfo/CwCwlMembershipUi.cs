@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace CoCApiDealer.UIEntities;
+namespace CoCStatsTracker.UIEntities;
 
-public class CwCwlMembershipUi
+public class CwCwlMembershipUi : UiEntity
 {
     public string Tag { get; set; }
     public string Name { get; set; }
@@ -18,7 +18,7 @@ public class CwCwlMembershipUi
     public ICollection<WarAttackUi> Attacks { get; set; }
 }
 
-public class WarAttackUi
+public class WarAttackUi : UiEntity
 {
     public string EnemyTag { get; set; }
     public string EnemyName { get; set; }

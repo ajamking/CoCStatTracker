@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace CoCStatsTracker.UIEntities;
 
-public class CwCwlUi
+public class CwCwlUi : UiEntity
 {
     public DateTime StartedOn { get; set; }
     public DateTime EndedOn { get; set; }
@@ -24,7 +24,7 @@ public class CwCwlUi
     public ICollection<ClanWarAttackUi> MembersResults { get; set; } // Для графика по всему клану
 }
 
-public class ClanWarAttackUi
+public class ClanWarAttackUi : UiEntity
 {
     public string PlayerName { get; set; }
     public int ThLevel { get; set; }

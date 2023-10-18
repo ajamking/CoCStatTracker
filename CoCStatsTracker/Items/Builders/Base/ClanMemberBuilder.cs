@@ -102,6 +102,11 @@ public class ClanMemberBuilder
         ClanMember.Units = units;
     }
 
+    public void SetTrackedClan(TrackedClan trackedClan)
+    {
+        ClanMember.Clan = trackedClan;
+    }
+
     public void AddRaidMembership(RaidMember membership)
     {
         ClanMember.RaidMemberships.Add(membership);

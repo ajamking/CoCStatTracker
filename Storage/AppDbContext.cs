@@ -1,6 +1,4 @@
-﻿using CoCApiDealer.ForTests;
-using CoCStatTracker;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Storage.Configurations.Base;
 using Storage.Configurations.ClanWars;
@@ -12,11 +10,12 @@ namespace Storage
     public class AppDbContext : DbContext, ICoCDbContext
     {
         public string ConnectionString { get; }
-
-        public DbSet<ClanMember> ClanMembers { get; set; }
+      
         public DbSet<TrackedClan> TrackedClans { get; set; }
+        public DbSet<ClanMember> ClanMembers { get; set; }
+        public DbSet<InitialClanMembersStaticstics> InitialClanMembersStaticstics { get; set; }
         public DbSet<Troop> Units { get; set; }
-
+        
         public DbSet<ClanWar> ClanWars { get; set; }
         public DbSet<EnemyWarMember> EnemyWarMembers { get; set; }
         public DbSet<WarAttack> WarAttacks { get; set; }
@@ -57,7 +56,8 @@ namespace Storage
             modelBuilder.ApplyConfiguration(new ClanMemberConfiguration());
             modelBuilder.ApplyConfiguration(new TrackedClanConfiguration());
             modelBuilder.ApplyConfiguration(new UnitConfiguration());
-
+            modelBuilder.ApplyConfiguration(new InitialClanMembersStaticsticsConfiguration());
+            
             modelBuilder.ApplyConfiguration(new ClanWarConfiguration());
             modelBuilder.ApplyConfiguration(new EnemyWarMemberConfiguration());
             modelBuilder.ApplyConfiguration(new WarAttackConfiguration());
@@ -70,11 +70,6 @@ namespace Storage
             modelBuilder.ApplyConfiguration(new RaidMemberConfiguration());
             modelBuilder.ApplyConfiguration(new RaidDefenseConfiguration());
             modelBuilder.ApplyConfiguration(new DestroyedFriendlyDistrictConfiguration());
-        }
-
-        public int Complete()
-        {
-            return SaveChanges();
         }
     }
 }
