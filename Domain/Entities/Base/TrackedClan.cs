@@ -7,7 +7,6 @@ namespace Domain.Entities
     public class TrackedClan : Entity
     {
         public DateTime UpdatedOn { get; set; }
-        public bool IsCurrent { get; set; }
         public string Tag { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
@@ -25,7 +24,7 @@ namespace Domain.Entities
         public int WarLoses { get; set; }
         public int CapitalHallLevel { get; set; }
         
-        public virtual InitialClanMembersStaticstics InitialClanMembersStaticstics { get; set; }
+        public virtual LastClanMemberStatistics LastClanMembersStaticstics { get; set; }
 
         public virtual ICollection<ClanMember> ClanMembers { get; set; }
         public virtual ICollection<ClanWar> ClanWars { get; set; }

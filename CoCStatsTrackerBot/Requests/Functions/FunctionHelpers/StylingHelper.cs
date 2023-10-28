@@ -1,0 +1,160 @@
+﻿using System.Text;
+
+namespace CoCStatsTrackerBot.Requests;
+
+public class StylingHelper
+{
+    /// <summary>
+    /// Стилизует текст в соответствии с Telegram MarkdownV2
+    /// </summary>
+    public static string MakeItStyled(string str, UiTextStyle textStyle)
+    {
+        switch (textStyle)
+        {
+            case UiTextStyle.Header:
+                return $@"_*{Ecranize(str)}*_".ToUpper();
+            case UiTextStyle.Subtitle:
+                return $@"_*{Ecranize(str)}*_";
+            case UiTextStyle.TableAnnotation:
+                return $@"__*{Ecranize(str)}*__";
+            case UiTextStyle.Name:
+                return $@"*{Ecranize(str)}*";
+            case UiTextStyle.Default:
+                return Ecranize(str);
+            default:
+                return Ecranize($@"Text Style Error");
+        }
+    }
+
+    /// <summary>
+    /// Возвращает первое слово в строке
+    /// </summary>
+    public static string GetFirstWord(string str)
+    {
+        try
+        {
+            string[] cleaned = str.Split(new char[] { ' ' });
+            return cleaned[0];
+        }
+        catch (Exception)
+        {
+            return str;
+        }
+    }
+
+    /// <summary>
+    /// Вовзращает центрированную по заданной ширине строку
+    /// </summary>
+    public static string GetCenteredString(string s, int width)
+    {
+        if (s.Length >= width)
+        {
+            return s;
+        }
+
+        int leftPadding = (width - s.Length) / 2;
+
+        int rightPadding = width - s.Length - leftPadding;
+
+        return new string(' ', leftPadding) + s + new string(' ', rightPadding);
+    }
+
+   
+
+    /// <summary>
+    /// Заменяет различные смайлики и т.д. в строке на символ ! с фиксированной шириной.
+    /// </summary>
+    public static string ChangeInvalidSymbols(string name)
+    {
+        var result = new StringBuilder(name.Length);
+
+        foreach (var symbol in name)
+        {
+            if (char.IsLetter(symbol) || char.IsDigit(symbol))
+            {
+                result.Append(symbol);
+            }
+            else
+            {
+                result.Append("!");
+            }
+        }
+
+        return result.ToString();
+    }
+
+    /// <summary>
+    /// Экранирует символы в строке. В ТГ разметке MarkdownV2 некоторые символы зарезервированы и их приходится экранировать
+    /// </summary>
+    public static string Ecranize(string str)
+    {
+        var reservedSymbols = @"_*,`.[]()~'><#+-/=|{}!""№;%:?*\";
+        StringBuilder newStr = new StringBuilder("");
+
+        foreach (var c in str)
+        {
+            if (reservedSymbols.Contains(c))
+            {
+                newStr.Append(@"\");
+                newStr.Append(c);
+            }
+            else
+            {
+                newStr.Append(c);
+            }
+        }
+
+        return newStr.ToString();
+    }
+
+    /// <summary>
+    /// Определяет максимальную длину строки для двух ячеек UI таблицы.
+    /// </summary>
+    public static UiTableMaxSize DefineTableMaxSize(Dictionary<string, string> dic, string firstColumnName, string secondColumnName)
+    {
+        var uiTablemaxSize = new UiTableMaxSize();
+
+        var maxKeyLength = dic.Keys.Select(x => x.Length).Max();
+
+        var maxValueLength = dic.Values.Select(x => x.Length).Max();
+
+        if (maxKeyLength >= firstColumnName.Length)
+        {
+            uiTablemaxSize.KeyMaxLength = maxKeyLength;
+        }
+        else
+        {
+            uiTablemaxSize.KeyMaxLength = firstColumnName.Length;
+        }
+
+        if (maxValueLength >= secondColumnName.Length)
+        {
+            uiTablemaxSize.ValueMaxLength = maxValueLength;
+        }
+        else
+        {
+            uiTablemaxSize.ValueMaxLength = secondColumnName.Length;
+        }
+
+        return uiTablemaxSize;
+    }
+
+}
+
+/// <summary>
+/// Вспомогательный класс, определяющий длину(ширину) двух столбцов.
+/// </summary>
+public class UiTableMaxSize
+{
+    public int KeyMaxLength { get; set; }
+    public int ValueMaxLength { get; set; }
+}
+
+public enum UiTextStyle
+{
+    Header,
+    TableAnnotation,
+    Name,
+    Subtitle,
+    Default
+}

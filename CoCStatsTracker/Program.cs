@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CoCStatsTracker
 {
@@ -6,6 +8,7 @@ namespace CoCStatsTracker
     {
         static void Main(string[] args)
         {
+           
         }
     }
 }

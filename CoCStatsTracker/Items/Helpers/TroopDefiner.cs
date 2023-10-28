@@ -1,7 +1,8 @@
 ﻿using Domain.Entities;
 using System.Collections.Generic;
 
-namespace CoCStatsTracker.Helpers;
+namespace CoCStatsTracker.Items.Helpers;
+
 public static class TroopDefiner
 {
     public static Dictionary<string, string> BaseUnitsForSupers = new Dictionary<string, string>()
@@ -56,6 +57,6 @@ public static class TroopDefiner
             return UnitType.Pet;
         }
 
-        else return UnitType.Unit;
+        else return UnitType.EveryUnit;
     }
 }

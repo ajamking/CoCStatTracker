@@ -1,13 +1,7 @@
-﻿using CoCApiDealer;
-using CoCApiDealer.ApiRequests;
-using CoCStatsTracker;
-using CoCStatsTracker.UIEntities;
+﻿using CoCStatsTrackerBot.Requests;
 using Domain.Entities;
-using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
-using Microsoft.Extensions.DependencyInjection;
 using Storage;
 using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
@@ -31,23 +25,11 @@ class Program
 
     async static Task Main(string[] args)
     {
-        var dbinit = new DBInit("#YPPGCCY8", "#UQQGYJJP");
-
-        //var checkConnectRequest = new CwlGroupRequest();
-
-        //var checkConnect = asf.CallApi("#YPPGCCY8");
-
-        //var addCH = new AddToDbCommandHandler("Data Source=./../../../../CustomSolutionElements/CoCStatsTracker.db");
-
-        //addCH.CreateEmptyDb();
-        //addCH.AddTrackedClan("#YPPGCCY8");
-        //addCH.AddClanMembers("#YPPGCCY8");
-
         using var db = new AppDbContext("Data Source=./../../../../CustomSolutionElements/CoCStatsTracker.db");
 
         TrackedClans = db.TrackedClans.ToList();
 
-        foreach (var activeClan in TrackedClans.Where(x => x.IsCurrent == true))
+        foreach (var activeClan in TrackedClans)
         {
             //  TempFunctions.GetNonAttackersRaids(activeClan.Tag);
             //TempFunctions.GetNonAttackersCw(activeClan.Tag);
@@ -80,7 +62,7 @@ class Program
         {
             if (update.Type == UpdateType.Message && update?.Message?.Text != null)
             {
-                Console.WriteLine(update.Message.Chat.Username + "  Отправил сообщение " + update.Message.Text + " " + DateTime.Now);
+                Console.WriteLine($"{DateTime.Now}: Принято сообщение: \"{update.Message.Text}\" от {update.Message.Chat.Username}");
 
                 await Navigator.HandleMessage(botClient, update.Message);
 
@@ -89,7 +71,7 @@ class Program
         }
         catch (Exception e)
         {
-            Console.WriteLine("ignored exception" + e.Message + "in chat " + update.Message);
+            Console.WriteLine("Проигнорировали исключение " + e.Message + "в чате " + update.Message);
         }
     }
 

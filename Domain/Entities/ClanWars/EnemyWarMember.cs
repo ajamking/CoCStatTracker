@@ -4,7 +4,7 @@
     {
         public string Tag { get; set; }
         public string Name { get; set; }
-        public int THLevel { get; set; }
+        public int TownHallLevel { get; set; }
         public int MapPosition { get; set; }
 
         public int? ClanWarId { get; set; }

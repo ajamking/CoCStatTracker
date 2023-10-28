@@ -1,4 +1,7 @@
-﻿using CoCStatsTrackerBot.Menue;
+﻿using CoCStatsTrackerBot.Menu;
+using CoCStatsTrackerBot.Requests;
+using CoCStatsTrackerBot.Requests.RequestHandlers;
+using System.Text.RegularExpressions;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
@@ -6,76 +9,81 @@ namespace CoCStatsTrackerBot;
 
 public static class Navigator
 {
-    public static List<BaseMenu> Menues = new Menues().AllMenues;
+    public static List<BaseRequestHandler> AllRequestHandlers = AllRequestHandlersConstructor.AllRequestHandlers;
 
-    public static Dictionary<long, MenuLevels> CurrentUserMenuLevel = new Dictionary<long, MenuLevels>();
+    public static List<BotUser> BotUsers = new List<BotUser>();
+
+    public static Regex TagRegex { get; set; } = new Regex(@"^#(\w{6,9})$");
 
     public async static Task HandleMessage(ITelegramBotClient botClient, Message message)
     {
-        CurrentUserMenuLevel.TryAdd(message.Chat.Id, MenuLevels.Main0);
+        TryAddBotUser(message);
 
-        if (message.Text.ToLower() == "назад")
+        var activeBotUser = BotUsers.First(x => x.ChatId == message.Chat.Id);
+
+        if (message.Text?.ToLower() == "назад")
         {
-            switch (CurrentUserMenuLevel[message.Chat.Id])
+            switch (activeBotUser.LastMenuLevel)
             {
                 case MenuLevels.Member1:
                     {
-                        await botClient.SendTextMessageAsync(message.Chat.Id,
-                        text: "Воспользуйтесь меню.",
-                        replyMarkup: Menues.First(x => x.MenuLevel == MenuLevels.Main0).Keyboard);
+                        AllRequestHandlers
+                            .First(x => x.HandlerMenuLevel == MenuLevels.Main0)
+                            .ShowKeyboard(new RequestHadnlerParameters(botClient, message, activeBotUser.LastTagMessage));
 
-                        CurrentUserMenuLevel[message.Chat.Id] = MenuLevels.Main0;
+                        activeBotUser.LastMenuLevel = MenuLevels.Main0;
 
                         return;
                     }
                 case MenuLevels.PlayerInfo2 or MenuLevels.ClanInfo2 or MenuLevels.CurrentWarInfo2 or
                      MenuLevels.CurrentRaidInfo2:
                     {
-                        await botClient.SendTextMessageAsync(message.Chat.Id,
-                        text: "Воспользуйтесь меню.",
-                        replyMarkup: Menues.First(x => x.MenuLevel == MenuLevels.Member1).Keyboard);
+                        AllRequestHandlers
+                            .First(x => x.HandlerMenuLevel == MenuLevels.Member1)
+                            .ShowKeyboard(new RequestHadnlerParameters(botClient, message, activeBotUser.LastTagMessage));
 
-                        CurrentUserMenuLevel[message.Chat.Id] = MenuLevels.Member1;
+                        activeBotUser.LastMenuLevel = MenuLevels.Member1;
 
                         return;
                     }
                 case MenuLevels.PlayerWarStatistics3 or MenuLevels.PlayerRaidStatistics3 or MenuLevels.PlayerArmy3:
                     {
-                        await botClient.SendTextMessageAsync(message.Chat.Id,
-                        text: "Воспользуйтесь меню.",
-                        replyMarkup: Menues.First(x => x.MenuLevel == MenuLevels.PlayerInfo2).Keyboard);
+                        AllRequestHandlers
+                           .First(x => x.HandlerMenuLevel == MenuLevels.PlayerInfo2)
+                           .ShowKeyboard(new RequestHadnlerParameters(botClient, message, activeBotUser.LastTagMessage));
 
-                        CurrentUserMenuLevel[message.Chat.Id] = MenuLevels.PlayerInfo2;
+                        activeBotUser.LastMenuLevel = MenuLevels.PlayerInfo2;
 
                         return;
                     }
                 case MenuLevels.ClanWarsHistory3 or MenuLevels.ClanRaidsHistory3:
                     {
-                        await botClient.SendTextMessageAsync(message.Chat.Id,
-                        text: "Воспользуйтесь меню.",
-                        replyMarkup: Menues.First(x => x.MenuLevel == MenuLevels.ClanInfo2).Keyboard);
+                        AllRequestHandlers
+                           .First(x => x.HandlerMenuLevel == MenuLevels.ClanInfo2)
+                           .ShowKeyboard(new RequestHadnlerParameters(botClient, message, activeBotUser.LastTagMessage));
 
-                        CurrentUserMenuLevel[message.Chat.Id] = MenuLevels.ClanInfo2;
+                        activeBotUser.LastMenuLevel = MenuLevels.ClanInfo2;
 
                         return;
                     }
                 case MenuLevels.CurrentDistrictStatistics3:
                     {
-                        await botClient.SendTextMessageAsync(message.Chat.Id,
-                        text: "Воспользуйтесь меню.",
-                        replyMarkup: Menues.First(x => x.MenuLevel == MenuLevels.CurrentRaidInfo2).Keyboard);
 
-                        CurrentUserMenuLevel[message.Chat.Id] = MenuLevels.CurrentRaidInfo2;
+                        AllRequestHandlers
+                         .First(x => x.HandlerMenuLevel == MenuLevels.CurrentRaidInfo2)
+                         .ShowKeyboard(new RequestHadnlerParameters(botClient, message, activeBotUser.LastTagMessage));
+
+                        activeBotUser.LastMenuLevel = MenuLevels.CurrentRaidInfo2;
 
                         return;
                     }
                 default:
                     {
-                        await botClient.SendTextMessageAsync(message.Chat.Id,
-                        text: "Вы в начальной директории, попробуйте выбрать пункт из меню.",
-                        replyMarkup: Menues.First(x => x.MenuLevel == MenuLevels.Main0).Keyboard);
+                        AllRequestHandlers
+                         .First(x => x.HandlerMenuLevel == MenuLevels.Main0)
+                         .ShowKeyboard(new RequestHadnlerParameters(botClient, message, activeBotUser.LastTagMessage));
 
-                        CurrentUserMenuLevel[message.Chat.Id] = MenuLevels.Main0;
+                        activeBotUser.LastMenuLevel = MenuLevels.Main0;
 
                         return;
                     }
@@ -86,16 +94,9 @@ public static class Navigator
         {
             switch (message.Text)
             {
-                case string msg when MemberRequestHandler.TagRegex.IsMatch(msg):
+                case string msg when TagRegex.IsMatch(msg):
                     {
-                        if (MemberRequestHandler.UsersLastTags.ContainsKey(message.Chat.Id))
-                        {
-                            MemberRequestHandler.UsersLastTags[message.Chat.Id] = msg;
-                        }
-                        else
-                        {
-                            MemberRequestHandler.UsersLastTags.Add(message.Chat.Id, msg);
-                        }
+                        UpsertLastTagMessage(message);
 
                         await botClient.SendTextMessageAsync(message.Chat.Id, text: "Тег задан в корректной форме!");
 
@@ -103,127 +104,50 @@ public static class Navigator
                     }
                 default:
                     {
-                        await botClient.SendTextMessageAsync(message.Chat.Id, text: "Если вы пытались задать тег игрока или клана, " +
-                          "то не вышло, задайте тег в корректной форме или выберите другуо опцию из меню.");
+                        await botClient.SendTextMessageAsync(message.Chat.Id, text: "Тег не прошел проверку. " +
+                            "Задайте тег в корректной форме или выберите другуо опцию из меню.");
 
                         return;
                     }
             }
         }
 
-        foreach (var menu in Menues)
+        if (AllRequestHandlers.Any(x => x.Header == message.Text))
         {
-            if (menu.Header == message.Text)
-            {
-                switch (menu.MenuLevel)
-                {
-                    case MenuLevels.Main0:
-                        {
-                            await botClient.SendTextMessageAsync(message.Chat.Id,
-                               text: "Приветствую! Я уникальный бот вашего клана в Clash of Clans. Выберите интересующий вас вариант из меню",
-                               replyMarkup: menu.Keyboard);
+            var requestHandler = AllRequestHandlers.First(x => x.Header == message.Text);
 
-                            CurrentUserMenuLevel[message.Chat.Id] = menu.MenuLevel;
+            var requestParameters = new RequestHadnlerParameters(botClient, message, activeBotUser.LastTagMessage);
 
-                            return;
-                        }
-                    default:
-                        {
-                            await botClient.SendTextMessageAsync(message.Chat.Id,
-                               text: "Выберите интересующий пункт из меню",
-                               replyMarkup: menu.Keyboard);
+            activeBotUser.LastMenuLevel = requestHandler.HandlerMenuLevel;
 
-                            CurrentUserMenuLevel[message.Chat.Id] = menu.MenuLevel;
+            requestHandler.ShowKeyboard(requestParameters);
 
-                            return;
-                        }
-                }
-            }
-
+            requestHandler.Execute(requestParameters);
+        }
+        else
+        {
+            await botClient.SendTextMessageAsync(message.Chat.Id,
+                  text: $"Вы сказали {message.Text}, но я еще не знаю таких сложных вещей. 🥺\n" +
+                  $"Выберите что-то из меню или введите корректный тег игрока/клана 😁");
 
         }
+    }
 
-        foreach (var menu in Menues)
+    public static void TryAddBotUser(Message message)
+    {
+        if (!BotUsers.Any(x => x.ChatId == message.Chat.Id))
         {
-            if (menu.KeyWords.Contains(message.Text) && menu.MenuLevel == CurrentUserMenuLevel[message.Chat.Id])
+            BotUsers.Add(new BotUser()
             {
-                switch (CurrentUserMenuLevel[message.Chat.Id])
-                {
-                    case MenuLevels.PlayerInfo2:
-                        {
-                            await MemberRequestHandler.HandlePlayerInfoLvl2(botClient, message, menu.KeyWords);
-
-                            return;
-                        }
-                    case MenuLevels.ClanInfo2:
-                        {
-                            await MemberRequestHandler.HandleClanInfoLvl2(botClient, message, menu.KeyWords);
-
-                            return;
-                        }
-                    case MenuLevels.CurrentWarInfo2:
-                        {
-                            await MemberRequestHandler.HandleCurrentWarInfoLvl2(botClient, message, menu.KeyWords);
-
-                            return;
-                        }
-                    case MenuLevels.CurrentRaidInfo2:
-                        {
-                            await MemberRequestHandler.HandleCurrentRaidInfoLvl2(botClient, message, menu.KeyWords);
-
-                            return;
-                        }
-
-
-
-                    case MenuLevels.PlayerWarStatistics3:
-                        {
-                            await MemberRequestHandler.HandlePlayerWarStatisticsLvl3(botClient, message, menu.KeyWords);
-
-                            return;
-                        }
-                    case MenuLevels.PlayerRaidStatistics3:
-                        {
-                            await MemberRequestHandler.HandlePlayerRaidStatisticsLvl3(botClient, message, menu.KeyWords);
-
-                            return;
-                        }
-                    case MenuLevels.PlayerArmy3:
-                        {
-                            await MemberRequestHandler.HandlePlayerArmyLvl3(botClient, message, menu.KeyWords);
-
-                            return;
-                        }
-                    case MenuLevels.ClanWarsHistory3:
-                        {
-                            await MemberRequestHandler.HandleClanWarHistoryLvl3(botClient, message, menu.KeyWords);
-
-                            return;
-                        }
-                    case MenuLevels.ClanRaidsHistory3:
-                        {
-                            await MemberRequestHandler.HandleClanRaidHistoryLvl3(botClient, message, menu.KeyWords);
-
-                            return;
-                        }
-                    case MenuLevels.CurrentDistrictStatistics3:
-                        {
-                            await MemberRequestHandler.HandleCurrentDistrictStatistics3(botClient, message, menu.KeyWords);
-
-                            return;
-                        }
-                    default:
-                        {
-                            Console.WriteLine("Ошбика при орпеделении уровня меню сообщения");
-                            continue;
-                        }
-                }
-            }
+                ChatId = message.Chat.Id,
+                FirstName = message.Chat.FirstName,
+                Username = message.Chat.Username,
+            });
         }
+    }
 
-        await botClient.SendTextMessageAsync(message.Chat.Id,
-                      text: $"Вы сказали {message.Text}, но я еще не знаю таких сложных вещей. 🥺\n" +
-                      $"Выберите что-то из меню или введите корректный тег игрока/клана 😁");
-
+    public static void UpsertLastTagMessage(Message message)
+    {
+        BotUsers.First(x => x.ChatId == message.Chat.Id).LastTagMessage = message.Text;
     }
 }

@@ -14,8 +14,8 @@
 
     public enum UnitType
     {
-        Hero,
-        Unit,
+        Hero = 1,
+        EveryUnit,
         SuperUnit,
         SiegeMachine,
         Pet

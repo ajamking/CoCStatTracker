@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace CoCStatsTracker.Helpers;
+namespace CoCStatsTracker.Items.Helpers;
 
 public static class DateTimeParser
 {
