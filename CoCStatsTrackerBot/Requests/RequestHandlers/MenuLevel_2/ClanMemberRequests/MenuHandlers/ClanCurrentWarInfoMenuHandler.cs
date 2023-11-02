@@ -7,6 +7,6 @@ public class ClanCurrentWarInfoMenuHandler : BaseRequestHandler
     public ClanCurrentWarInfoMenuHandler()
     {
         Header = "Текущая война";
-        HandlerMenuLevel = MenuLevels.CurrentWarInfo2;
+        HandlerMenuLevel = MenuLevel.CurrentWarInfo2;
     }
 }

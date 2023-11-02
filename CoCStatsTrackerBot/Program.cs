@@ -1,7 +1,4 @@
-﻿using CoCStatsTrackerBot.Requests;
-using Domain.Entities;
-using Storage;
-using System.Reflection;
+﻿using CoCStatsTracker;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
@@ -10,40 +7,17 @@ using Telegram.Bot.Types.Enums;
 namespace CoCStatsTrackerBot;
 
 /// <summary>
-/// CЕрилог добавить ВЕЗДЕ.
-/// НЕ ЗАБЫТЬ ОБЫГРАТЬ РЕКВЕСТ ЦВЛ ГРУППЫ
 /// Тег клана:	#YPPGCCY8   #UQQGYJJP
 /// 
 /// Тег игрока: #2VGG92CL9  #LRPLYJ9U2 #G8P9Q299R
 /// </summary>
-
 class Program
 {
     private static TelegramBotClient client = new TelegramBotClient(token: System.IO.File.ReadAllText(@"./../../../../CustomSolutionElements/TelegramBotClientToken.txt"));
 
-    public static List<TrackedClan> TrackedClans { get; set; } = new List<TrackedClan>();
-
     async static Task Main(string[] args)
     {
-        using var db = new AppDbContext("Data Source=./../../../../CustomSolutionElements/CoCStatsTracker.db");
-
-        TrackedClans = db.TrackedClans.ToList();
-
-        foreach (var activeClan in TrackedClans)
-        {
-            //  TempFunctions.GetNonAttackersRaids(activeClan.Tag);
-            //TempFunctions.GetNonAttackersCw(activeClan.Tag);
-
-            //var testDaddyBuilder = new DaddyBuilder(activeClan);
-
-            //testDaddyBuilder.UpdateCurrentRaid();
-
-            //testDaddyBuilder.UpdateCurrentClanWar();
-        }
-
-        var a = db.ChangeTracker.Entries<CapitalRaid>();
-
-        db.SaveChanges();
+        CreateNewTestDb("#YPPGCCY8", "#UQQGYJJP");
 
         Console.WriteLine("Connection winh DB in MemberRequestHandler sucsessful");
 
@@ -90,5 +64,23 @@ class Program
         Console.WriteLine(errorMessage);
 
         return Task.CompletedTask;
+    }
+
+    public static void CreateNewTestDb(params string[] ClanTags)
+    {
+        AddToDbCommandHandler.ResetDb();
+
+        foreach (var clanTag in ClanTags)
+        {
+            AddToDbCommandHandler.AddTrackedClan(clanTag, adminsKey:"KEFamily0707");
+
+            AddToDbCommandHandler.AddClanMembers(clanTag);
+
+            AddToDbCommandHandler.AddLastClanMembersStaticstics(clanTag);
+
+            AddToDbCommandHandler.AddCurrentRaidToClan(clanTag);
+
+            AddToDbCommandHandler.AddCurrentClanWarToClan(clanTag);
+        }
     }
 }

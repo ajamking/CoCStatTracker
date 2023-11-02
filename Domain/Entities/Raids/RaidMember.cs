@@ -5,8 +5,8 @@ namespace Domain.Entities
     public class RaidMember : Entity
     {
         public int TotalLoot { get; set; }
-        public string Tag { get; set; }
-        public string Name { get; set; }
+        public string MemberTag { get; set; }
+        public string MemberName { get; set; }
 
         public int? ClanMemberId { get; set; }
         public virtual ClanMember ClanMember { get; set; }

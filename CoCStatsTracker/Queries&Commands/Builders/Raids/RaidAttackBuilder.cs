@@ -5,20 +5,30 @@ namespace CoCStatsTracker.Builders;
 
 public class RaidAttackBuilder
 {
-    public RaidAttack RaidAttack { get; }
+    public RaidAttack RaidAttack { get; set; }
 
     public RaidAttackBuilder(RaidAttack raidAttack = null)
     {
         RaidAttack = raidAttack ?? new RaidAttack();
     }
 
-    public void SetBaseProperties(int destructionPercentFrom, AttackOnDistrictApi attack, OpponentDistrict opponentDistrict)
+    public void SetBaseProperties(AttackOnDistrictApi memberAttackApi, AttackedCapitalApi raidOnClanApi,
+        DistrictApi destroyedDistrictApi, int previousDestructionPercent)
     {
-        RaidAttack.DestructionPercentFrom = destructionPercentFrom;
-        RaidAttack.DestructionPercentTo = attack.DestructionPercentTo;
-        RaidAttack.MemberTag = attack.Attacker.Tag;
-        RaidAttack.MemberName = attack.Attacker.Name;
-        RaidAttack.OpponentDistrict = opponentDistrict;
+        RaidAttack = new RaidAttack()
+        {
+            MemberTag = memberAttackApi.Attacker.Tag,
+            MemberName = memberAttackApi.Attacker.Name,
+
+            OpponentClanTag = raidOnClanApi.DefenderClan.Tag,
+            OpponentClanName = raidOnClanApi.DefenderClan.Name,
+            OpponentClanLevel = raidOnClanApi.DefenderClan.Level,
+            OpponentDistrictName = destroyedDistrictApi.Name,
+            OpponentDistrictLevel = destroyedDistrictApi.DistrictLevel,
+
+            DestructionPercentTo = memberAttackApi.DestructionPercentTo,
+            DestructionPercentFrom = previousDestructionPercent
+        };
     }
 
     public void SetRaidMember(RaidMember raidMember)

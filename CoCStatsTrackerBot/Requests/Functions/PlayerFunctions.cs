@@ -134,7 +134,7 @@ public static class PlayerFunctions
             str.AppendLine(StylingHelper.MakeItStyled("Конец войны", UiTextStyle.Subtitle));
             str.AppendLine(StylingHelper.MakeItStyled(uiMembership.EndedOn, UiTextStyle.Default));
             str.AppendLine();
-            str.AppendLine(StylingHelper.MakeItStyled("Позиция на карте - " + uiMembership.MapPosition, UiTextStyle.Subtitle));
+            str.AppendLine(StylingHelper.MakeItStyled("Позиция на карте: " + uiMembership.MapPosition, UiTextStyle.Subtitle));
             str.AppendLine();
             str.AppendLine(StylingHelper.MakeItStyled("Худшая защита:", UiTextStyle.Subtitle));
             str.AppendLine();

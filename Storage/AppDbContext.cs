@@ -22,8 +22,6 @@ namespace Storage
         public DbSet<WarMember> WarMembers { get; set; }
 
         public DbSet<CapitalRaid> CapitalRaids { get; set; }
-        public DbSet<DefeatedClan> DefeatedClans { get; set; }
-        public DbSet<OpponentDistrict> OpponentDistricts { get; set; }
         public DbSet<RaidAttack> RaidAttacks { get; set; }
         public DbSet<RaidMember> RaidMembers { get; set; }
         public DbSet<RaidDefense> RaidDefenses { get; set; }
@@ -64,8 +62,6 @@ namespace Storage
             modelBuilder.ApplyConfiguration(new WarMemberConfiguration());
 
             modelBuilder.ApplyConfiguration(new CapitalRaidConfigurartion());
-            modelBuilder.ApplyConfiguration(new DefeatedClanConfiguration());
-            modelBuilder.ApplyConfiguration(new EnemyDistrictConfiguration());
             modelBuilder.ApplyConfiguration(new RaidAttackConfiguration());
             modelBuilder.ApplyConfiguration(new RaidMemberConfiguration());
             modelBuilder.ApplyConfiguration(new RaidDefenseConfiguration());

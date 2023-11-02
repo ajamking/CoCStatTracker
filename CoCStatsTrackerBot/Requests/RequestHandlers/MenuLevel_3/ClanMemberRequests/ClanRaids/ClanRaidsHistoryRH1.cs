@@ -7,7 +7,7 @@ public class ClanRaidsHistoryRH1 : BaseRequestHandler
     public ClanRaidsHistoryRH1()
     {
         Header = "Последний рейд";
-        HandlerMenuLevel = MenuLevels.ClanRaidsHistory3;
+        HandlerMenuLevel = MenuLevel.ClanRaidsHistory3;
     }
 
     override public void Execute(RequestHadnlerParameters parameters)

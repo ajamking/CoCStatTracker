@@ -7,6 +7,6 @@ public class ClanRaidHistoryMenuHandler : BaseRequestHandler
     public ClanRaidHistoryMenuHandler()
     {
         Header = "История рейдов";
-        HandlerMenuLevel = MenuLevels.ClanRaidsHistory3;
+        HandlerMenuLevel = MenuLevel.ClanRaidsHistory3;
     }
 }

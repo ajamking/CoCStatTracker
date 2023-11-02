@@ -21,6 +21,7 @@ namespace Storage.Configurations.ClanWars
            .HasOne<CapitalRaid>(x => x.Raid)
            .WithMany(x => x.RaidMembers)
            .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }

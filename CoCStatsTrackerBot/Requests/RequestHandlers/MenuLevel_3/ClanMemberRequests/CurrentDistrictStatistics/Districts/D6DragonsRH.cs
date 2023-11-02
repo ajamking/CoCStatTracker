@@ -7,7 +7,7 @@ public class D6DragonsRH : BaseRequestHandler
     public D6DragonsRH()
     {
         Header = "Драконьи утесы";
-        HandlerMenuLevel = MenuLevels.CurrentDistrictStatistics3;
+        HandlerMenuLevel = MenuLevel.CurrentDistrictStatistics3;
     }
 
     override public void Execute(RequestHadnlerParameters parameters)

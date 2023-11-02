@@ -8,7 +8,7 @@ public class MemberHeroesRH : BaseRequestHandler
     public MemberHeroesRH()
     {
         Header = "Герои";
-        HandlerMenuLevel = MenuLevels.PlayerArmy3;
+        HandlerMenuLevel = MenuLevel.PlayerArmy3;
     }
 
     override public void Execute(RequestHadnlerParameters parameters)

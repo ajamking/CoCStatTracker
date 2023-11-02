@@ -7,7 +7,7 @@ public class D5BuildersRH : BaseRequestHandler
     public D5BuildersRH()
     {
         Header = "Мастерская строителя";
-        HandlerMenuLevel = MenuLevels.CurrentDistrictStatistics3;
+        HandlerMenuLevel = MenuLevel.CurrentDistrictStatistics3;
     }
 
     override public void Execute(RequestHadnlerParameters parameters)

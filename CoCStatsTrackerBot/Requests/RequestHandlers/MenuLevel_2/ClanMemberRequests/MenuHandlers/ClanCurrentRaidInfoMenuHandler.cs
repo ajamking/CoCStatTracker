@@ -7,6 +7,6 @@ public class ClanCurrentRaidInfoMenuHandler : BaseRequestHandler
     public ClanCurrentRaidInfoMenuHandler()
     {
         Header = "Текущий рейд";
-        HandlerMenuLevel = MenuLevels.CurrentRaidInfo2;
+        HandlerMenuLevel = MenuLevel.CurrentRaidInfo2;
     }
 }

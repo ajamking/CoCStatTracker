@@ -1,8 +1,11 @@
 ﻿using System.Text;
+using System;
+using System.Text.RegularExpressions;
+using System.Runtime.CompilerServices;
 
 namespace CoCStatsTrackerBot.Requests;
 
-public class StylingHelper
+public static class StylingHelper
 {
     /// <summary>
     /// Стилизует текст в соответствии с Telegram MarkdownV2
@@ -42,9 +45,6 @@ public class StylingHelper
         }
     }
 
-    /// <summary>
-    /// Вовзращает центрированную по заданной ширине строку
-    /// </summary>
     public static string GetCenteredString(string s, int width)
     {
         if (s.Length >= width)
@@ -57,30 +57,6 @@ public class StylingHelper
         int rightPadding = width - s.Length - leftPadding;
 
         return new string(' ', leftPadding) + s + new string(' ', rightPadding);
-    }
-
-   
-
-    /// <summary>
-    /// Заменяет различные смайлики и т.д. в строке на символ ! с фиксированной шириной.
-    /// </summary>
-    public static string ChangeInvalidSymbols(string name)
-    {
-        var result = new StringBuilder(name.Length);
-
-        foreach (var symbol in name)
-        {
-            if (char.IsLetter(symbol) || char.IsDigit(symbol))
-            {
-                result.Append(symbol);
-            }
-            else
-            {
-                result.Append("!");
-            }
-        }
-
-        return result.ToString();
     }
 
     /// <summary>
@@ -139,6 +115,50 @@ public class StylingHelper
         return uiTablemaxSize;
     }
 
+
+    /// <summary>
+    /// Заменяет различные смайлики и т.д. в строке на символ ! с фиксированной шириной и возвращает корректно отображающееся в MarkDown таблице строку.
+    /// </summary>
+    public static string GetProperString(string str, int maxStringLength)
+    {
+        var tempName = new StringBuilder(str.Length);
+
+        var haveInvalidSymbols = false;
+
+        foreach (var symbol in str)
+        {
+            var ab = char.IsSurrogate(symbol);
+
+            if ((char.IsLetterOrDigit(symbol) || char.IsWhiteSpace(symbol) || char.IsPunctuation(symbol)) && symbol != '\\')
+            {
+                tempName.Append(symbol);
+            }
+            else
+            {
+                haveInvalidSymbols = true;
+
+                tempName.Append("?");
+            }
+        }
+
+        var result = tempName.ToString();
+
+        if (haveInvalidSymbols)
+        {
+            result = result.Substring(0, result.Length - 2);
+        }
+
+        if (result.Length > maxStringLength)
+        {
+            return result.Substring(0, maxStringLength);
+        }
+        else
+        {
+            return result;
+        }
+    }
+
+   
 }
 
 /// <summary>
@@ -157,4 +177,60 @@ public enum UiTextStyle
     Name,
     Subtitle,
     Default
+}
+
+//Позвляет вычислить длину символа и тд. Это очень сложно адекватно применить, так что забыли. Но тут пока оставим.
+public static class InlineCharCounter
+{
+    private static string GetProperStringV2(string str, int maxStringLength)
+    {
+        var result = new StringBuilder(maxStringLength);
+
+        int currentStringLength = 0;
+
+        foreach (var symbol in str)
+        {
+            var currentSynbolLength = symbol.GetLength();
+
+            if (currentStringLength + currentSynbolLength < maxStringLength)
+            {
+                result.Append(symbol);
+
+                currentStringLength += currentSynbolLength;
+            }
+        }
+
+        return result.ToString();
+    }
+
+    private static bool IsFullWidthChar(this char c)
+    {
+        if (c >= 'ᄀ')
+        {
+            if (c > 'ᅟ' && c != '〈' && c != '〉' && (c < '⺀' || c > '\ua4cf' || c == '〿') && (c < '가' || c > '힣') && (c < '豈' || c > '\ufaff') && (c < '︐' || c > '︙') && (c < '︰' || c > '\ufe6f') && (c < '\uff00' || c > '｠') && (c < '￠' || c > '￦') && (c < 131072 || c > 196605))
+            {
+                if (c >= 196608)
+                {
+                    return c <= 262141;
+                }
+
+                return false;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private static int GetLength(this char c)
+    {
+        if (c == '\0')
+        {
+            return 0;
+        }
+
+        return (!IsFullWidthChar(c)) ? 1 : 2;
+    }
+
 }

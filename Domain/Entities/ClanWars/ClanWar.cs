@@ -32,13 +32,11 @@ namespace Domain.Entities
 
         public virtual ICollection<WarMember> WarMembers { get; set; }
         public virtual ICollection<EnemyWarMember> EnemyWarMembers { get; set; }
-        // public virtual ICollection<WarAttack> WarAttacks { get; set; }
-
+        
         public ClanWar()
         {
             WarMembers = new HashSet<WarMember>();
             EnemyWarMembers = new HashSet<EnemyWarMember>();
-            // WarAttacks = new HashSet<WarAttack>();
         }
     }
 }

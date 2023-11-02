@@ -7,7 +7,7 @@ public class D1CapitalPeakRH : BaseRequestHandler
     public D1CapitalPeakRH()
     {
         Header = "Столичный пик";
-        HandlerMenuLevel = MenuLevels.CurrentDistrictStatistics3;
+        HandlerMenuLevel = MenuLevel.CurrentDistrictStatistics3;
     }
 
     override public void Execute(RequestHadnlerParameters parameters)

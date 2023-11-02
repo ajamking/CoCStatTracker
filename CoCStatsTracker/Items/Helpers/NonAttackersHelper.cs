@@ -28,7 +28,7 @@ public static class NonAttackersHelper
         {
             foreach (var clanMember in clan.ClanMembers)
             {
-                if (raid.RaidMembers.FirstOrDefault(x => x.Tag == clanMember.Tag) == null)
+                if (raid.RaidMembers.FirstOrDefault(x => x.MemberTag == clanMember.Tag) == null)
                 {
                     membersWithout6Attacks.Add(clanMember.Name, 0);
 
@@ -43,7 +43,7 @@ public static class NonAttackersHelper
             {
                 if (raidMember.Attacks.Count != 6)
                 {
-                    membersWithout6Attacks.Add(raidMember.Name, raidMember.Attacks.Count);
+                    membersWithout6Attacks.Add(raidMember.MemberName, raidMember.Attacks.Count);
 
                     count++;
                 }

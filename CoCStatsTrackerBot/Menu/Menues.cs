@@ -19,7 +19,7 @@ public class MainMenu0 : BaseMenu
         })
         { ResizeKeyboard = true };
 
-        MenuLevel = MenuLevels.Main0;
+        MenuLevel = MenuLevel.Main0;
     }
 
 }
@@ -45,7 +45,7 @@ public class MemberMenu1 : BaseMenu
         })
         { ResizeKeyboard = true };
 
-        MenuLevel = MenuLevels.Member1;
+        MenuLevel = MenuLevel.Member1;
     }
 }
 
@@ -70,7 +70,7 @@ public class PlayerInfo2 : BaseMenu
         })
         { ResizeKeyboard = true };
 
-        MenuLevel = MenuLevels.PlayerInfo2;
+        MenuLevel = MenuLevel.PlayerInfo2;
     }
 }
 
@@ -97,7 +97,7 @@ public class ClanInfo2 : BaseMenu
         })
         { ResizeKeyboard = true };
 
-        MenuLevel = MenuLevels.ClanInfo2;
+        MenuLevel = MenuLevel.ClanInfo2;
     }
 }
 
@@ -109,7 +109,7 @@ public class ClanCurrentRaidInfo2 : BaseMenu
 
         KeyWords = new string[]
         {
-            "Главное", "Показатели",
+            "Главное о рейде", "Показатели рейда",
             "Статистика по районам", "Назад",
         };
 
@@ -120,7 +120,7 @@ public class ClanCurrentRaidInfo2 : BaseMenu
         })
         { ResizeKeyboard = true };
 
-        MenuLevel = MenuLevels.CurrentRaidInfo2;
+        MenuLevel = MenuLevel.CurrentRaidInfo2;
     }
 }
 
@@ -132,7 +132,7 @@ public class ClanCurrentWarInfo2 : BaseMenu
 
         KeyWords = new string[]
         {
-           "Главное", "Показатели",
+           "Главное о войне", "Показатели войны",
            "Карта", "Назад",
         };
 
@@ -143,7 +143,7 @@ public class ClanCurrentWarInfo2 : BaseMenu
         })
         { ResizeKeyboard = true };
 
-        MenuLevel = MenuLevels.CurrentWarInfo2;
+        MenuLevel = MenuLevel.CurrentWarInfo2;
     }
 }
 
@@ -155,8 +155,8 @@ public class PlayerWarStatistics3 : BaseMenu
 
         KeyWords = new string[]
         {
-           "Последняя война", "Последние 3",
-           "Последние 5", "Назад",
+           "Последняя участие в войне", "3 последних войны",
+           "5 последних войн", "Назад",
         };
 
         Keyboard = new(new[]
@@ -166,7 +166,7 @@ public class PlayerWarStatistics3 : BaseMenu
         })
         { ResizeKeyboard = true };
 
-        MenuLevel = MenuLevels.PlayerWarStatistics3;
+        MenuLevel = MenuLevel.PlayerWarStatistics3;
     }
 }
 
@@ -178,8 +178,8 @@ public class PlayerRaidStatistics3 : BaseMenu
 
         KeyWords = new string[]
         {
-            "Последний рейд", "Последние 3",
-            "Последние 5", "Назад",
+            "Последнее участие в рейдах", "3 последних рейда",
+            "5 последних рейдов", "Назад",
         };
 
         Keyboard = new(new[]
@@ -189,7 +189,7 @@ public class PlayerRaidStatistics3 : BaseMenu
         })
         { ResizeKeyboard = true };
 
-        MenuLevel = MenuLevels.PlayerRaidStatistics3;
+        MenuLevel = MenuLevel.PlayerRaidStatistics3;
     }
 }
 
@@ -201,8 +201,8 @@ public class PlayerArmy3 : BaseMenu
 
         KeyWords = new string[]
         {
-             "Герои", "Осадные машины",
-             "Активные супер юниты", "Все войска",
+             "Герои", "Осадные машины игрока",
+             "Активные супер юниты игрока", "Все войска",
              "Назад",
         };
 
@@ -214,7 +214,7 @@ public class PlayerArmy3 : BaseMenu
         })
         { ResizeKeyboard = true };
 
-        MenuLevel = MenuLevels.PlayerArmy3;
+        MenuLevel = MenuLevel.PlayerArmy3;
     }
 }
 
@@ -237,7 +237,7 @@ public class ClanWarHistory3 : BaseMenu
         })
         { ResizeKeyboard = true };
 
-        MenuLevel = MenuLevels.ClanWarsHistory3;
+        MenuLevel = MenuLevel.ClanWarsHistory3;
     }
 }
 
@@ -249,8 +249,8 @@ public class ClanRaidHistory3 : BaseMenu
 
         KeyWords = new string[]
         {
-           "Последний рейд", "Последние 3",
-           "Последние 5", "Средние показатели игроков",
+           "Последний рейд", "Последние_3",
+           "Последние_5", "Средние показатели игроков",
            "Назад",
         };
 
@@ -262,7 +262,7 @@ public class ClanRaidHistory3 : BaseMenu
         })
         { ResizeKeyboard = true };
 
-        MenuLevel = MenuLevels.ClanRaidsHistory3;
+        MenuLevel = MenuLevel.ClanRaidsHistory3;
     }
 }
 
@@ -287,6 +287,6 @@ public class ClanCurrentDistrictStatistics3 : BaseMenu
         })
         { ResizeKeyboard = true };
 
-        MenuLevel = MenuLevels.CurrentDistrictStatistics3;
+        MenuLevel = MenuLevel.CurrentDistrictStatistics3;
     }
 }

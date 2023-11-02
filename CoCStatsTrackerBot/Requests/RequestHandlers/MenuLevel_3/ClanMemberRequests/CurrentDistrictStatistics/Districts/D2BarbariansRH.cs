@@ -7,7 +7,7 @@ public class D2BarbariansRH : BaseRequestHandler
     public D2BarbariansRH()
     {
         Header = "Лагерь варваров";
-        HandlerMenuLevel = MenuLevels.CurrentDistrictStatistics3;
+        HandlerMenuLevel = MenuLevel.CurrentDistrictStatistics3;
     }
 
     override public void Execute(RequestHadnlerParameters parameters)

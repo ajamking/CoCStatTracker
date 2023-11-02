@@ -7,6 +7,6 @@ public class ClanInfoMenuHandler : BaseRequestHandler
     public ClanInfoMenuHandler()
     {
         Header = "Клан";
-        HandlerMenuLevel = MenuLevels.PlayerInfo2;
+        HandlerMenuLevel = MenuLevel.ClanInfo2;
     }
 }

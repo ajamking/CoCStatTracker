@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities
 {
     public class TrackedClan : Entity
     {
+        public string AdminsKey { get; set; }
         public DateTime UpdatedOn { get; set; }
         public string Tag { get; set; }
         public string Name { get; set; }
@@ -23,7 +23,7 @@ namespace Domain.Entities
         public int WarTies { get; set; }
         public int WarLoses { get; set; }
         public int CapitalHallLevel { get; set; }
-        
+
         public virtual LastClanMemberStatistics LastClanMembersStaticstics { get; set; }
 
         public virtual ICollection<ClanMember> ClanMembers { get; set; }

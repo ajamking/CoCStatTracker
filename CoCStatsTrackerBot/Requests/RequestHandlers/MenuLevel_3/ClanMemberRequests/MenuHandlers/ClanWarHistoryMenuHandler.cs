@@ -7,6 +7,6 @@ public class ClanWarHistoryMenuHandler : BaseRequestHandler
     public ClanWarHistoryMenuHandler()
     {
         Header = "История войн";
-        HandlerMenuLevel = MenuLevels.ClanWarsHistory3;
+        HandlerMenuLevel = MenuLevel.ClanWarsHistory3;
     }
 }

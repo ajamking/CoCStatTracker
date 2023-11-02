@@ -7,8 +7,8 @@ public class MemberSuperUnitsRH : BaseRequestHandler
 {
     public MemberSuperUnitsRH()
     {
-        Header = "Активные супер юниты";
-        HandlerMenuLevel = MenuLevels.PlayerArmy3;
+        Header = "Активные супер юниты игрока";
+        HandlerMenuLevel = MenuLevel.PlayerArmy3;
     }
 
     override public void Execute(RequestHadnlerParameters parameters)

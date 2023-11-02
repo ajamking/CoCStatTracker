@@ -7,6 +7,6 @@ public class StartMenuHandler : BaseRequestHandler
     public StartMenuHandler()
     {
         Header = "/start";
-        HandlerMenuLevel = MenuLevels.Main0;
+        HandlerMenuLevel = MenuLevel.Main0;
     }
 }

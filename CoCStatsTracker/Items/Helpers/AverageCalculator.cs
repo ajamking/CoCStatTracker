@@ -31,7 +31,7 @@ public static class AverageCalculator
                             }
                         }
 
-                        return (warAvg / warCounter);
+                        return warCounter == 0 ? 0 : warAvg / warCounter;
                     }
                 case AvgType.ClanWarWithout1415Th:
                     {
@@ -56,7 +56,7 @@ public static class AverageCalculator
                             }
                         }
 
-                        return (warAvg / warCounter);
+                        return warCounter == 0 ? 0 : warAvg / warCounter;
                     }
                 case AvgType.Raids:
                     {
@@ -77,7 +77,7 @@ public static class AverageCalculator
                             }
                         }
 
-                        return (raidsAvg / raidsCounter);
+                        return raidsCounter == 0 ? 0 : raidsAvg / raidsCounter;
                     }
                 case AvgType.RaidsWithoutPeak:
                     {
@@ -93,7 +93,7 @@ public static class AverageCalculator
                         {
                             foreach (var attack in raid.Attacks)
                             {
-                                if (attack.OpponentDistrict.Name != "Capital Peak")
+                                if (attack.OpponentDistrictName != "Capital Peak")
                                 {
                                     raidsAvg += (attack.DestructionPercentTo - attack.DestructionPercentFrom);
                                     raidsCounter++;
@@ -101,7 +101,7 @@ public static class AverageCalculator
                             }
                         }
 
-                        return (raidsAvg / raidsCounter);
+                        return raidsCounter == 0 ? 0 : raidsAvg / raidsCounter;
                     }
                 default:
                     return 0;

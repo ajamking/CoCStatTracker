@@ -14,8 +14,9 @@ public class TrackedClanBuilder
         Clan = trackedClan ?? new TrackedClan();
     }
 
-    public void SetBaseProperties(ClanApi clanApi)
+    public void SetBaseProperties(ClanApi clanApi, string adminsKey)
     {
+        Clan.AdminsKey = adminsKey;
         Clan.UpdatedOn = DateTime.Now;
         Clan.Tag = clanApi.Tag;
         Clan.Name = clanApi.Name;

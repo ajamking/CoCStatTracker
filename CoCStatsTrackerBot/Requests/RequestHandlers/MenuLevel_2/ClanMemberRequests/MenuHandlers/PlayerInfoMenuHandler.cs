@@ -7,6 +7,6 @@ public class PlayerInfoMenuHandler : BaseRequestHandler
     public PlayerInfoMenuHandler()
     {
         Header = "Игрок";
-        HandlerMenuLevel = MenuLevels.PlayerInfo2;
+        HandlerMenuLevel = MenuLevel.PlayerInfo2;
     }
 }

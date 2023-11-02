@@ -38,16 +38,6 @@ public class CapitalRaidBuilder
         Raid.RaidMembers = members;
     }
 
-    public void SetDefeatedClans(ICollection<DefeatedClan> clans)
-    {
-        Raid.DefeatedClans = clans;
-    }
-
-    public void SetAttacks(ICollection<RaidAttack> attacks)
-    {
-        Raid.RaidAttacks = attacks;
-    }
-
     public void SetRaidDefenses(ICollection<RaidDefense> defenses)
     {
         Raid.RaidDefenses = defenses;

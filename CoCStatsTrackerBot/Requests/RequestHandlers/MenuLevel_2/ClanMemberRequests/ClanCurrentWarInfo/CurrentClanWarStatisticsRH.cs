@@ -8,8 +8,8 @@ public class CurrentClanWarStatisticsRH : BaseRequestHandler
 {
     public CurrentClanWarStatisticsRH()
     {
-        Header = "Показатели";
-        HandlerMenuLevel = MenuLevels.CurrentWarInfo2;
+        Header = "Показатели войны";
+        HandlerMenuLevel = MenuLevel.CurrentWarInfo2;
     }
 
     override public void Execute(RequestHadnlerParameters parameters)
@@ -18,11 +18,15 @@ public class CurrentClanWarStatisticsRH : BaseRequestHandler
         {
             parameters.EntriesCount = 1;
 
-            var allClanWars = GetFromDbQueryHandler.GetAllClanWars(parameters.LastTagMessage).OrderByDescending(x => x.StartedOn).ToList();
+            var allClanWars = GetFromDbQueryHandler.GetAllClanWars(parameters.LastClanTagMessage).OrderByDescending(x => x.StartedOn).ToList();
 
             var answer = ClanFunctions.GetClanWarHistory(allClanWars, parameters.EntriesCount, MessageSplitToken);
 
             ResponseSender.SendAnswer(parameters, true, SplitAnswer(answer));
+        }
+        catch (NotFoundException e)
+        {
+            ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Пока не обладаю такими сведениями.", UiTextStyle.Default));
         }
         catch (Exception e)
         {

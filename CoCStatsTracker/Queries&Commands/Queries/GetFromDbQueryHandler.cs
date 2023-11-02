@@ -1,29 +1,38 @@
 ﻿using CoCStatsTracker.UIEntities;
 using Storage;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace CoCStatsTracker;
 
 public static class GetFromDbQueryHandler
 {
-    private static string _dbConnectionString;
+    private static string _dbConnectionString = "Data Source=./../../../../CustomSolutionElements/CoCStatsTracker.db";
 
     public static void SetConnectionString(string dbConnectionString)
     {
         _dbConnectionString = dbConnectionString;
     }
+
     /*--------------Клан--------------*/
     public static List<ClanUi> GetAllTrackedClans()
     {
+        var test = new Stopwatch();
+
+        test.Start();
+
         using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
         {
+           
             var uiClans = new List<ClanUi>();
 
             uiClans.AddRange(dbContext.TrackedClans
                 .Select(Mapper.MapToUi).ToList());
 
             NotFoundException.ThrowByPredicate(() => uiClans is { Count: 0 }, "No tracked clans were found in DB");
+
+            test.Stop();
 
             return uiClans;
         }

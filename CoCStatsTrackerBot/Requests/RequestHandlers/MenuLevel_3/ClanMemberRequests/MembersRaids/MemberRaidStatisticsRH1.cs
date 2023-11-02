@@ -6,8 +6,8 @@ public class MemberRaidStatisticsRH1 : BaseRequestHandler
 {
     public MemberRaidStatisticsRH1()
     {
-        Header = "Последний рейд";
-        HandlerMenuLevel = MenuLevels.PlayerRaidStatistics3;
+        Header = "Последнее участие в рейдах";
+        HandlerMenuLevel = MenuLevel.PlayerRaidStatistics3;
     }
 
     override public void Execute(RequestHadnlerParameters parameters)

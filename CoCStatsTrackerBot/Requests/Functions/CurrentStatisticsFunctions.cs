@@ -45,7 +45,7 @@ public class CurrentStatisticsFunctions
 
     public static string GetCurrentWarMap(WarMapUi warMapUi)
     {
-        var maxNameLength = 8;
+        var maxNameLength = 14;
 
         var warMembers = warMapUi.WarMembers.OrderBy(x => x.MapPosition).ToList();
 
@@ -64,6 +64,7 @@ public class CurrentStatisticsFunctions
         str.AppendLine(StylingHelper.MakeItStyled(warMapUi.StartedOn + " - ", UiTextStyle.Default));
         str.AppendLine(StylingHelper.MakeItStyled(warMapUi.EndedOn.ToString(), UiTextStyle.Default));
         str.AppendLine();
+        str.AppendLine($@"``` ");
 
         for (int i = 0; i < warMembers.Count; i++)
         {
@@ -71,9 +72,9 @@ public class CurrentStatisticsFunctions
 
             var opponent = enemyWarMembers[i];
 
-            var properMateName = StylingHelper.ChangeInvalidSymbols(mate.Name);
+            var properMateName = StylingHelper.GetProperString(mate.Name, maxNameLength);
 
-            var properOpponentName = StylingHelper.ChangeInvalidSymbols(opponent.Name);
+            var properOpponentName = StylingHelper.GetProperString(opponent.Name, maxNameLength);
 
             var position = StylingHelper.GetCenteredString((i + 1).ToString(), 2);
 
@@ -89,12 +90,28 @@ public class CurrentStatisticsFunctions
                 properOpponentName = properOpponentName.Substring(0, maxNameLength);
             }
 
+            var membersThLevel = mate.TownHallLevel.ToString();
+
+            if (mate.TownHallLevel < 10)
+            {
+                membersThLevel += " ";
+            }
+
+            var opponentThLevel = opponent.TownHallLevel.ToString();
+
+            if (opponent.TownHallLevel < 10)
+            {
+                opponentThLevel += " ";
+            }
+
             properOpponentName = StylingHelper.GetCenteredString(properOpponentName, maxNameLength);
 
-            var mapStr = $@"{properMateName} {mate.TownHallLevel} |{position}| {opponent.TownHallLevel} {properOpponentName}";
+            var mapStr = $@"{properMateName} {membersThLevel} |{position}| {opponent.TownHallLevel} {properOpponentName}";
 
-            str.AppendLine($@"``` {StylingHelper.Ecranize(mapStr)}```");
+            str.AppendLine($@"{StylingHelper.Ecranize(mapStr)}");
         }
+
+        str.AppendLine($@"```");
 
         return str.ToString();
     }
@@ -240,12 +257,7 @@ public class CurrentStatisticsFunctions
             {
                 foreach (var attack in district.Attacks)
                 {
-                    var properName = StylingHelper.ChangeInvalidSymbols(attack.PlayerName);
-
-                    if (properName.Length >= maxNameLength)
-                    {
-                        properName = properName.Substring(0, maxNameLength);
-                    }
+                    var properName = StylingHelper.GetProperString(attack.PlayerName, maxNameLength);
 
                     str.Append($" |{StylingHelper.GetCenteredString(properName, maxNameLength)}|");
 

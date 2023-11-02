@@ -1,4 +1,5 @@
-﻿using CoCStatsTrackerBot.Menu;
+﻿using CoCStatsTrackerBot.Helpers;
+using CoCStatsTrackerBot.Menu;
 using CoCStatsTrackerBot.Requests;
 using CoCStatsTrackerBot.Requests.RequestHandlers;
 using System.Text.RegularExpressions;
@@ -17,137 +18,194 @@ public static class Navigator
 
     public async static Task HandleMessage(ITelegramBotClient botClient, Message message)
     {
-        TryAddBotUser(message);
+        TryAddBotUser(botClient, message);
 
         var activeBotUser = BotUsers.First(x => x.ChatId == message.Chat.Id);
 
-        if (message.Text?.ToLower() == "назад")
+        UpdateUsersRHParametersMesssage(activeBotUser, message);
+
+        if (activeBotUser.RequestHadnlerParameters.Message.Text.ToLower() == "назад")
         {
-            switch (activeBotUser.LastMenuLevel)
+            switch (activeBotUser.CurrentMenuLevel)
             {
-                case MenuLevels.Member1:
+                case MenuLevel.Member1:
                     {
                         AllRequestHandlers
-                            .First(x => x.HandlerMenuLevel == MenuLevels.Main0)
-                            .ShowKeyboard(new RequestHadnlerParameters(botClient, message, activeBotUser.LastTagMessage));
+                            .First(x => x.HandlerMenuLevel == MenuLevel.Main0)
+                            .ShowKeyboard(activeBotUser.RequestHadnlerParameters);
 
-                        activeBotUser.LastMenuLevel = MenuLevels.Main0;
+                        activeBotUser.CurrentMenuLevel = MenuLevel.Main0;
 
                         return;
                     }
-                case MenuLevels.PlayerInfo2 or MenuLevels.ClanInfo2 or MenuLevels.CurrentWarInfo2 or
-                     MenuLevels.CurrentRaidInfo2:
+                case MenuLevel.PlayerInfo2 or MenuLevel.ClanInfo2 or MenuLevel.CurrentWarInfo2 or
+                     MenuLevel.CurrentRaidInfo2:
                     {
                         AllRequestHandlers
-                            .First(x => x.HandlerMenuLevel == MenuLevels.Member1)
-                            .ShowKeyboard(new RequestHadnlerParameters(botClient, message, activeBotUser.LastTagMessage));
+                            .First(x => x.HandlerMenuLevel == MenuLevel.Member1)
+                            .ShowKeyboard(activeBotUser.RequestHadnlerParameters);
 
-                        activeBotUser.LastMenuLevel = MenuLevels.Member1;
+                        activeBotUser.CurrentMenuLevel = MenuLevel.Member1;
 
                         return;
                     }
-                case MenuLevels.PlayerWarStatistics3 or MenuLevels.PlayerRaidStatistics3 or MenuLevels.PlayerArmy3:
+                case MenuLevel.PlayerWarStatistics3 or MenuLevel.PlayerRaidStatistics3 or MenuLevel.PlayerArmy3:
                     {
                         AllRequestHandlers
-                           .First(x => x.HandlerMenuLevel == MenuLevels.PlayerInfo2)
-                           .ShowKeyboard(new RequestHadnlerParameters(botClient, message, activeBotUser.LastTagMessage));
+                           .First(x => x.HandlerMenuLevel == MenuLevel.PlayerInfo2)
+                           .ShowKeyboard(activeBotUser.RequestHadnlerParameters);
 
-                        activeBotUser.LastMenuLevel = MenuLevels.PlayerInfo2;
+                        activeBotUser.CurrentMenuLevel = MenuLevel.PlayerInfo2;
 
                         return;
                     }
-                case MenuLevels.ClanWarsHistory3 or MenuLevels.ClanRaidsHistory3:
+                case MenuLevel.ClanWarsHistory3 or MenuLevel.ClanRaidsHistory3:
                     {
                         AllRequestHandlers
-                           .First(x => x.HandlerMenuLevel == MenuLevels.ClanInfo2)
-                           .ShowKeyboard(new RequestHadnlerParameters(botClient, message, activeBotUser.LastTagMessage));
+                           .First(x => x.HandlerMenuLevel == MenuLevel.ClanInfo2)
+                           .ShowKeyboard(activeBotUser.RequestHadnlerParameters);
 
-                        activeBotUser.LastMenuLevel = MenuLevels.ClanInfo2;
+                        activeBotUser.CurrentMenuLevel = MenuLevel.ClanInfo2;
 
                         return;
                     }
-                case MenuLevels.CurrentDistrictStatistics3:
+                case MenuLevel.CurrentDistrictStatistics3:
                     {
 
                         AllRequestHandlers
-                         .First(x => x.HandlerMenuLevel == MenuLevels.CurrentRaidInfo2)
-                         .ShowKeyboard(new RequestHadnlerParameters(botClient, message, activeBotUser.LastTagMessage));
+                         .First(x => x.HandlerMenuLevel == MenuLevel.CurrentRaidInfo2)
+                         .ShowKeyboard(activeBotUser.RequestHadnlerParameters);
 
-                        activeBotUser.LastMenuLevel = MenuLevels.CurrentRaidInfo2;
+                        activeBotUser.CurrentMenuLevel = MenuLevel.CurrentRaidInfo2;
 
                         return;
                     }
                 default:
                     {
                         AllRequestHandlers
-                         .First(x => x.HandlerMenuLevel == MenuLevels.Main0)
-                         .ShowKeyboard(new RequestHadnlerParameters(botClient, message, activeBotUser.LastTagMessage));
+                         .First(x => x.HandlerMenuLevel == MenuLevel.Main0)
+                         .ShowKeyboard(activeBotUser.RequestHadnlerParameters);
 
-                        activeBotUser.LastMenuLevel = MenuLevels.Main0;
+                        activeBotUser.CurrentMenuLevel = MenuLevel.Main0;
 
                         return;
                     }
             }
         }
 
-        if (message.Text.Contains('#'))
+        if (activeBotUser.RequestHadnlerParameters.Message.Text.Contains('#'))
         {
-            switch (message.Text)
+            switch (activeBotUser.RequestHadnlerParameters.Message.Text)
             {
                 case string msg when TagRegex.IsMatch(msg):
                     {
-                        UpsertLastTagMessage(message);
+                        if (TagsConditionChecker.CheckClanExistInDb(activeBotUser.RequestHadnlerParameters))
+                        {
+                            UpsertLastClanTagMessage(message);
 
-                        await botClient.SendTextMessageAsync(message.Chat.Id, text: "Тег задан в корректной форме!");
+                            ResponseSender.SendAnswer(activeBotUser.RequestHadnlerParameters, true, StylingHelper.MakeItStyled($"Тег клана задан в корректной форме!", UiTextStyle.Default));
 
-                        return;
+                            return;
+                        }
+                        else if (TagsConditionChecker.CheckMemberExistInDb(activeBotUser.RequestHadnlerParameters))
+                        {
+                            UpsertLastMemberTagMessage(message);
+
+                            ResponseSender.SendAnswer(activeBotUser.RequestHadnlerParameters, true, StylingHelper.MakeItStyled($"Тег игрока задан в корректной форме!", UiTextStyle.Default));
+
+                            return;
+                        }
+                        else
+                        {
+                            ResponseSender.SendAnswer(activeBotUser.RequestHadnlerParameters, true, StylingHelper.MakeItStyled($"Тег был задан в корректной форме, но ни игрок ни клан с таким тегом" +
+                                $" не отслеживаются. Попробуйте ввести другой.", UiTextStyle.Default));
+
+                            return;
+                        }
                     }
                 default:
                     {
-                        await botClient.SendTextMessageAsync(message.Chat.Id, text: "Тег не прошел проверку. " +
-                            "Задайте тег в корректной форме или выберите другуо опцию из меню.");
+                        ResponseSender.SendAnswer(activeBotUser.RequestHadnlerParameters, true,
+                          StylingHelper.MakeItStyled($"Тег не прошел проверку.\r\nЗадайте тег в корректной форме или выберите другуо опцию из меню.", UiTextStyle.Default));
 
                         return;
                     }
             }
         }
 
-        if (AllRequestHandlers.Any(x => x.Header == message.Text))
+        if (AllRequestHandlers.Any(x => x.Header == activeBotUser.RequestHadnlerParameters.Message.Text))
         {
-            var requestHandler = AllRequestHandlers.First(x => x.Header == message.Text);
+            var requestHandler = AllRequestHandlers.First(x => x.Header == activeBotUser.RequestHadnlerParameters.Message.Text);
 
-            var requestParameters = new RequestHadnlerParameters(botClient, message, activeBotUser.LastTagMessage);
+            if (activeBotUser.RequestHadnlerParameters.LastMemberTagMessage is null && (requestHandler.HandlerMenuLevel is
+                 MenuLevel.PlayerInfo2 or
+                 MenuLevel.PlayerWarStatistics3 or
+                 MenuLevel.PlayerRaidStatistics3 or
+                 MenuLevel.PlayerArmy3))
+            {
+                TagsConditionChecker.SendMemberTagMessageIsEmpty(activeBotUser.RequestHadnlerParameters);
+            }
+            else if (activeBotUser.RequestHadnlerParameters.LastClanTagMessage is null && (requestHandler.HandlerMenuLevel is
+                  MenuLevel.ClanInfo2 or
+                  MenuLevel.ClanWarsHistory3 or
+                  MenuLevel.ClanRaidsHistory3 or
+                  MenuLevel.CurrentDistrictStatistics3 or
+                  MenuLevel.CurrentWarInfo2 or
+                  MenuLevel.CurrentRaidInfo2))
+            {
+                TagsConditionChecker.SendClanTagMessageIsEmpty(activeBotUser.RequestHadnlerParameters);
+            }
+            else
+            {
+                requestHandler.Execute(activeBotUser.RequestHadnlerParameters);
 
-            activeBotUser.LastMenuLevel = requestHandler.HandlerMenuLevel;
-
-            requestHandler.ShowKeyboard(requestParameters);
-
-            requestHandler.Execute(requestParameters);
+                ChangUserMenuLevels(activeBotUser, requestHandler);
+            }
         }
         else
         {
-            await botClient.SendTextMessageAsync(message.Chat.Id,
-                  text: $"Вы сказали {message.Text}, но я еще не знаю таких сложных вещей. 🥺\n" +
-                  $"Выберите что-то из меню или введите корректный тег игрока/клана 😁");
-
+            ResponseSender.SendAnswer(activeBotUser.RequestHadnlerParameters, true,
+                StylingHelper.MakeItStyled($"Вы сказали {message.Text}, но я еще не знаю таких сложных вещей.🥺 \r\n" +
+                $"Выберите что-то из меню или введите корректный тег игрока или кална.😁", UiTextStyle.Default));
         }
     }
 
-    public static void TryAddBotUser(Message message)
+    private static void TryAddBotUser(ITelegramBotClient telegramBotClient, Message message)
     {
         if (!BotUsers.Any(x => x.ChatId == message.Chat.Id))
         {
-            BotUsers.Add(new BotUser()
-            {
-                ChatId = message.Chat.Id,
-                FirstName = message.Chat.FirstName,
-                Username = message.Chat.Username,
-            });
+            BotUsers.Add(new BotUser(telegramBotClient, message));
         }
     }
 
-    public static void UpsertLastTagMessage(Message message)
+    private static void UpsertLastClanTagMessage(Message message)
     {
-        BotUsers.First(x => x.ChatId == message.Chat.Id).LastTagMessage = message.Text;
+        BotUsers.First(x => x.ChatId == message.Chat.Id).RequestHadnlerParameters.LastClanTagMessage = message.Text;
+    }
+
+    private static void UpsertLastMemberTagMessage(Message message)
+    {
+        BotUsers.First(x => x.ChatId == message.Chat.Id).RequestHadnlerParameters.LastMemberTagMessage = message.Text;
+    }
+
+    private static void UpdateUsersRHParametersMesssage(BotUser activeBotUser, Message message)
+    {
+        activeBotUser.RequestHadnlerParameters.Message = message;
+    }
+
+    private static void ChangUserMenuLevels(BotUser activeBotUser, BaseRequestHandler requestHandler)
+    {
+        activeBotUser.PreviousMenuLevel = activeBotUser.CurrentMenuLevel;
+
+        activeBotUser.CurrentMenuLevel = requestHandler.HandlerMenuLevel;
+
+        if (requestHandler.HandlerMenuLevel is MenuLevel.Main0)
+        {
+            requestHandler.ShowKeyboard(activeBotUser.RequestHadnlerParameters);
+        }
+        if (activeBotUser.CurrentMenuLevel != activeBotUser.PreviousMenuLevel)
+        {
+            requestHandler.ShowKeyboard(activeBotUser.RequestHadnlerParameters);
+        }
     }
 }

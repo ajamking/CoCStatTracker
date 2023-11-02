@@ -7,8 +7,8 @@ public class MemberSiegeMachinesRH : BaseRequestHandler
 {
     public MemberSiegeMachinesRH()
     {
-        Header = "Осадные машины";
-        HandlerMenuLevel = MenuLevels.PlayerArmy3;
+        Header = "Осадные машины игрока";
+        HandlerMenuLevel = MenuLevel.PlayerArmy3;
     }
 
     override public void Execute(RequestHadnlerParameters parameters)

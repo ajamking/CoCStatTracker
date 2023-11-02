@@ -7,7 +7,7 @@ public class D4BaloonsRH : BaseRequestHandler
     public D4BaloonsRH()
     {
         Header = "Лагуна шаров";
-        HandlerMenuLevel = MenuLevels.CurrentDistrictStatistics3;
+        HandlerMenuLevel = MenuLevel.CurrentDistrictStatistics3;
     }
 
     override public void Execute(RequestHadnlerParameters parameters)

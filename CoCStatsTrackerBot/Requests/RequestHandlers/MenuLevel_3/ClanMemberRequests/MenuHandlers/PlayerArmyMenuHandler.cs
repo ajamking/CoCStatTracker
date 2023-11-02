@@ -7,6 +7,6 @@ public class PlayerArmyMenuHandler : BaseRequestHandler
     public PlayerArmyMenuHandler()
     {
         Header = "Войска";
-        HandlerMenuLevel = MenuLevels.PlayerArmy3;
+        HandlerMenuLevel = MenuLevel.PlayerArmy3;
     }
 }

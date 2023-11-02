@@ -10,16 +10,16 @@ using System.Threading.Tasks;
 
 namespace CoCStatsTracker;
 
-public class AddToDbCommandHandler
+public static class AddToDbCommandHandler
 {
-    private string _dbConnectionString;
+    private static string _dbConnectionString = "Data Source=./../../../../CustomSolutionElements/CoCStatsTracker.db";
 
-    public AddToDbCommandHandler(string dbConnectionString)
+    public static void SetConnectionString(string dbConnectionString)
     {
         _dbConnectionString = dbConnectionString;
     }
 
-    public void ResetDb()
+    public static void ResetDb()
     {
         using (AppDbContext dbContext = new AppDbContext(_dbConnectionString, true))
         {
@@ -27,7 +27,7 @@ public class AddToDbCommandHandler
         }
     }
 
-    public void AddTrackedClan(string clanTag)
+    public static void AddTrackedClan(string clanTag, string adminsKey)
     {
         var trackedClanBuilder = new TrackedClanBuilder();
 
@@ -35,7 +35,7 @@ public class AddToDbCommandHandler
 
         FailedPullFromApiException.ThrowByPredicate(() => clanInfoFromApi is { Tag: null }, "AddTrackedClan is failed, bad API responce");
 
-        trackedClanBuilder.SetBaseProperties(clanInfoFromApi);
+        trackedClanBuilder.SetBaseProperties(clanInfoFromApi, adminsKey);
 
         using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
         {
@@ -45,7 +45,7 @@ public class AddToDbCommandHandler
         }
     }
 
-    public void AddClanMembers(string clanTag)
+    public static void AddClanMembers(string clanTag)
     {
         var clanMembersTagsFromApi = new ClanInfoRequest().CallApi(clanTag).Result.Members;
 
@@ -84,7 +84,7 @@ public class AddToDbCommandHandler
         }
     }
 
-    public void AddLastClanMembersStaticstics(string clanTag)
+    public static void AddLastClanMembersStaticstics(string clanTag)
     {
         using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
         {
@@ -95,14 +95,16 @@ public class AddToDbCommandHandler
             var trackedClanBuilder = new TrackedClanBuilder(trackedClan);
 
             trackedClanBuilder.SetLastClanMembersStaticstics(trackedClanBuilder.Clan.ClanMembers);
+
+            dbContext.SaveChanges();
         }
     }
 
-    public void AddCurrentRaidToClan(string clanTag)
+    public static void AddCurrentRaidToClan(string clanTag)
     {
         var raidInfoFromApi = new CapitalRaidsRequest().CallApi(clanTag, 1).Result.RaidsInfo.First();
 
-        FailedPullFromApiException.ThrowByPredicate(() => raidInfoFromApi is { StartTime: null }, "AddCurrentRaidToClan is failed, bad API responce");
+        FailedPullFromApiException.ThrowByPredicate(() => raidInfoFromApi is null, "AddCurrentRaidToClan is failed, bad API responce");
 
         using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
         {
@@ -120,9 +122,7 @@ public class AddToDbCommandHandler
 
             raidBuilder = AddRaidDefenses(raidBuilder, raidInfoFromApi);
 
-            raidBuilder = AddRaidMembersWithoutAttacks(trackedClanBuilder, raidBuilder, raidInfoFromApi);
-
-            raidBuilder = AddDefeatedClansAndRaidAttacks(raidBuilder, raidInfoFromApi);
+            raidBuilder = AddRaidMembers(trackedClanBuilder, raidBuilder, raidInfoFromApi);
 
             trackedClanBuilder.AddCapitalRaid(raidBuilder.Raid);
 
@@ -130,7 +130,7 @@ public class AddToDbCommandHandler
         }
     }
 
-    private CapitalRaidBuilder AddRaidDefenses(CapitalRaidBuilder raidBuilder, RaidApi raidInfoFromApi)
+    private static CapitalRaidBuilder AddRaidDefenses(CapitalRaidBuilder raidBuilder, RaidApi raidInfoFromApi)
     {
         var raidDefenseBuilder = new RaidDefenseBuilder();
 
@@ -143,10 +143,11 @@ public class AddToDbCommandHandler
         return raidBuilder;
     }
 
-    private CapitalRaidBuilder AddRaidMembersWithoutAttacks(TrackedClanBuilder trackedClanBuilder, CapitalRaidBuilder raidBuilder, RaidApi raidInfoFromApi)
+    private static CapitalRaidBuilder AddRaidMembers(TrackedClanBuilder trackedClanBuilder, CapitalRaidBuilder raidBuilder, RaidApi raidInfoFromApi)
     {
-        var newRaidMembers = new List<RaidMember>();
+        var raidMemberBuilders = new List<RaidMemberBuilder>();
 
+        //Создаем рейд мемберов без атак
         foreach (var raidMemberApi in raidInfoFromApi.RaidMembers)
         {
             var raidMemberBuilder = new RaidMemberBuilder();
@@ -155,87 +156,64 @@ public class AddToDbCommandHandler
 
             raidMemberBuilder.SetRaid(raidBuilder.Raid);
 
-            var clanMemberOnRaid = trackedClanBuilder.Clan.ClanMembers
-               .FirstOrDefault(x => x.Tag == raidMemberBuilder.Member.Tag);
+            raidMemberBuilder.SetClanMember(trackedClanBuilder.Clan.ClanMembers
+                .FirstOrDefault(x => x.Tag == raidMemberApi.Tag));
 
-            if (clanMemberOnRaid != null)
-            {
-                clanMemberOnRaid.RaidMemberships.Add(raidMemberBuilder.Member);
-            }
-
-            raidMemberBuilder.SetClanMember(clanMemberOnRaid);
+            raidMemberBuilders.Add(raidMemberBuilder);
         }
 
-        raidBuilder.SetRaidMembers(newRaidMembers);
+        var allRaidAttacks = new List<RaidAttack>();
 
-        return raidBuilder;
-    }
-
-    private CapitalRaidBuilder AddDefeatedClansAndRaidAttacks(CapitalRaidBuilder raidBuilder, RaidApi raidInfoFromApi)
-    {
-        var defeatedClans = new List<DefeatedClan>();
-
-        var raidAttacks = new List<RaidAttack>();
-
-        foreach (var attackedClanApi in raidInfoFromApi.RaidOnClans)
+        //Билдим все RaidAttacks, кладем в одну кучу.
+        foreach (var raidOnClanApi in raidInfoFromApi.RaidOnClans)
         {
-            var defeatedClanBuilder = new DefeatedClanBuilder();
-
-            defeatedClanBuilder.SetBaseProperties(attackedClanApi);
-
-            defeatedClanBuilder.SetCapitalRaid(raidBuilder.Raid);
-
-            var destroyedDistricts = new List<OpponentDistrict>();
-
-            foreach (var defeatedDistrict in attackedClanApi.DestroyedDistricts)
+            foreach (var destroyedDistrictApi in raidOnClanApi.DestroyedDistricts.Where(x => x.MemberAttacks is not null))
             {
-                var opponentDistrictBuilder = new OpponentDistrictBuilder();
+                var sortedAttacksApi = destroyedDistrictApi.MemberAttacks.OrderBy(x => x.DestructionPercentTo).ToList();
 
-                opponentDistrictBuilder.SetBaseProperties(defeatedDistrict);
+                var destructionPercentFrom = 0;
 
-                var sortedAttacks = new List<AttackOnDistrictApi>();
-
-                if (defeatedDistrict.MemberAttacks != null)
+                foreach (var memberAttackApi in sortedAttacksApi)
                 {
-                    var previousDestructionPercent = 0;
+                    var raidAttackBuilder = new RaidAttackBuilder();
 
-                    sortedAttacks = defeatedDistrict.MemberAttacks.OrderBy(x => x.DestructionPercentTo).ToList();
+                    raidAttackBuilder.SetBaseProperties(memberAttackApi, raidOnClanApi, destroyedDistrictApi, destructionPercentFrom);
 
-                    foreach (var attack in sortedAttacks)
-                    {
-                        var tempRaidMember = raidBuilder.Raid.RaidMembers.FirstOrDefault(x => x.Tag == attack.Attacker.Tag);
+                    destructionPercentFrom = memberAttackApi.DestructionPercentTo;
 
-                        var raidAttackBuilder = new RaidAttackBuilder(tempRaidMember.Attacks?
-                            .FirstOrDefault(x => x.DestructionPercentTo == attack.DestructionPercentTo));
+                    raidAttackBuilder.SetRaidMember(raidMemberBuilders.FirstOrDefault(x => x.Member.MemberTag == memberAttackApi.Attacker.Tag).Member);
 
-                        raidAttackBuilder.SetBaseProperties(previousDestructionPercent, attack, opponentDistrictBuilder.District);
-
-                        raidAttackBuilder.SetRaidMember(raidBuilder.Raid.RaidMembers
-                            .FirstOrDefault(x => x.Tag == attack.Attacker.Tag));
-
-                        raidAttacks.Add(raidAttackBuilder.RaidAttack);
-
-                        previousDestructionPercent = attack.DestructionPercentTo;
-                    }
+                    allRaidAttacks.Add(raidAttackBuilder.RaidAttack);
                 }
-
-                destroyedDistricts.Add(opponentDistrictBuilder.District);
             }
-
-            defeatedClanBuilder.SetOpponentDistricts(destroyedDistricts);
-
-            defeatedClans.Add(defeatedClanBuilder.Clan);
         }
 
-        raidBuilder.SetDefeatedClans(defeatedClans);
+        var raidMembers = new List<RaidMember>();
 
-        raidBuilder.SetAttacks(raidAttacks);
+        //Раскидываем атаки по рейдМемберам
+        foreach (var rmb in raidMemberBuilders)
+        {
+            var memberRaidAttacks = new List<RaidAttack>();
+
+            foreach (var attack in allRaidAttacks)
+            {
+                if (attack.MemberTag == rmb.Member.MemberTag)
+                {
+                    memberRaidAttacks.Add(attack);
+                }
+            }
+
+            rmb.SetRaidMemberAttacks(memberRaidAttacks);
+
+            raidMembers.Add(rmb.Member);
+        }
+
+        raidBuilder.SetRaidMembers(raidMembers);
 
         return raidBuilder;
     }
 
-
-    public void AddCurrentClanWarToClan(string clanTag, bool isCwLWar = false, string cwlWarTag = "")
+    public static void AddCurrentClanWarToClan(string clanTag, bool isCwLWar = false, string cwlWarTag = "")
     {
         var clanWarInfoFromApi = isCwLWar ?
                new CwlWarRequest().CallApi(cwlWarTag).Result :
@@ -267,7 +245,7 @@ public class AddToDbCommandHandler
         }
     }
 
-    private ClanWarBuilder AddEnemyWarMembers(ClanWarBuilder clanWarBuilder, ClanWarApi clanWarInfoFromApi)
+    private static ClanWarBuilder AddEnemyWarMembers(ClanWarBuilder clanWarBuilder, ClanWarApi clanWarInfoFromApi)
     {
         var enemyWarmembers = new List<EnemyWarMember>();
 
@@ -287,7 +265,7 @@ public class AddToDbCommandHandler
         return clanWarBuilder;
     }
 
-    private ClanWarBuilder AddCwMembersWithAttacks(TrackedClanBuilder trackedClanBuilder, ClanWarBuilder clanWarBuilder, ClanWarApi clanWarInfoFromApi)
+    private static ClanWarBuilder AddCwMembersWithAttacks(TrackedClanBuilder trackedClanBuilder, ClanWarBuilder clanWarBuilder, ClanWarApi clanWarInfoFromApi)
     {
         var warMembers = new List<WarMember>();
 

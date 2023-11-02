@@ -6,8 +6,8 @@ public class MemberWarStatisticsRH3 : BaseRequestHandler
 {
     public MemberWarStatisticsRH3()
     {
-        Header = "Последние 3";
-        HandlerMenuLevel = MenuLevels.PlayerWarStatistics3;
+        Header = "3 последних войны";
+        HandlerMenuLevel = MenuLevel.PlayerWarStatistics3;
     }
 
     override public void Execute(RequestHadnlerParameters parameters)

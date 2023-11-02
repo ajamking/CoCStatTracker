@@ -7,7 +7,7 @@ public class D8SkeletonsRH : BaseRequestHandler
     public D8SkeletonsRH()
     {
         Header = "Парк скелетов";
-        HandlerMenuLevel = MenuLevels.CurrentDistrictStatistics3;
+        HandlerMenuLevel = MenuLevel.CurrentDistrictStatistics3;
     }
 
     override public void Execute(RequestHadnlerParameters parameters)

@@ -7,6 +7,6 @@ public class ClanCurrentDistrictStatisticsMenuHandler : BaseRequestHandler
     public ClanCurrentDistrictStatisticsMenuHandler()
     {
         Header = "Статистика по районам";
-        HandlerMenuLevel = MenuLevels.CurrentDistrictStatistics3;
+        HandlerMenuLevel = MenuLevel.CurrentDistrictStatistics3;
     }
 }

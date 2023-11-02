@@ -72,7 +72,7 @@ public static class ClanFunctions
         {
             counter++;
 
-            str.AppendLine(StylingHelper.MakeItStyled(counter + member.Name + "[" + member.Tag + "]", UiTextStyle.Name));
+            str.AppendLine(StylingHelper.MakeItStyled(counter + " " + member.Name + " [" + member.Tag + "] ", UiTextStyle.Name));
         }
 
         return str.ToString();
@@ -137,17 +137,12 @@ public static class ClanFunctions
         {
             var memberMachines = GetAllMachineLevels(memberArmy, machineMapper.Keys.ToList());
 
-            var properName = StylingHelper.ChangeInvalidSymbols(memberArmy.PlayerName);
-
-            if (properName.Length > maxNameLength)
-            {
-                properName = properName.Substring(0, maxNameLength);
-            }
-
             if (memberMachines.All(x => x.Value == "0"))
             {
                 break;
             }
+
+            var properName = StylingHelper.GetProperString(memberArmy.PlayerName, maxNameLength);
 
             str.Append($" |{StylingHelper.GetCenteredString(properName, maxNameLength)}|");
             str.Append($"{StylingHelper.GetCenteredString(memberMachines.First(x => x.Key == allMachines[0]).Value, maxMachineLevelLength)}|");
@@ -206,7 +201,7 @@ public static class ClanFunctions
 
                 foreach (var memberArmy in allArmysUi)
                 {
-                    if (memberArmy.Units.FirstOrDefault(x => x.Name == superUnit.Key)?.SuperTroopIsActivated == true)
+                    if (memberArmy.SuperUnits.FirstOrDefault(x => x.Name == superUnit.Key)?.SuperTroopIsActivated == true)
                     {
                         var properName = memberArmy.PlayerName;
 
@@ -220,6 +215,7 @@ public static class ClanFunctions
                 }
 
                 str.AppendLine(StylingHelper.MakeItStyled(members, UiTextStyle.Name));
+
                 str.AppendLine();
             }
         }
@@ -245,7 +241,7 @@ public static class ClanFunctions
         str.AppendLine(StylingHelper.MakeItStyled("Золото - столичное золото, вложенное за сезон.", UiTextStyle.Default));
         str.AppendLine(StylingHelper.MakeItStyled("Донат - пожертвовано войск за сезон.", UiTextStyle.Default));
         str.AppendLine();
-        str.AppendLine(StylingHelper.MakeItStyled("Все показатели сбрасываются каждый рейтинговый сезон.", UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled("Все показатели сбрасываются каждый рейтинговый сезон или по усмотрению администратора.", UiTextStyle.Default));
         str.AppendLine();
 
         str.AppendLine($"``` " +
@@ -262,12 +258,7 @@ public static class ClanFunctions
 
         foreach (var member in seasonStatisticsUistring)
         {
-            var properName = StylingHelper.ChangeInvalidSymbols(member.Name);
-
-            if (properName.Length > maxNameLength)
-            {
-                properName = properName.Substring(0, maxNameLength);
-            }
+            var properName = StylingHelper.GetProperString(member.Name, maxNameLength);
 
             str.Append($" |{StylingHelper.GetCenteredString(properName, maxNameLength)}|");
 
@@ -370,12 +361,7 @@ public static class ClanFunctions
                     {
                         foreach (var attack in district.Attacks)
                         {
-                            var properName = StylingHelper.ChangeInvalidSymbols(attack.PlayerName);
-
-                            if (properName.Length > maxNameLength)
-                            {
-                                properName = properName.Substring(0, maxNameLength);
-                            }
+                            var properName = StylingHelper.GetProperString(attack.PlayerName, maxNameLength);
 
                             str.Append($" |{StylingHelper.GetCenteredString(properName, maxNameLength)}|");
 
@@ -462,16 +448,16 @@ public static class ClanFunctions
 
                 foreach (var attack in cw.MembersResults.OrderByDescending(x => x.ThLevel))
                 {
-                    var properNameLevgth = 8;
-                    var shorterCoefficient = 3;
-                    var properName = StylingHelper.ChangeInvalidSymbols(attack.PlayerName);
+                    var properName = StylingHelper.GetProperString(attack.PlayerName, maxNameLength);
 
-                    if (properName.Length > properNameLevgth)
+                    var membersThLevel = attack.ThLevel.ToString();
+
+                    if (attack.ThLevel < 10)
                     {
-                        properName = properName.Substring(0, properNameLevgth);
+                        membersThLevel += " ";
                     }
 
-                    str.Append($" |{attack.ThLevel} {StylingHelper.GetCenteredString(properName, maxNameLength - shorterCoefficient)}|");
+                    str.Append($" |{membersThLevel} {StylingHelper.GetCenteredString(properName, maxNameLength)}|");
 
                     str.Append($"{StylingHelper.GetCenteredString(attack.FirstEnemyThLevel + "/" + attack.FirstDestructionPercent + "/" + attack.FirstStarsCount, maxAttackLenght)}|");
 
@@ -517,16 +503,10 @@ public static class ClanFunctions
             $"|{new string('-', maxDestructionPercentLength)}" +
             $"|{new string('-', maxCapitalLootLength)}|");
 
-        var properNameLength = maxNameLength - 3;
 
         foreach (var perfomance in playersPerfomances.OrderByDescending(x => x.AverageDestructionPercent))
         {
-            var properName = StylingHelper.ChangeInvalidSymbols(perfomance.Name);
-
-            if (properName.Length > properNameLength)
-            {
-                properName = properName.Substring(0, properNameLength);
-            }
+            var properName = StylingHelper.GetProperString(perfomance.Name, maxNameLength);
 
             str.Append($" |{StylingHelper.GetCenteredString(properName, maxNameLength)}|");
 

@@ -16,8 +16,6 @@ namespace Storage
         public DbSet<WarMember> WarMembers { get; set; }
 
         public DbSet<CapitalRaid> CapitalRaids { get; set; }
-        public DbSet<DefeatedClan> DefeatedClans { get; set; }
-        public DbSet<OpponentDistrict> OpponentDistricts { get; set; }
         public DbSet<RaidAttack> RaidAttacks { get; set; }
         public DbSet<RaidMember> RaidMembers { get; set; }
         public DbSet<RaidDefense> RaidDefenses { get; set; }

@@ -13,21 +13,9 @@ namespace Storage.Configurations.ClanWars
             builder.Property(p => p.DestructionPercentTo).IsRequired();
 
             builder
-               .HasOne<CapitalRaid>(x => x.Raid)
-               .WithMany(x => x.RaidAttacks)
-               .OnDelete(DeleteBehavior.Cascade);
-
-            builder
                 .HasOne<RaidMember>(x => x.RaidMember)
                 .WithMany(x => x.Attacks)
                 .OnDelete(DeleteBehavior.Cascade);
-
-            builder
-                .HasOne<OpponentDistrict>(x => x.OpponentDistrict)
-                .WithMany(x => x.Attacks)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            
         }
     }
 }
