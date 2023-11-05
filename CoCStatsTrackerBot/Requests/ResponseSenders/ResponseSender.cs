@@ -6,7 +6,7 @@ namespace CoCStatsTrackerBot.Requests;
 
 public static class ResponseSender
 {
-    public async static void SendAnswer(RequestHadnlerParameters parameters, bool answerIsValid, params string[] splitedAnswer)
+    public async static void SendAnswer(BotUserRequestParameters parameters, bool answerIsValid, params string[] splitedAnswer)
     {
         var botUserIdentitficator = DeterMineUserIdentificator(parameters.Message);
 
@@ -33,30 +33,15 @@ public static class ResponseSender
             }
 
             await parameters.BotClient.SendTextMessageAsync(parameters.Message.Chat.Id,
-                  text: StylingHelper.MakeItStyled("", UiTextStyle.Default),
+                  text: StylingHelper.MakeItStyled("Произошла внутреняя ошибка, обратитесь к администратору.", UiTextStyle.Default),
                   parseMode: ParseMode.MarkdownV2);
-
         }
     }
-    
 
-    private static string DeterMineUserIdentificator(Message message)
+    private static string DeterMineUserIdentificator(Message message) => message switch
     {
-        var botUserIdentitficator = "";
-
-        if (message.Chat.Username != null)
-        {
-            botUserIdentitficator = message.Chat.Username;
-        }
-        else if (message.Chat.FirstName != null)
-        {
-            botUserIdentitficator = message.Chat.FirstName;
-        }
-        else
-        {
-            botUserIdentitficator = message.Chat.Id.ToString();
-        }
-
-        return botUserIdentitficator;
-    }
+        _ when !string.IsNullOrEmpty(message.Chat.Username) => message.Chat.Username,
+        _ when !string.IsNullOrEmpty(message.Chat.FirstName) => message.Chat.FirstName,
+        _ => message.Chat.Id.ToString(),
+    };
 }

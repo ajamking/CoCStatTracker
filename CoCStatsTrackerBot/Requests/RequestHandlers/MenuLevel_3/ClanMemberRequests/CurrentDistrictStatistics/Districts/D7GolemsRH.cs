@@ -10,9 +10,9 @@ public class D7GolemsRH : BaseRequestHandler
         HandlerMenuLevel = MenuLevel.CurrentDistrictStatistics3;
     }
 
-    override public void Execute(RequestHadnlerParameters parameters)
+    override public void Execute(BotUserRequestParameters parameters)
     {
-        parameters.DistrictType = DistrictType.Golem_Quarry;
+        parameters.DistrictType = ADistrictType.Golem_Quarry;
 
         var handler = new CurrentDistrictStatisticsRHBase();
 

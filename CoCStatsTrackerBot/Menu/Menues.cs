@@ -8,14 +8,9 @@ public class MainMenu0 : BaseMenu
     {
         Header = "/start";
 
-        KeyWords = new string[] 
-        { 
-            "Член клана", "Руководитель", "Прочее"
-        };
-
         Keyboard = new(new[]
         {
-        new KeyboardButton[] { KeyWords[0], KeyWords[1], KeyWords[2] },
+        new KeyboardButton[] { "Основные функции", "Интерфейс главы клана", "Прочее" },
         })
         { ResizeKeyboard = true };
 
@@ -24,24 +19,18 @@ public class MainMenu0 : BaseMenu
 
 }
 
+
 public class MemberMenu1 : BaseMenu
 {
     public MemberMenu1()
     {
-        Header = "Член клана";
-
-        KeyWords = new string[]
-        {
-            "Игрок", "Клан",
-            "Текущая война", "Текущий рейд",
-            "Назад"
-        };
+        Header = "Основные функции";
 
         Keyboard = new(new[]
         {
-        new KeyboardButton[] { KeyWords[0], KeyWords[1] },
-        new KeyboardButton[] { KeyWords[2], KeyWords[3] },
-        new KeyboardButton[] { KeyWords[4] }
+        new KeyboardButton[] { "Игрок", "Клан" },
+        new KeyboardButton[] { "Текущая война","Текущий рейд" },
+        new KeyboardButton[] { "Назад" }
         })
         { ResizeKeyboard = true };
 
@@ -55,18 +44,11 @@ public class PlayerInfo2 : BaseMenu
     {
         Header = "Игрок";
 
-        KeyWords = new string[]
-        {
-            "Главное об игроке", "Все об игроке",
-            "Показатели войн", "Показатели рейдов",
-            "Войска", "Назад"
-        };
-
         Keyboard = new(new[]
         {
-        new KeyboardButton[] { KeyWords[0], KeyWords[1] },
-        new KeyboardButton[] { KeyWords[2], KeyWords[3] },
-        new KeyboardButton[] { KeyWords[4], KeyWords[5] },
+        new KeyboardButton[] { "Главное об игроке", "Все об игроке" },
+        new KeyboardButton[] { "Показатели войн", "Показатели рейдов" },
+        new KeyboardButton[] { "Войска", "Назад" },
         })
         { ResizeKeyboard = true };
 
@@ -80,20 +62,12 @@ public class ClanInfo2 : BaseMenu
     {
         Header = "Клан";
 
-        KeyWords = new string[]
-        {
-            "Главное о клане", "Члены клана",
-            "История войн", "История рейдов",
-            "Осадные машины", "Активные супер юниты",
-            "Показатели месяца", "Назад"
-        };
-
         Keyboard = new(new[]
         {
-        new KeyboardButton[] { KeyWords[0], KeyWords[1] },
-        new KeyboardButton[] { KeyWords[2], KeyWords[3] },
-        new KeyboardButton[] { KeyWords[4], KeyWords[5] },
-        new KeyboardButton[] { KeyWords[6], KeyWords[7] }
+        new KeyboardButton[] { "Главное о клане", "Члены клана" },
+        new KeyboardButton[] { "История войн","История рейдов" },
+        new KeyboardButton[] { "Осадные машины","Активные супер юниты" },
+        new KeyboardButton[] {  "Показатели месяца", "Назад" }
         })
         { ResizeKeyboard = true };
 
@@ -107,16 +81,10 @@ public class ClanCurrentRaidInfo2 : BaseMenu
     {
         Header = "Текущий рейд";
 
-        KeyWords = new string[]
-        {
-            "Главное о рейде", "Показатели рейда",
-            "Статистика по районам", "Назад",
-        };
-
         Keyboard = new(new[]
         {
-        new KeyboardButton[] { KeyWords[0], KeyWords[1] },
-        new KeyboardButton[] { KeyWords[2], KeyWords[3] },
+        new KeyboardButton[] { "Главное о рейде", "Показатели рейда" },
+        new KeyboardButton[] {  "Статистика по районам", "Назад" },
         })
         { ResizeKeyboard = true };
 
@@ -130,16 +98,10 @@ public class ClanCurrentWarInfo2 : BaseMenu
     {
         Header = "Текущая война";
 
-        KeyWords = new string[]
-        {
-           "Главное о войне", "Показатели войны",
-           "Карта", "Назад",
-        };
-
         Keyboard = new(new[]
         {
-        new KeyboardButton[] { KeyWords[0], KeyWords[1] },
-        new KeyboardButton[] { KeyWords[2], KeyWords[3] },
+        new KeyboardButton[] { "Главное о войне", "Показатели войны" },
+        new KeyboardButton[] { "Карта", "Назад" },
         })
         { ResizeKeyboard = true };
 
@@ -153,16 +115,10 @@ public class PlayerWarStatistics3 : BaseMenu
     {
         Header = "Показатели войн";
 
-        KeyWords = new string[]
-        {
-           "Последняя участие в войне", "3 последних войны",
-           "5 последних войн", "Назад",
-        };
-
         Keyboard = new(new[]
         {
-        new KeyboardButton[] { KeyWords[0], KeyWords[1] },
-        new KeyboardButton[] { KeyWords[2], KeyWords[3] },
+        new KeyboardButton[] {  "Последняя участие в войне", "3 последних войны" },
+        new KeyboardButton[] {  "5 последних войн", "Назад" },
         })
         { ResizeKeyboard = true };
 
@@ -176,16 +132,10 @@ public class PlayerRaidStatistics3 : BaseMenu
     {
         Header = "Показатели рейдов";
 
-        KeyWords = new string[]
-        {
-            "Последнее участие в рейдах", "3 последних рейда",
-            "5 последних рейдов", "Назад",
-        };
-
         Keyboard = new(new[]
         {
-        new KeyboardButton[] { KeyWords[0], KeyWords[1] },
-        new KeyboardButton[] { KeyWords[2], KeyWords[3] },
+        new KeyboardButton[] { "Последнее участие в рейдах", "3 последних рейда" },
+        new KeyboardButton[] { "5 последних рейдов", "Назад" },
         })
         { ResizeKeyboard = true };
 
@@ -199,18 +149,11 @@ public class PlayerArmy3 : BaseMenu
     {
         Header = "Войска";
 
-        KeyWords = new string[]
-        {
-             "Герои", "Осадные машины игрока",
-             "Активные супер юниты игрока", "Все войска",
-             "Назад",
-        };
-
         Keyboard = new(new[]
         {
-        new KeyboardButton[] { KeyWords[0], KeyWords[1] },
-        new KeyboardButton[] { KeyWords[2], KeyWords[3] },
-        new KeyboardButton[] { KeyWords[4] },
+        new KeyboardButton[] { "Герои", "Осадные машины игрока" },
+        new KeyboardButton[] { "Активные супер юниты игрока", "Все войска" },
+        new KeyboardButton[] { "Назад" },
         })
         { ResizeKeyboard = true };
 
@@ -224,16 +167,10 @@ public class ClanWarHistory3 : BaseMenu
     {
         Header = "История войн";
 
-        KeyWords = new string[]
-        {
-           "Последняя война", "Последние 3",
-           "Последние 5", "Назад",
-        };
-
         Keyboard = new(new[]
         {
-        new KeyboardButton[] { KeyWords[0], KeyWords[1] },
-        new KeyboardButton[] { KeyWords[2], KeyWords[3] },
+        new KeyboardButton[] { "Последняя война", "Последние 3" },
+        new KeyboardButton[] { "Последние 5", "Назад" },
         })
         { ResizeKeyboard = true };
 
@@ -247,18 +184,11 @@ public class ClanRaidHistory3 : BaseMenu
     {
         Header = "История рейдов";
 
-        KeyWords = new string[]
-        {
-           "Последний рейд", "Последние_3",
-           "Последние_5", "Средние показатели игроков",
-           "Назад",
-        };
-
         Keyboard = new(new[]
         {
-        new KeyboardButton[] { KeyWords[0], KeyWords[1] },
-        new KeyboardButton[] { KeyWords[2], KeyWords[3] },
-        new KeyboardButton[] { KeyWords[4]},
+        new KeyboardButton[] { "Последний рейд", "Последние_3" },
+        new KeyboardButton[] { "Последние_5", "Средние показатели игроков" },
+        new KeyboardButton[] { "Назад"},
         })
         { ResizeKeyboard = true };
 
@@ -272,21 +202,171 @@ public class ClanCurrentDistrictStatistics3 : BaseMenu
     {
         Header = "Статистика по районам";
 
-        KeyWords = new string[]
-        {
-           "Столичный пик", "Лагерь варваров", "Долина колдунов",
-           "Лагуна шаров", "Мастерская строителя", "Драконьи утесы",
-           "Карьер големов", "Парк скелетов", "Назад",
-        };
-
         Keyboard = new(new[]
         {
-          new KeyboardButton[] { KeyWords[0], KeyWords[1], KeyWords[2] },
-          new KeyboardButton[] { KeyWords[3], KeyWords[4], KeyWords[5] },
-          new KeyboardButton[] { KeyWords[6], KeyWords[7], KeyWords[8] },
+          new KeyboardButton[] { "Столичный пик", "Лагерь варваров", "Долина колдунов" },
+          new KeyboardButton[] { "Лагуна шаров", "Мастерская строителя", "Драконьи утесы" },
+          new KeyboardButton[] { "Карьер големов", "Парк скелетов", "Назад"},
         })
         { ResizeKeyboard = true };
 
         MenuLevel = MenuLevel.CurrentDistrictStatistics3;
     }
+}
+
+
+public class LeaderMenu1 : BaseMenu
+{
+    public LeaderMenu1()
+    {
+        Header = "Интерфейс главы клана";
+
+        Keyboard = new(new[]
+        {
+        new KeyboardButton[] { "Доступные кланы", "Добавление" },
+        new KeyboardButton[] { "Обновление", "Удаление",  },
+        new KeyboardButton[] { "Меню создателя", "Назад" }
+        })
+        { ResizeKeyboard = true };
+
+        MenuLevel = MenuLevel.Leader1;
+    }
+}
+
+public class DeveloperMenu2 : BaseMenu
+{
+    public DeveloperMenu2()
+    {
+        Header = "Меню создателя";
+
+        Keyboard = new(new[]
+        {
+        new KeyboardButton[] { "Все кланы", "Установить клану токен" },
+        new KeyboardButton[] { "Добавить клан в БД", "Удалить клан из БД", },
+        new KeyboardButton[] { "Добавить клан в ЧС", "Удалить клан из ЧС" },
+        new KeyboardButton[] { "Снести всю базу", "Назад" }
+        })
+        { ResizeKeyboard = true };
+
+        MenuLevel = MenuLevel.DeveloperMenu2;
+    }
+}
+
+public class LeaderAddMenu2 : BaseMenu
+{
+    public LeaderAddMenu2()
+    {
+        Header = "Добавление";
+
+        Keyboard = new(new[]
+        {
+        new KeyboardButton[] { "Добавить последний рейд", "Добавить последнюю войну" },
+        new KeyboardButton[] { "Назад" }
+        })
+        { ResizeKeyboard = true };
+
+        MenuLevel = MenuLevel.LeaderAddMenu2;
+    }
+}
+
+public class LeaderUpdateMenu2 : BaseMenu
+{
+    public LeaderUpdateMenu2()
+    {
+        Header = "Обновление";
+
+        Keyboard = new(new[]
+        {
+        new KeyboardButton[] { "Описание функций",},
+        new KeyboardButton[] { "Характеристики клана", "Игроков клана",},
+        new KeyboardButton[] { "Обновить последний рейд", "Обновить последнюю войну"},
+        new KeyboardButton[] { "Сезонные показатели", "Назад" }
+        })
+        { ResizeKeyboard = true };
+
+        MenuLevel = MenuLevel.LeaderUpdateMenu2;
+    }
+}
+
+public class LeaderDeleteMenu2 : BaseMenu
+{
+    public LeaderDeleteMenu2()
+    {
+        Header = "Удаление";
+
+        Keyboard = new(new[]
+        {
+        new KeyboardButton[] { "Удаление войн", "Удаление рейдов" },
+        new KeyboardButton[] { "Назад" }
+        })
+        { ResizeKeyboard = true };
+
+        MenuLevel = MenuLevel.LeaderDeleteMenu2;
+    }
+}
+
+public class LeaderDeleteRaidsMenu3 : BaseMenu
+{
+    public LeaderDeleteRaidsMenu3()
+    {
+        Header = "Удаление рейдов";
+
+        Keyboard = new(new[]
+        {
+        new KeyboardButton[] { "Зафиксированные рейды.",  "Оставить последний." },
+        new KeyboardButton[] { "Оставить 3 последних.", "Оставить 5 последних."},
+        new KeyboardButton[] { "Удалить все.", "Назад" }
+        })
+        { ResizeKeyboard = true };
+
+        MenuLevel = MenuLevel.LeaderDeleteRaidsMenu3;
+    }
+}
+
+public class LeaderDeleteClanWarsMenu3 : BaseMenu
+{
+    public LeaderDeleteClanWarsMenu3()
+    {
+        Header = "Удаление войн";
+
+        Keyboard = new(new[]
+        {
+        new KeyboardButton[] { "Зафиксированные войны", "Оставить последнюю" },
+        new KeyboardButton[] { "Оставить 3 последних", "Оставить 5 последних" },
+        new KeyboardButton[] { "Удалить все", "Назад" }
+        })
+        { ResizeKeyboard = true };
+
+        MenuLevel = MenuLevel.LeaderDeleteClanWarsMenu3;
+    }
+}
+
+
+public enum MenuLevel
+{
+    Main0,
+
+    Member1,
+
+    PlayerInfo2,
+    ClanInfo2,
+    CurrentWarInfo2,
+    CurrentRaidInfo2,
+
+    PlayerWarStatistics3,
+    PlayerRaidStatistics3,
+    PlayerArmy3,
+    ClanWarsHistory3,
+    ClanRaidsHistory3,
+    CurrentDistrictStatistics3,
+
+    Leader1,
+
+    LeaderAddMenu2,
+    LeaderUpdateMenu2,
+    LeaderDeleteMenu2,
+    DeveloperMenu2,
+
+    LeaderDeleteClanWarsMenu3,
+    LeaderDeleteRaidsMenu3,
 }

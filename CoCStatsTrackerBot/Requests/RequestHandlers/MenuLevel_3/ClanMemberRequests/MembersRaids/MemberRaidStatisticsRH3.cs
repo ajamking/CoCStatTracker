@@ -10,7 +10,7 @@ public class MemberRaidStatisticsRH3 : BaseRequestHandler
         HandlerMenuLevel = MenuLevel.PlayerRaidStatistics3;
     }
 
-    override public void Execute(RequestHadnlerParameters parameters)
+    override public void Execute(BotUserRequestParameters parameters)
     {
         parameters.EntriesCount = 3;
 

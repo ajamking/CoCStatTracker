@@ -10,7 +10,7 @@ public class ClanWarHistoryRH5 : BaseRequestHandler
         HandlerMenuLevel = MenuLevel.ClanWarsHistory3;
     }
 
-    override public void Execute(RequestHadnlerParameters parameters)
+    override public void Execute(BotUserRequestParameters parameters)
     {
         parameters.EntriesCount = 5;
 

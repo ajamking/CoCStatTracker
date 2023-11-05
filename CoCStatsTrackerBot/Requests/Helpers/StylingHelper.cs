@@ -1,7 +1,4 @@
 ﻿using System.Text;
-using System;
-using System.Text.RegularExpressions;
-using System.Runtime.CompilerServices;
 
 namespace CoCStatsTrackerBot.Requests;
 
@@ -114,7 +111,6 @@ public static class StylingHelper
 
         return uiTablemaxSize;
     }
-
 
     /// <summary>
     /// Заменяет различные смайлики и т.д. в строке на символ ! с фиксированной шириной и возвращает корректно отображающееся в MarkDown таблице строку.

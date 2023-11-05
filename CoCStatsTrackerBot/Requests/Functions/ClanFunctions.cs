@@ -234,14 +234,14 @@ public static class ClanFunctions
 
         str.AppendLine(StylingHelper.MakeItStyled("Сезонная статистика игроков клана", UiTextStyle.Header));
         str.AppendLine(StylingHelper.MakeItStyled(seasonStatisticsUistring.First().ClanName + " - " + seasonStatisticsUistring.First().ClanTag, UiTextStyle.Name));
-        str.AppendLine(StylingHelper.MakeItStyled("Последнее обновление: " + seasonStatisticsUistring.First().UpdatedOn, UiTextStyle.Subtitle));
+        str.AppendLine(StylingHelper.MakeItStyled("Сбор статистики начат: " + seasonStatisticsUistring.First().UpdatedOn, UiTextStyle.Subtitle));
         str.AppendLine();
         str.AppendLine(StylingHelper.MakeItStyled("Пояснение таблицы:", UiTextStyle.TableAnnotation));
         str.AppendLine(StylingHelper.MakeItStyled("Зв. - боевые звезды, заработанные за сезон.", UiTextStyle.Default));
         str.AppendLine(StylingHelper.MakeItStyled("Золото - столичное золото, вложенное за сезон.", UiTextStyle.Default));
         str.AppendLine(StylingHelper.MakeItStyled("Донат - пожертвовано войск за сезон.", UiTextStyle.Default));
         str.AppendLine();
-        str.AppendLine(StylingHelper.MakeItStyled("Все показатели сбрасываются каждый рейтинговый сезон или по усмотрению администратора.", UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled("Сбор статистики начинается заново каждый рейтинговый сезон или по усмотрению администратора.", UiTextStyle.Default));
         str.AppendLine();
 
         str.AppendLine($"``` " +

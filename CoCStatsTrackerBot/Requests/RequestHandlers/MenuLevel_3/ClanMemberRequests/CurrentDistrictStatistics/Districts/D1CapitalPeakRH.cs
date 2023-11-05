@@ -10,9 +10,9 @@ public class D1CapitalPeakRH : BaseRequestHandler
         HandlerMenuLevel = MenuLevel.CurrentDistrictStatistics3;
     }
 
-    override public void Execute(RequestHadnlerParameters parameters)
+    override public void Execute(BotUserRequestParameters parameters)
     {
-        parameters.DistrictType = DistrictType.Capital_Peak;
+        parameters.DistrictType = ADistrictType.Capital_Peak;
 
         var handler = new CurrentDistrictStatisticsRHBase();
 

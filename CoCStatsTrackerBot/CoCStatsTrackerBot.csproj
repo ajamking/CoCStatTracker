@@ -18,9 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Requests\RequestHandlers\MenuLevel_2\LeaderRequests\MenuHandlers\" />
     <Folder Include="Requests\RequestHandlers\MenuLevel_2\OtherRequests\MenuHandlers\" />
-    <Folder Include="Requests\RequestHandlers\MenuLevel_3\LeaderRequests\MenuHandlers\" />
     <Folder Include="Requests\RequestHandlers\MenuLevel_3\OtherRequests\MenuHandlers\" />
   </ItemGroup>
 

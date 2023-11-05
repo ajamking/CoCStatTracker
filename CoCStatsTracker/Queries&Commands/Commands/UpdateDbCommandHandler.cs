@@ -84,7 +84,7 @@ public static class UpdateDbCommandHandler
         }
     }
 
-    public static void UpdateLastClanMembersStaticstics(string clanTag)
+    public static void ResetLastClanMembersStaticstics(string clanTag)
     {
         using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
         {
@@ -95,6 +95,25 @@ public static class UpdateDbCommandHandler
             var trackedClanBuilder = new TrackedClanBuilder(trackedClan);
 
             trackedClanBuilder.SetLastClanMembersStaticstics(trackedClanBuilder.Clan.ClanMembers);
+
+            dbContext.SaveChanges();
+        }
+    }
+
+
+    public static void ResetClanAdminKey(string clanTag, string newAdminsKey)
+    {
+        using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
+        {
+            dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag).AdminsKey = newAdminsKey;
+        }
+    }
+
+    public static void ResetClanIsBlasckListProperty(string clanTag, bool isInBlackList)
+    {
+        using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
+        {
+            dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag).IsInBlackList = isInBlackList;
         }
     }
 

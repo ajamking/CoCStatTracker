@@ -11,7 +11,7 @@ public class MemberEveryUnitInfoRH : BaseRequestHandler
         HandlerMenuLevel = MenuLevel.PlayerArmy3;
     }
 
-    override public void Execute(RequestHadnlerParameters parameters)
+    override public void Execute(BotUserRequestParameters parameters)
     {
         parameters.UnitType = UnitType.EveryUnit;
 

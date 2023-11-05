@@ -8,6 +8,10 @@ public abstract class BaseRequestHandler
     public static string MessageSplitToken { get; } = "answerReservedSplitter";
     public static List<BaseMenu> AllMenues { get; private set; }
 
+    public static string DefaultNotFoundMessage = StylingHelper.MakeItStyled("Пока не обладаю запрашиваемыми сведениями.", UiTextStyle.Default);
+
+    public static string DefaultFailerPullFromApiMessage = StylingHelper.MakeItStyled("Не удалось получить запрашиваемые сведения. Проблема на стороне CoC API", UiTextStyle.Default);
+
     public string Header { get; protected set; } = "/start";
 
     public MenuLevel HandlerMenuLevel { get; protected set; } = MenuLevel.Main0;
@@ -28,7 +32,7 @@ public abstract class BaseRequestHandler
 
     public virtual string[] SplitAnswer(string answer) => answer.Split(new[] { MessageSplitToken }, StringSplitOptions.RemoveEmptyEntries).ToArray();
 
-    public virtual void Execute(RequestHadnlerParameters parameters) { }
+    public virtual void Execute(BotUserRequestParameters parameters) { }
 
-    public virtual void ShowKeyboard(RequestHadnlerParameters parameters) => KeyboardSender.ShowKeyboard(parameters, AllMenues.First(x => x.MenuLevel == HandlerMenuLevel).Keyboard);
+    public virtual void ShowKeyboard(BotUserRequestParameters parameters) => KeyboardSender.ShowKeyboard(parameters, AllMenues.First(x => x.MenuLevel == HandlerMenuLevel).Keyboard);
 }

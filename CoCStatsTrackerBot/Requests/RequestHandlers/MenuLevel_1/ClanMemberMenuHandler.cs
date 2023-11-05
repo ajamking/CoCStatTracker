@@ -6,7 +6,7 @@ public class ClanMemberMenuHandler : BaseRequestHandler
 {
     public ClanMemberMenuHandler()
     {
-        Header = "Член клана";
+        Header = "Основные функции";
         HandlerMenuLevel = MenuLevel.Member1;
     }
 }

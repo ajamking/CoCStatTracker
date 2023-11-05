@@ -188,22 +188,22 @@ public class CurrentStatisticsFunctions
         return str.ToString();
     }
 
-    public static string GetDistrictStatistics(RaidUi raidUi, DistrictType districtType)
+    public static string GetDistrictStatistics(RaidUi raidUi, ADistrictType districtType)
     {
         var maxNameLength = 18;
         var max2ColumnLength = 3;
         var max3ColumnLength = 3;
 
-        var districtMapper = new Dictionary<DistrictType, string>()
+        var districtMapper = new Dictionary<ADistrictType, string>()
         {
-            {DistrictType.Capital_Peak, "Capital Peak" },
-            {DistrictType.Barbarian_Camp, "Barbarian Camp" },
-            {DistrictType.Wizard_Valley, "Wizard Valley" },
-            {DistrictType.Balloon_Lagoon, "Balloon Lagoon" },
-            {DistrictType.Builders_Workshop, "Builder's Workshop" },
-            {DistrictType.Dragon_Cliffs, "Dragon Cliffs" },
-            {DistrictType.Golem_Quarry, "Golem Quarry" },
-            {DistrictType.Skeleton_Park, "Skeleton Park" },
+            {ADistrictType.Capital_Peak, "Capital Peak" },
+            {ADistrictType.Barbarian_Camp, "Barbarian Camp" },
+            {ADistrictType.Wizard_Valley, "Wizard Valley" },
+            {ADistrictType.Balloon_Lagoon, "Balloon Lagoon" },
+            {ADistrictType.Builders_Workshop, "Builder's Workshop" },
+            {ADistrictType.Dragon_Cliffs, "Dragon Cliffs" },
+            {ADistrictType.Golem_Quarry, "Golem Quarry" },
+            {ADistrictType.Skeleton_Park, "Skeleton Park" },
         };
 
         var chosenDistrictName = districtMapper.First(x => x.Key == districtType).Value;

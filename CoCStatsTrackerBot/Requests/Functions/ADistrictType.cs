@@ -1,6 +1,6 @@
 ﻿namespace CoCStatsTrackerBot.Requests;
 
-public enum DistrictType
+public enum ADistrictType
 {
     Capital_Peak = 1,
     Barbarian_Camp,

@@ -10,9 +10,9 @@ public class D8SkeletonsRH : BaseRequestHandler
         HandlerMenuLevel = MenuLevel.CurrentDistrictStatistics3;
     }
 
-    override public void Execute(RequestHadnlerParameters parameters)
+    override public void Execute(BotUserRequestParameters parameters)
     {
-        parameters.DistrictType = DistrictType.Skeleton_Park;
+        parameters.DistrictType = ADistrictType.Skeleton_Park;
 
         var handler = new CurrentDistrictStatisticsRHBase();
 

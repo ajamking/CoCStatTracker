@@ -10,9 +10,9 @@ public class D6DragonsRH : BaseRequestHandler
         HandlerMenuLevel = MenuLevel.CurrentDistrictStatistics3;
     }
 
-    override public void Execute(RequestHadnlerParameters parameters)
+    override public void Execute(BotUserRequestParameters parameters)
     {
-        parameters.DistrictType = DistrictType.Dragon_Cliffs;
+        parameters.DistrictType = ADistrictType.Dragon_Cliffs;
 
         var handler = new CurrentDistrictStatisticsRHBase();
 

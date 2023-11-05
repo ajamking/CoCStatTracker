@@ -10,9 +10,9 @@ public class D2BarbariansRH : BaseRequestHandler
         HandlerMenuLevel = MenuLevel.CurrentDistrictStatistics3;
     }
 
-    override public void Execute(RequestHadnlerParameters parameters)
+    override public void Execute(BotUserRequestParameters parameters)
     {
-        parameters.DistrictType = DistrictType.Barbarian_Camp;
+        parameters.DistrictType = ADistrictType.Barbarian_Camp;
 
         var handler = new CurrentDistrictStatisticsRHBase();
 

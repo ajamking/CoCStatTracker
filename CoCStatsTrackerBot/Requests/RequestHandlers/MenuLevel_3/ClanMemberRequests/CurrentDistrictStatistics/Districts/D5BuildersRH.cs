@@ -10,9 +10,9 @@ public class D5BuildersRH : BaseRequestHandler
         HandlerMenuLevel = MenuLevel.CurrentDistrictStatistics3;
     }
 
-    override public void Execute(RequestHadnlerParameters parameters)
+    override public void Execute(BotUserRequestParameters parameters)
     {
-        parameters.DistrictType = DistrictType.Builders_Workshop;
+        parameters.DistrictType = ADistrictType.Builders_Workshop;
 
         var handler = new CurrentDistrictStatisticsRHBase();
 

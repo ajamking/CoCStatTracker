@@ -82,9 +82,11 @@ public static class AddToDbCommandHandler
 
             dbContext.SaveChanges();
         }
+
+        AddLastClanMembersStaticstics(clanTag);
     }
 
-    public static void AddLastClanMembersStaticstics(string clanTag)
+    private static void AddLastClanMembersStaticstics(string clanTag)
     {
         using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
         {
@@ -99,6 +101,7 @@ public static class AddToDbCommandHandler
             dbContext.SaveChanges();
         }
     }
+
 
     public static void AddCurrentRaidToClan(string clanTag)
     {
@@ -123,6 +126,8 @@ public static class AddToDbCommandHandler
             raidBuilder = AddRaidDefenses(raidBuilder, raidInfoFromApi);
 
             raidBuilder = AddRaidMembers(trackedClanBuilder, raidBuilder, raidInfoFromApi);
+
+            AlreadyExistsException.ThrowByPredicate(() => trackedClanBuilder.Clan.CapitalRaids.Any(x => x.StartedOn == raidBuilder.Raid.StartedOn), "AddCurrentRaidToClan is failed, this raid already exists");
 
             trackedClanBuilder.AddCapitalRaid(raidBuilder.Raid);
 
@@ -213,6 +218,7 @@ public static class AddToDbCommandHandler
         return raidBuilder;
     }
 
+
     public static void AddCurrentClanWarToClan(string clanTag, bool isCwLWar = false, string cwlWarTag = "")
     {
         var clanWarInfoFromApi = isCwLWar ?
@@ -239,6 +245,8 @@ public static class AddToDbCommandHandler
 
             clanWarBuilder = AddCwMembersWithAttacks(trackedClanBuilder, clanWarBuilder, clanWarInfoFromApi);
 
+            AlreadyExistsException.ThrowByPredicate(() => trackedClanBuilder.Clan.ClanWars.Any(x => x.StartedOn == clanWarBuilder.ClanWar.StartedOn), "AddCurrentClanWarToClan is failed, this CW already exists");
+            
             trackedClanBuilder.AddClanWar(clanWarBuilder.ClanWar);
 
             dbContext.SaveChanges();

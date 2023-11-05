@@ -10,9 +10,9 @@ public class D4BaloonsRH : BaseRequestHandler
         HandlerMenuLevel = MenuLevel.CurrentDistrictStatistics3;
     }
 
-    override public void Execute(RequestHadnlerParameters parameters)
+    override public void Execute(BotUserRequestParameters parameters)
     {
-        parameters.DistrictType = DistrictType.Balloon_Lagoon;
+        parameters.DistrictType = ADistrictType.Balloon_Lagoon;
 
         var handler = new CurrentDistrictStatisticsRHBase();
 

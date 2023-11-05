@@ -13,9 +13,9 @@ namespace Storage
       
         public DbSet<TrackedClan> TrackedClans { get; set; }
         public DbSet<ClanMember> ClanMembers { get; set; }
-        public DbSet<LastClanMemberStatistics> InitialClanMembersStaticstics { get; set; }
         public DbSet<Troop> Units { get; set; }
-        
+        public DbSet<LastClanMemberStatistics> InitialClanMembersStaticstics { get; set; }
+
         public DbSet<ClanWar> ClanWars { get; set; }
         public DbSet<EnemyWarMember> EnemyWarMembers { get; set; }
         public DbSet<WarAttack> WarAttacks { get; set; }
@@ -55,7 +55,7 @@ namespace Storage
             modelBuilder.ApplyConfiguration(new TrackedClanConfiguration());
             modelBuilder.ApplyConfiguration(new UnitConfiguration());
             modelBuilder.ApplyConfiguration(new LastClanMembersStaticsticsConfiguration());
-            
+
             modelBuilder.ApplyConfiguration(new ClanWarConfiguration());
             modelBuilder.ApplyConfiguration(new EnemyWarMemberConfiguration());
             modelBuilder.ApplyConfiguration(new WarAttackConfiguration());

@@ -1,13 +1,7 @@
-﻿using CoCApiDealer.ApiRequests;
-using CoCStatsTracker.Builders;
-using CoCStatsTracker.Items.Exceptions;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Storage;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoCStatsTracker;
 

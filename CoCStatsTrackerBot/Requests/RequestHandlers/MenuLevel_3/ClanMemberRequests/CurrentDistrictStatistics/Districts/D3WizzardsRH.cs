@@ -10,9 +10,9 @@ public class D3WizzardsRH : BaseRequestHandler
         HandlerMenuLevel = MenuLevel.CurrentDistrictStatistics3;
     }
 
-    override public void Execute(RequestHadnlerParameters parameters)
+    override public void Execute(BotUserRequestParameters parameters)
     {
-        parameters.DistrictType = DistrictType.Wizard_Valley;
+        parameters.DistrictType = ADistrictType.Wizard_Valley;
 
         var handler = new CurrentDistrictStatisticsRHBase();
 

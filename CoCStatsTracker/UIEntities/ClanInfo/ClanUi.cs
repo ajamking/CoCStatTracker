@@ -4,6 +4,8 @@ namespace CoCStatsTracker.UIEntities;
 
 public class ClanUi : UiEntity
 {
+    public string AdminsKey { get; set; }
+    public bool IsInBlackList { get; set; }
     public string Tag { get; set; }
     public string Name { get; set; }
     public string Type { get; set; }

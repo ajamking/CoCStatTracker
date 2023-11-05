@@ -13,11 +13,8 @@ public class BotUser
     public MenuLevel PreviousMenuLevel { get; set; }
 
     public bool IsBotHolder { get; set; }
-    public bool IsAdmin { get; set; }
-    public string AdminsKey { get; set; }
-
-
-    public RequestHadnlerParameters RequestHadnlerParameters { get; set; }
+  
+    public BotUserRequestParameters RequestHadnlerParameters { get; set; }
 
     public BotUser(ITelegramBotClient botClient, Message message)
     {
@@ -25,7 +22,6 @@ public class BotUser
         Username = message.Chat.Username;
         FirstName = message.Chat.FirstName;
         CurrentMenuLevel = MenuLevel.Main0;
-        IsAdmin = false;
-        RequestHadnlerParameters = new RequestHadnlerParameters(botClient, message, null, null);
+        RequestHadnlerParameters = new BotUserRequestParameters(botClient, message, null, null);
     }
 }

@@ -12,7 +12,7 @@ public class ClanActiveSuperUnitsRH : BaseRequestHandler
         HandlerMenuLevel = MenuLevel.ClanInfo2;
     }
 
-    override public void Execute(RequestHadnlerParameters parameters)
+    override public void Execute(BotUserRequestParameters parameters)
     {
         try
         {
@@ -31,7 +31,7 @@ public class ClanActiveSuperUnitsRH : BaseRequestHandler
         }
         catch (NotFoundException e)
         {
-            ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Пока не обладаю такими сведениями.", UiTextStyle.Default));
+            ResponseSender.SendAnswer(parameters, true, DefaultNotFoundMessage);
         }
         catch (Exception e)
         {

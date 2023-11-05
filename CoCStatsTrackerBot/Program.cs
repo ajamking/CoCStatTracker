@@ -1,4 +1,5 @@
 ﻿using CoCStatsTracker;
+using Domain.Entities;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
@@ -9,19 +10,19 @@ namespace CoCStatsTrackerBot;
 /// <summary>
 /// Тег клана:	#YPPGCCY8   #UQQGYJJP
 /// 
-/// Тег игрока: #2VGG92CL9  #LRPLYJ9U2 #G8P9Q299R
+/// Тег игрока: AJAMKING: #G8P9Q299R Зануда051: #LRPLYJ9U2
 /// </summary>
+
 class Program
 {
-    private static TelegramBotClient client = new TelegramBotClient(token: System.IO.File.ReadAllText(@"./../../../../CustomSolutionElements/TelegramBotClientToken.txt"));
+    private static TelegramBotClient _client = new TelegramBotClient(token: System.IO.File.ReadAllText(@"./../../../../CustomSolutionElements/TelegramBotClientToken.txt"));
 
     async static Task Main(string[] args)
     {
-        CreateNewTestDb("#YPPGCCY8", "#UQQGYJJP");
+        //CreateNewTestDb("#YPPGCCY8", "#UQQGYJJP", "#VUJCUQ9Y");
+        //AddToDbCommandHandler.AddCurrentRaidToClan("#YPPGCCY8");
 
-        Console.WriteLine("Connection winh DB in MemberRequestHandler sucsessful");
-
-        client.StartReceiving(HandleUpdateAsync, HandleError);
+        _client.StartReceiving(HandleUpdateAsync, HandleError);
 
         Console.WriteLine("Bot started");
 
@@ -38,7 +39,7 @@ class Program
             {
                 Console.WriteLine($"{DateTime.Now}: Принято сообщение: \"{update.Message.Text}\" от {update.Message.Chat.Username}");
 
-                await Navigator.HandleMessage(botClient, update.Message);
+                Navigation.Execute(botClient, update.Message);
 
                 return;
             }
@@ -72,15 +73,20 @@ class Program
 
         foreach (var clanTag in ClanTags)
         {
-            AddToDbCommandHandler.AddTrackedClan(clanTag, adminsKey:"KEFamily0707");
+            if (clanTag == "#VUJCUQ9Y")
+            {
+                AddToDbCommandHandler.AddTrackedClan(clanTag, adminsKey: "@VIKAND");
+            }
+            else
+            {
+                AddToDbCommandHandler.AddTrackedClan(clanTag, adminsKey: "@KEFamily0707");
+            }
 
             AddToDbCommandHandler.AddClanMembers(clanTag);
 
-            AddToDbCommandHandler.AddLastClanMembersStaticstics(clanTag);
-
             AddToDbCommandHandler.AddCurrentRaidToClan(clanTag);
 
-            AddToDbCommandHandler.AddCurrentClanWarToClan(clanTag);
+            //AddToDbCommandHandler.AddCurrentClanWarToClan(clanTag);
         }
     }
 }

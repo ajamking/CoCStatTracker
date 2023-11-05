@@ -18,21 +18,14 @@ public static class GetFromDbQueryHandler
     /*--------------Клан--------------*/
     public static List<ClanUi> GetAllTrackedClans()
     {
-        var test = new Stopwatch();
-
-        test.Start();
-
         using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
         {
-           
             var uiClans = new List<ClanUi>();
 
             uiClans.AddRange(dbContext.TrackedClans
                 .Select(Mapper.MapToUi).ToList());
 
             NotFoundException.ThrowByPredicate(() => uiClans is { Count: 0 }, "No tracked clans were found in DB");
-
-            test.Stop();
 
             return uiClans;
         }
@@ -56,9 +49,14 @@ public static class GetFromDbQueryHandler
         {
             var uiClanWars = new List<CwCwlUi>();
 
-            uiClanWars.AddRange(dbContext.ClanWars
-                .Where(x => x.TrackedClan.Tag == clanTag)
-                .Select(Mapper.MapToUi).ToList());
+            var trackedClan = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
+
+            NotFoundException.ThrowByPredicate(() => trackedClan is null, "No such clan was found in DB");
+
+            foreach (var clanWar in trackedClan.ClanWars)
+            {
+                uiClanWars.Add(Mapper.MapToUi(clanWar));
+            }
 
             NotFoundException.ThrowByPredicate(() => uiClanWars is { Count: 0 }, "No tracked ClanWars were found in DB");
 
@@ -93,9 +91,14 @@ public static class GetFromDbQueryHandler
         {
             var uiClanMembers = new List<ClanMemberUi>();
 
-            uiClanMembers.AddRange(dbContext.ClanMembers
-                .Where(x => x.Clan.Tag == clanTag)
-                .Select(Mapper.MapToUi).ToList());
+            var trackedClan = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
+
+            NotFoundException.ThrowByPredicate(() => trackedClan is null, "No such clan was found in DB");
+
+            foreach (var member in trackedClan.ClanMembers)
+            {
+                uiClanMembers.Add(Mapper.MapToUi(member));
+            }
 
             NotFoundException.ThrowByPredicate(() => uiClanMembers is { Count: 0 }, "No tracked ClanMembers were found in DB");
 
@@ -148,7 +151,7 @@ public static class GetFromDbQueryHandler
             {
                 if (obsoleteClanMembers.Any(x => x.Tag == member.Tag))
                 {
-                    seasonStatistics.Add(Mapper.MapToUi(member, obsoleteClanMembers.First(x => x.Tag == member.Tag)));
+                    seasonStatistics.Add(Mapper.MapToUi(member, obsoleteClanMembers.First(x => x.Tag == member.Tag), clan.LastClanMembersStaticstics.UpdatedOn));
                 }
             }
 

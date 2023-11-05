@@ -1,11 +1,12 @@
-﻿
+﻿using CoCStatsTrackerBot.Menu;
+
 namespace CoCStatsTrackerBot.Requests;
 
 public class LeaderMenuHandler : BaseRequestHandler
 {
     public LeaderMenuHandler()
     {
-        Header = "Руководитель";
-        //HandlerMenuLevel = MenuLevels.Member1;
+        Header = "Интерфейс главы клана";
+        HandlerMenuLevel = MenuLevel.Leader1;
     }
 }

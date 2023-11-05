@@ -17,6 +17,7 @@ public class TrackedClanBuilder
     public void SetBaseProperties(ClanApi clanApi, string adminsKey)
     {
         Clan.AdminsKey = adminsKey;
+
         Clan.UpdatedOn = DateTime.Now;
         Clan.Tag = clanApi.Tag;
         Clan.Name = clanApi.Name;
@@ -43,10 +44,37 @@ public class TrackedClanBuilder
 
     public void SetLastClanMembersStaticstics(ICollection<ClanMember> members)
     {
+        var newClanMembers = new List<ClanMember>();
+
+        foreach (var member in members)
+        {
+            newClanMembers.Add(new ClanMember()
+            {
+                Tag = member.Tag,
+                Name = member.Name,
+                ExpLevel = member.ExpLevel,
+                Trophies = member.Trophies,
+                BestTrophies = member.BestTrophies,
+                WarStars = member.WarStars,
+                AttackWins = member.AttackWins,
+                DefenceWins = member.DefenceWins,
+                BuilderHallLevel = member.BuilderHallLevel,
+                VersusTrophies = member.VersusTrophies,
+                BestVersusTrophies = member.BestVersusTrophies,
+                VersusBattleWins = member.VersusBattleWins,
+                Role = member.Role,
+                WarPreference = member.WarPreference,
+                DonationsSent = member.DonationsSent,
+                DonationsRecieved = member.DonationsRecieved,
+                TotalCapitalContributions = member.TotalCapitalContributions,
+                League = member.League,
+            });
+        }
+
         Clan.LastClanMembersStaticstics = new LastClanMemberStatistics()
         {
             UpdatedOn = DateTime.Now,
-            ObsoleteClanMembers = members,
+            ObsoleteClanMembers = newClanMembers,
         };
     }
 

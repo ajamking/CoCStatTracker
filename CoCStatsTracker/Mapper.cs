@@ -30,6 +30,8 @@ public static class Mapper
 
         return new ClanUi
         {
+            AdminsKey = clan.AdminsKey,
+            IsInBlackList = clan.IsInBlackList,
             Tag = clan.Tag,
             Name = clan.Name,
             Type = clan.Type,
@@ -143,7 +145,7 @@ public static class Mapper
         {
             attackedClanTags.Add(attack.OpponentClanTag);
 
-            attackedClanTags.Add(attack.OpponentDistrictName);
+            allDistrictNames.Add(attack.OpponentDistrictName);
         }
 
         var defeatedClans = new List<DefeatedClanUi>();
@@ -432,11 +434,11 @@ public static class Mapper
         };
     }
 
-    public static SeasonStatisticsUi MapToUi(ClanMember currentClanMember, ClanMember obsoleteClanMember)
+    public static SeasonStatisticsUi MapToUi(ClanMember currentClanMember, ClanMember obsoleteClanMember, DateTime initializedOn)
     {
         return new SeasonStatisticsUi()
         {
-            UpdatedOn = DateTime.Now.ToString(),
+            UpdatedOn = initializedOn.ToString(),
 
             ClanName = currentClanMember.Clan.Name,
             ClanTag = currentClanMember.Clan.Tag,

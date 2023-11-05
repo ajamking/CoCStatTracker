@@ -6,6 +6,7 @@ namespace Domain.Entities
     public class TrackedClan : Entity
     {
         public string AdminsKey { get; set; }
+        public bool IsInBlackList { get; set; }
         public DateTime UpdatedOn { get; set; }
         public string Tag { get; set; }
         public string Name { get; set; }
