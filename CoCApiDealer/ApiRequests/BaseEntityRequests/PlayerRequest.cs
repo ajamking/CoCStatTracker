@@ -1,5 +1,4 @@
-﻿using CoCApiDealer.RequestsSettings;
-using CoCStatsTracker.ApiEntities;
+﻿using CoCStatsTracker.ApiEntities;
 using Newtonsoft.Json;
 
 namespace CoCApiDealer.ApiRequests;
@@ -16,20 +15,15 @@ public class PlayerRequest : BaseApiRequest
 
             var playerInfo = JsonConvert.DeserializeObject<PlayerApi>(apiRequestResult);
 
-            if (playerInfo == null)
-            {
-                throw new Exception("Nothing came from API");
-            }
-            else
-            {
-                return playerInfo;
-            }
+            ApiNullOrEmtyResponseException.ThrowByPredicate(() => playerInfo == null || playerInfo.Tag == null,
+                    "PlayerRequest is failed, Nothing came from API");
+
+            return playerInfo;
 
         }
-        catch (Exception ex)
+        catch (ApiNullOrEmtyResponseException ex)
         {
-
-            throw new ApiErrorException(ex);
+            return null;
         }
     }
 }

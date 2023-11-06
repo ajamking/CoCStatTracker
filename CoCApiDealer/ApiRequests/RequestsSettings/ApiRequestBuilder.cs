@@ -1,4 +1,4 @@
-﻿namespace CoCApiDealer.RequestsSettings;
+﻿namespace CoCApiDealer.ApiRequests;
 
 public class ApiRequestBuilder
 {

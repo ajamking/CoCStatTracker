@@ -1,7 +1,8 @@
 ﻿using CoCStatsTracker.UIEntities;
+using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Storage;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace CoCStatsTracker;
@@ -16,7 +17,7 @@ public static class GetFromDbQueryHandler
     }
 
     /*--------------Клан--------------*/
-    public static List<ClanUi> GetAllTrackedClans()
+    public static List<ClanUi> GetAllTrackedClansUi()
     {
         using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
         {
@@ -31,7 +32,7 @@ public static class GetFromDbQueryHandler
         }
     }
 
-    public static ClanUi GetTrackedClan(string clanTag)
+    public static ClanUi GetTrackedClanUi(string clanTag)
     {
         using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
         {
@@ -43,7 +44,7 @@ public static class GetFromDbQueryHandler
         }
     }
 
-    public static List<CwCwlUi> GetAllClanWars(string clanTag)
+    public static List<CwCwlUi> GetAllClanWarsUi(string clanTag)
     {
         using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
         {
@@ -53,18 +54,20 @@ public static class GetFromDbQueryHandler
 
             NotFoundException.ThrowByPredicate(() => trackedClan is null, "No such clan was found in DB");
 
-            foreach (var clanWar in trackedClan.ClanWars)
+            var wars = trackedClan.ClanWars;
+
+            NotFoundException.ThrowByPredicate(() => wars is { Count: 0 }, "NNo tracked ClanWars were found in DB");
+
+            foreach (var clanWar in wars)
             {
                 uiClanWars.Add(Mapper.MapToUi(clanWar));
             }
-
-            NotFoundException.ThrowByPredicate(() => uiClanWars is { Count: 0 }, "No tracked ClanWars were found in DB");
 
             return uiClanWars;
         }
     }
 
-    public static List<RaidUi> GetAllRaids(string clanTag)
+    public static List<RaidUi> GetAllRaidsUi(string clanTag)
     {
         using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
         {
@@ -74,18 +77,20 @@ public static class GetFromDbQueryHandler
 
             NotFoundException.ThrowByPredicate(() => trackedClan is null, "No such clan was found in DB");
 
+            var raids = trackedClan.CapitalRaids;
+
+            NotFoundException.ThrowByPredicate(() => raids is { Count: 0 }, "No tracked Raids were found in DB");
+
             foreach (var raid in trackedClan.CapitalRaids)
             {
                 uiRaids.Add(Mapper.MapToUi(raid, trackedClan));
             }
 
-            NotFoundException.ThrowByPredicate(() => uiRaids is { Count: 0 }, "No tracked Raids were found in DB");
-
             return uiRaids;
         }
     }
 
-    public static List<ClanMemberUi> GetAllClanMembers(string clanTag)
+    public static List<ClanMemberUi> GetAllClanMembersUi(string clanTag)
     {
         using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
         {
@@ -95,18 +100,20 @@ public static class GetFromDbQueryHandler
 
             NotFoundException.ThrowByPredicate(() => trackedClan is null, "No such clan was found in DB");
 
+            var clanMembers = trackedClan.ClanMembers;
+
+            NotFoundException.ThrowByPredicate(() => clanMembers is { Count: 0 }, "No tracked ClanMembers were found in DB");
+
             foreach (var member in trackedClan.ClanMembers)
             {
                 uiClanMembers.Add(Mapper.MapToUi(member));
             }
 
-            NotFoundException.ThrowByPredicate(() => uiClanMembers is { Count: 0 }, "No tracked ClanMembers were found in DB");
-
             return uiClanMembers;
         }
     }
 
-    public static List<AverageRaidsPerfomanceUi> GetAllClanMembersAverageRaidPerfomance(string clanTag)
+    public static List<AverageRaidsPerfomanceUi> GetAllClanMembersAverageRaidPerfomanceUi(string clanTag)
     {
         using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
         {
@@ -119,7 +126,7 @@ public static class GetFromDbQueryHandler
 
             var averagePerfomances = new List<AverageRaidsPerfomanceUi>();
 
-            foreach (var member in clan.ClanMembers)
+            foreach (var member in clanMembers)
             {
                 if (member.RaidMemberships != null && member.RaidMemberships.Count != 0)
                 {
@@ -133,7 +140,7 @@ public static class GetFromDbQueryHandler
         }
     }
 
-    public static List<SeasonStatisticsUi> GetSeasonStatistics(string clanTag)
+    public static List<SeasonStatisticsUi> GetSeasonStatisticsUi(string clanTag)
     {
         using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
         {
@@ -143,7 +150,7 @@ public static class GetFromDbQueryHandler
 
             var currentClanMembers = clan.ClanMembers;
 
-            var obsoleteClanMembers = clan.LastClanMembersStaticstics.ObsoleteClanMembers;
+            var obsoleteClanMembers = clan.PreviousClanMembersStaticstics;
 
             var seasonStatistics = new List<SeasonStatisticsUi>();
 
@@ -151,7 +158,7 @@ public static class GetFromDbQueryHandler
             {
                 if (obsoleteClanMembers.Any(x => x.Tag == member.Tag))
                 {
-                    seasonStatistics.Add(Mapper.MapToUi(member, obsoleteClanMembers.First(x => x.Tag == member.Tag), clan.LastClanMembersStaticstics.UpdatedOn));
+                    seasonStatistics.Add(Mapper.MapToUi(member, obsoleteClanMembers.First(x => x.Tag == member.Tag), clan.PreviousClanMembersStaticstics.FirstOrDefault().UpdatedOn));
                 }
             }
 
@@ -163,7 +170,7 @@ public static class GetFromDbQueryHandler
 
 
     /*--------------Клан мембер--------------*/
-    public static ClanMemberUi GetClanMember(string playersTag)
+    public static ClanMemberUi GetClanMemberUi(string playersTag)
     {
         using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
         {
@@ -175,7 +182,7 @@ public static class GetFromDbQueryHandler
         }
     }
 
-    public static ArmyUi GetMembersArmy(string playersTag)
+    public static ArmyUi GetMembersArmyUi(string playersTag)
     {
         using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
         {
@@ -190,7 +197,7 @@ public static class GetFromDbQueryHandler
         }
     }
 
-    public static List<CwCwlMembershipUi> GetAllMemberСwCwlMemberships(string playersTag)
+    public static List<CwCwlMembershipUi> GetAllMemberСwCwlMembershipsUi(string playersTag)
     {
         using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
         {
@@ -208,7 +215,7 @@ public static class GetFromDbQueryHandler
         }
     }
 
-    public static List<RaidMembershipUi> GetAllMemberRaidMemberships(string playersTag)
+    public static List<RaidMembershipUi> GetAllMemberRaidMembershipsUi(string playersTag)
     {
         using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
         {
@@ -227,4 +234,28 @@ public static class GetFromDbQueryHandler
     }
 
 
+    /*--------------Для проверки вводимых тегов--------------*/
+    public static bool CheckClanExists(string clanTag)
+    {
+        using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
+        {
+            return dbContext.TrackedClans.Any(x => x.Tag == clanTag);
+        }
+    }
+
+    public static bool CheckMemberExists(string memberTag)
+    {
+        using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
+        {
+            return dbContext.ClanMembers.Any(x => x.Tag == memberTag);
+        }
+    }
+
+    public static List<TrackedClan> GetAllTrackedClans()
+    {
+        using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
+        {
+            return dbContext.TrackedClans.ToList();
+        }
+    }
 }

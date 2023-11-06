@@ -29,8 +29,8 @@ public class MemberMenu1 : BaseMenu
         Keyboard = new(new[]
         {
         new KeyboardButton[] { "Игрок", "Клан" },
-        new KeyboardButton[] { "Текущая война","Текущий рейд" },
-        new KeyboardButton[] { "Назад" }
+        new KeyboardButton[] { "Текущая война", "Текущий рейд" },
+        new KeyboardButton[] { "Все отслеживаемые кланы", "Назад" }
         })
         { ResizeKeyboard = true };
 
@@ -117,7 +117,7 @@ public class PlayerWarStatistics3 : BaseMenu
 
         Keyboard = new(new[]
         {
-        new KeyboardButton[] {  "Последняя участие в войне", "3 последних войны" },
+        new KeyboardButton[] {  "Последнее участие в войне", "3 последних войны" },
         new KeyboardButton[] {  "5 последних войн", "Назад" },
         })
         { ResizeKeyboard = true };
@@ -206,7 +206,8 @@ public class ClanCurrentDistrictStatistics3 : BaseMenu
         {
           new KeyboardButton[] { "Столичный пик", "Лагерь варваров", "Долина колдунов" },
           new KeyboardButton[] { "Лагуна шаров", "Мастерская строителя", "Драконьи утесы" },
-          new KeyboardButton[] { "Карьер големов", "Парк скелетов", "Назад"},
+          new KeyboardButton[] { "Карьер големов", "Парк скелетов", "Гоблинские шахты"},
+          new KeyboardButton[] { "Назад"}
         })
         { ResizeKeyboard = true };
 
@@ -244,7 +245,7 @@ public class DeveloperMenu2 : BaseMenu
         new KeyboardButton[] { "Все кланы", "Установить клану токен" },
         new KeyboardButton[] { "Добавить клан в БД", "Удалить клан из БД", },
         new KeyboardButton[] { "Добавить клан в ЧС", "Удалить клан из ЧС" },
-        new KeyboardButton[] { "Снести всю базу", "Назад" }
+        new KeyboardButton[] { "Назад" }
         })
         { ResizeKeyboard = true };
 

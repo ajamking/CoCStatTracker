@@ -15,11 +15,11 @@ public class LeaderDeleteWarsRHBase : BaseRequestHandler
     {
         try
         {
-            var clanWars = GetFromDbQueryHandler.GetAllClanWars(parameters.LastClanTagToMerge).Count;
+            var clanWars = GetFromDbQueryHandler.GetAllClanWarsUi(parameters.LastClanTagToMerge).Count;
 
             DeleteFromDbCommandHandler.DeleteClanWars(parameters.LastClanTagToMerge, parameters.EntriesCount);
 
-            var clanWarsAfterRemove = GetFromDbQueryHandler.GetAllRaids(parameters.LastClanTagToMerge).Count;
+            var clanWarsAfterRemove = GetFromDbQueryHandler.GetAllRaidsUi(parameters.LastClanTagToMerge).Count;
 
             var answer = StylingHelper.MakeItStyled($"Операция успешна.\n" +
                 $"Записей удалено: {clanWars - clanWarsAfterRemove}", UiTextStyle.Default);

@@ -1,7 +1,7 @@
 ﻿using CoCStatsTracker;
 using CoCStatsTrackerBot.Menu;
 
-namespace CoCStatsTrackerBot.Requests;   
+namespace CoCStatsTrackerBot.Requests;
 
 public class MemberRaidStatisticsRHBase : BaseRequestHandler
 {
@@ -15,7 +15,7 @@ public class MemberRaidStatisticsRHBase : BaseRequestHandler
     {
         try
         {
-            var raidMembershipsUi = GetFromDbQueryHandler.GetAllMemberRaidMemberships(parameters.LastMemberTagMessage);
+            var raidMembershipsUi = GetFromDbQueryHandler.GetAllMemberRaidMembershipsUi(parameters.LastMemberTagMessage);
 
             var answer = PlayerFunctions.GetRaidStatistics(raidMembershipsUi, parameters.EntriesCount, MessageSplitToken);
 

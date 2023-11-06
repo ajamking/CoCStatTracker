@@ -17,7 +17,7 @@ public class LeaderUpdateClanMembersRH : BaseRequestHandler
         {
             UpdateDbCommandHandler.UpdateTrackedClanClanMembers(parameters.LastClanTagToMerge);
 
-            ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled($"Операция успешна, базовые показатели игрок обновлены", UiTextStyle.Default));
+            ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled($"Операция успешна, базовые показатели игроков обновлены", UiTextStyle.Default));
         }
         catch (NotFoundException e)
         {

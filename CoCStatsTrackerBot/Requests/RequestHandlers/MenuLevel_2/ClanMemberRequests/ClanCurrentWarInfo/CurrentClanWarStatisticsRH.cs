@@ -1,6 +1,5 @@
 ﻿using CoCStatsTracker;
 using CoCStatsTrackerBot.Menu;
-using CoCStatsTrackerBot.Requests;
 
 namespace CoCStatsTrackerBot.Requests;
 
@@ -18,7 +17,7 @@ public class CurrentClanWarStatisticsRH : BaseRequestHandler
         {
             parameters.EntriesCount = 1;
 
-            var allClanWars = GetFromDbQueryHandler.GetAllClanWars(parameters.LastClanTagMessage).OrderByDescending(x => x.StartedOn).ToList();
+            var allClanWars = GetFromDbQueryHandler.GetAllClanWarsUi(parameters.LastClanTagMessage).OrderByDescending(x => x.StartedOn).ToList();
 
             var answer = ClanFunctions.GetClanWarHistory(allClanWars, parameters.EntriesCount, MessageSplitToken);
 

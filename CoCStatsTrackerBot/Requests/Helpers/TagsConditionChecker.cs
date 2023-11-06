@@ -1,5 +1,4 @@
 ﻿using CoCStatsTracker;
-using CoCStatsTracker.UIEntities;
 using CoCStatsTrackerBot.Requests;
 using System.Text;
 
@@ -9,17 +8,36 @@ public static class TagsConditionChecker
 {
     public static void SendMemberTagMessageIsEmpty(BotUserRequestParameters parameters)
     {
-        ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Введите тег отслеживаемого игрока в формате #123456789, а затем выберите пункт из меню.\n" +
-            "\r\nСписок всех отслеживаемых членов клана можно получить в Клан/Члены клана", UiTextStyle.Default));
+        var answer = new StringBuilder(StylingHelper.MakeItStyled("Для получения информации об отслеживаемом игроке:\n\n", UiTextStyle.Header));
+
+        answer.Append(StylingHelper.MakeItStyled("Введите тег отслеживаемого игрока в формате ", UiTextStyle.Default));
+
+        answer.Append(StylingHelper.MakeItStyled("#123456789", UiTextStyle.Header));
+
+        answer.AppendLine(StylingHelper.MakeItStyled(", а затем выберите интересующий пункт из меню.", UiTextStyle.Default));
+
+        answer.Append(StylingHelper.MakeItStyled("\nСписок всех отслеживаемых членов клана можно получить в ", UiTextStyle.Default));
+
+        answer.AppendLine(StylingHelper.MakeItStyled("Клан ➙ Члены клана.", UiTextStyle.Subtitle));
+
+        answer.Append(StylingHelper.MakeItStyled("\nЕсли вы хотите ознакомиться со статистикой другого игрока - можете ввести новый тег в чат ", UiTextStyle.Default));
+
+        answer.Append(StylingHelper.MakeItStyled("в любое время.", UiTextStyle.TableAnnotation));
+
+        ResponseSender.SendAnswer(parameters, true, answer.ToString());
     }
 
     public static void SendClanTagMessageIsEmpty(BotUserRequestParameters parameters)
     {
-        var answer = new StringBuilder(StylingHelper.MakeItStyled("Введите тег клана клана из представленных ниже (можно скопировать и вставить), а затем выберите пункт из меню.\n\n", UiTextStyle.Default));
+        var answer = new StringBuilder(StylingHelper.MakeItStyled("Для получения информации об отслеживаемом клане:\n\n", UiTextStyle.Header));
+
+        answer.Append(StylingHelper.MakeItStyled("Введите тег клана клана из представленных ниже (можно скопировать и вставить), а затем выберите пункт из меню.\n\n", UiTextStyle.Default));
 
         var allowedClans = new StringBuilder(StylingHelper.MakeItStyled("Доступные отслеживаемые кланы:\n", UiTextStyle.Subtitle));
 
         var blockedClans = new StringBuilder(StylingHelper.MakeItStyled("Недоступные отслеживаемые кланы:\n", UiTextStyle.Subtitle));
+
+        var isAnyBlackList = false;
 
         foreach (var clan in GetFromDbQueryHandler.GetAllTrackedClans())
         {
@@ -29,54 +47,47 @@ public static class TagsConditionChecker
             }
             else
             {
+                isAnyBlackList = true;
+
                 blockedClans.AppendLine(StylingHelper.MakeItStyled($"{clan.Name} - {clan.Tag}", UiTextStyle.Name));
             }
         }
 
         answer.Append(allowedClans);
+
         answer.AppendLine();
-        answer.Append(blockedClans);
+
+        if (isAnyBlackList)
+        {
+            answer.Append(blockedClans);
+        }
+
+        answer.Append(StylingHelper.MakeItStyled("Если вы хотите получить информацию о другом отслеживаемом клане - " +
+            "просто введите в чат его тег ", UiTextStyle.Default));
+
+        answer.AppendLine(StylingHelper.MakeItStyled("в любое время.", UiTextStyle.TableAnnotation));
+
 
         ResponseSender.SendAnswer(parameters, true, answer.ToString());
     }
 
-    public static bool CheckMemberExistInDb(BotUserRequestParameters parameters)
-    {
-        var clanMembers = new List<ClanMemberUi>(300);
-
-        foreach (var clan in GetFromDbQueryHandler.GetAllTrackedClans().Where(x => x.IsInBlackList is false))
-        {
-            clanMembers.AddRange(GetFromDbQueryHandler.GetAllClanMembers(clan.Tag));
-        }
-
-        return clanMembers.Any(x => x.Tag == parameters.Message.Text);
-    }
-
-    public static bool CheckClanExistInDb(BotUserRequestParameters parameters)
-    {
-        return GetFromDbQueryHandler.GetAllTrackedClans()
-            .Where(x => x.Tag == parameters.Message.Text)
-            .Where(x => x.IsInBlackList is false)
-            .Any();
-    }
-
-
     public static void SendAdminsKeyIsEmpty(BotUserRequestParameters parameters)
     {
-        ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Для доступа к интерфейсу главы клана - введите токен авторизации.", UiTextStyle.Default));
+        ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Для доступа к интерфейсу главы клана - введите токен авторизации." +
+            "\n\nТокен авторизации выдается владельцем бота главе клана, дальше - на усмотрение главы.", UiTextStyle.Default));
     }
 
     public static bool CheckClanIsAllowedToMerge(BotUserRequestParameters parameters)
     {
-        return GetFromDbQueryHandler.GetAllTrackedClans()
+        return GetFromDbQueryHandler.GetAllTrackedClansUi()
               .Where(x => x.Tag == parameters.Message.Text)
               .Where(x => x.IsInBlackList is false)
-              .Any(x=>x.AdminsKey == parameters.AdminsKey);
+              .Any(x => x.AdminsKey == parameters.AdminsKey);
     }
 
     public static bool CheckClanWithAdminsKeyExistsInDb(this string adminsKey)
     {
-        return GetFromDbQueryHandler.GetAllTrackedClans()
+        return GetFromDbQueryHandler.GetAllTrackedClansUi()
                .Any(x => x.AdminsKey == adminsKey);
     }
 }

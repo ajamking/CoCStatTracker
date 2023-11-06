@@ -1,4 +1,5 @@
 ﻿using CoCStatsTrackerBot.Menu;
+using System.Text;
 
 namespace CoCStatsTrackerBot.Requests;
 
@@ -8,5 +9,30 @@ public class StartMenuHandler : BaseRequestHandler
     {
         Header = "/start";
         HandlerMenuLevel = MenuLevel.Main0;
+    }
+
+    override public void Execute(BotUserRequestParameters parameters)
+    {
+        var answer = new StringBuilder(StylingHelper.MakeItStyled("Добро пожаловать!\n\n", UiTextStyle.Header));
+
+        answer.AppendLine(StylingHelper.MakeItStyled("Я - уникальный бот для сбора всевозможной статистики вашего клана в игре Clash of Clans\n", UiTextStyle.Name));
+
+        answer.AppendLine(StylingHelper.GetInlineLink("Руководство по использованию", "https://t.me/CoC_Stats_Tracker_Bot_Community/5/24"));
+
+        answer.AppendLine(StylingHelper.GetInlineLink("\nГруппа пользователей бота", "https://t.me/CoC_Stats_Tracker_Bot_Community"));
+
+        answer.AppendLine(StylingHelper.GetInlineLink("\nАдминистратор", "https://t.me/StatsTrackerManager"));
+
+        answer.AppendLine(StylingHelper.MakeItStyled("\nКраткое описание:\n", UiTextStyle.TableAnnotation));
+
+        answer.AppendLine(StylingHelper.MakeItStyled("1. Бот предназначен для сбора и визуализации статиситики только отслеживаемых кланов.\n", UiTextStyle.Default));
+
+        answer.AppendLine(StylingHelper.MakeItStyled("2. Все взаимодействие с ботом осуществляется через кнопочное меню, команд содержащих символ \'/\' не предусмотрено.\n", UiTextStyle.Default));
+
+        answer.AppendLine(StylingHelper.MakeItStyled("3. Бот находится в состоянии Альфа-теста, иногда может не работать или крашиться.\n", UiTextStyle.Default));
+
+        answer.AppendLine(StylingHelper.MakeItStyled("4. Даты и время, выводимые ботом соответствют часовому поясу UTC+3 (московское время).\n", UiTextStyle.Default));
+
+        ResponseSender.SendAnswer(parameters, true, answer.ToString());
     }
 }

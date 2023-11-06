@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Domain.Entities
 {
     public class RaidMember : Entity
     {
+        public DateTime UpdatedOn { get; set; }
         public int TotalLoot { get; set; }
         public string MemberTag { get; set; }
         public string MemberName { get; set; }

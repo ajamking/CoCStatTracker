@@ -1,6 +1,4 @@
-﻿using CoCApiDealer.RequestsSettings;
-
-namespace CoCApiDealer.ApiRequests;
+﻿namespace CoCApiDealer.ApiRequests;
 
 public class BaseApiRequest
 {

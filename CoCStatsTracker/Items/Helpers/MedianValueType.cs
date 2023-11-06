@@ -1,6 +1,6 @@
 ﻿namespace CoCStatsTracker.Items.Helpers;
 
-public enum AvgType
+public enum MedianValueType
 {
     ClanWar,
     ClanWarWithout1415Th,

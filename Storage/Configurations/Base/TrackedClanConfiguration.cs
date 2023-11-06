@@ -1,7 +1,6 @@
 ﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Storage.Configurations.Base
 {
@@ -14,7 +13,6 @@ namespace Storage.Configurations.Base
             builder.Property(p => p.UpdatedOn).IsRequired();
             builder.Property(p => p.Tag).IsRequired();
             builder.Property(p => p.Name).IsRequired();
-            //builder.Property(p => p.IsCurrent).HasConversion(new BoolToStringConverter("Current", "Obsolete")).IsRequired();
         }
     }
 }

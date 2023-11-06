@@ -16,7 +16,7 @@ public class LeaderDeleteWarsShowWarsInfoRH : BaseRequestHandler
     {
         try
         {
-            var wars = GetFromDbQueryHandler.GetAllClanWars(parameters.LastClanTagToMerge);
+            var wars = GetFromDbQueryHandler.GetAllClanWarsUi(parameters.LastClanTagToMerge);
 
             var answer = new StringBuilder(StylingHelper.MakeItStyled($"Зафиксированные войны клана {parameters.LastClanTagToMerge} :\n\n", UiTextStyle.Header));
 
@@ -32,7 +32,7 @@ public class LeaderDeleteWarsShowWarsInfoRH : BaseRequestHandler
                 }
             }
             else
-            {   
+            {
                 answer.AppendLine(StylingHelper.MakeItStyled("Записи отсутствуют", UiTextStyle.Default));
             }
 

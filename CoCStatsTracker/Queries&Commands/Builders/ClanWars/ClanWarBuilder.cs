@@ -1,8 +1,8 @@
 ﻿using CoCStatsTracker.ApiEntities;
-using CoCStatsTracker;
-using Domain.Entities;
-using System.Collections.Generic;
 using CoCStatsTracker.Items.Helpers;
+using Domain.Entities;
+using System;
+using System.Collections.Generic;
 
 namespace CoCStatsTracker.Builders;
 
@@ -15,18 +15,20 @@ public class ClanWarBuilder
         ClanWar = clanWar ?? new ClanWar();
     }
 
-    public void SetBaseProperties(ClanWarApi clanWarApi, bool isCwl = false, string state = "War still goes on")
+    public void SetBaseProperties(ClanWarApi clanWarApi, bool isCwlWar = false, int attacksPerMember = 2)
     {
-        ClanWar.IsCWL = isCwl;
-        ClanWar.Result = state;
+        ClanWar.UpdatedOn = DateTime.Now;
+
+        ClanWar.IsCWL = isCwlWar;
+        ClanWar.Result = GetWarResult(clanWarApi);
 
         ClanWar.State = clanWarApi.State;
         ClanWar.TeamSize = clanWarApi.TeamSize;
-        ClanWar.AttackPerMember = clanWarApi.AttacksPerMember;
+        ClanWar.AttackPerMember = attacksPerMember;
 
-        ClanWar.PreparationStartTime = DateTimeParser.Parse(clanWarApi.PreparationStartTime).ToLocalTime();
-        ClanWar.StartedOn = DateTimeParser.Parse(clanWarApi.StartTime).ToLocalTime();
-        ClanWar.EndedOn = DateTimeParser.Parse(clanWarApi.EndTime).ToLocalTime();
+        ClanWar.PreparationStartTime = DateTimeParser.ParseToDateTime(clanWarApi.PreparationStartTime).ToLocalTime();
+        ClanWar.StartedOn = DateTimeParser.ParseToDateTime(clanWarApi.StartTime).ToLocalTime();
+        ClanWar.EndedOn = DateTimeParser.ParseToDateTime(clanWarApi.EndTime).ToLocalTime();
 
         ClanWar.AttacksCount = clanWarApi.ClanResults.AttacksCount;
         ClanWar.StarsCount = clanWarApi.ClanResults.StarsCount;
@@ -53,5 +55,35 @@ public class ClanWarBuilder
     public void SetEnemyWarMembers(ICollection<EnemyWarMember> warMembers)
     {
         ClanWar.EnemyWarMembers = warMembers;
+    }
+
+    private static string GetWarResult(ClanWarApi clanWarApi)
+    {
+        var result = "Неопределен";
+
+        if (clanWarApi.State == "warEnded")
+        {
+            if (clanWarApi.ClanResults.StarsCount > clanWarApi.OpponentResults.StarsCount)
+            {
+                result = "Победа";
+            }
+            else if (clanWarApi.ClanResults.StarsCount == clanWarApi.OpponentResults.StarsCount)
+            {
+                if (clanWarApi.ClanResults.DestructionPercentage > clanWarApi.OpponentResults.DestructionPercentage)
+                {
+                    result = "Победа";
+                }
+                else
+                {
+                    result = "Поражение";
+                }
+            }
+            else
+            {
+                result = "Поражение";
+            }
+        }
+
+        return result;
     }
 }

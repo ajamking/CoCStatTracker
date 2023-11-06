@@ -13,7 +13,7 @@
 
         public int DestructionPercentFrom { get; set; }
         public int DestructionPercentTo { get; set; }
-     
+
         public int? RaidMemberId { get; set; }
         public virtual RaidMember RaidMember { get; set; }
     }

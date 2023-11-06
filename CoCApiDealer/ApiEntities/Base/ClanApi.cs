@@ -29,7 +29,7 @@ public class ClanApi
     public int ClanCapitalPoints { get; set; }
 
     [JsonProperty("capitalLeague")]
-    public LeagueApi ?CapitalLeague { get; set; }
+    public LeagueApi? CapitalLeague { get; set; }
 
     [JsonProperty("requiredTrophies")]
     public int RequiredTrophies { get; set; }
@@ -53,13 +53,13 @@ public class ClanApi
     public LeagueApi WarLeague { get; set; }
 
     [JsonProperty("clanCapital")]
-    public ClanCapitalApi ?ClanCapital { get; set; }
+    public ClanCapitalApi? ClanCapital { get; set; }
 
     [JsonProperty("members")]
     public int MembersCount { get; set; }
 
     [JsonProperty("memberList")]
-    public ClanMemberApi[] ?Members { get; set; }
+    public ClanMemberApi[]? Members { get; set; }
 }
 
 public class ClanCapitalApi

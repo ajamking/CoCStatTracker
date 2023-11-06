@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Headers;
 
-namespace CoCApiDealer.RequestsSettings;
+namespace CoCApiDealer.ApiRequests;
 
 public class CoCApiClientFactory
 {

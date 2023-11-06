@@ -27,6 +27,14 @@ public static class StylingHelper
     }
 
     /// <summary>
+    /// Формирует гиперссылку
+    /// </summary>
+    public static string GetInlineLink(string text, string link)
+    {
+        return $@"[{text}]({Ecranize(link)})";
+    }
+
+    /// <summary>
     /// Возвращает первое слово в строке
     /// </summary>
     public static string GetFirstWord(string str)
@@ -42,18 +50,21 @@ public static class StylingHelper
         }
     }
 
-    public static string GetCenteredString(string s, int width)
+    /// <summary>
+    /// Центрирует строку, отбивая пробелами слева и справа.
+    /// </summary>
+    public static string GetCenteredString(string str, int maxStringWidth)
     {
-        if (s.Length >= width)
+        if (str.Length >= maxStringWidth)
         {
-            return s;
+            return str;
         }
 
-        int leftPadding = (width - s.Length) / 2;
+        int leftPadding = (maxStringWidth - str.Length) / 2;
 
-        int rightPadding = width - s.Length - leftPadding;
+        int rightPadding = maxStringWidth - str.Length - leftPadding;
 
-        return new string(' ', leftPadding) + s + new string(' ', rightPadding);
+        return new string(' ', leftPadding) + str + new string(' ', rightPadding);
     }
 
     /// <summary>
@@ -154,7 +165,7 @@ public static class StylingHelper
         }
     }
 
-   
+
 }
 
 /// <summary>

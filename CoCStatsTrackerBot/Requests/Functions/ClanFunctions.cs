@@ -420,8 +420,7 @@ public static class ClanFunctions
                 str.AppendLine(StylingHelper.MakeItStyled(cw.StartedOn.ToString() + "-", UiTextStyle.Default));
                 str.AppendLine(StylingHelper.MakeItStyled(cw.EndedOn.ToString(), UiTextStyle.Default));
                 str.AppendLine();
-                str.AppendLine(StylingHelper.MakeItStyled("Результат:", UiTextStyle.Subtitle));
-                str.AppendLine(StylingHelper.MakeItStyled(cw.Result, UiTextStyle.Default));
+                str.AppendLine(StylingHelper.MakeItStyled($"Результат: {cw.Result}", UiTextStyle.Subtitle));
                 str.AppendLine();
                 str.AppendLine(StylingHelper.MakeItStyled("Суммарное количество звезд:", UiTextStyle.Subtitle));
                 str.AppendLine(StylingHelper.MakeItStyled(cw.TotalStarsEarned + " : " + cw.OpponentStarsCount, UiTextStyle.Default));
@@ -430,7 +429,7 @@ public static class ClanFunctions
                                                      Math.Round(cw.OpponentDestructionPercentage, 1), UiTextStyle.Default));
                 str.AppendLine();
                 str.AppendLine(StylingHelper.MakeItStyled("Пояснение таблицы:", UiTextStyle.TableAnnotation));
-                str.AppendLine(StylingHelper.MakeItStyled("Атаки - ТХ/Проценты/Звезды", UiTextStyle.Default));
+                str.AppendLine(StylingHelper.MakeItStyled("Атаки - Уровень ТХ / Проценты / Звезды", UiTextStyle.Default));
                 str.AppendLine();
 
                 str.AppendLine(StylingHelper.MakeItStyled("Показатели атак:", UiTextStyle.Subtitle));
@@ -448,16 +447,20 @@ public static class ClanFunctions
 
                 foreach (var attack in cw.MembersResults.OrderByDescending(x => x.ThLevel))
                 {
-                    var properName = StylingHelper.GetProperString(attack.PlayerName, maxNameLength);
-
                     var membersThLevel = attack.ThLevel.ToString();
 
                     if (attack.ThLevel < 10)
                     {
+                        membersThLevel += "  ";
+                    }
+                    else
+                    {
                         membersThLevel += " ";
                     }
 
-                    str.Append($" |{membersThLevel} {StylingHelper.GetCenteredString(properName, maxNameLength)}|");
+                    var properName = StylingHelper.GetProperString(attack.PlayerName, maxNameLength - membersThLevel.Length);
+
+                    str.Append($" |{membersThLevel}{StylingHelper.GetCenteredString(properName, maxNameLength - membersThLevel.Length)}|");
 
                     str.Append($"{StylingHelper.GetCenteredString(attack.FirstEnemyThLevel + "/" + attack.FirstDestructionPercent + "/" + attack.FirstStarsCount, maxAttackLenght)}|");
 

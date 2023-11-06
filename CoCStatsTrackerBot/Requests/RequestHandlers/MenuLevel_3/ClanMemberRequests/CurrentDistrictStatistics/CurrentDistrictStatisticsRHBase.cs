@@ -15,7 +15,7 @@ public class CurrentDistrictStatisticsRHBase : BaseRequestHandler
     {
         try
         {
-            var raids = GetFromDbQueryHandler.GetAllRaids(parameters.LastClanTagMessage).OrderByDescending(x => x.StartedOn);
+            var raids = GetFromDbQueryHandler.GetAllRaidsUi(parameters.LastClanTagMessage).OrderByDescending(x => x.StartedOn);
 
             var answer = CurrentStatisticsFunctions.GetDistrictStatistics(raids.First(), parameters.DistrictType);
 

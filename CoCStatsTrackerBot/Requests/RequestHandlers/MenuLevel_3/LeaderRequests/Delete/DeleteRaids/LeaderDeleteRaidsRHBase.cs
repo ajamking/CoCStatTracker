@@ -15,11 +15,11 @@ public class LeaderDeleteRaidsRHBase : BaseRequestHandler
     {
         try
         {
-            var raidsCountBeforeRemove = GetFromDbQueryHandler.GetAllRaids(parameters.LastClanTagToMerge).Count;
+            var raidsCountBeforeRemove = GetFromDbQueryHandler.GetAllRaidsUi(parameters.LastClanTagToMerge).Count;
 
             DeleteFromDbCommandHandler.DeleteClanRaids(parameters.LastClanTagToMerge, parameters.EntriesCount);
 
-            var raidsCountAfterRemove = GetFromDbQueryHandler.GetAllRaids(parameters.LastClanTagToMerge).Count;
+            var raidsCountAfterRemove = GetFromDbQueryHandler.GetAllRaidsUi(parameters.LastClanTagToMerge).Count;
 
             var answer = StylingHelper.MakeItStyled($"Операция успешна.\n" +
                 $"Записей удалено: {raidsCountBeforeRemove - raidsCountAfterRemove}", UiTextStyle.Default);

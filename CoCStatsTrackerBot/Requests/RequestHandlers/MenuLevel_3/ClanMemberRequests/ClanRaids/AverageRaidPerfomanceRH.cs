@@ -15,7 +15,7 @@ public class AverageRaidPerfomanceRH : BaseRequestHandler
     {
         try
         {
-            var averagePergomances = GetFromDbQueryHandler.GetAllClanMembersAverageRaidPerfomance(parameters.LastClanTagMessage);
+            var averagePergomances = GetFromDbQueryHandler.GetAllClanMembersAverageRaidPerfomanceUi(parameters.LastClanTagMessage);
 
             var answer = ClanFunctions.GetMembersAverageRaidsPerfomance(averagePergomances);
 

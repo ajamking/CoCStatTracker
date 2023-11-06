@@ -6,7 +6,7 @@ public class MemberWarStatisticsRH1 : BaseRequestHandler
 {
     public MemberWarStatisticsRH1()
     {
-        Header = "Последняя участие в войне";
+        Header = "Последнее участие в войне";
         HandlerMenuLevel = MenuLevel.PlayerWarStatistics3;
     }
 

@@ -1,4 +1,5 @@
 ﻿using CoCStatsTracker;
+using CoCStatsTracker.Items.Exceptions;
 using CoCStatsTrackerBot.Menu;
 
 namespace CoCStatsTrackerBot.Requests;
@@ -15,13 +16,29 @@ public class LeaderUpdateLastWarRH : BaseRequestHandler
     {
         try
         {
-            UpdateDbCommandHandler.UpdateCurrentClanWar(parameters.LastClanTagToMerge);
+            try
+            {
+                UpdateDbCommandHandler.UpdateCurrentClanWar(parameters.LastClanTagToMerge);
 
-            ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled($"Операция успешна, информация о последней войне обновлена", UiTextStyle.Default));
+                ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled($"Операция успешна, информация о последней войне обновлена", UiTextStyle.Default));
+            }
+            catch (FailedPullFromApiException e)
+            {
+                UpdateDbCommandHandler.UpdateCwlClanWars(parameters.LastClanTagToMerge);
+
+                ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled($"Операция успешна, информация о ранее зафиксированных " +
+                    $"войнах текущей лиги обновлена.", UiTextStyle.Default));
+            }
+            
         }
         catch (NotFoundException e)
         {
             ResponseSender.SendAnswer(parameters, true, DefaultNotFoundMessage);
+        }
+        catch (FailedPullFromApiException e)
+        {
+            ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Выполнение операции на данный момент невозможно.\n" +
+                "Бот сможет получить сведения о войнах клана лишь если история войн будет общедоступной.", UiTextStyle.Default));
         }
         catch (Exception e)
         {

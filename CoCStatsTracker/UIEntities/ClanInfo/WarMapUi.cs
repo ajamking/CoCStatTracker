@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace CoCStatsTracker.UIEntities;
 
@@ -9,8 +10,9 @@ public class WarMapUi : UiEntity
     public string OpponentClanName { get; set; }
     public string OpponentClanTag { get; set; }
     public string PreparationStartTime { get; set; }
-    public string StartedOn { get; set; }
-    public string EndedOn { get; set; }
+    public DateTime PreparationStartedOn { get; set; }
+    public DateTime StartedOn { get; set; }
+    public DateTime EndedOn { get; set; }
 
     public List<WarMemberOnMapUi> WarMembers { get; set; }
     public List<WarMemberOnMapUi> EnemyWarMembers { get; set; }

@@ -3,21 +3,23 @@ using CoCStatsTrackerBot.Menu;
 
 namespace CoCStatsTrackerBot.Requests;
 
-public class DeveloperRemoveAllDataBaseRH : BaseRequestHandler
+public class MemberFullInfoRH : BaseRequestHandler
 {
-    public DeveloperRemoveAllDataBaseRH()
+    public MemberFullInfoRH()
     {
-        Header = "Снести всю базу";
-        HandlerMenuLevel = MenuLevel.DeveloperMenu2;
+        Header = "Все об игроке";
+        HandlerMenuLevel = MenuLevel.PlayerInfo2;
     }
 
     override public void Execute(BotUserRequestParameters parameters)
     {
         try
         {
-            AddToDbCommandHandler.ResetDb();
+            var member = GetFromDbQueryHandler.GetClanMemberUi(parameters.LastMemberTagMessage);
 
-            ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("БД полностью очищена.", UiTextStyle.Default));
+            var answer = PlayerFunctions.GetFullPlayerInfo(member);
+
+            ResponseSender.SendAnswer(parameters, true, SplitAnswer(answer));
         }
         catch (NotFoundException e)
         {

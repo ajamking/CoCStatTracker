@@ -1,6 +1,5 @@
 ﻿using CoCStatsTracker;
 using CoCStatsTrackerBot.Menu;
-using CoCStatsTrackerBot.Requests;
 
 namespace CoCStatsTrackerBot.Requests;
 
@@ -18,7 +17,7 @@ public class CurrentRaidStatisticsRH : BaseRequestHandler
         {
             parameters.EntriesCount = 1;
 
-            var allRaids = GetFromDbQueryHandler.GetAllRaids(parameters.LastClanTagMessage).OrderByDescending(x => x.StartedOn).ToList();
+            var allRaids = GetFromDbQueryHandler.GetAllRaidsUi(parameters.LastClanTagMessage).OrderByDescending(x => x.StartedOn).ToList();
 
             var answer = ClanFunctions.GetRaidsHistory(allRaids, parameters.EntriesCount, MessageSplitToken);
 

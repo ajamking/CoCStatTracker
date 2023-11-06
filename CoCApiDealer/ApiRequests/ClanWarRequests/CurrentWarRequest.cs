@@ -1,5 +1,4 @@
-﻿using CoCApiDealer.RequestsSettings;
-using CoCStatsTracker.ApiEntities;
+﻿using CoCStatsTracker.ApiEntities;
 using Newtonsoft.Json;
 
 namespace CoCApiDealer.ApiRequests;
@@ -16,19 +15,15 @@ public class CurrentWarRequest : BaseApiRequest
 
             var currentWar = JsonConvert.DeserializeObject<ClanWarApi>(apiRequestResult);
 
-            if (currentWar == null)
-            {
-                throw new Exception("Nothing came from API");
-            }
-            else
-            {
-                return currentWar;
-            }
+            ApiNullOrEmtyResponseException.ThrowByPredicate(() => currentWar == null || currentWar.StartTime == null,
+                    "CurrentWarRequest is failed, Nothing came from API");
+
+            return currentWar;
 
         }
-        catch (Exception ex)
+        catch (ApiNullOrEmtyResponseException ex)
         {
-            throw new ApiErrorException(ex);
+            return null;
         }
     }
 }

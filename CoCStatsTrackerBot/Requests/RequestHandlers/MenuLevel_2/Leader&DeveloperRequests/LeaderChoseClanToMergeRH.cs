@@ -29,9 +29,21 @@ public class LeaderChoseClanToMergeRH : BaseRequestHandler
 
             answer.AppendLine(StylingHelper.MakeItStyled("\n\nКланы, которые вы можете модерировать: ", UiTextStyle.Default));
 
-            foreach (var clan in GetFromDbQueryHandler.GetAllTrackedClans().Where(x => x.AdminsKey == parameters.AdminsKey))
+            var trackedClans = GetFromDbQueryHandler.GetAllTrackedClansUi();
+
+            if (parameters.IsBotHolder)
             {
-                answer.AppendLine(StylingHelper.MakeItStyled($"{clan.Name} - {clan.Tag}", UiTextStyle.Name));
+                foreach (var clan in trackedClans)
+                {
+                    answer.AppendLine(StylingHelper.MakeItStyled($"{clan.Name} - {clan.Tag}", UiTextStyle.Name));
+                }
+            }
+            else
+            {
+                foreach (var clan in trackedClans.Where(x => x.AdminsKey == parameters.AdminsKey).Where(x => x.IsInBlackList == false))
+                {
+                    answer.AppendLine(StylingHelper.MakeItStyled($"{clan.Name} - {clan.Tag}", UiTextStyle.Name));
+                }
             }
 
             answer.AppendLine(StylingHelper.MakeItStyled("\nДля переопределения модерируемого клана введите один из тегов, представленных выше. ", UiTextStyle.Default));

@@ -1,5 +1,6 @@
 ﻿using CoCStatsTracker;
 using Domain.Entities;
+using Newtonsoft.Json.Linq;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
@@ -20,7 +21,6 @@ class Program
     async static Task Main(string[] args)
     {
         //CreateNewTestDb("#YPPGCCY8", "#UQQGYJJP", "#VUJCUQ9Y");
-        //AddToDbCommandHandler.AddCurrentRaidToClan("#YPPGCCY8");
 
         _client.StartReceiving(HandleUpdateAsync, HandleError);
 
@@ -86,7 +86,7 @@ class Program
 
             AddToDbCommandHandler.AddCurrentRaidToClan(clanTag);
 
-            //AddToDbCommandHandler.AddCurrentClanWarToClan(clanTag);
+            AddToDbCommandHandler.AddCwlClanWarsToClan(clanTag);
         }
     }
 }

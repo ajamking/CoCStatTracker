@@ -1,14 +1,14 @@
 ﻿using CoCStatsTracker;
+using CoCStatsTracker.UIEntities;
 using CoCStatsTrackerBot.Menu;
-using CoCStatsTrackerBot.Requests;
 
 namespace CoCStatsTrackerBot.Requests;
 
-public class ClanShortInfoRH : BaseRequestHandler
+public class ClanActiveSuperUnitsRH : BaseRequestHandler
 {
-    public ClanShortInfoRH()
+    public ClanActiveSuperUnitsRH()
     {
-        Header = "Главное о клане";
+        Header = "Активные супер юниты";
         HandlerMenuLevel = MenuLevel.ClanInfo2;
     }
 
@@ -16,9 +16,16 @@ public class ClanShortInfoRH : BaseRequestHandler
     {
         try
         {
-            var clan = GetFromDbQueryHandler.GetTrackedClan(parameters.LastClanTagMessage);
+            var clan = GetFromDbQueryHandler.GetTrackedClanUi(parameters.LastClanTagMessage);
 
-            var answer = ClanFunctions.GetClanShortInfo(clan);
+            var armys = new List<ArmyUi>();
+
+            foreach (var member in clan.ClanMembers)
+            {
+                armys.Add(GetFromDbQueryHandler.GetMembersArmyUi(member.Tag));
+            }
+
+            var answer = ClanFunctions.GetClanActiveeSuperUnits(armys);
 
             ResponseSender.SendAnswer(parameters, true, SplitAnswer(answer));
         }

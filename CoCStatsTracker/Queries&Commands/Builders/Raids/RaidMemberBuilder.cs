@@ -1,7 +1,7 @@
 ﻿using CoCStatsTracker.ApiEntities;
 using Domain.Entities;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics.Metrics;
 
 namespace CoCStatsTracker.Builders;
 
@@ -16,6 +16,8 @@ public class RaidMemberBuilder
 
     public void SetBaseProperties(RaidMemberApi member)
     {
+        Member.UpdatedOn = DateTime.Now;
+
         Member.TotalLoot = member.CapitalResourcesLooted;
         Member.MemberTag = member.Tag;
         Member.MemberName = member.Name;

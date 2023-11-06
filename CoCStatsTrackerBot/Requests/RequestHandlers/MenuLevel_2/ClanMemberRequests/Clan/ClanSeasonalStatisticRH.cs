@@ -15,7 +15,7 @@ public class ClanSeasonalStatisticRH : BaseRequestHandler
     {
         try
         {
-            var seasonalStatistics = GetFromDbQueryHandler.GetSeasonStatistics(parameters.LastClanTagMessage);
+            var seasonalStatistics = GetFromDbQueryHandler.GetSeasonStatisticsUi(parameters.LastClanTagMessage);
 
             var answer = ClanFunctions.GetSeasonClanMembersStatistcs(seasonalStatistics);
 

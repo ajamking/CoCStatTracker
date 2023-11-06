@@ -1,6 +1,4 @@
-﻿using CoCStatsTracker;
-using CoCStatsTracker.UIEntities;
-using Domain.Entities;
+﻿using CoCStatsTracker.UIEntities;
 using System.Text;
 
 namespace CoCStatsTrackerBot.Requests;
@@ -204,6 +202,8 @@ public class CurrentStatisticsFunctions
             {ADistrictType.Dragon_Cliffs, "Dragon Cliffs" },
             {ADistrictType.Golem_Quarry, "Golem Quarry" },
             {ADistrictType.Skeleton_Park, "Skeleton Park" },
+            {ADistrictType.Goblin_Mines, "Goblin Mines" },
+
         };
 
         var chosenDistrictName = districtMapper.First(x => x.Key == districtType).Value;

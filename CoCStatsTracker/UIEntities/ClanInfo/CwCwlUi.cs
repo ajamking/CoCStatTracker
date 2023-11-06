@@ -5,6 +5,7 @@ namespace CoCStatsTracker.UIEntities;
 
 public class CwCwlUi : UiEntity
 {
+    public DateTime PreparationStartTime { get; set; }
     public DateTime StartedOn { get; set; }
     public DateTime EndedOn { get; set; }
     public int WarMembersCount { get; set; }

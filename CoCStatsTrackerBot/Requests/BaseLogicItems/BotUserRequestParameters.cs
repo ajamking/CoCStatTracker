@@ -6,6 +6,7 @@ namespace CoCStatsTrackerBot.Requests;
 
 public class BotUserRequestParameters
 {
+    public bool IsBotHolder { get; set; }
     public string AdminsKey { get; set; }
 
     public ITelegramBotClient BotClient { get; set; }

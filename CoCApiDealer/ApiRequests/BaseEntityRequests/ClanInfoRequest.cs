@@ -1,5 +1,4 @@
-﻿using CoCApiDealer.RequestsSettings;
-using CoCStatsTracker.ApiEntities;
+﻿using CoCStatsTracker.ApiEntities;
 using Newtonsoft.Json;
 
 namespace CoCApiDealer.ApiRequests;
@@ -16,21 +15,14 @@ public class ClanInfoRequest : BaseApiRequest
 
             var clanInfo = JsonConvert.DeserializeObject<ClanApi>(apiRequestResult);
 
-            if (clanInfo == null)
-            {
-                throw new Exception("Nothing came from API");
-            }
-            else
-            {
-                return clanInfo;
-            }
+            ApiNullOrEmtyResponseException.ThrowByPredicate(() => clanInfo == null || clanInfo.Tag == null,
+                    "ClanInfoRequest is failed, Nothing came from API");
 
+            return clanInfo;
         }
-        catch (Exception ex)
+        catch (ApiNullOrEmtyResponseException ex)
         {
-
-            throw new ApiErrorException(ex);
+            return null;
         }
-
     }
 }

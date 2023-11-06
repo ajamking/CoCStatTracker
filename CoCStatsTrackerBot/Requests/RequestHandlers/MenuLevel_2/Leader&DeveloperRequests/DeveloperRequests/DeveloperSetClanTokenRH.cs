@@ -15,17 +15,15 @@ public class DeveloperSetClanTokenRH : BaseRequestHandler
     {
         try
         {
-            if (!(string.IsNullOrEmpty(parameters.LastClanTagToMerge) && string.IsNullOrEmpty(parameters.AdminKeyToMerge)))
+            if (string.IsNullOrEmpty(parameters.LastClanTagToMerge) || string.IsNullOrEmpty(parameters.AdminKeyToMerge))
             {
-                UpdateDbCommandHandler.ResetClanAdminKey(parameters.LastClanTagToMerge, parameters.AdminKeyToMerge);
-
-                AddToDbCommandHandler.AddClanMembers(parameters.TagToAddClan);
-
-                ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Токен для клана успешно переопределен.", UiTextStyle.Default));
+                ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Тег изменяемого клана или токен главы не проставлены.", UiTextStyle.Default));
             }
             else
             {
-                ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Тег изменяемого клана или токен главы не проставлены.", UiTextStyle.Default));
+                UpdateDbCommandHandler.ResetClanAdminKey(parameters.LastClanTagToMerge, parameters.AdminKeyToMerge);
+
+                ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Токен для клана успешно переопределен.", UiTextStyle.Default));
             }
         }
         catch (NotFoundException e)

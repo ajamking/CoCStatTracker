@@ -1,9 +1,8 @@
 ﻿using CoCStatsTracker.ApiEntities;
-using CoCStatsTracker;
+using CoCStatsTracker.Items.Helpers;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
-using CoCStatsTracker.Items.Helpers;
 
 namespace CoCStatsTracker.Builders;
 
@@ -18,9 +17,11 @@ public class CapitalRaidBuilder
 
     public void SetBaseProperties(RaidApi raidApi)
     {
+        Raid.UpdatedOn = DateTime.Now;
+
         Raid.State = raidApi.State;
-        Raid.StartedOn = DateTimeParser.Parse(raidApi.StartTime).ToLocalTime();
-        Raid.EndedOn = DateTimeParser.Parse(raidApi.EndTime).ToLocalTime();
+        Raid.StartedOn = DateTimeParser.ParseToDateTime(raidApi.StartTime).ToLocalTime();
+        Raid.EndedOn = DateTimeParser.ParseToDateTime(raidApi.EndTime).ToLocalTime();
         Raid.TotalLoot = raidApi.CapitalTotalLoot;
         Raid.TotalAttacks = raidApi.TotalAttacks;
         Raid.EnemyDistrictsDestoyed = raidApi.EnemyDistrictsDestroyed;

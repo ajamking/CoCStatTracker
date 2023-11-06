@@ -1,8 +1,10 @@
-﻿namespace CoCStatsTracker.UIEntities;
+﻿using System;
+
+namespace CoCStatsTracker.UIEntities;
 
 public class SeasonStatisticsUi : UiEntity
 {
-    public string UpdatedOn { get; set; }
+    public DateTime InitializedOn { get; set; }
     public string ClanTag { get; set; }
     public string ClanName { get; set; }
     public string Name { get; set; }

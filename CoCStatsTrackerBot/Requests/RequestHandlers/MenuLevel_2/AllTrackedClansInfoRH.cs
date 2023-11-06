@@ -1,26 +1,22 @@
 ﻿using CoCStatsTracker;
+using CoCStatsTrackerBot.Helpers;
 using CoCStatsTrackerBot.Menu;
-using CoCStatsTrackerBot.Requests;
 
 namespace CoCStatsTrackerBot.Requests;
 
-public class MemberShortInfoRH : BaseRequestHandler
+public class AllTrackedClansInfoRH : BaseRequestHandler
 {
-    public MemberShortInfoRH()
+    public AllTrackedClansInfoRH()
     {
-        Header = "Главное об игроке";
-        HandlerMenuLevel = MenuLevel.PlayerInfo2;
+        Header = "Все отслеживаемые кланы";
+        HandlerMenuLevel = MenuLevel.Member1;
     }
 
     override public void Execute(BotUserRequestParameters parameters)
     {
         try
         {
-            var member = GetFromDbQueryHandler.GetClanMember(parameters.LastMemberTagMessage);
-
-            var answer = PlayerFunctions.GetShortPlayerInfo(member);
-
-            ResponseSender.SendAnswer(parameters, true, SplitAnswer(answer));
+            TagsConditionChecker.SendClanTagMessageIsEmpty(parameters);
         }
         catch (NotFoundException e)
         {

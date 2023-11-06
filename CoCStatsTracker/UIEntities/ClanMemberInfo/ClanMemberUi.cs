@@ -21,10 +21,10 @@ public class ClanMemberUi : UiEntity
     public int DonationsSent { get; set; }
     public int DonationsRecieved { get; set; }
     public int WarStars { get; set; }
-    public int TotalCapitalContributions { get; set; }
-
-    public int CwAverageDestructionPercent { get; set; }
-    public int CwAverageDestructionPercentWithout14_15Th { get; set; }
-    public int RaidsAverageDestructionPercent { get; set; }
-    public int RaidsAverageDestructionPercentWithoutPeak { get; set; }
+    public int TotalCapitalContributed { get; set; }
+    public int TotalCapitalGoldLooted { get; set; }
+    public int CwMedianDP { get; set; }
+    public int CwMedianDPWithout14_15Th { get; set; }
+    public int RaidsMedianDP { get; set; }
+    public int RaidsMedianDPWithoutPeak { get; set; }
 }

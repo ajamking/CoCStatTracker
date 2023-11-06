@@ -6,9 +6,9 @@ namespace Storage
     public interface ICoCDbContext
     {
         public DbSet<TrackedClan> TrackedClans { get; set; }
-        public DbSet<LastClanMemberStatistics> InitialClanMembersStaticstics { get; set; }
         public DbSet<ClanMember> ClanMembers { get; set; }
         public DbSet<Troop> Units { get; set; }
+        public DbSet<PreviousClanMember> PreviousClanMembers { get; set; }
 
         public DbSet<ClanWar> ClanWars { get; set; }
         public DbSet<EnemyWarMember> EnemyWarMembers { get; set; }

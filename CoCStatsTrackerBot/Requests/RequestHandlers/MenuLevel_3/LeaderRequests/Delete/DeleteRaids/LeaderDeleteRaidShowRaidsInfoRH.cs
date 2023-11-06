@@ -16,7 +16,7 @@ public class LeaderDeleteRaidShowRaidsInfoRH : BaseRequestHandler
     {
         try
         {
-            var raids = GetFromDbQueryHandler.GetAllRaids(parameters.LastClanTagToMerge);
+            var raids = GetFromDbQueryHandler.GetAllRaidsUi(parameters.LastClanTagToMerge);
 
             var answer = new StringBuilder(StylingHelper.MakeItStyled($"Зафиксированные рейды клана {parameters.LastClanTagToMerge} :\n\n", UiTextStyle.Header));
 

@@ -1,14 +1,13 @@
 ﻿using CoCStatsTracker;
 using CoCStatsTrackerBot.Menu;
-using CoCStatsTrackerBot.Requests;
 
 namespace CoCStatsTrackerBot.Requests;
 
-public class MemberFullInfoRH : BaseRequestHandler
+public class MemberShortInfoRH : BaseRequestHandler
 {
-    public MemberFullInfoRH()
+    public MemberShortInfoRH()
     {
-        Header = "Все об игроке";
+        Header = "Главное об игроке";
         HandlerMenuLevel = MenuLevel.PlayerInfo2;
     }
 
@@ -16,9 +15,9 @@ public class MemberFullInfoRH : BaseRequestHandler
     {
         try
         {
-            var member = GetFromDbQueryHandler.GetClanMember(parameters.LastMemberTagMessage);
+            var member = GetFromDbQueryHandler.GetClanMemberUi(parameters.LastMemberTagMessage);
 
-            var answer = PlayerFunctions.GetFullPlayerInfo(member);
+            var answer = PlayerFunctions.GetShortPlayerInfo(member);
 
             ResponseSender.SendAnswer(parameters, true, SplitAnswer(answer));
         }

@@ -21,7 +21,7 @@ public class DeveloperAddClanRH : BaseRequestHandler
 
                 AddToDbCommandHandler.AddClanMembers(parameters.TagToAddClan);
 
-                ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Клан, члены клана, сезонная статистика добавлены.", UiTextStyle.Default));
+                ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Клан, члены клана, сезонная статистика добавлены в БД.", UiTextStyle.Default));
             }
             else
             {
@@ -31,6 +31,10 @@ public class DeveloperAddClanRH : BaseRequestHandler
         catch (NotFoundException e)
         {
             ResponseSender.SendAnswer(parameters, true, DefaultNotFoundMessage);
+        }
+        catch (AlreadyExistsException e)
+        {
+            ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Этот клан уже отслеживается, добавить его нельзя.", UiTextStyle.Default));
         }
         catch (Exception e)
         {

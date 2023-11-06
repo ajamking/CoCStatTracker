@@ -28,7 +28,7 @@ public class DeveloperDeleteClanRH : BaseRequestHandler
         }
         catch (NotFoundException e)
         {
-            ResponseSender.SendAnswer(parameters, true, DefaultNotFoundMessage);
+            ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Такого клана нет в БД, удаление невозможно.", UiTextStyle.Default));
         }
         catch (Exception e)
         {

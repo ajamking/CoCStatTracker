@@ -1,5 +1,4 @@
-﻿using CoCApiDealer.RequestsSettings;
-using CoCStatsTracker.ApiEntities;
+﻿using CoCStatsTracker.ApiEntities;
 using Newtonsoft.Json;
 
 namespace CoCApiDealer.ApiRequests;
@@ -16,20 +15,14 @@ public class CapitalRaidsRequest : BaseApiRequest
 
             var capitalRaidsInfo = JsonConvert.DeserializeObject<RaidsApi>(apiRequestResult);
 
-            if (capitalRaidsInfo == null)
-            {
-                throw new Exception("Nothing came from API");
-            }
-            else
-            {
-                return capitalRaidsInfo;
-            }
+            ApiNullOrEmtyResponseException.ThrowByPredicate(() => capitalRaidsInfo == null || capitalRaidsInfo.RaidsInfo == null,
+              "CapitalRaidsRequest is failed, Nothing came from API");
 
+            return capitalRaidsInfo;
         }
-        catch (Exception ex)
+        catch (ApiNullOrEmtyResponseException ex)
         {
-
-            throw new ApiErrorException(ex);
+            return null;
         }
     }
 }

@@ -12,7 +12,7 @@ public abstract class BaseRequestHandler
 
     public static string DefaultFailerPullFromApiMessage = StylingHelper.MakeItStyled("Не удалось получить запрашиваемые сведения. Проблема на стороне CoC API", UiTextStyle.Default);
 
-    public string Header { get; protected set; } = "/start";
+    public string Header { get; protected set; } = "Базовый метод, не вызывается вообще";
 
     public MenuLevel HandlerMenuLevel { get; protected set; } = MenuLevel.Main0;
 

@@ -42,8 +42,8 @@ public static class WarMapUiBuilder
             OpponentClanName = clanWar.OpponentClanName,
             OpponentClanTag = clanWar.OpponentClanTag,
             PreparationStartTime = clanWar.PreparationStartTime.ToString(),
-            StartedOn = clanWar.StartedOn.ToString(),
-            EndedOn = clanWar.EndedOn.ToString(),
+            StartedOn = clanWar.StartedOn,
+            EndedOn = clanWar.EndedOn,
             WarMembers = warMembersUi,
             EnemyWarMembers = enemyWarMembersUi,
         };

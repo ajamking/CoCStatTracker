@@ -50,14 +50,12 @@ public static class NonAttackersHelper
             }
         }
 
-        if (count is not 0)
+        if (count != 0)
         {
             return membersWithout6Attacks;
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
     }
 
     public static Dictionary<string, int> GetNonAttackersCw(ClanWar clanWar)
@@ -75,7 +73,11 @@ public static class NonAttackersHelper
             }
         }
 
-        return membersWithoutAttacks;
+        if (membersWithoutAttacks.Count != 0)
+        {
+            return membersWithoutAttacks;
+        }
+
+        return null;
     }
 }
-

@@ -1,7 +1,6 @@
 ﻿using CoCStatsTracker;
 using CoCStatsTracker.UIEntities;
 using CoCStatsTrackerBot.Menu;
-using CoCStatsTrackerBot.Requests;
 
 namespace CoCStatsTrackerBot.Requests;
 
@@ -17,13 +16,13 @@ public class ClanSiegeMachinesRH : BaseRequestHandler
     {
         try
         {
-            var clan = GetFromDbQueryHandler.GetTrackedClan(parameters.LastClanTagMessage);
+            var clan = GetFromDbQueryHandler.GetTrackedClanUi(parameters.LastClanTagMessage);
 
             var armys = new List<ArmyUi>();
 
             foreach (var member in clan.ClanMembers)
             {
-                armys.Add(GetFromDbQueryHandler.GetMembersArmy(member.Tag));
+                armys.Add(GetFromDbQueryHandler.GetMembersArmyUi(member.Tag));
             }
 
             var answer = ClanFunctions.GetClanSiegeMachines(armys);

@@ -16,6 +16,7 @@ namespace Storage.Configurations.ClanWars
             builder
                .HasOne<TrackedClan>(x => x.TrackedClan)
                .WithMany(x => x.CapitalRaids)
+               .HasForeignKey(t => t.TrackedClanId)
                .OnDelete(DeleteBehavior.Cascade);
         }
     }

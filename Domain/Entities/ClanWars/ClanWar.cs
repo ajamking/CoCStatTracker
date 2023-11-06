@@ -5,6 +5,8 @@ namespace Domain.Entities
 {
     public class ClanWar : Entity
     {
+        public DateTime UpdatedOn { get; set; }
+
         public bool IsCWL { get; set; }
         public string Result { get; set; }
 
@@ -32,7 +34,7 @@ namespace Domain.Entities
 
         public virtual ICollection<WarMember> WarMembers { get; set; }
         public virtual ICollection<EnemyWarMember> EnemyWarMembers { get; set; }
-        
+
         public ClanWar()
         {
             WarMembers = new HashSet<WarMember>();

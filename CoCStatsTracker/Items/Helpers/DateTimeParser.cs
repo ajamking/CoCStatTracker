@@ -5,9 +5,8 @@ namespace CoCStatsTracker.Items.Helpers;
 
 public static class DateTimeParser
 {
-    public static DateTime Parse(string apiDateTime)
+    public static DateTime ParseToDateTime(this string apiDateTime)
     {
         return DateTime.ParseExact(apiDateTime, "yyyyMMddTHHmmss.fffZ", CultureInfo.CurrentCulture).ToLocalTime();
     }
 }
-

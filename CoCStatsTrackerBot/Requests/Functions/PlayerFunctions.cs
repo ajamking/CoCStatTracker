@@ -1,4 +1,5 @@
-﻿using CoCStatsTracker.UIEntities;
+﻿using CoCStatsTracker.ApiEntities;
+using CoCStatsTracker.UIEntities;
 using Domain.Entities;
 using System.Text;
 
@@ -8,20 +9,29 @@ public static class PlayerFunctions
 {
     public static string GetShortPlayerInfo(ClanMemberUi clanMemberui)
     {
+        var str = new StringBuilder();
+
+        str.AppendLine(StylingHelper.MakeItStyled("Краткая информация об игроке", UiTextStyle.Header));
+        str.AppendLine(StylingHelper.MakeItStyled(clanMemberui.Name + " - " + clanMemberui.Tag, UiTextStyle.Name));
+        str.AppendLine();
+        str.AppendLine(StylingHelper.MakeItStyled("Пояснение таблицы:", UiTextStyle.TableAnnotation));
+        str.AppendLine(StylingHelper.MakeItStyled("μ - медианный процент разрушений.", UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled("З/С - золото столицыю", UiTextStyle.Default));
+        str.AppendLine();
+
         var dic = new Dictionary<string, string>()
         {
-            { "КВ μ%", $"{clanMemberui.CwAverageDestructionPercent}" },
-            { "КВ μ% без 14,15ТХ", $"{clanMemberui.CwAverageDestructionPercentWithout14_15Th}" },
-            { "Рейды μ%", $"{clanMemberui.RaidsAverageDestructionPercent}" },
-            { "Рейды μ% без Пика", $"{clanMemberui.RaidsAverageDestructionPercentWithoutPeak}" },
-            { "Участие в войне", $"{clanMemberui.WarPreference}" },
-            { "Войск отправлено", $"{clanMemberui.DonationsSent}" },
-            { "Войск получено", $"{clanMemberui.DonationsRecieved}" },
-            { "Звезд завоевано", $"{clanMemberui.WarStars}" },
-            { "Золото столицы", $"{clanMemberui.TotalCapitalContributions}" },
+            { "КВ μ%", $"{clanMemberui.CwMedianDP}" },
+            { "КВ μ% без 14,15ТХ", $"{clanMemberui.CwMedianDPWithout14_15Th}" },
+            { "Рейды μ%", $"{clanMemberui.RaidsMedianDP}" },
+            { "Рейды μ% без Пика", $"{clanMemberui.RaidsMedianDPWithoutPeak}" },
+            { "Щит войны", $"{clanMemberui.WarPreference}" },
+            { "Войск отправлено", $"{clanMemberui.DonationsSent.GetDividedString()}" },
+            { "Войск получено", $"{clanMemberui.DonationsRecieved.GetDividedString()}" },
+            { "Звезд завоевано", $"{clanMemberui.WarStars.GetDividedString()}" },
+            { "З/С награблено", $"{clanMemberui.TotalCapitalGoldLooted.GetDividedString()}" },
+            { "З/С вложено", $"{clanMemberui.TotalCapitalContributed.GetDividedString()}" },
         };
-
-        var str = new StringBuilder();
 
         var firstColumnName = "Параметр";
 
@@ -29,12 +39,6 @@ public static class PlayerFunctions
 
         var tableSize = StylingHelper.DefineTableMaxSize(dic, firstColumnName, secondColumnName);
 
-        str.AppendLine(StylingHelper.MakeItStyled("Краткая информация об игроке", UiTextStyle.Header));
-        str.AppendLine(StylingHelper.MakeItStyled(clanMemberui.Name + " - " + clanMemberui.Tag, UiTextStyle.Name));
-        str.AppendLine();
-        str.AppendLine(StylingHelper.MakeItStyled("Пояснение таблицы:", UiTextStyle.TableAnnotation));
-        str.AppendLine(StylingHelper.MakeItStyled("μ - cредние показатели атак.", UiTextStyle.Default));
-        str.AppendLine();
         str.AppendLine($"``` |{firstColumnName.PadRight(tableSize.KeyMaxLength)}|{StylingHelper.GetCenteredString(secondColumnName, tableSize.ValueMaxLength)}|");
         str.AppendLine($" |{new string('-', tableSize.KeyMaxLength)}|{new string('-', tableSize.ValueMaxLength)}|");
 
@@ -52,45 +56,46 @@ public static class PlayerFunctions
 
     public static string GetFullPlayerInfo(ClanMemberUi clanMemberUi)
     {
+        var str = new StringBuilder();
+
+        str.AppendLine(StylingHelper.MakeItStyled("Информация об игроке", UiTextStyle.Header));
+        str.AppendLine(StylingHelper.MakeItStyled(clanMemberUi.Name + " - " + clanMemberUi.Tag, UiTextStyle.Name));
+        str.AppendLine();
+        str.AppendLine(StylingHelper.MakeItStyled("μ - медианный процент разрушений.", UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled("З/С - золото столицы", UiTextStyle.Default));
+        str.AppendLine();
+
         var dic = new Dictionary<string, string>()
         {
             { "Роль в клане", $"{clanMemberUi.RoleInClan}" },
-            { "Уровено опыта", $"{clanMemberUi.ExpLevel}" },
+            { "Уровень опыта", $"{clanMemberUi.ExpLevel}" },
             { "Уровень ТХ", $"{clanMemberUi.TownHallLevel}" },
             { "Уровень оружия", $"{clanMemberUi.TownHallWeaponLevel}" },
-            { "Трофеи", $"{clanMemberUi.Trophies}" },
-            { "Max Трофеи", $"{clanMemberUi.BestTrophies}" },
-            { "Текущая лига", $"{clanMemberUi.League.Replace("League ", "")}" },
-            { "Трофеи ДС", $"{clanMemberUi.VersusTrophies}" },
-            { "Max Трофеи ДС", $"{clanMemberUi.BestVersusTrophies}" },
-            { "Атак выиграно", $"{clanMemberUi.AttackWins}" },
-            { "Защит выиграно", $"{clanMemberUi.DefenseWins}" },
-            { "Участие в войне", $"{clanMemberUi.WarPreference}" },
-            { "Войск отправлено", $"{clanMemberUi.DonationsSent}" },
-            { "Войск получено", $"{clanMemberUi.DonationsRecieved}" },
-            { "Звезд завоевано", $"{clanMemberUi.WarStars}" },
-            { "Золото столицы", $"{clanMemberUi.TotalCapitalContributions}" },
+            { "Текущая лига", $"{clanMemberUi.League}" },
+            { "Текущие трофеи", $"{clanMemberUi.Trophies.GetDividedString()}" },
+            { "Макс. трофеи", $"{clanMemberUi.BestTrophies.GetDividedString()}" },
+            { "Трофеи ДС", $"{clanMemberUi.VersusTrophies.GetDividedString()}" },
+            { "Макс. трофеи ДС", $"{clanMemberUi.BestVersusTrophies.GetDividedString()}" },
+            { "Атак выиграно", $"{clanMemberUi.AttackWins.GetDividedString()}" },
+            { "Защит выиграно", $"{clanMemberUi.DefenseWins.GetDividedString()}" },
+            { "Щит войны", $"{clanMemberUi.WarPreference}" },
+            { "Войск отправлено", $"{clanMemberUi.DonationsSent.GetDividedString()}" },
+            { "Войск получено", $"{clanMemberUi.DonationsRecieved.GetDividedString()}" },
+            { "Звезд завоевано", $"{clanMemberUi.WarStars.GetDividedString()}" },
+            { "З/С награблено", $"{clanMemberUi.TotalCapitalGoldLooted.GetDividedString()}" },
+            { "З/С вложено", $"{clanMemberUi.TotalCapitalContributed.GetDividedString()}" },
 
-            { "КВ μ%", $"{clanMemberUi.CwAverageDestructionPercent}" },
-            { "КВ μ% без 14,15ТХ", $"{clanMemberUi.CwAverageDestructionPercentWithout14_15Th}" },
-            { "Рейды μ%", $"{clanMemberUi.RaidsAverageDestructionPercent}" },
-            { "Рейды μ% без Пика", $"{clanMemberUi.RaidsAverageDestructionPercentWithoutPeak}" },
+            { "КВ μ%", $"{clanMemberUi.CwMedianDP}" },
+            { "КВ μ% без 14,15ТХ", $"{clanMemberUi.CwMedianDPWithout14_15Th}" },
+            { "Рейды μ%", $"{clanMemberUi.RaidsMedianDP}" },
+            { "Рейды μ% без Пика", $"{clanMemberUi.RaidsMedianDPWithoutPeak}" },
         };
-
-        var str = new StringBuilder();
 
         var firstColumnName = "Параметр";
 
         var secondColumnName = "Значение";
 
         var tableSize = StylingHelper.DefineTableMaxSize(dic, firstColumnName, secondColumnName);
-
-        str.AppendLine(StylingHelper.MakeItStyled("Информация об игроке", UiTextStyle.Header));
-        str.AppendLine(StylingHelper.MakeItStyled(clanMemberUi.Name + " - " + clanMemberUi.Tag, UiTextStyle.Name));
-        str.AppendLine();
-        str.AppendLine(StylingHelper.MakeItStyled("Пояснение таблицы:", UiTextStyle.TableAnnotation));
-        str.AppendLine(StylingHelper.MakeItStyled("μ - cредние показатели атак.", UiTextStyle.Default));
-        str.AppendLine();
 
         str.AppendLine($"``` |{firstColumnName.PadRight(tableSize.KeyMaxLength)}|{StylingHelper.GetCenteredString(secondColumnName, tableSize.ValueMaxLength)}|");
         str.AppendLine($" |{new string('-', tableSize.KeyMaxLength)}|{new string('-', tableSize.ValueMaxLength)}|");
@@ -129,63 +134,91 @@ public static class PlayerFunctions
         foreach (var uiMembership in cwCwlMembershipsUi.OrderByDescending(x => x.StartedOn))
         {
             str.AppendLine($@"{messageSplitToken}");
-            str.AppendLine(StylingHelper.MakeItStyled("Начало войны", UiTextStyle.Subtitle));
-            str.AppendLine(StylingHelper.MakeItStyled(uiMembership.StartedOn, UiTextStyle.Default));
-            str.AppendLine(StylingHelper.MakeItStyled("Конец войны", UiTextStyle.Subtitle));
-            str.AppendLine(StylingHelper.MakeItStyled(uiMembership.EndedOn, UiTextStyle.Default));
+            str.AppendLine(StylingHelper.MakeItStyled("Начало подготовки:", UiTextStyle.Subtitle));
+            str.AppendLine(StylingHelper.MakeItStyled($"{uiMembership.PreparationStartedOn.ToString("dd:MM")} числа, в {uiMembership.PreparationStartedOn.ToString("HH:mm")}", UiTextStyle.Default));
+            str.AppendLine();
+            str.AppendLine(StylingHelper.MakeItStyled("Начало войны:", UiTextStyle.Subtitle));
+            str.AppendLine(StylingHelper.MakeItStyled($"{uiMembership.StartedOn.ToString("dd:MM")} числа, в {uiMembership.StartedOn.ToString("HH:mm")}", UiTextStyle.Default));
+            str.AppendLine();
+            str.AppendLine(StylingHelper.MakeItStyled("Конец войны:", UiTextStyle.Subtitle));
+            str.AppendLine(StylingHelper.MakeItStyled($"{uiMembership.EndedOn.ToString("dd:MM")} числа, в {uiMembership.EndedOn.ToString("HH:mm")}", UiTextStyle.Default));
+
+            if (uiMembership.EndedOn > DateTime.Now)
+            {
+                str.AppendLine();
+                str.AppendLine(StylingHelper.MakeItStyled("Осталось до конца войны:", UiTextStyle.Subtitle));
+                str.AppendLine(StylingHelper.MakeItStyled($"{Math.Round(uiMembership.EndedOn.Subtract(DateTime.Now).TotalHours, 0)}ч. " +
+                    $"{uiMembership.EndedOn.Subtract(DateTime.Now).Minutes}м.", UiTextStyle.Default));
+            }
+
             str.AppendLine();
             str.AppendLine(StylingHelper.MakeItStyled("Позиция на карте: " + uiMembership.MapPosition, UiTextStyle.Subtitle));
             str.AppendLine();
             str.AppendLine(StylingHelper.MakeItStyled("Худшая защита:", UiTextStyle.Subtitle));
-            str.AppendLine();
 
-            str.AppendLine($"``` " +
-                $"|{StylingHelper.GetCenteredString("Секунд", maxAttackLenght)}" +
-                $"|{StylingHelper.GetCenteredString("%", maxDestructionPercent)}" +
-                $"|{StylingHelper.GetCenteredString("Звезд", maxStars)}|");
+            if (uiMembership.BestOpponentsTime == 0 || uiMembership.BestOpponentsPercent == 0 || uiMembership.BestOpponentStars == 0)
+            {
+                str.AppendLine(StylingHelper.MakeItStyled("Нападений пока не было.", UiTextStyle.Default));
+            }
+            else
+            {
+                str.AppendLine($"``` " +
+               $"|{StylingHelper.GetCenteredString("Секунд", maxAttackLenght)}" +
+               $"|{StylingHelper.GetCenteredString("%", maxDestructionPercent)}" +
+               $"|{StylingHelper.GetCenteredString("Звезд", maxStars)}|");
 
-            str.AppendLine($" " +
-                $"|{new string('-', maxAttackLenght)}" +
-                $"|{new string('-', maxDestructionPercent)}" +
-                $"|{new string('-', maxStars)}|");
+                str.AppendLine($" " +
+                    $"|{new string('-', maxAttackLenght)}" +
+                    $"|{new string('-', maxDestructionPercent)}" +
+                    $"|{new string('-', maxStars)}|");
 
-            str.Append($" |{StylingHelper.GetCenteredString(uiMembership.BestOpponentsTime, maxAttackLenght)}|");
-            str.Append($"{StylingHelper.GetCenteredString(uiMembership.BestOpponentsPercent, maxDestructionPercent)}|");
-            str.AppendLine($"{StylingHelper.GetCenteredString(uiMembership.BestOpponentStars, maxStars)}|");
-            str.Append("```");
+                str.Append($" |{StylingHelper.GetCenteredString(uiMembership.BestOpponentsTime.ToString(), maxAttackLenght)}|");
+                str.Append($"{StylingHelper.GetCenteredString(uiMembership.BestOpponentsPercent.ToString(), maxDestructionPercent)}|");
+                str.AppendLine($"{StylingHelper.GetCenteredString(uiMembership.BestOpponentStars.ToString(), maxStars)}|");
+                str.Append("```");
+            }
+
 
             str.AppendLine();
             str.AppendLine(StylingHelper.MakeItStyled("Показатели атак:", UiTextStyle.Subtitle));
-            str.AppendLine();
-            str.AppendLine(StylingHelper.MakeItStyled("Пояснение таблицы:", UiTextStyle.TableAnnotation));
-            str.AppendLine(StylingHelper.MakeItStyled("Атака - очередность атаки в войне", UiTextStyle.Default));
-            str.AppendLine(StylingHelper.MakeItStyled("Противник - позиция/уровень ТХ", UiTextStyle.Default));
-            str.AppendLine();
 
-            str.AppendLine($"``` " +
-                $"|{StylingHelper.GetCenteredString("Атака", maxAttackLenght)}" +
-                $"|{StylingHelper.GetCenteredString("Противник", maxOpponentLenght)}" +
-                $"|{StylingHelper.GetCenteredString("%", maxDestructionPercent)}" +
-                $"|{StylingHelper.GetCenteredString("Звезд", maxStars)}|");
-
-            str.AppendLine($" " +
-                $"|{new string('-', maxAttackLenght)}" +
-                $"|{new string('-', maxOpponentLenght)}" +
-                $"|{new string('-', maxDestructionPercent)}" +
-                $"|{new string('-', maxStars)}|");
-
-            foreach (var attack in uiMembership.Attacks)
+            if (uiMembership.Attacks.Count == 0)
             {
-                str.Append($" |{StylingHelper.GetCenteredString(attack.AttackOrder, maxAttackLenght)}|");
-
-                str.Append($"{StylingHelper.GetCenteredString(attack.EnemyMapPosition + " / " + attack.EnemyTHLevel, maxOpponentLenght)}|");
-
-                str.Append($"{StylingHelper.GetCenteredString(attack.DestructionPercent, maxDestructionPercent)}|");
-
-                str.AppendLine($"{StylingHelper.GetCenteredString(attack.Stars, maxStars)}|");
+                str.AppendLine(StylingHelper.MakeItStyled("Атаки не проведены.", UiTextStyle.Default));
             }
+            else
+            {
+                str.AppendLine();
+                str.AppendLine(StylingHelper.MakeItStyled("Пояснение таблицы:", UiTextStyle.TableAnnotation));
+                str.AppendLine(StylingHelper.MakeItStyled("Атака - очередность атаки в войне", UiTextStyle.Default));
+                str.AppendLine(StylingHelper.MakeItStyled("Противник - позиция на карте / уровень ТХ", UiTextStyle.Default));
+                str.AppendLine();
 
-            str.Append("```\n");
+                str.AppendLine($"``` " +
+                    $"|{StylingHelper.GetCenteredString("Атака", maxAttackLenght)}" +
+                    $"|{StylingHelper.GetCenteredString("Противник", maxOpponentLenght)}" +
+                    $"|{StylingHelper.GetCenteredString("%", maxDestructionPercent)}" +
+                    $"|{StylingHelper.GetCenteredString("Звезд", maxStars)}|");
+
+                str.AppendLine($" " +
+                    $"|{new string('-', maxAttackLenght)}" +
+                    $"|{new string('-', maxOpponentLenght)}" +
+                    $"|{new string('-', maxDestructionPercent)}" +
+                    $"|{new string('-', maxStars)}|");
+
+                foreach (var attack in uiMembership.Attacks)
+                {
+                    str.Append($" |{StylingHelper.GetCenteredString(attack.AttackOrder.ToString(), maxAttackLenght)}|");
+
+                    str.Append($"{StylingHelper.GetCenteredString(attack.EnemyMapPosition + " / " + attack.EnemyTHLevel, maxOpponentLenght)}|");
+
+                    str.Append($"{StylingHelper.GetCenteredString(attack.DestructionPercent.ToString(), maxDestructionPercent)}|");
+
+                    str.AppendLine($"{StylingHelper.GetCenteredString(attack.Stars.ToString(), maxStars)}|");
+                }
+
+                str.Append("```\n");
+            }
 
             counter++;
 
@@ -223,9 +256,9 @@ public static class PlayerFunctions
         {
             str.AppendLine($@"{messageSplitToken}");
             str.AppendLine(StylingHelper.MakeItStyled("Начало рейдов", UiTextStyle.Subtitle));
-            str.AppendLine(StylingHelper.MakeItStyled(uiMembership.StartedOn, UiTextStyle.Default));
+            str.AppendLine(StylingHelper.MakeItStyled(uiMembership.StartedOn.ToString(), UiTextStyle.Default));
             str.AppendLine(StylingHelper.MakeItStyled("Конец рейдов", UiTextStyle.Subtitle));
-            str.AppendLine(StylingHelper.MakeItStyled(uiMembership.EndedOn, UiTextStyle.Default));
+            str.AppendLine(StylingHelper.MakeItStyled(uiMembership.EndedOn.ToString(), UiTextStyle.Default));
             str.AppendLine();
             str.AppendLine(StylingHelper.MakeItStyled("Золота заработано - " + uiMembership.TotalLoot, UiTextStyle.Subtitle));
             str.AppendLine();
@@ -255,11 +288,11 @@ public static class PlayerFunctions
 
                 str.Append($" |{StylingHelper.GetCenteredString(attackNumber.ToString(), maxAttackLenght)}|");
 
-                str.Append($"{StylingHelper.GetCenteredString(attack.DistrictName, maxDistrictLenght)}|");
+                str.Append($"{StylingHelper.GetCenteredString(attack.DistrictName.ToString(), maxDistrictLenght)}|");
 
-                str.Append($"{StylingHelper.GetCenteredString(attack.DestructionPercentFrom, maxDestructionFrom)}|");
+                str.Append($"{StylingHelper.GetCenteredString(attack.DestructionPercentFrom.ToString(), maxDestructionFrom)}|");
 
-                str.AppendLine($"{StylingHelper.GetCenteredString(attack.DestructionPercentTo, maxDestructionTo)}|");
+                str.AppendLine($"{StylingHelper.GetCenteredString(attack.DestructionPercentTo.ToString(), maxDestructionTo)}|");
 
                 attackNumber++;
             }
@@ -347,7 +380,7 @@ public static class PlayerFunctions
         {
             str.Append($" |{StylingHelper.GetCenteredString(unit.Name, maxNameLength)}|");
 
-            str.AppendLine($"{StylingHelper.GetCenteredString(unit.Lvl, maxLvlLength)}|");
+            str.AppendLine($"{StylingHelper.GetCenteredString(unit.Lvl.ToString(), maxLvlLength)}|");
         }
 
         str.Append("```\n");

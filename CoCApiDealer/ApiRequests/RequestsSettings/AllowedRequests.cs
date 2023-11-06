@@ -1,4 +1,4 @@
-﻿namespace CoCApiDealer.RequestsSettings;
+﻿namespace CoCApiDealer.ApiRequests;
 
 public static class AllowedRequests
 {

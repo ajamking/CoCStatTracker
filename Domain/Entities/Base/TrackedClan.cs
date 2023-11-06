@@ -25,8 +25,7 @@ namespace Domain.Entities
         public int WarLoses { get; set; }
         public int CapitalHallLevel { get; set; }
 
-        public virtual LastClanMemberStatistics LastClanMembersStaticstics { get; set; }
-
+        public virtual ICollection<PreviousClanMember> PreviousClanMembersStaticstics { get; set; }
         public virtual ICollection<ClanMember> ClanMembers { get; set; }
         public virtual ICollection<ClanWar> ClanWars { get; set; }
         public virtual ICollection<CapitalRaid> CapitalRaids { get; set; }
@@ -36,7 +35,7 @@ namespace Domain.Entities
             ClanMembers = new HashSet<ClanMember>();
             ClanWars = new HashSet<ClanWar>();
             CapitalRaids = new HashSet<CapitalRaid>();
+            PreviousClanMembersStaticstics = new HashSet<PreviousClanMember>();
         }
-
     }
 }

@@ -30,6 +30,7 @@ public static class Mapper
 
         return new ClanUi
         {
+            UpdatedOn = clan.UpdatedOn,
             AdminsKey = clan.AdminsKey,
             IsInBlackList = clan.IsInBlackList,
             Tag = clan.Tag,
@@ -90,8 +91,11 @@ public static class Mapper
 
         return new CwCwlUi
         {
+            UpdatedOn = clanWar.UpdatedOn,
+            PreparationStartTime = clanWar.PreparationStartTime,
             StartedOn = clanWar.StartedOn,
             EndedOn = clanWar.EndedOn,
+
             WarMembersCount = clanWar.WarMembers.Count(),
             AttackPerMember = clanWar.AttackPerMember,
             ClanTag = clanWar.TrackedClan.Tag,
@@ -205,6 +209,7 @@ public static class Mapper
 
         return new RaidUi
         {
+            UpdatedOn = raid.UpdatedOn,
             State = raid.State,
             StartedOn = raid.StartedOn,
             EndedOn = raid.EndedOn,
@@ -228,6 +233,7 @@ public static class Mapper
     {
         return new ClanMemberUi
         {
+            UpdatedOn = clanMember.UpdatedOn,
             Tag = clanMember.Tag,
             Name = clanMember.Name,
             ClanTag = clanMember.Clan.Tag,
@@ -247,12 +253,13 @@ public static class Mapper
             DonationsSent = clanMember.DonationsSent,
             DonationsRecieved = clanMember.DonationsRecieved,
             WarStars = clanMember.WarStars,
-            TotalCapitalContributions = clanMember.TotalCapitalContributions,
+            TotalCapitalContributed = clanMember.TotalCapitalGoldContributed,
+            TotalCapitalGoldLooted = clanMember.TotalCapitalGoldLooted,
 
-            CwAverageDestructionPercent = AverageCalculator.CalculateAveragePercent(clanMember, AvgType.ClanWar),
-            CwAverageDestructionPercentWithout14_15Th = AverageCalculator.CalculateAveragePercent(clanMember, AvgType.ClanWarWithout1415Th),
-            RaidsAverageDestructionPercent = AverageCalculator.CalculateAveragePercent(clanMember, AvgType.Raids),
-            RaidsAverageDestructionPercentWithoutPeak = AverageCalculator.CalculateAveragePercent(clanMember, AvgType.RaidsWithoutPeak)
+            CwMedianDP = MedianValueCalculator.Calculate(clanMember, MedianValueType.ClanWar),
+            CwMedianDPWithout14_15Th = MedianValueCalculator.Calculate(clanMember, MedianValueType.ClanWarWithout1415Th),
+            RaidsMedianDP = MedianValueCalculator.Calculate(clanMember, MedianValueType.Raids),
+            RaidsMedianDPWithoutPeak = MedianValueCalculator.Calculate(clanMember, MedianValueType.RaidsWithoutPeak)
         };
     }
 
@@ -272,7 +279,7 @@ public static class Mapper
                     superUnits.Add(new TroopUi
                     {
                         Name = troop.Name,
-                        Lvl = troop.Level.ToString(),
+                        Lvl = troop.Level,
                         SuperTroopIsActivated = troop.SuperTroopIsActivated
                     });
                     break;
@@ -281,7 +288,7 @@ public static class Mapper
                     siegeMachines.Add(new TroopUi
                     {
                         Name = troop.Name,
-                        Lvl = troop.Level.ToString(),
+                        Lvl = troop.Level,
                         SuperTroopIsActivated = troop.SuperTroopIsActivated
                     });
                     break;
@@ -290,7 +297,7 @@ public static class Mapper
                     heroes.Add(new TroopUi
                     {
                         Name = troop.Name,
-                        Lvl = troop.Level.ToString(),
+                        Lvl = troop.Level,
                         SuperTroopIsActivated = troop.SuperTroopIsActivated
                     });
                     break;
@@ -299,7 +306,7 @@ public static class Mapper
                     pets.Add(new TroopUi
                     {
                         Name = troop.Name,
-                        Lvl = troop.Level.ToString(),
+                        Lvl = troop.Level,
                         SuperTroopIsActivated = troop.SuperTroopIsActivated
                     });
                     break;
@@ -308,7 +315,7 @@ public static class Mapper
                     units.Add(new TroopUi
                     {
                         Name = troop.Name,
-                        Lvl = troop.Level.ToString(),
+                        Lvl = troop.Level,
                         SuperTroopIsActivated = troop.SuperTroopIsActivated
                     });
                     break;
@@ -317,6 +324,7 @@ public static class Mapper
 
         return new ArmyUi
         {
+            UpdatedOn = clanMember.UpdatedOn,
             SuperUnits = superUnits,
             SiegeMachines = siegeMachines,
             Heroes = heroes,
@@ -340,28 +348,30 @@ public static class Mapper
             {
                 EnemyTag = attack.EnemyWarMember.Tag,
                 EnemyName = attack.EnemyWarMember.Name,
-                AttackOrder = attack.AttackOrder.ToString(),
-                Stars = attack.Stars.ToString(),
-                DestructionPercent = attack.DestructionPercent.ToString(),
-                Duration = attack.Duration.ToString(),
-                EnemyTHLevel = attack.EnemyWarMember.TownHallLevel.ToString(),
-                EnemyMapPosition = attack.EnemyWarMember.MapPosition.ToString(),
+                AttackOrder = attack.AttackOrder,
+                Stars = attack.Stars,
+                DestructionPercent = attack.DestructionPercent,
+                Duration = attack.Duration,
+                EnemyTHLevel = attack.EnemyWarMember.TownHallLevel,
+                EnemyMapPosition = attack.EnemyWarMember.MapPosition,
             });
         }
 
         return new CwCwlMembershipUi
         {
+            UpdatedOn = member.UpdatedOn,
             Tag = member.Tag,
             Name = member.Name,
             ClanTag = member.ClanWar.TrackedClan.Tag,
             ClanName = member.ClanWar.TrackedClan.Name,
-            StartedOn = member.ClanWar.StartedOn.ToString(),
-            EndedOn = member.ClanWar.EndedOn.ToString(),
-            TownHallLevel = member.TownHallLevel.ToString(),
-            MapPosition = member.MapPosition.ToString(),
-            BestOpponentStars = member.BestOpponentStars.ToString(),
-            BestOpponentsTime = member.BestOpponentTime.ToString(),
-            BestOpponentsPercent = member.BestOpponentPercent.ToString(),
+            PreparationStartedOn = member.ClanWar.PreparationStartTime,
+            StartedOn = member.ClanWar.StartedOn,
+            EndedOn = member.ClanWar.EndedOn,
+            TownHallLevel = member.TownHallLevel,
+            MapPosition = member.MapPosition,
+            BestOpponentStars = member.BestOpponentStars,
+            BestOpponentsTime = member.BestOpponentTime,
+            BestOpponentsPercent = member.BestOpponentPercent,
             Attacks = attacks,
         };
     }
@@ -377,21 +387,22 @@ public static class Mapper
                 DefendersTag = attack.OpponentClanTag,
                 DefendersName = attack.OpponentClanName,
                 DistrictName = attack.OpponentDistrictName,
-                DistrictLevel = attack.OpponentDistrictLevel.ToString(),
-                DestructionPercentFrom = attack.DestructionPercentFrom.ToString(),
-                DestructionPercentTo = attack.DestructionPercentTo.ToString(),
+                DistrictLevel = attack.OpponentDistrictLevel,
+                DestructionPercentFrom = attack.DestructionPercentFrom,
+                DestructionPercentTo = attack.DestructionPercentTo,
             });
         }
 
         return new RaidMembershipUi
         {
+            UpdatedOn = raidMember.UpdatedOn,
             Tag = raidMember.ClanMember.Tag,
             Name = raidMember.ClanMember.Name,
             ClanTag = raidMember.Raid.TrackedClan.Tag,
             ClanName = raidMember.Raid.TrackedClan.Name,
-            StartedOn = raidMember.Raid.StartedOn.ToString(),
-            EndedOn = raidMember.Raid.EndedOn.ToString(),
-            TotalLoot = raidMember.TotalLoot.ToString(),
+            StartedOn = raidMember.Raid.StartedOn,
+            EndedOn = raidMember.Raid.EndedOn,
+            TotalLoot = raidMember.TotalLoot,
             Attacks = attacks,
         };
     }
@@ -425,6 +436,7 @@ public static class Mapper
 
         return new AverageRaidsPerfomanceUi
         {
+            UpdatedOn = raidMemberships.FirstOrDefault().UpdatedOn,
             Tag = playerTag,
             Name = playerName,
             AverageDestructionPercent = Math.Round(avgDestructionPercent, 2),
@@ -434,19 +446,19 @@ public static class Mapper
         };
     }
 
-    public static SeasonStatisticsUi MapToUi(ClanMember currentClanMember, ClanMember obsoleteClanMember, DateTime initializedOn)
+    public static SeasonStatisticsUi MapToUi(ClanMember currentClanMember, PreviousClanMember obsoleteClanMember, DateTime initializedOn)
     {
         return new SeasonStatisticsUi()
         {
-            UpdatedOn = initializedOn.ToString(),
-
+            InitializedOn = initializedOn,
+            UpdatedOn = currentClanMember.UpdatedOn,
             ClanName = currentClanMember.Clan.Name,
             ClanTag = currentClanMember.Clan.Tag,
             Name = currentClanMember.Name,
             Tag = currentClanMember.Tag,
 
             DonationsSend = currentClanMember.DonationsSent - obsoleteClanMember.DonationsSent,
-            CapitalContributions = currentClanMember.TotalCapitalContributions - obsoleteClanMember.TotalCapitalContributions,
+            CapitalContributions = currentClanMember.TotalCapitalGoldContributed - obsoleteClanMember.TotalCapitalContributions,
             WarStarsEarned = currentClanMember.WarStars - obsoleteClanMember.WarStars
         };
     }

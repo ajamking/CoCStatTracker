@@ -16,14 +16,27 @@ public class LeaderAddLastWarRH : BaseRequestHandler
     {
         try
         {
-            AddToDbCommandHandler.AddCurrentClanWarToClan(parameters.LastClanTagToMerge);
+            try
+            {
+                AddToDbCommandHandler.AddCurrentClanWarToClan(parameters.LastClanTagToMerge);
 
-            var lastWar = GetFromDbQueryHandler.GetAllClanWars(parameters.LastClanTagToMerge).OrderByDescending(x => x.StartedOn).First();
+                var lastWar = GetFromDbQueryHandler.GetAllClanWarsUi(parameters.LastClanTagToMerge).OrderByDescending(x => x.StartedOn).First();
 
-            var answer = StylingHelper.MakeItStyled($"Операция успешна.\n" +
-                $"Добавлена война: {lastWar.StartedOn.ToShortDateString()} - {lastWar.EndedOn.ToShortTimeString()} {lastWar.Result}", UiTextStyle.Default);
+                var answer = StylingHelper.MakeItStyled($"Операция успешна.\n" +
+                    $"Добавлена война: {lastWar.StartedOn.ToShortDateString()} - {lastWar.EndedOn.ToShortTimeString()} {lastWar.Result}", UiTextStyle.Default);
 
-            ResponseSender.SendAnswer(parameters, true, SplitAnswer(answer));
+                ResponseSender.SendAnswer(parameters, true, SplitAnswer(answer));
+            }
+            catch (FailedPullFromApiException e)
+            {
+                AddToDbCommandHandler.AddCwlClanWarsToClan(parameters.LastClanTagToMerge);
+
+                var answer = StylingHelper.MakeItStyled($"Операция успешна.\n" +
+                    $"Добавлены все недостающие войны с ЛВК.", UiTextStyle.Default);
+
+                ResponseSender.SendAnswer(parameters, true, SplitAnswer(answer));
+            }
+          
         }
         catch (NotFoundException e)
         {

@@ -15,7 +15,7 @@ public class ClanRaidHistoryRHBase : BaseRequestHandler
     {
         try
         {
-            var raids = GetFromDbQueryHandler.GetAllRaids(parameters.LastClanTagMessage);
+            var raids = GetFromDbQueryHandler.GetAllRaidsUi(parameters.LastClanTagMessage);
 
             var answer = ClanFunctions.GetRaidsHistory(raids, parameters.EntriesCount, MessageSplitToken);
 

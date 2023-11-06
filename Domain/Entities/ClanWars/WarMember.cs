@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Domain.Entities
 {
     public class WarMember : Entity
     {
+        public DateTime UpdatedOn { get; set; }
         public string Tag { get; set; }
         public string Name { get; set; }
         public int TownHallLevel { get; set; }

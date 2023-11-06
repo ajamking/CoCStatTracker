@@ -10,4 +10,5 @@ public enum ADistrictType
     Dragon_Cliffs,
     Golem_Quarry,
     Skeleton_Park,
+    Goblin_Mines
 }

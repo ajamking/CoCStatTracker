@@ -20,6 +20,6 @@ public class ArmyUi : UiEntity
 public class TroopUi : UiEntity
 {
     public string Name { get; set; }
-    public string Lvl { get; set; }
+    public int Lvl { get; set; }
     public bool? SuperTroopIsActivated { get; set; }
 }

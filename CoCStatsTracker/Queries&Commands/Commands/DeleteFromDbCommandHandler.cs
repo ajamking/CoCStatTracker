@@ -18,11 +18,11 @@ public static class DeleteFromDbCommandHandler
     {
         using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
         {
-            var trackedClan = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
+            var clan = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
 
-            NotFoundException.ThrowByPredicate(() => trackedClan is null, "DeleteTrackedClan is failed, no such clan found");
+            NotFoundException.ThrowByPredicate(() => clan is null, "DeleteTrackedClan is failed, no such clan found");
 
-            dbContext.TrackedClans.Remove(dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag));
+            dbContext.TrackedClans.Remove(clan);
 
             dbContext.SaveChanges();
         }

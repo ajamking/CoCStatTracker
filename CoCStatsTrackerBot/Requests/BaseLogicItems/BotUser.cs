@@ -12,8 +12,6 @@ public class BotUser
     public MenuLevel CurrentMenuLevel { get; set; }
     public MenuLevel PreviousMenuLevel { get; set; }
 
-    public bool IsBotHolder { get; set; }
-  
     public BotUserRequestParameters RequestHadnlerParameters { get; set; }
 
     public BotUser(ITelegramBotClient botClient, Message message)

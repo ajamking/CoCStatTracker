@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities
 {
     public class CapitalRaid : Entity
     {
+        public DateTime UpdatedOn { get; set; }
         public string State { get; set; }
         public DateTime StartedOn { get; set; }
         public DateTime EndedOn { get; set; }

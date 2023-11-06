@@ -4,6 +4,8 @@ using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Xml;
 
 namespace CoCStatsTracker.Builders;
 
@@ -36,21 +38,14 @@ public class ClanMemberBuilder
         ClanMember.BestVersusTrophies = playerApi.BestVersusTrophies;
         ClanMember.VersusBattleWins = playerApi.VersusBattleWins;
 
-        ClanMember.Role = playerApi.RoleInClan;
-        ClanMember.WarPreference = playerApi.WarPreference;
+        ClanMember.Role = playerApi.RoleInClan.GetRoleRu();
+        ClanMember.WarPreference = playerApi.WarPreference.GetWarPreferenceRu();
 
         ClanMember.DonationsSent = playerApi.DonationsSent;
         ClanMember.DonationsRecieved = playerApi.DonationsReceived;
-        ClanMember.TotalCapitalContributions = playerApi.ClanCapitalContributions;
-
-        if (playerApi.League != null)
-        {
-            ClanMember.League = playerApi.League.Name;
-        }
-        else
-        {
-            ClanMember.League = "Not Defined Yet";
-        }
+        ClanMember.TotalCapitalGoldContributed = playerApi.ClanCapitalContributions;
+        ClanMember.TotalCapitalGoldLooted = playerApi.Achievements.FirstOrDefault(x => x.Name == "Aggressive Capitalism").Value;
+        ClanMember.League = playerApi.GetLeagueRU();
     }
 
     public void SetUnits(TroopApi[] troops, TroopApi[] heroes)
@@ -116,4 +111,6 @@ public class ClanMemberBuilder
     {
         ClanMember.WarMemberships.Add(warMember);
     }
+
+   
 }

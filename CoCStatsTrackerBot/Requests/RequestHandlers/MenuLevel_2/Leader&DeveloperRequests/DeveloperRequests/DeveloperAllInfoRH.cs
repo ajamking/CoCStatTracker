@@ -30,9 +30,9 @@ public class DeveloperAllInfoRH : BaseRequestHandler
 
             answer.AppendLine(StylingHelper.MakeItStyled("\n\nКланы, которые вы можете модерировать: ", UiTextStyle.Default));
 
-            foreach (var clan in GetFromDbQueryHandler.GetAllTrackedClans())
+            foreach (var clan in GetFromDbQueryHandler.GetAllTrackedClansUi())
             {
-                answer.AppendLine(StylingHelper.MakeItStyled($"{clan.Name} - {clan.Tag} - {clan.AdminsKey}", UiTextStyle.Name));
+                answer.AppendLine(StylingHelper.MakeItStyled($"{clan.Name} - {clan.Tag} - {clan.AdminsKey} - {clan.IsInBlackList}", UiTextStyle.Name));
             }
 
             answer.AppendLine(StylingHelper.MakeItStyled("\nДля переопределения модерируемого клана введите один из тегов, представленных выше. ", UiTextStyle.Default));

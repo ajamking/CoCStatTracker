@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoCStatsTracker.UIEntities;
 
 public class UiEntity
 {
-
+    public DateTime UpdatedOn { get; set; }
 }

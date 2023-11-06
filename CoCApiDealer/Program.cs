@@ -1,7 +1,5 @@
 ﻿using CoCApiDealer.ForTests;
 using Storage;
-using System;
-using System.Security.Cryptography.X509Certificates;
 
 public class Program
 {
@@ -20,7 +18,7 @@ public class Program
 
         using (TestDbContext db = new TestDbContext("Data Source=./../../../../CustomSolutionElements/TestDb.db", true))
         {
-     
+
 
         }
     }

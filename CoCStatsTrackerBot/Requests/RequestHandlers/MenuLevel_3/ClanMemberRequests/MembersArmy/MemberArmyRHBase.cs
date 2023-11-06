@@ -15,7 +15,7 @@ public class MemberArmyRHBase : BaseRequestHandler
     {
         try
         {
-            var playerArmy = GetFromDbQueryHandler.GetMembersArmy(parameters.LastMemberTagMessage);
+            var playerArmy = GetFromDbQueryHandler.GetMembersArmyUi(parameters.LastMemberTagMessage);
 
             var answer = PlayerFunctions.GetMembersArmyInfo(playerArmy, parameters.UnitType);
 

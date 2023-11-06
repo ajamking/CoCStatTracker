@@ -3,11 +3,11 @@ using CoCStatsTrackerBot.Menu;
 
 namespace CoCStatsTrackerBot.Requests;
 
-public class ClanAllMembersRH : BaseRequestHandler
+public class ClanShortInfoRH : BaseRequestHandler
 {
-    public ClanAllMembersRH()
+    public ClanShortInfoRH()
     {
-        Header = "Члены клана";
+        Header = "Главное о клане";
         HandlerMenuLevel = MenuLevel.ClanInfo2;
     }
 
@@ -15,9 +15,9 @@ public class ClanAllMembersRH : BaseRequestHandler
     {
         try
         {
-            var clanMembers = GetFromDbQueryHandler.GetAllClanMembers(parameters.LastClanTagMessage);
+            var clan = GetFromDbQueryHandler.GetTrackedClanUi(parameters.LastClanTagMessage);
 
-            var answer = ClanFunctions.GetClanMembers(clanMembers);
+            var answer = ClanFunctions.GetClanShortInfo(clan);
 
             ResponseSender.SendAnswer(parameters, true, SplitAnswer(answer));
         }

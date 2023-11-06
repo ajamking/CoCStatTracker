@@ -15,7 +15,7 @@ public class MemberWarStatisticsRHBase : BaseRequestHandler
     {
         try
         {
-            var cwCwlMembershipsUi = GetFromDbQueryHandler.GetAllMemberСwCwlMemberships(parameters.LastMemberTagMessage);
+            var cwCwlMembershipsUi = GetFromDbQueryHandler.GetAllMemberСwCwlMembershipsUi(parameters.LastMemberTagMessage);
 
             var answer = PlayerFunctions.GetWarStatistics(cwCwlMembershipsUi, parameters.EntriesCount, MessageSplitToken);
 

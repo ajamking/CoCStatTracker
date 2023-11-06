@@ -1,10 +1,9 @@
-﻿using CoCApiDealer.RequestsSettings;
-using CoCStatsTracker.ApiEntities;
+﻿using CoCStatsTracker.ApiEntities;
 using Newtonsoft.Json;
 
 namespace CoCApiDealer.ApiRequests;
 
-// Применения пока нет.
+// Применения пока нет. Вся информация об игроках получается через PlayerRequest
 public class ClanMembersRequest : BaseApiRequest
 {
     public async Task<ClanMembersApi> CallApi(string clanTag)
@@ -15,22 +14,16 @@ public class ClanMembersRequest : BaseApiRequest
 
             var apiRequestResult = await new ApiRequestBuilder(_httpClient, clanTag, requestType).CallApi();
 
-            var clanMember = JsonConvert.DeserializeObject<ClanMembersApi>(apiRequestResult);
+            var clanMembers = JsonConvert.DeserializeObject<ClanMembersApi>(apiRequestResult);
 
-            if (clanMember == null)
-            {
-                throw new Exception("Nothing came from API");
-            }
-            else
-            {
-                return clanMember;
-            }
+            ApiNullOrEmtyResponseException.ThrowByPredicate(() => clanMembers == null || clanMembers.Members.Count() == 0,
+                    "ClanMembersRequest is failed, Nothing came from API");
 
+            return clanMembers;
         }
-        catch (Exception ex)
+        catch (ApiNullOrEmtyResponseException ex)
         {
-
-            throw new ApiErrorException(ex);
+            return null;
         }
     }
 }

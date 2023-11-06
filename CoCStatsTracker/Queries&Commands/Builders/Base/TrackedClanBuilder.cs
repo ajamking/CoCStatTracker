@@ -44,12 +44,15 @@ public class TrackedClanBuilder
 
     public void SetLastClanMembersStaticstics(ICollection<ClanMember> members)
     {
-        var newClanMembers = new List<ClanMember>();
+        var newPreviousClanMembers = new List<PreviousClanMember>();
 
         foreach (var member in members)
         {
-            newClanMembers.Add(new ClanMember()
+            newPreviousClanMembers.Add(new PreviousClanMember()
             {
+                UpdatedOn = DateTime.Now,
+                TownHallLevel = member.TownHallLevel,
+                TownHallWeaponLevel = member.TownHallWeaponLevel,
                 Tag = member.Tag,
                 Name = member.Name,
                 ExpLevel = member.ExpLevel,
@@ -66,16 +69,12 @@ public class TrackedClanBuilder
                 WarPreference = member.WarPreference,
                 DonationsSent = member.DonationsSent,
                 DonationsRecieved = member.DonationsRecieved,
-                TotalCapitalContributions = member.TotalCapitalContributions,
+                TotalCapitalContributions = member.TotalCapitalGoldContributed,
                 League = member.League,
             });
         }
 
-        Clan.LastClanMembersStaticstics = new LastClanMemberStatistics()
-        {
-            UpdatedOn = DateTime.Now,
-            ObsoleteClanMembers = newClanMembers,
-        };
+        Clan.PreviousClanMembersStaticstics = newPreviousClanMembers;
     }
 
     public void AddClanWar(ClanWar clanWar)

@@ -15,7 +15,7 @@ public class ClanWarHistoryRHBase : BaseRequestHandler
     {
         try
         {
-            var clanWars = GetFromDbQueryHandler.GetAllClanWars(parameters.LastClanTagMessage);
+            var clanWars = GetFromDbQueryHandler.GetAllClanWarsUi(parameters.LastClanTagMessage);
 
             var answer = ClanFunctions.GetClanWarHistory(clanWars, parameters.EntriesCount, MessageSplitToken);
 

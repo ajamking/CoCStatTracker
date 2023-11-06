@@ -26,7 +26,7 @@ public class LeaderUpdateInfoRH : BaseRequestHandler
             msg.Append(StylingHelper.MakeItStyled("Игроки клана ", UiTextStyle.Name));
 
             msg.AppendLine(StylingHelper.MakeItStyled("- обновляется состав клана, а также базовые характериситики игроков, по типу уровня ТХ, боевых звезд, армии и т.д.\n" +
-                "Все имеющиеся записи об участии игроков в рейдах и войнах - сохраняются. \n", UiTextStyle.Default));
+                "Все имеющиеся записи об участии игроков в рейдах и войнах - сохраняются. Операция занимает больше времени, чем остальные. \n", UiTextStyle.Default));
 
             msg.Append(StylingHelper.MakeItStyled("Обновить последний рейд ", UiTextStyle.Name));
 
@@ -34,7 +34,8 @@ public class LeaderUpdateInfoRH : BaseRequestHandler
 
             msg.Append(StylingHelper.MakeItStyled("Обновить последнюю войну ", UiTextStyle.Name));
 
-            msg.AppendLine(StylingHelper.MakeItStyled("- обновляется вся информация о последней войне, включая участие игроков клана в войне.\n", UiTextStyle.Default));
+            msg.AppendLine(StylingHelper.MakeItStyled("- обновляется вся информация о последней войне, включая участие игроков клана в войне." +
+                "Если клан участвует в ЛВК, то будут добавлены все недостающие войны текущей лиги.\n", UiTextStyle.Default));
 
             msg.Append(StylingHelper.MakeItStyled("Сезонные показатели ", UiTextStyle.Name));
 

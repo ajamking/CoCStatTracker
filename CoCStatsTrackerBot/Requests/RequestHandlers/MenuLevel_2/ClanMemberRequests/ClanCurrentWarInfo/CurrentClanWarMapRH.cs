@@ -1,6 +1,5 @@
 ﻿using CoCStatsTracker;
 using CoCStatsTrackerBot.Menu;
-using CoCStatsTrackerBot.Requests;
 
 namespace CoCStatsTrackerBot.Requests;
 
@@ -16,7 +15,7 @@ public class CurrentClanWarMapRH : BaseRequestHandler
     {
         try
         {
-            var allClanWars = GetFromDbQueryHandler.GetAllClanWars(parameters.LastClanTagMessage).OrderByDescending(x => x.StartedOn);
+            var allClanWars = GetFromDbQueryHandler.GetAllClanWarsUi(parameters.LastClanTagMessage).OrderByDescending(x => x.StartedOn);
 
             var answer = CurrentStatisticsFunctions.GetCurrentWarMap(allClanWars.First().WarMap);
 

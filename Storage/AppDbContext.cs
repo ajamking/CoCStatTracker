@@ -3,18 +3,17 @@ using Microsoft.EntityFrameworkCore;
 using Storage.Configurations.Base;
 using Storage.Configurations.ClanWars;
 using Storage.Configurations.Raids;
-using System.Reflection.Emit;
 
 namespace Storage
 {
     public class AppDbContext : DbContext, ICoCDbContext
     {
         public string ConnectionString { get; }
-      
+
         public DbSet<TrackedClan> TrackedClans { get; set; }
         public DbSet<ClanMember> ClanMembers { get; set; }
         public DbSet<Troop> Units { get; set; }
-        public DbSet<LastClanMemberStatistics> InitialClanMembersStaticstics { get; set; }
+        public DbSet<PreviousClanMember> PreviousClanMembers { get; set; }
 
         public DbSet<ClanWar> ClanWars { get; set; }
         public DbSet<EnemyWarMember> EnemyWarMembers { get; set; }
@@ -54,7 +53,7 @@ namespace Storage
             modelBuilder.ApplyConfiguration(new ClanMemberConfiguration());
             modelBuilder.ApplyConfiguration(new TrackedClanConfiguration());
             modelBuilder.ApplyConfiguration(new UnitConfiguration());
-            modelBuilder.ApplyConfiguration(new LastClanMembersStaticsticsConfiguration());
+            modelBuilder.ApplyConfiguration(new PreviousClanMemberConfiguration());
 
             modelBuilder.ApplyConfiguration(new ClanWarConfiguration());
             modelBuilder.ApplyConfiguration(new EnemyWarMemberConfiguration());

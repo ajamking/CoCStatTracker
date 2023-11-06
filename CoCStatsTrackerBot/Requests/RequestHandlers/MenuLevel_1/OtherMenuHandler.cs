@@ -1,6 +1,4 @@
-﻿using CoCStatsTrackerBot.Requests;
-
-namespace CoCStatsTrackerBot.Requests;
+﻿namespace CoCStatsTrackerBot.Requests;
 
 public class OtherMenuHandler : BaseRequestHandler
 {

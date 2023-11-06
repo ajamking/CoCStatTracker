@@ -17,7 +17,7 @@ public class LeaderAddLastRaidRH : BaseRequestHandler
         {
             AddToDbCommandHandler.AddCurrentRaidToClan(parameters.LastClanTagToMerge);
 
-            var lastRaid = GetFromDbQueryHandler.GetAllRaids(parameters.LastClanTagToMerge).OrderByDescending(x => x.StartedOn).First();
+            var lastRaid = GetFromDbQueryHandler.GetAllRaidsUi(parameters.LastClanTagToMerge).OrderByDescending(x => x.StartedOn).First();
 
             var answer = StylingHelper.MakeItStyled($"Операция успешна.\n" +
                 $"Добавлен рейд: {lastRaid.StartedOn.ToShortDateString()} - {lastRaid.EndedOn.ToShortTimeString()} {lastRaid.State}", UiTextStyle.Default);

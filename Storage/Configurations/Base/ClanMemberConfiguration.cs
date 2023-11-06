@@ -16,6 +16,7 @@ namespace Storage.Configurations.Base
             builder
            .HasOne<TrackedClan>(x => x.Clan)
            .WithMany(x => x.ClanMembers)
+           .HasForeignKey(t => t.TrackedClanId)
            .OnDelete(DeleteBehavior.Cascade);
         }
     }
