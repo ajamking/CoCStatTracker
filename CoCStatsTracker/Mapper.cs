@@ -3,6 +3,7 @@ using CoCStatsTracker.UIEntities;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 
 namespace CoCStatsTracker;
@@ -50,7 +51,7 @@ public static class Mapper
             WarLeague = clan.WarLeague,
             WarWinStreak = clan.WarWinStreak,
             WarWins = clan.WarWins,
-            WarTies = clan.WarTies,
+            WarDraws = clan.WarTies,
             WarLoses = clan.WarLoses,
             CapitalHallLevel = clan.CapitalHallLevel,
             ClanMembers = clanMembers
@@ -184,10 +185,10 @@ public static class Mapper
             TotalCapitalContributed = clanMember.TotalCapitalGoldContributed,
             TotalCapitalGoldLooted = clanMember.TotalCapitalGoldLooted,
 
-            CwMedianDP = MedianValueCalculator.Calculate(clanMember, MedianValueType.ClanWar),
-            CwMedianDPWithout14_15Th = MedianValueCalculator.Calculate(clanMember, MedianValueType.ClanWarWithout1415Th),
-            RaidsMedianDP = MedianValueCalculator.Calculate(clanMember, MedianValueType.Raids),
-            RaidsMedianDPWithoutPeak = MedianValueCalculator.Calculate(clanMember, MedianValueType.RaidsWithoutPeak)
+            CwMedianDP = ClanMemberMedianValueCalculator.Calculate(clanMember, MedianValueType.ClanWar),
+            CwMedianDPWithout14_15Th = ClanMemberMedianValueCalculator.Calculate(clanMember, MedianValueType.ClanWarWithout1415Th),
+            RaidsMedianDP = ClanMemberMedianValueCalculator.Calculate(clanMember, MedianValueType.Raids),
+            RaidsMedianDPWithoutPeak = ClanMemberMedianValueCalculator.Calculate(clanMember, MedianValueType.RaidsWithoutPeak)
         };
     }
 
@@ -310,43 +311,45 @@ public static class Mapper
         };
     }
 
-    public static AverageRaidsPerfomanceUi MapToUi(ICollection<RaidMember> raidMemberships, TrackedClan trackedClan)
+    public static MedianRaidPerfomanse MapToUi(ICollection<RaidMember> raidMemberships, TrackedClan trackedClan)
     {
-        var avgCapitalLoot = 0.0;
-        var avgDestructionPercent = 0.0;
-        var attackCounter = 0;
+        var medianDestructionPercent = 0;
 
-        var playerName = "";
-        var playerTag = "";
+        var medianCapitalLoot = 0;
 
-        foreach (var raidMember in raidMemberships)
+        if (raidMemberships.Count == 0)
         {
-            playerName = raidMember.Name;
-            playerTag = raidMember.Tag;
+            medianDestructionPercent = 0;
 
-            avgCapitalLoot += raidMember.TotalLoot;
-
-            foreach (var attack in raidMember.Attacks)
-            {
-                avgDestructionPercent += (attack.DestructionPercentTo - attack.DestructionPercentFrom);
-                attackCounter++;
-            }
+            medianCapitalLoot = 0;
         }
 
-        avgDestructionPercent /= attackCounter;
+        var sortedAttacks = raidMemberships
+            .SelectMany(raidMember => raidMember.Attacks)
+            .OrderByDescending(x => x.DestructionPercentTo - x.DestructionPercentFrom)
+            .ToList();
 
-        avgCapitalLoot /= raidMemberships.Count();
+        var resultAttack = sortedAttacks[sortedAttacks.Count / 2];
 
-        return new AverageRaidsPerfomanceUi
+        medianDestructionPercent = resultAttack.DestructionPercentTo - resultAttack.DestructionPercentFrom;
+
+        var sortedTotalLoots = raidMemberships.OrderByDescending(x => x.TotalLoot).ToList();
+
+        medianCapitalLoot = sortedTotalLoots[sortedTotalLoots.Count / 2].TotalLoot;
+
+        return new MedianRaidPerfomanse
         {
-            RaidMembershipsCount = raidMemberships.Count,
-            UpdatedOn = raidMemberships.FirstOrDefault().UpdatedOn,
-            Tag = playerTag,
-            Name = playerName,
-            AverageDestructionPercent = Math.Round(avgDestructionPercent, 2),
-            AverageCapitalLoot = Math.Round(avgCapitalLoot, 2),
             ClanName = trackedClan.Name,
-            ClanTag = trackedClan.Tag
+            ClanTag = trackedClan.Tag,
+
+            UpdatedOn = raidMemberships.FirstOrDefault().UpdatedOn,
+            Tag = raidMemberships.FirstOrDefault().Tag,
+            Name = raidMemberships.FirstOrDefault().Name,
+
+            RaidMembershipsCount = raidMemberships.Count,
+
+            MedianDestructionPersent = medianDestructionPercent,
+            MedianLoot = medianCapitalLoot,
         };
     }
 
@@ -449,12 +452,12 @@ public static class Mapper
                     {
                         AttackerName = attackOnDistrict.RaidMember.Name,
                         AttackerTag = attackOnDistrict.RaidMember.Tag,
-                        
+
                         DestructionPercentFrom = attackOnDistrict.DestructionPercentFrom,
                         DestructionPercentTo = attackOnDistrict.DestructionPercentTo,
                     });
 
-                    if (attackOnDistrict.DestructionPercentTo> totalDistrictDestructionPercent)
+                    if (attackOnDistrict.DestructionPercentTo > totalDistrictDestructionPercent)
                     {
                         totalDistrictDestructionPercent = attackOnDistrict.DestructionPercentTo;
                     }

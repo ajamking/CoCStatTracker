@@ -12,8 +12,8 @@ public class CurrentStatisticsFunctions
         var str = new StringBuilder();
 
         str.AppendLine(StylingHelper.MakeItStyled("Общая информация о последней войне клана", UiTextStyle.Header));
-        str.AppendLine(StylingHelper.MakeItStyled(currentClanWarUi.ClanName + " - " + currentClanWarUi.ClanTag, UiTextStyle.Name));
-        str.AppendLine();
+
+        str.AppendLine(StylingHelper.MakeItStyled($"{currentClanWarUi.ClanName} - {currentClanWarUi.ClanTag}\n", UiTextStyle.Name));
 
         str.AppendLine(GetWarMainInfoHat(currentClanWarUi));
 
@@ -48,22 +48,23 @@ public class CurrentStatisticsFunctions
         var str = new StringBuilder();
 
         str.AppendLine(StylingHelper.MakeItStyled("Карта текущей войны клана", UiTextStyle.Header));
-        str.AppendLine(StylingHelper.MakeItStyled(warMapUi.ClanName + " - " + warMapUi.ClanTag, UiTextStyle.Name));
-        str.AppendLine();
+        str.AppendLine(StylingHelper.MakeItStyled($"{warMapUi.ClanName} - {warMapUi.ClanTag}\n", UiTextStyle.Name));
+
         str.AppendLine(StylingHelper.MakeItStyled("Противник:", UiTextStyle.Subtitle));
-        str.AppendLine(StylingHelper.MakeItStyled(warMapUi.OpponentClanName + " - " + warMapUi.OpponentClanTag, UiTextStyle.Name));
-        str.AppendLine();
+        str.AppendLine(StylingHelper.MakeItStyled($"{warMapUi.OpponentClanName} - {warMapUi.OpponentClanTag}\n", UiTextStyle.Name));
+      
         str.AppendLine(warMapUi.UpdatedOn.GetUpdatedOnString());
-        str.AppendLine();
-        str.AppendLine(StylingHelper.MakeItStyled("Начало подготовки:", UiTextStyle.Subtitle));
+ 
+        str.AppendLine(StylingHelper.MakeItStyled("\nНачало подготовки:", UiTextStyle.Subtitle));
         str.AppendLine(StylingHelper.MakeItStyled(warMapUi.PreparationStartTime.FormateToUiDateTime(), UiTextStyle.Default));
         str.AppendLine(StylingHelper.MakeItStyled("Начало войны:", UiTextStyle.Subtitle));
         str.AppendLine(StylingHelper.MakeItStyled(warMapUi.StartedOn.FormateToUiDateTime(), UiTextStyle.Default));
         str.AppendLine(StylingHelper.MakeItStyled("Конец войны:", UiTextStyle.Subtitle));
         str.AppendLine(StylingHelper.MakeItStyled(warMapUi.EndedOn.FormateToUiDateTime(), UiTextStyle.Default));
-        str.AppendLine();
-        str.AppendLine(StylingHelper.MakeItStyled("Карта войны:", UiTextStyle.Subtitle));
-        str.AppendLine($@"``` ");
+
+        str.AppendLine(StylingHelper.MakeItStyled("\nКарта войны:", UiTextStyle.Subtitle));
+
+        str.AppendLine($"``` ");
 
         for (int i = 0; i < warMembers.Count; i++)
         {
@@ -91,7 +92,7 @@ public class CurrentStatisticsFunctions
                 opponentThLevel += " ";
             }
 
-            var mapStr = $@"{properMateName} {membersThLevel} |{position}| {opponent.TownHallLevel} {properOpponentName}";
+            var mapStr = $"{properMateName} {membersThLevel} |{position}| {opponent.TownHallLevel} {properOpponentName}";
 
             str.AppendLine($@"{StylingHelper.Ecranize(mapStr)}");
         }
@@ -106,14 +107,13 @@ public class CurrentStatisticsFunctions
         var str = new StringBuilder();
 
         str.AppendLine(StylingHelper.MakeItStyled("Общая информация о последнем рейде клана", UiTextStyle.Header));
-        str.AppendLine(StylingHelper.MakeItStyled(raidsUi.ClanName + " - " + raidsUi.ClanTag, UiTextStyle.Name));
-        str.AppendLine();
+        str.AppendLine(StylingHelper.MakeItStyled($"{raidsUi.ClanName} - {raidsUi.ClanTag}\n", UiTextStyle.Name));
+
         str.Append(GetRaidsMainInfoHat(raidsUi));
 
         if (raidsUi.NonAttackersRaids.Count != 0)
         {
-            str.AppendLine(StylingHelper.MakeItStyled("ПРОВЕЛИ НЕ ВСЕ АТАКИ:", UiTextStyle.Subtitle));
-            str.AppendLine();
+            str.AppendLine(StylingHelper.MakeItStyled("ПРОВЕЛИ МЕНЕЕ 6 ИЛИ НЕ ПРОВЕЛИ АТАК:\n", UiTextStyle.Subtitle));
 
             foreach (var nonAttacker in raidsUi.NonAttackersRaids)
             {
@@ -124,7 +124,7 @@ public class CurrentStatisticsFunctions
                     telegramUserName = nonAttacker.TelegramUserName;
                 }
 
-                str.AppendLine(StylingHelper.MakeItStyled($"{nonAttacker.Name} Атак: {nonAttacker.AttacksCount} {telegramUserName}", UiTextStyle.Name));
+                str.AppendLine(StylingHelper.MakeItStyled($"{nonAttacker.Name} ﴾ {nonAttacker.AttacksCount} ﴿ {telegramUserName}", UiTextStyle.Name));
             }
         }
 
@@ -134,12 +134,13 @@ public class CurrentStatisticsFunctions
     public static string GetDistrictStatistics(RaidUi raidUi, DistrictType districtType)
     {
         var maxNameLength = 18;
-        var max2ColumnLength = 3;
-        var max3ColumnLength = 3;
+        var max2ColumnLength = 5;
+        var max3ColumnLength = 5;
 
         var chosenDistrictName = FunctionsLogicHelper.AllDistricts.First(x => x.Key == districtType).Value;
 
         var avgPercent = 0.0;
+
         var counter = 0;
 
         foreach (var clan in raidUi.DefeatedClans)
@@ -149,6 +150,7 @@ public class CurrentStatisticsFunctions
                 foreach (var attack in district.Attacks)
                 {
                     avgPercent += attack.DestructionPercentTo - attack.DestructionPercentFrom;
+
                     counter++;
                 }
             }
@@ -162,35 +164,39 @@ public class CurrentStatisticsFunctions
         var str = new StringBuilder();
 
         str.AppendLine(StylingHelper.MakeItStyled("Показатели игроков клана", UiTextStyle.Header));
-        str.AppendLine(StylingHelper.MakeItStyled(raidUi.ClanName + " - " + raidUi.ClanTag, UiTextStyle.Name));
-        str.AppendLine();
+        str.AppendLine(StylingHelper.MakeItStyled($"{raidUi.ClanName} - {raidUi.ClanTag}\n", UiTextStyle.Name));
+  
         str.Append(StylingHelper.MakeItStyled("В атаках на район: ", UiTextStyle.Default));
-        str.AppendLine(StylingHelper.MakeItStyled($"{chosenDistrictName}", UiTextStyle.Header));
-        str.AppendLine();
+        str.AppendLine(StylingHelper.MakeItStyled($"{chosenDistrictName}\n", UiTextStyle.Header));
+
         str.AppendLine(raidUi.UpdatedOn.GetUpdatedOnString());
-        str.AppendLine();
-        str.Append(StylingHelper.MakeItStyled("Разрушений за атаку в среднем: ", UiTextStyle.Default));
+   
+        str.Append(StylingHelper.MakeItStyled("\nРазрушений за атаку в среднем: ", UiTextStyle.Default));
         str.AppendLine(StylingHelper.MakeItStyled($"{avgPercent}%", UiTextStyle.Name));
-        str.AppendLine();
-        str.AppendLine(StylingHelper.MakeItStyled("Показатели атак:", UiTextStyle.Subtitle));
+   
+        str.AppendLine(StylingHelper.MakeItStyled("\nПоказатели атак:", UiTextStyle.Subtitle));
 
         str.AppendLine($"``` " +
                            $"|{StylingHelper.GetCenteredString("Игрок", maxNameLength)}" +
                            $"|{StylingHelper.GetCenteredString("%От", max2ColumnLength)}" +
                            $"|{StylingHelper.GetCenteredString("%До", max3ColumnLength)}|");
 
-        str.AppendLine($" " +
-            $"|{new string('-', maxNameLength)}" +
-            $"|{new string('-', max2ColumnLength)}" +
-            $"|{new string('-', max3ColumnLength)}|");
+        str.AppendLine(StylingHelper.GetTableDeviderLine(DeviderType.Colunmn, maxNameLength, max2ColumnLength, max3ColumnLength));
+
+        str.AppendLine(StylingHelper.GetTableDeviderLine(DeviderType.Whitespace, maxNameLength, max2ColumnLength, max3ColumnLength));
 
         var tableWidth = maxNameLength + max2ColumnLength + max3ColumnLength + 2;
 
-        str.AppendLine($" {StylingHelper.GetCenteredString(" ", tableWidth + 2)}");
-
         foreach (var clan in raidUi.DefeatedClans)
         {
-            str.AppendLine($" |{StylingHelper.GetCenteredStringDash(StylingHelper.GetProperName(clan.Name, maxNameLength), tableWidth)}|");
+            var totalDistrictLoot = 0;
+
+            if (clan.DefeatedEmemyDistricts.FirstOrDefault(x => x.Name == chosenDistrictName) != null)
+            {
+                totalDistrictLoot = clan.DefeatedEmemyDistricts.FirstOrDefault(x => x.Name == chosenDistrictName).Loot;
+            }
+
+            str.AppendLine($" |{StylingHelper.GetCenteredStringDash($" {StylingHelper.GetProperName(clan.Name, maxNameLength)} - {totalDistrictLoot.GetDividedString()} ", tableWidth)}|");
 
             foreach (var district in clan.DefeatedEmemyDistricts.Where(x => x.Name == chosenDistrictName))
             {
@@ -226,11 +232,12 @@ public class CurrentStatisticsFunctions
 
         str.Append(StylingHelper.MakeItStyled("\nНачало рейдов:  ", UiTextStyle.Default));
         str.AppendLine(StylingHelper.MakeItStyled(raidUi.StartedOn.FormateToUiDateTime(), UiTextStyle.Subtitle));
+
         str.Append(StylingHelper.MakeItStyled("Конец рейдов:  ", UiTextStyle.Default));
         str.AppendLine(StylingHelper.MakeItStyled(raidUi.EndedOn.FormateToUiDateTime(), UiTextStyle.Subtitle));
 
-        var firstColumnLength = 18;
-        var secondColumnLength = 9;
+        var firstColumnLength = 20;
+        var secondColumnLength = 11;
 
         str.AppendLine($"\n``` " +
                 $"|{StylingHelper.GetCenteredString("Параметр", firstColumnLength)}" +
@@ -269,10 +276,10 @@ public class CurrentStatisticsFunctions
         str.AppendLine(StylingHelper.MakeItStyled("Золото - суммарно награбленное золото;", UiTextStyle.Default));
         str.AppendLine(StylingHelper.MakeItStyled("Защиты/Атаки ~123 - среднее количество атак, затрачиваемых на полное уничтожение клана.\n", UiTextStyle.Default));
 
-        var maxClanNameLength = 10;
+        var maxClanNameLength = 16;
         var maxAttackLength = 5;
         var maxDDCLength = 3;
-        var maxGoldLootedLength = 7;
+        var maxGoldLootedLength = 9;
 
         var tableLength = maxClanNameLength + maxAttackLength + maxDDCLength + maxGoldLootedLength + 2;
 
@@ -350,7 +357,6 @@ public class CurrentStatisticsFunctions
         var str = new StringBuilder();
 
         str.AppendLine(cw.UpdatedOn.GetUpdatedOnString());
-
 
         str.AppendLine(StylingHelper.MakeItStyled("\nНачало подготовки:", UiTextStyle.Subtitle));
         str.AppendLine(StylingHelper.MakeItStyled(cw.PreparationStartTime.FormateToUiDateTime(), UiTextStyle.Default));

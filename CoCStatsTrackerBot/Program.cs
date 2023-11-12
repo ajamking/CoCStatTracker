@@ -235,9 +235,9 @@ class Program
 
     async static Task Main(string[] args)
     {
-        CheckThatFunc();
+        //CheckThatFunc();
 
-        CreateNewTestDb("#YPPGCCY8");
+        //CreateNewTestDb("#YPPGCCY8", "#UQQGYJJP");
 
         //UpdateDbCommandHandler.UpdateClanCurrentRaid("#YPPGCCY8");
 

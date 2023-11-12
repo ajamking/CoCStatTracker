@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace CoCStatsTracker.Items.Helpers;
 
-public static class MedianValueCalculator
+public static class ClanMemberMedianValueCalculator
 {
     public static int Calculate(ClanMember member, MedianValueType avgType)
     {

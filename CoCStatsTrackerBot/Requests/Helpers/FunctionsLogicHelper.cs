@@ -26,6 +26,38 @@ public static class FunctionsLogicHelper
             {DistrictType.Goblin_Mines, "Goblin Mines" },
     };
 
+    public static Dictionary<string, string> SuperUnitsMapper { get; set; } = new Dictionary<string, string>()
+    {
+                { "Super Barbarian", "Суперварвар"},
+                { "Super Archer", "Суперлучница"},
+                { "Super Giant", "Супергигант"},
+                { "Sneaky Goblin", "Коварный гоблин"},
+                { "Super Wall Breaker", "Суперстенобой"},
+                { "Rocket Balloon", "Ракетный шар"},
+                { "Super Wizard", "Суперколдун"},
+                { "Super Dragon", "Супердракон"},
+                { "Inferno Dragon", "Пламенный дракон"},
+                { "Super Minion", "Суперминьон"},
+                { "Super Valkyrie", "Супервалькирия"},
+                { "Super Witch", "Суперведьма"},
+                { "Ice Hound", "Ледяная гончая"},
+                { "Super Bowler", "Супервышибала"},
+                { "Super Miner", "Супершахтер"},
+                { "Super Hog Rider", "Супервсадник на кабане"},
+    };
+
+    public static Dictionary<string, string> SiegeMachinesMapper { get; set; } = new Dictionary<string, string>()
+    {
+                { "Wall Wrecker", "Разрушитель стен"},
+                { "Battle Blimp", "Боевой дирижабль"},
+                { "Stone Slammer", "Камнебросатель"},
+                { "Siege Barracks", "Осадные казармы"},
+                { "Log Launcher", "Бревномет"},
+                { "Flame Flinger", "Огнеметатель"},
+                { "Battle Drill", "Боевой бур"},
+    };
+
+
     public static List<DistrictUi> SortAsOnMap(this ICollection<DistrictUi> districts)
     {
         var newDistrictsList = new List<DistrictUi>();
@@ -49,6 +81,25 @@ public static class FunctionsLogicHelper
         predict.SummPrediction = predict.DefensePrediction + predict.OffensePrediction;
 
         return predict;
+    }
+
+    public static Dictionary<string, string> GetAllMachineLevels(ArmyUi memberArmy, List<string> allMachinesInGame)
+    {
+        var machineLevels = new Dictionary<string, string>();
+
+        foreach (var machine in allMachinesInGame)
+        {
+            if (memberArmy.SiegeMachines.Any(x => x.Name == machine))
+            {
+                machineLevels.Add(machine, memberArmy.SiegeMachines.First(x => x.Name == machine).Lvl.ToString());
+            }
+            else
+            {
+                machineLevels.Add(machine, "0");
+            }
+        }
+
+        return machineLevels;
     }
 
     private static int GetOffensePrediction(RaidUi raidsUi)
@@ -144,6 +195,8 @@ public static class FunctionsLogicHelper
 
         return summDeadUnits / magicDivider;
     }
+
+    
 }
 
 public class DistrictsForPrediction

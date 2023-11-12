@@ -22,7 +22,7 @@ public class ClanUi : UiEntity
     public string WarLeague { get; set; }
     public int WarWinStreak { get; set; }
     public int WarWins { get; set; }
-    public int WarTies { get; set; }
+    public int WarDraws { get; set; }
     public int WarLoses { get; set; }
     public int CapitalHallLevel { get; set; }
     public List<ClanMemberUi> ClanMembers { get; set; }

@@ -7,9 +7,6 @@ public static class ClanFunctions
 {
     public static string GetClanShortInfo(ClanUi clanUi)
     {
-        var newCWLeagueString = clanUi.WarLeague.Replace("League ", "");
-        var newCapitalLeagueString = clanUi.CapitalLeague.Replace("League ", "");
-
         var dic = new Dictionary<string, string>()
         {
             { "Уровень", $"{clanUi.ClanLevel}" },
@@ -17,13 +14,14 @@ public static class ClanFunctions
             { "Очки клана", $"{clanUi.ClanPoints.GetDividedString()}" },
             { "Очки клана ДС", $"{clanUi.ClanVersusPoints.GetDividedString()}" },
             { "История КВ", $"{clanUi.IsWarLogPublic}" },
-            { "Лига ЛВК", $"{newCWLeagueString}" },
-            { "Винстрик КВ", $"{clanUi.WarWinStreak}" },
+            { "Лига ЛВК", $"{clanUi.WarLeague}" },
+            { "Проведено КВ", $"{(clanUi.WarWins + clanUi.WarDraws + clanUi.WarLoses).GetDividedString()}" },
             { "Побед КВ", $"{clanUi.WarWins.GetDividedString()}" },
-            { "Ничьих КВ", $"{clanUi.WarTies.GetDividedString()}" },
             { "Поражений КВ", $"{clanUi.WarLoses.GetDividedString()}" },
+            { "Ничьих КВ", $"{clanUi.WarDraws.GetDividedString()}" },
+            { "Винстрик КВ", $"{clanUi.WarWinStreak}" },
             { "Уровень столицы", $"{clanUi.CapitalHallLevel}" },
-            { "Лига столицы", $"{newCapitalLeagueString}" },
+            { "Лига столицы", $"{clanUi.CapitalLeague}" },
             { "Очки столицы", $"{clanUi.ClanCapitalPoints.GetDividedString()}" },
         };
 
@@ -33,7 +31,9 @@ public static class ClanFunctions
 
         var secondColumnName = "Значение";
 
-        var tableSize = StylingHelper.DefineTableMaxSize(dic, firstColumnName, secondColumnName);
+        var firstColumnLength = 16;
+
+        var secondColumnLength = 15;
 
         str.AppendLine(StylingHelper.MakeItStyled("Краткая информация о клане", UiTextStyle.Header));
         str.AppendLine(StylingHelper.MakeItStyled(clanUi.Name + " - " + clanUi.Tag, UiTextStyle.Name));
@@ -45,14 +45,15 @@ public static class ClanFunctions
         str.AppendLine();
         str.AppendLine(StylingHelper.MakeItStyled("Основные показатели:", UiTextStyle.Subtitle));
         str.AppendLine();
-        str.AppendLine($"``` |{firstColumnName.PadRight(tableSize.KeyMaxLength)}|{StylingHelper.GetCenteredString(secondColumnName, tableSize.ValueMaxLength)}|");
-        str.AppendLine($" |{new string('-', tableSize.KeyMaxLength)}|{new string('-', tableSize.ValueMaxLength)}|");
+        str.AppendLine($"``` |{firstColumnName.PadRight(firstColumnLength)}|{StylingHelper.GetCenteredString(secondColumnName, secondColumnLength)}|");
+
+        str.AppendLine(StylingHelper.GetTableDeviderLine(DeviderType.Colunmn, firstColumnLength, secondColumnLength));
 
         foreach (var item in dic)
         {
-            str.Append($" |{item.Key.PadRight(tableSize.KeyMaxLength)}|");
+            str.Append($" |{item.Key.PadRight(firstColumnLength)}|");
 
-            str.AppendLine($"{StylingHelper.GetCenteredString(item.Value.ToString(), tableSize.ValueMaxLength)}|");
+            str.AppendLine($"{StylingHelper.GetCenteredString(item.Value.ToString(), secondColumnLength)}|");
         }
 
         str.Append("```");
@@ -65,11 +66,10 @@ public static class ClanFunctions
         var str = new StringBuilder();
 
         str.AppendLine(StylingHelper.MakeItStyled("Список членов клана", UiTextStyle.Header));
-        str.AppendLine(StylingHelper.MakeItStyled(clanMembersUi.First().ClanName + " - " + clanMembersUi.First().ClanTag, UiTextStyle.Name));
-        str.AppendLine();
-        str.AppendLine(clanMembersUi.FirstOrDefault().UpdatedOn.GetUpdatedOnString());
-        str.AppendLine(StylingHelper.MakeItStyled("Список отсортирован по уровню ТХ.", UiTextStyle.Subtitle));
-        str.AppendLine();
+        str.AppendLine(StylingHelper.MakeItStyled($"{clanMembersUi.First().ClanName} - {clanMembersUi.First().ClanTag}\n", UiTextStyle.Name));
+
+        str.AppendLine(clanMembersUi.First().UpdatedOn.GetUpdatedOnString());
+        str.AppendLine(StylingHelper.MakeItStyled("Список отсортирован по уровню ТХ.\n", UiTextStyle.Subtitle));
 
         var counter = 0;
 
@@ -89,7 +89,6 @@ public static class ClanFunctions
             }
 
             str.AppendLine(StylingHelper.MakeItStyled($"{newCounter}| {member.Name}  [{member.Tag}]  {member.TelegramUserName}", UiTextStyle.Name));
-
         }
 
         return str.ToString();
@@ -99,37 +98,27 @@ public static class ClanFunctions
     {
         var str = new StringBuilder();
 
-        var machineMapper = new Dictionary<string, string>(){
-                { "Wall Wrecker", "Разрушитель стен"},
-                { "Battle Blimp", "Боевой дирижабль"},
-                { "Stone Slammer", "Камнебросатель"},
-                { "Siege Barracks", "Осадные казармы"},
-                { "Log Launcher", "Бревномет"},
-                { "Flame Flinger", "Огнеметатель"},
-                { "Battle Drill", "Боевой бур"},};
-
-        var allMachines = machineMapper.Keys.ToList();
+        var allMachines = FunctionsLogicHelper.SiegeMachinesMapper.Keys.ToList();
         var maxNameLength = 14;
         var maxMachineLevelLength = 1;
 
         str.AppendLine(StylingHelper.MakeItStyled("Осадные машины игроков клана", UiTextStyle.Header));
-        str.AppendLine(StylingHelper.MakeItStyled(allArmysUi.First().ClanName + " - " + allArmysUi.First().ClanTag, UiTextStyle.Name));
-        str.AppendLine();
+        str.AppendLine(StylingHelper.MakeItStyled($"{allArmysUi.First().ClanName} - {allArmysUi.First().ClanTag}\n", UiTextStyle.Name));
+
         str.AppendLine(allArmysUi.First().UpdatedOn.GetUpdatedOnString());
-        str.AppendLine();
-        str.AppendLine(StylingHelper.MakeItStyled("Пояснение таблицы", UiTextStyle.TableAnnotation));
-        str.AppendLine(StylingHelper.MakeItStyled(("1 - " + machineMapper.ElementAt(0).Value), UiTextStyle.Default));
-        str.AppendLine(StylingHelper.MakeItStyled(("2 - " + machineMapper.ElementAt(1).Value), UiTextStyle.Default));
-        str.AppendLine(StylingHelper.MakeItStyled(("3 - " + machineMapper.ElementAt(2).Value), UiTextStyle.Default));
-        str.AppendLine(StylingHelper.MakeItStyled(("4 - " + machineMapper.ElementAt(3).Value), UiTextStyle.Default));
-        str.AppendLine(StylingHelper.MakeItStyled(("5 - " + machineMapper.ElementAt(4).Value), UiTextStyle.Default));
-        str.AppendLine(StylingHelper.MakeItStyled(("6 - " + machineMapper.ElementAt(5).Value), UiTextStyle.Default));
-        str.AppendLine(StylingHelper.MakeItStyled(("7 - " + machineMapper.ElementAt(6).Value), UiTextStyle.Default));
-        str.AppendLine();
-        str.AppendLine(StylingHelper.MakeItStyled("Цифры в столбцах - уровни осадных машин.", UiTextStyle.Default));
-        str.AppendLine();
-        str.AppendLine(StylingHelper.MakeItStyled("Перечень доступных игрокам машин:", UiTextStyle.Subtitle));
-        str.AppendLine();
+
+        str.AppendLine(StylingHelper.MakeItStyled("\nЦифры в столбцах - осадные машины по типу:", UiTextStyle.TableAnnotation));
+        str.AppendLine(StylingHelper.MakeItStyled(("1 - " + FunctionsLogicHelper.SiegeMachinesMapper.ElementAt(0).Value), UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled(("2 - " + FunctionsLogicHelper.SiegeMachinesMapper.ElementAt(1).Value), UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled(("3 - " + FunctionsLogicHelper.SiegeMachinesMapper.ElementAt(2).Value), UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled(("4 - " + FunctionsLogicHelper.SiegeMachinesMapper.ElementAt(3).Value), UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled(("5 - " + FunctionsLogicHelper.SiegeMachinesMapper.ElementAt(4).Value), UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled(("6 - " + FunctionsLogicHelper.SiegeMachinesMapper.ElementAt(5).Value), UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled(("7 - " + FunctionsLogicHelper.SiegeMachinesMapper.ElementAt(6).Value), UiTextStyle.Default));
+
+        str.AppendLine(StylingHelper.MakeItStyled("\nЦифры в строках - уровни осадных машин.", UiTextStyle.TableAnnotation));
+
+        str.AppendLine(StylingHelper.MakeItStyled("\nПеречень доступных игрокам машин:\n", UiTextStyle.Subtitle));
 
         str.AppendLine($"``` " +
                   $"|{StylingHelper.GetCenteredString("Игрок", maxNameLength)}" +
@@ -141,19 +130,12 @@ public static class ClanFunctions
                   $"|{StylingHelper.GetCenteredString("6", maxMachineLevelLength)}" +
                   $"|{StylingHelper.GetCenteredString("7", maxMachineLevelLength)}|");
 
-        str.AppendLine($" " +
-            $"|{new string('-', maxNameLength)}" +
-            $"|{new string('-', maxMachineLevelLength)}" +
-            $"|{new string('-', maxMachineLevelLength)}" +
-            $"|{new string('-', maxMachineLevelLength)}" +
-            $"|{new string('-', maxMachineLevelLength)}" +
-            $"|{new string('-', maxMachineLevelLength)}" +
-            $"|{new string('-', maxMachineLevelLength)}" +
-            $"|{new string('-', maxMachineLevelLength)}|");
+        str.AppendLine(StylingHelper.GetTableDeviderLine(DeviderType.Colunmn, maxNameLength, maxMachineLevelLength, maxMachineLevelLength,
+            maxMachineLevelLength, maxMachineLevelLength, maxMachineLevelLength, maxMachineLevelLength, maxMachineLevelLength));
 
         foreach (var memberArmy in allArmysUi.OrderByDescending(x => x.TownHallLevel))
         {
-            var memberMachines = GetAllMachineLevels(memberArmy, machineMapper.Keys.ToList());
+            var memberMachines = FunctionsLogicHelper.GetAllMachineLevels(memberArmy, FunctionsLogicHelper.SiegeMachinesMapper.Keys.ToList());
 
             if (memberMachines.All(x => x.Value == "0"))
             {
@@ -183,35 +165,13 @@ public static class ClanFunctions
 
         var maxNameLength = 14;
 
-        var superUnitsMapper = new Dictionary<string, string>(){
-                { "Super Barbarian", "Суперварвар"},
-                { "Super Archer", "Суперлучница"},
-                { "Super Giant", "Супергигант"},
-
-                { "Sneaky Goblin", "Коварный гоблин"},
-                { "Super Wall Breaker", "Суперстенобой"},
-                { "Rocket Balloon", "Ракетный шар"},
-
-                { "Super Wizard", "Суперколдун"},
-                { "Super Dragon", "Супердракон"},
-                { "Inferno Dragon", "Пламенный дракон"},
-
-                { "Super Minion", "Суперминьон"},
-                { "Super Valkyrie", "Супервалькирия"},
-                { "Super Witch", "Суперведьма"},
-
-                { "Ice Hound", "Ледяная гончая"},
-                { "Super Bowler", "Супервышибала"},
-                { "Super Miner", "Супершахтер"},
-                { "Super Hog Rider", "Супервсадник на кабане"},};
-
         str.AppendLine(StylingHelper.MakeItStyled("Активные супер юниты клана", UiTextStyle.Header));
-        str.AppendLine(StylingHelper.MakeItStyled(allArmysUi.First().ClanName + " - " + allArmysUi.First().ClanTag, UiTextStyle.Name));
-        str.AppendLine();
+        str.AppendLine(StylingHelper.MakeItStyled($"{allArmysUi.First().ClanName} - {allArmysUi.First().ClanTag}\n", UiTextStyle.Name));
+
         str.AppendLine(allArmysUi.First().UpdatedOn.GetUpdatedOnString());
         str.AppendLine();
 
-        foreach (var superUnit in superUnitsMapper)
+        foreach (var superUnit in FunctionsLogicHelper.SuperUnitsMapper)
         {
             if (allArmysUi.Any(x => x.SuperUnits.FirstOrDefault(x => x.Name == superUnit.Key)?.SuperTroopIsActivated == true))
             {
@@ -249,47 +209,41 @@ public static class ClanFunctions
 
         var maxNameLength = 10;
         var maxStarsLength = 2;
-        var maxDonationsLength = 5;
-        var maxDonationsRecieved = 5;
-        var attacskWins = 3;
-        var versusAttacksWins = 3;
-        var maxCapitalLootLength = 6;
+        var maxDonationsLength = 6;
+        var maxDonationsRecievedLength = 6;
+        var attacskWinsLength = 3;
+        var versusAttacksWinsLength = 3;
+        var maxCapitalLootLength = 7;
 
 
         str.AppendLine(StylingHelper.MakeItStyled("Сезонная статистика игроков клана", UiTextStyle.Header));
-        str.AppendLine(StylingHelper.MakeItStyled(seasonStatisticsUistring.First().ClanName + " - " + seasonStatisticsUistring.First().ClanTag, UiTextStyle.Name));
-        str.AppendLine();
+        str.AppendLine(StylingHelper.MakeItStyled($"{seasonStatisticsUistring.First().ClanName} - {seasonStatisticsUistring.First().ClanTag}\n", UiTextStyle.Name));
+
         str.AppendLine(StylingHelper.MakeItStyled("Сбор статистики начат: " + seasonStatisticsUistring.First().InitializedOn.FormateToUiDateTime(), UiTextStyle.Subtitle));
+
         str.AppendLine(seasonStatisticsUistring.First().UpdatedOn.GetUpdatedOnString());
-        str.AppendLine();
-        str.AppendLine(StylingHelper.MakeItStyled("Пояснение таблицы:", UiTextStyle.TableAnnotation));
+
+        str.AppendLine(StylingHelper.MakeItStyled("\nПояснение таблицы:", UiTextStyle.TableAnnotation));
         str.AppendLine(StylingHelper.MakeItStyled("Зв - боевые звезды, заработанные за сезон.", UiTextStyle.Default));
         str.AppendLine(StylingHelper.MakeItStyled("Дон.о - отправлено войск за сезон.", UiTextStyle.Default));
         str.AppendLine(StylingHelper.MakeItStyled("Дон.п - получено войск за сезон.", UiTextStyle.Default));
         str.AppendLine(StylingHelper.MakeItStyled("Атх - успешных атак в глобале за сезон.", UiTextStyle.Default));
         str.AppendLine(StylingHelper.MakeItStyled("Адс - успешных атак на ДС за сезон.", UiTextStyle.Default));
-        str.AppendLine(StylingHelper.MakeItStyled("З.с. - золото столицы, вложенное за сезон.", UiTextStyle.Default));
-        str.AppendLine();
-        str.AppendLine(StylingHelper.MakeItStyled("Сбор статистики начинается заново каждый рейтинговый сезон или по усмотрению администратора.", UiTextStyle.Default));
-        str.AppendLine();
+        str.AppendLine(StylingHelper.MakeItStyled("З.с. - золото столицы, вложенное за сезон.\n", UiTextStyle.Default));
+
+        str.AppendLine(StylingHelper.MakeItStyled("Сбор статистики начинается заново каждый рейтинговый сезон или по усмотрению администратора.\n", UiTextStyle.Default));
 
         str.AppendLine($"``` " +
                   $"|{StylingHelper.GetCenteredString("Игрок", maxNameLength)}" +
                   $"|{StylingHelper.GetCenteredString("Зв", maxStarsLength)}" +
                   $"|{StylingHelper.GetCenteredString("Дон.о", maxDonationsLength)}" +
-                  $"|{StylingHelper.GetCenteredString("Дон.п", maxDonationsRecieved)}" +
-                  $"|{StylingHelper.GetCenteredString("Атх", attacskWins)}" +
-                  $"|{StylingHelper.GetCenteredString("Адс", versusAttacksWins)}" +
+                  $"|{StylingHelper.GetCenteredString("Дон.п", maxDonationsRecievedLength)}" +
+                  $"|{StylingHelper.GetCenteredString("Атх", attacskWinsLength)}" +
+                  $"|{StylingHelper.GetCenteredString("Адс", versusAttacksWinsLength)}" +
                   $"|{StylingHelper.GetCenteredString("З.с.", maxCapitalLootLength)}|");
 
-        str.AppendLine($" " +
-            $"|{new string('-', maxNameLength)}" +
-            $"|{new string('-', maxStarsLength)}" +
-            $"|{new string('-', maxDonationsLength)}" +
-            $"|{new string('-', maxDonationsRecieved)}" +
-            $"|{new string('-', attacskWins)}" +
-            $"|{new string('-', versusAttacksWins)}" +
-            $"|{new string('-', maxCapitalLootLength)}|");
+        str.AppendLine(StylingHelper.GetTableDeviderLine(DeviderType.Colunmn, maxNameLength, maxStarsLength, maxDonationsLength,
+            maxDonationsRecievedLength, attacskWinsLength, versusAttacksWinsLength, maxCapitalLootLength));
 
         foreach (var member in seasonStatisticsUistring)
         {
@@ -297,17 +251,17 @@ public static class ClanFunctions
 
             str.Append($" |{StylingHelper.GetCenteredString(properName, maxNameLength)}|");
 
-            str.Append($"{StylingHelper.GetCenteredString((member.WarStarsEarned).ToString(), maxStarsLength)}|");
+            str.Append($"{StylingHelper.GetCenteredString(member.WarStarsEarned.ToString(), maxStarsLength)}|");
 
-            str.Append($"{StylingHelper.GetCenteredString((member.DonationsSend).ToString(), maxDonationsLength)}|");
+            str.Append($"{StylingHelper.GetCenteredString(member.DonationsSend.GetDividedString(), maxDonationsLength)}|");
 
-            str.Append($"{StylingHelper.GetCenteredString((member.DonationRecieved).ToString(), maxDonationsRecieved)}|");
+            str.Append($"{StylingHelper.GetCenteredString(member.DonationRecieved.GetDividedString(), maxDonationsRecievedLength)}|");
 
-            str.Append($"{StylingHelper.GetCenteredString((member.AttackWins).ToString(), attacskWins)}|");
+            str.Append($"{StylingHelper.GetCenteredString(member.AttackWins.ToString(), attacskWinsLength)}|");
 
-            str.Append($"{StylingHelper.GetCenteredString((member.VersusBattleWins).ToString(), versusAttacksWins)}|");
+            str.Append($"{StylingHelper.GetCenteredString(member.VersusBattleWins.ToString(), versusAttacksWinsLength)}|");
 
-            str.AppendLine($"{StylingHelper.GetCenteredString((member.CapitalContributions).ToString(), maxCapitalLootLength)}|");
+            str.AppendLine($"{StylingHelper.GetCenteredString(member.CapitalContributions.GetDividedString(), maxCapitalLootLength)}|");
         }
 
         str.Append("```\n");
@@ -319,13 +273,13 @@ public static class ClanFunctions
     {
         var str = new StringBuilder();
 
-        var maxNameLength = 12;
+        var maxNameLength = 14;
         var maxDistrictLength = 9;
         var maxAttackLenght = 6;
 
         str.AppendLine(StylingHelper.MakeItStyled("Результаты рейдов клана", UiTextStyle.Header));
-        str.AppendLine(StylingHelper.MakeItStyled(raidsUi.First().ClanName + " - " + raidsUi.First().ClanTag, UiTextStyle.Name));
-        str.AppendLine();
+
+        str.AppendLine(StylingHelper.MakeItStyled($"{raidsUi.First().ClanName} - {raidsUi.First().ClanTag}\n", UiTextStyle.Name));
 
         var counter = 0;
 
@@ -337,8 +291,7 @@ public static class ClanFunctions
 
                 str.AppendLine($@"{messageSplitToken}");
 
-                str.AppendLine(StylingHelper.MakeItStyled("Показатели атак:", UiTextStyle.Subtitle));
-                str.AppendLine();
+                str.AppendLine(StylingHelper.MakeItStyled("Показатели атак:\n", UiTextStyle.Subtitle));
 
                 var defeatedClansCounter = 0;
 
@@ -349,16 +302,15 @@ public static class ClanFunctions
                    $"|{StylingHelper.GetCenteredString("Район", maxDistrictLength)}" +
                    $"|{StylingHelper.GetCenteredString("От-До%", maxAttackLenght)}|");
 
-                    str.AppendLine($" " +
-                        $"|{new string('-', maxNameLength)}" +
-                        $"|{new string('-', maxDistrictLength)}" +
-                        $"|{new string('-', maxAttackLenght)}|");
+                    str.AppendLine(StylingHelper.GetTableDeviderLine(DeviderType.Colunmn, maxNameLength, maxDistrictLength, maxAttackLenght));
 
                     var tableWidth = maxNameLength + maxDistrictLength + maxAttackLenght + 2;
 
                     str.AppendLine($" {StylingHelper.GetCenteredString(" ", tableWidth + 2)}");
 
-                    str.AppendLine($" |{StylingHelper.GetCenteredStringDash(StylingHelper.GetProperName(defeatedClan.Name, maxNameLength), tableWidth)}|");
+                    str.AppendLine($" |{StylingHelper.GetCenteredStringDash(StylingHelper.GetProperName(defeatedClan.Name, defeatedClan.Name.Length), tableWidth)}|");
+
+                    var districtCounter = 0;
 
                     foreach (var district in defeatedClan.DefeatedEmemyDistricts.SortAsOnMap())
                     {
@@ -371,6 +323,13 @@ public static class ClanFunctions
                             str.Append($"{StylingHelper.GetCenteredString(StylingHelper.GetFirstWord(district.Name), maxDistrictLength)}|");
 
                             str.AppendLine($"{StylingHelper.GetCenteredString(attack.DestructionPercentFrom + "-" + attack.DestructionPercentTo, maxAttackLenght)}|");
+                        }
+
+                        districtCounter++;
+
+                        if (districtCounter != defeatedClan.DefeatedEmemyDistricts.Count)
+                        {
+                            str.AppendLine(StylingHelper.GetTableDeviderLine(DeviderType.Colunmn, maxNameLength, maxDistrictLength, maxAttackLenght));
                         }
                     }
 
@@ -398,6 +357,7 @@ public static class ClanFunctions
         var str = new StringBuilder();
 
         var maxAttackLenght = 8;
+
         var maxNameLength = 12;
 
         if (recordsCount != 1)
@@ -409,8 +369,7 @@ public static class ClanFunctions
             str.AppendLine(StylingHelper.MakeItStyled("Результ последней войны клана", UiTextStyle.Header));
         }
 
-        str.AppendLine(StylingHelper.MakeItStyled(clanWarsUi.First().ClanName + " - " + clanWarsUi.First().ClanTag, UiTextStyle.Name));
-        str.AppendLine();
+        str.AppendLine(StylingHelper.MakeItStyled($"{clanWarsUi.First().ClanName} - {clanWarsUi.First().ClanTag}\n", UiTextStyle.Name));
 
         var counter = 0;
 
@@ -425,8 +384,6 @@ public static class ClanFunctions
 
                 str.AppendLine(CurrentStatisticsFunctions.GetWarMainInfoHat(cw));
 
-               
-
                 str.AppendLine(StylingHelper.MakeItStyled("Показатели атак:", UiTextStyle.Subtitle));
 
                 if (cw.MembersResults.All(x => x.FirstEnemyThLevel == 0 && x.SecondEnemyThLevel == 0))
@@ -439,18 +396,15 @@ public static class ClanFunctions
                 }
 
                 str.AppendLine(StylingHelper.MakeItStyled("Пояснение таблицы:", UiTextStyle.TableAnnotation));
-                str.AppendLine(StylingHelper.MakeItStyled("Атаки - Уровень ТХ / Проценты / Звезды", UiTextStyle.Default));
-                str.AppendLine();
+
+                str.AppendLine(StylingHelper.MakeItStyled("Атаки - Уровень ТХ / Проценты / Звезды\n", UiTextStyle.Default));
 
                 str.AppendLine($"``` " +
                     $"|{StylingHelper.GetCenteredString("Игрок", maxNameLength)}" +
                     $"|{StylingHelper.GetCenteredString("Атака 1", maxAttackLenght)}" +
                     $"|{StylingHelper.GetCenteredString("Атака 2", maxAttackLenght)}|");
 
-                str.AppendLine($" " +
-                    $"|{new string('-', maxNameLength)}" +
-                    $"|{new string('-', maxAttackLenght)}" +
-                    $"|{new string('-', maxAttackLenght)}|");
+                str.AppendLine(StylingHelper.GetTableDeviderLine(DeviderType.Colunmn, maxNameLength, maxAttackLenght, maxAttackLenght));
 
                 foreach (var attack in cw.MembersResults.OrderByDescending(x => x.ThLevel))
                 {
@@ -491,7 +445,7 @@ public static class ClanFunctions
         return str.ToString();
     }
 
-    public static string GetMembersAverageRaidsPerfomance(List<AverageRaidsPerfomanceUi> playersPerfomances)
+    public static string GetMembersAverageRaidsPerfomance(List<MedianRaidPerfomanse> playersPerfomances)
     {
         var maxNameLength = 12;
         var maxDestructionPercentLength = 5;
@@ -501,20 +455,18 @@ public static class ClanFunctions
         var str = new StringBuilder();
 
         str.AppendLine(StylingHelper.MakeItStyled("Средние показатели рейдеров клана:", UiTextStyle.Header));
-        str.AppendLine(StylingHelper.MakeItStyled(playersPerfomances.First().ClanName + " - " + playersPerfomances.First().ClanTag, UiTextStyle.Name));
-        str.AppendLine();
+        str.AppendLine(StylingHelper.MakeItStyled($"{playersPerfomances.First().ClanName} - {playersPerfomances.First().ClanTag}\n", UiTextStyle.Name));
+
         str.AppendLine(playersPerfomances.First().UpdatedOn.GetUpdatedOnString());
-        str.AppendLine();
-        str.AppendLine(StylingHelper.MakeItStyled("Пояснение таблицы:", UiTextStyle.TableAnnotation));
+
+        str.AppendLine(StylingHelper.MakeItStyled("\nПояснение таблицы:", UiTextStyle.TableAnnotation));
         str.AppendLine(StylingHelper.MakeItStyled("N - учтенное количество участий в рейдах.", UiTextStyle.Default));
         str.AppendLine(StylingHelper.MakeItStyled("Ср.% - средний процент разрушений за атаку.", UiTextStyle.Default));
-        str.AppendLine(StylingHelper.MakeItStyled("Золото - среднее количество золота, добываемого за рейд.", UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled("Золото - среднее количество золота, добываемого за рейд.\n", UiTextStyle.Default));
 
-        str.AppendLine();
-        str.AppendLine(StylingHelper.MakeItStyled("Таблица отсортирована по убыванию среднего процента разрушений", UiTextStyle.Default));
-        str.AppendLine();
-        str.AppendLine(StylingHelper.MakeItStyled("Средние показатели рейдеров:", UiTextStyle.Subtitle));
-        str.AppendLine();
+        str.AppendLine(StylingHelper.MakeItStyled("*Таблица отсортирована по убыванию среднего процента разрушений.\n", UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled("**На самом деле для большей наглядности в таблице выведены не усредненные значения, а медианные.\n", UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled("Средние показатели рейдеров:\n", UiTextStyle.Subtitle));
 
         str.AppendLine($"``` " +
                   $"|{StylingHelper.GetCenteredString("Игрок", maxNameLength)}" +
@@ -522,14 +474,9 @@ public static class ClanFunctions
                   $"|{StylingHelper.GetCenteredString("Ср.%", maxDestructionPercentLength)}" +
                   $"|{StylingHelper.GetCenteredString("Золото", maxCapitalLootLength)}|");
 
-        str.AppendLine($" " +
-            $"|{new string('-', maxNameLength)}" +
-            $"|{new string('-', maxNumberOfRaidsCount)}" +
-            $"|{new string('-', maxDestructionPercentLength)}" +
-            $"|{new string('-', maxCapitalLootLength)}|");
+        str.AppendLine(StylingHelper.GetTableDeviderLine(DeviderType.Dashes, maxNameLength, maxNumberOfRaidsCount, maxDestructionPercentLength, maxCapitalLootLength));
 
-
-        foreach (var perfomance in playersPerfomances.OrderByDescending(x => x.AverageDestructionPercent))
+        foreach (var perfomance in playersPerfomances.OrderByDescending(x => x.MedianDestructionPersent))
         {
             var properName = StylingHelper.GetProperName(perfomance.Name, maxNameLength);
 
@@ -537,32 +484,13 @@ public static class ClanFunctions
 
             str.Append($"{StylingHelper.GetCenteredString(perfomance.RaidMembershipsCount.ToString(), maxNumberOfRaidsCount)}|");
 
-            str.Append($"{StylingHelper.GetCenteredString(perfomance.AverageDestructionPercent.ToString(), maxDestructionPercentLength)}|");
+            str.Append($"{StylingHelper.GetCenteredString(perfomance.MedianDestructionPersent.ToString(), maxDestructionPercentLength)}|");
 
-            str.AppendLine($"{StylingHelper.GetCenteredString(perfomance.AverageCapitalLoot.GetDividedString(), maxCapitalLootLength)}|");
+            str.AppendLine($"{StylingHelper.GetCenteredString(perfomance.MedianLoot.GetDividedString(), maxCapitalLootLength)}|");
         }
 
         str.Append("```\n");
 
         return str.ToString();
-    }
-
-    private static Dictionary<string, string> GetAllMachineLevels(ArmyUi memberArmy, List<string> allMachinesInGame)
-    {
-        var machineLevels = new Dictionary<string, string>();
-
-        foreach (var machine in allMachinesInGame)
-        {
-            if (memberArmy.SiegeMachines.Any(x => x.Name == machine))
-            {
-                machineLevels.Add(machine, memberArmy.SiegeMachines.First(x => x.Name == machine).Lvl.ToString());
-            }
-            else
-            {
-                machineLevels.Add(machine, "0");
-            }
-        }
-
-        return machineLevels;
     }
 }

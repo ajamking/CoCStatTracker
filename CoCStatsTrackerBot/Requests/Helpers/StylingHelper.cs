@@ -1,4 +1,4 @@
-﻿using CoCStatsTracker.UIEntities;
+﻿using Microsoft.CodeAnalysis.CSharp;
 using System.Text;
 
 namespace CoCStatsTrackerBot.Requests;
@@ -49,16 +49,20 @@ public static class StylingHelper
     /// Центрирует строку, отбивая пробелами слева и справа.
     public static string GetCenteredString(string str, int maxStringWidth)
     {
-        if (str.Length >= maxStringWidth)
-        {
-            return str;
-        }
+        var newStr = SymbolDisplay.FormatLiteral(str, false);
+
+        //if (newStr.Length >= maxStringWidth)
+        //{
+        //    return str;
+        //}
 
         int leftPadding = (maxStringWidth - str.Length) / 2;
 
         int rightPadding = maxStringWidth - str.Length - leftPadding;
 
-        return new string(' ', leftPadding) + str + new string(' ', rightPadding);
+        var answer = new string(' ', leftPadding) + newStr + new string(' ', rightPadding);
+
+        return answer;
     }
 
     /// Центрирует строку, отбивая тире слева и справа.
@@ -104,42 +108,12 @@ public static class StylingHelper
         return newStr.ToString();
     }
 
-    /// Определяет максимальную длину строки для двух ячеек UI таблицы.
-    public static UiTableMaxSize DefineTableMaxSize(Dictionary<string, string> dic, string firstColumnName, string secondColumnName)
-    {
-        var uiTablemaxSize = new UiTableMaxSize();
-
-        var maxKeyLength = dic.Keys.Select(x => x.Length).Max();
-
-        var maxValueLength = dic.Values.Select(x => x.Length).Max();
-
-        if (maxKeyLength >= firstColumnName.Length)
-        {
-            uiTablemaxSize.KeyMaxLength = maxKeyLength;
-        }
-        else
-        {
-            uiTablemaxSize.KeyMaxLength = firstColumnName.Length;
-        }
-
-        if (maxValueLength >= secondColumnName.Length)
-        {
-            uiTablemaxSize.ValueMaxLength = maxValueLength;
-        }
-        else
-        {
-            uiTablemaxSize.ValueMaxLength = secondColumnName.Length;
-        }
-
-        return uiTablemaxSize;
-    }
-
     /// Заменяет различные смайлики и т.д. в строке на символ ! с фиксированной шириной и возвращает корректно отображающееся в MarkDown таблице строку.
     public static string GetProperName(this string str, int maxStringLength)
     {
-        var tempName = new StringBuilder(str.Length);
+        var tempName = new StringBuilder();
 
-        foreach (var symbol in str)
+        foreach (var symbol in SymbolDisplay.FormatLiteral(str, false))
         {
             if (char.IsDigit(symbol) ||
                 char.IsWhiteSpace(symbol) ||
@@ -149,6 +123,15 @@ public static class StylingHelper
                 (symbol >= 'а' && symbol <= 'я') ||
                 (symbol >= 'А' && symbol <= 'Я'))
             {
+                //if (symbol == '\\')
+                //{
+                //    tempName.Append($" {symbol}");
+                //}
+                //else
+                //{
+                //    tempName.Append(symbol);
+                //}
+
                 tempName.Append(symbol);
             }
             else
@@ -185,7 +168,7 @@ public static class StylingHelper
 
     public static string FormateToUiDateTime(this DateTime dateTime)
     {
-        var answer = $"{dateTime.ToString("dd:MM")} числа, в {dateTime.ToString("HH:mm")}";
+        var answer = $"{dateTime.ToString(@"dd\ MMM")} в {dateTime.ToString("HH:mm")}";
 
         return answer;
     }
@@ -260,15 +243,6 @@ public static class StylingHelper
     }
 }
 
-/// <summary>
-/// Вспомогательный класс, определяющий длину(ширину) двух столбцов.
-/// </summary>
-public class UiTableMaxSize
-{
-    public int KeyMaxLength { get; set; }
-    public int ValueMaxLength { get; set; }
-}
-
 public enum UiTextStyle
 {
     Header,
@@ -283,61 +257,4 @@ public enum DeviderType
     Colunmn,
     Dashes,
     Whitespace
-}
-
-
-//Позвляет вычислить длину символа и тд. Это очень сложно адекватно применить, так что забыли. Но тут пока оставим.
-public static class InlineCharCounter
-{
-    private static string GetProperStringV2(string str, int maxStringLength)
-    {
-        var result = new StringBuilder(maxStringLength);
-
-        int currentStringLength = 0;
-
-        foreach (var symbol in str)
-        {
-            var currentSynbolLength = symbol.GetLength();
-
-            if (currentStringLength + currentSynbolLength < maxStringLength)
-            {
-                result.Append(symbol);
-
-                currentStringLength += currentSynbolLength;
-            }
-        }
-
-        return result.ToString();
-    }
-
-    private static bool IsFullWidthChar(this char c)
-    {
-        if (c >= 'ᄀ')
-        {
-            if (c > 'ᅟ' && c != '〈' && c != '〉' && (c < '⺀' || c > '\ua4cf' || c == '〿') && (c < '가' || c > '힣') && (c < '豈' || c > '\ufaff') && (c < '︐' || c > '︙') && (c < '︰' || c > '\ufe6f') && (c < '\uff00' || c > '｠') && (c < '￠' || c > '￦') && (c < 131072 || c > 196605))
-            {
-                if (c >= 196608)
-                {
-                    return c <= 262141;
-                }
-
-                return false;
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
-    private static int GetLength(this char c)
-    {
-        if (c == '\0')
-        {
-            return 0;
-        }
-
-        return (!IsFullWidthChar(c)) ? 1 : 2;
-    }
-
 }

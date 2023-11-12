@@ -113,7 +113,7 @@ public static class GetFromDbQueryHandler
         }
     }
 
-    public static List<AverageRaidsPerfomanceUi> GetAllClanMembersAverageRaidPerfomanceUi(string clanTag)
+    public static List<MedianRaidPerfomanse> GetAllClanMembersAverageRaidPerfomanceUi(string clanTag)
     {
         using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
         {
@@ -124,7 +124,7 @@ public static class GetFromDbQueryHandler
 
             NotFoundException.ThrowByPredicate(() => clanMembers.Count == 0, "No ClanMembers was found in DB");
 
-            var averagePerfomances = new List<AverageRaidsPerfomanceUi>();
+            var averagePerfomances = new List<MedianRaidPerfomanse>();
 
             foreach (var member in clanMembers)
             {
