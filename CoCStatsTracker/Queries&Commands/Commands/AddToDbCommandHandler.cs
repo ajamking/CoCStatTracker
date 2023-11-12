@@ -138,7 +138,7 @@ public static class AddToDbCommandHandler
 
             raidBuilder = AddRaidDefenses(raidBuilder, raidInfoFromApi);
 
-            raidBuilder = AddRaidMembers(trackedClanBuilder, raidBuilder, raidInfoFromApi);
+            raidBuilder = AddAttackedClansAndRaidMembers(trackedClanBuilder, raidBuilder, raidInfoFromApi);
 
             trackedClanBuilder.AddCapitalRaid(raidBuilder.Raid);
 
@@ -146,7 +146,7 @@ public static class AddToDbCommandHandler
         }
     }
 
-    private static CapitalRaidBuilder AddRaidDefenses(CapitalRaidBuilder raidBuilder, RaidApi raidInfoFromApi)
+    public static CapitalRaidBuilder AddRaidDefenses(CapitalRaidBuilder raidBuilder, RaidApi raidInfoFromApi)
     {
         var raidDefenseBuilder = new RaidDefenseBuilder();
 
@@ -159,11 +159,35 @@ public static class AddToDbCommandHandler
         return raidBuilder;
     }
 
-    private static CapitalRaidBuilder AddRaidMembers(TrackedClanBuilder trackedClanBuilder, CapitalRaidBuilder raidBuilder, RaidApi raidInfoFromApi)
+    public static CapitalRaidBuilder AddAttackedClansAndRaidMembers(TrackedClanBuilder trackedClanBuilder, CapitalRaidBuilder raidBuilder, RaidApi raidInfoFromApi)
     {
-        var raidMemberBuilders = new List<RaidMemberBuilder>();
+        var attackedClans = new List<AttackedClanOnRaid>();
+        //Создаем AttackedClans без атак
+        foreach (var attackedClanApi in raidInfoFromApi.AttackedCapitals)
+        {
+            var attackedClanOnRaidBuilder = new AttackedClanOnRaidBuilder();
 
-        //Создаем рейд мемберов без атак
+            attackedClanOnRaidBuilder.SetBaseProperties(attackedClanApi);
+
+            var destroyedDistricts = new List<DefeatedEmemyDistrict>();
+
+            foreach (var destroyedDistrict in attackedClanApi.DestroyedDistricts)
+            {
+                destroyedDistricts.Add(new DefeatedEmemyDistrict()
+                {
+                    Name = destroyedDistrict.Name,
+                    Level = destroyedDistrict.DistrictLevel,
+                    TotalDistrictLoot = destroyedDistrict.TotalLooted
+                });
+            }
+
+            attackedClanOnRaidBuilder.SetDestroyedDistricts(destroyedDistricts);
+
+            attackedClans.Add(attackedClanOnRaidBuilder.AttackedClan);
+        }
+
+        var raidMemberBuilders = new List<RaidMemberBuilder>();
+        //Создаем RaidMembers без атак
         foreach (var raidMemberApi in raidInfoFromApi.RaidMembers)
         {
             var raidMemberBuilder = new RaidMemberBuilder();
@@ -180,8 +204,10 @@ public static class AddToDbCommandHandler
 
         var allRaidAttacks = new List<RaidAttack>();
 
+        var alreadyAddedClanTags = new List<string>();
+
         //Билдим все RaidAttacks, кладем в одну кучу.
-        foreach (var raidOnClanApi in raidInfoFromApi.RaidOnClans)
+        foreach (var raidOnClanApi in raidInfoFromApi.AttackedCapitals)
         {
             foreach (var destroyedDistrictApi in raidOnClanApi.DestroyedDistricts.Where(x => x.MemberAttacks is not null))
             {
@@ -189,42 +215,53 @@ public static class AddToDbCommandHandler
 
                 var destructionPercentFrom = 0;
 
-                foreach (var memberAttackApi in sortedAttacksApi)
+                foreach (var memberAttackOnDistrictApi in sortedAttacksApi)
                 {
                     var raidAttackBuilder = new RaidAttackBuilder();
 
-                    raidAttackBuilder.SetBaseProperties(memberAttackApi, raidOnClanApi, destroyedDistrictApi, destructionPercentFrom);
+                    var attackedClan = new AttackedClanOnRaid();
 
-                    destructionPercentFrom = memberAttackApi.DestructionPercentTo;
+                    if (alreadyAddedClanTags.Contains(raidOnClanApi.DefenderClan.Tag))
+                    {
+                        attackedClan = attackedClans.Last(x => x.Tag == raidOnClanApi.DefenderClan.Tag);
+                    }
+                    else
+                    {
+                        attackedClan = attackedClans.FirstOrDefault(x => x.Tag == raidOnClanApi.DefenderClan.Tag);
+                    }
 
-                    raidAttackBuilder.SetRaidMember(raidMemberBuilders.FirstOrDefault(x => x.Member.MemberTag == memberAttackApi.Attacker.Tag).Member);
+                    var destroyedDistrict = attackedClan.DefeatedEmemyDistricts.FirstOrDefault(x => x.Name == destroyedDistrictApi.Name);
+
+                    raidAttackBuilder.SetBaseProperties(destructionPercentFrom, memberAttackOnDistrictApi.DestructionPercentTo);
+
+                    raidAttackBuilder.SetDefeatedDistrict(destroyedDistrict);
+
+                    raidAttackBuilder.SetAttackedClan(attackedClan);
+
+                    raidAttackBuilder.SetRaidMember(raidMemberBuilders
+                        .FirstOrDefault(x => x.Member.Tag == memberAttackOnDistrictApi.Attacker.Tag).Member);
 
                     allRaidAttacks.Add(raidAttackBuilder.RaidAttack);
+
+                    destructionPercentFrom = memberAttackOnDistrictApi.DestructionPercentTo;
                 }
             }
+
+            alreadyAddedClanTags.Add(raidOnClanApi.DefenderClan.Tag);
         }
 
-        var raidMembers = new List<RaidMember>();
-
-        //Раскидываем атаки по рейдМемберам
-        foreach (var rmb in raidMemberBuilders)
+        //Присваиваем каждому рейд мемберу полагающиеся атаки.
+        foreach (var raidMemberBuilder in raidMemberBuilders)
         {
-            var memberRaidAttacks = new List<RaidAttack>();
-
-            foreach (var attack in allRaidAttacks)
-            {
-                if (attack.MemberTag == rmb.Member.MemberTag)
-                {
-                    memberRaidAttacks.Add(attack);
-                }
-            }
-
-            rmb.SetRaidMemberAttacks(memberRaidAttacks);
-
-            raidMembers.Add(rmb.Member);
+            raidMemberBuilder.SetRaidMemberAttacks(allRaidAttacks
+                .Where(x=>x.RaidMember.Tag == raidMemberBuilder.Member.Tag).ToList());
         }
 
-        raidBuilder.SetRaidMembers(raidMembers);
+        raidBuilder.SetAttackedClans(attackedClans);
+
+        raidBuilder.SetRaidMembers(raidMemberBuilders
+            .Select(rmb => rmb.Member)
+            .ToList());
 
         return raidBuilder;
     }
@@ -251,6 +288,8 @@ public static class AddToDbCommandHandler
             var clanWarBuilder = new ClanWarBuilder();
 
             clanWarBuilder.SetBaseProperties(currentWarInfoFromApi);
+
+            clanWarBuilder.SetOpponentWarStatistics(new ClanInfoRequest().CallApi(clanTag).Result);
 
             clanWarBuilder.SetTrackedClan(trackedClanBuilder.Clan);
 
@@ -303,6 +342,8 @@ public static class AddToDbCommandHandler
                 clanWarBuilder.SetTrackedClan(trackedClanBuilder.Clan);
 
                 clanWarBuilder.SetBaseProperties(cwlWarInfoFromApi, true, 1);
+
+                clanWarBuilder.SetOpponentWarStatistics(new ClanInfoRequest().CallApi(clanTag).Result);
 
                 clanWarBuilder = AddEnemyWarMembers(clanWarBuilder, cwlWarInfoFromApi);
 

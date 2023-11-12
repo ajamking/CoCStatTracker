@@ -10,6 +10,9 @@ public class SeasonStatisticsUi : UiEntity
     public string Name { get; set; }
     public string Tag { get; set; }
     public int DonationsSend { get; set; }
+    public int DonationRecieved { get; set; }
     public int CapitalContributions { get; set; }
     public int WarStarsEarned { get; set; }
+    public int AttackWins { get; set; }
+    public int VersusBattleWins { get; set; }
 }

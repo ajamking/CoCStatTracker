@@ -7,7 +7,7 @@ public class MemberEveryUnitInfoRH : BaseRequestHandler
 {
     public MemberEveryUnitInfoRH()
     {
-        Header = "Все войска";
+        Header = "Обычные войска";
         HandlerMenuLevel = MenuLevel.PlayerArmy3;
     }
 

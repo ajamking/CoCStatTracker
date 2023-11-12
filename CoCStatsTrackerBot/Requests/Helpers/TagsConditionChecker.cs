@@ -35,7 +35,7 @@ public static class TagsConditionChecker
 
         var allowedClans = new StringBuilder(StylingHelper.MakeItStyled("Доступные отслеживаемые кланы:\n", UiTextStyle.Subtitle));
 
-        var blockedClans = new StringBuilder(StylingHelper.MakeItStyled("Недоступные отслеживаемые кланы:\n", UiTextStyle.Subtitle));
+        var blockedClans = new StringBuilder(StylingHelper.MakeItStyled("\nНедоступные отслеживаемые кланы:\n", UiTextStyle.Subtitle));
 
         var isAnyBlackList = false;
 
@@ -55,14 +55,14 @@ public static class TagsConditionChecker
 
         answer.Append(allowedClans);
 
-        answer.AppendLine();
+   
 
         if (isAnyBlackList)
         {
             answer.Append(blockedClans);
         }
 
-        answer.Append(StylingHelper.MakeItStyled("Если вы хотите получить информацию о другом отслеживаемом клане - " +
+        answer.Append(StylingHelper.MakeItStyled("\nЕсли вы хотите получить информацию о другом отслеживаемом клане - " +
             "просто введите в чат его тег ", UiTextStyle.Default));
 
         answer.AppendLine(StylingHelper.MakeItStyled("в любое время.", UiTextStyle.TableAnnotation));
@@ -79,7 +79,7 @@ public static class TagsConditionChecker
 
     public static bool CheckClanIsAllowedToMerge(BotUserRequestParameters parameters)
     {
-        return GetFromDbQueryHandler.GetAllTrackedClansUi()
+        return GetFromDbQueryHandler.GetAllTrackedClans()
               .Where(x => x.Tag == parameters.Message.Text)
               .Where(x => x.IsInBlackList is false)
               .Any(x => x.AdminsKey == parameters.AdminsKey);
@@ -87,7 +87,7 @@ public static class TagsConditionChecker
 
     public static bool CheckClanWithAdminsKeyExistsInDb(this string adminsKey)
     {
-        return GetFromDbQueryHandler.GetAllTrackedClansUi()
+        return GetFromDbQueryHandler.GetAllTrackedClans()
                .Any(x => x.AdminsKey == adminsKey);
     }
 }

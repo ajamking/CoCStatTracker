@@ -35,18 +35,44 @@ public class LeaderChoseClanToMergeRH : BaseRequestHandler
             {
                 foreach (var clan in trackedClans)
                 {
-                    answer.AppendLine(StylingHelper.MakeItStyled($"{clan.Name} - {clan.Tag}", UiTextStyle.Name));
+                    var newsLetter = "Рассылка выключена";
+
+                    var chatId = "ChatId Не установлен";
+
+                    if (!string.IsNullOrEmpty(clan.ClanChatId))
+                    {
+                        chatId = $"Айди чата: {clan.ClanChatId}";
+                    }
+                    if (clan.NewsLetterOn)
+                    {
+                        newsLetter = "Рассылка включена";
+                    }
+
+                    answer.AppendLine(StylingHelper.MakeItStyled($"{clan.Name} - {clan.Tag}\n{newsLetter} - {chatId}\n", UiTextStyle.Name));
                 }
             }
             else
             {
                 foreach (var clan in trackedClans.Where(x => x.AdminsKey == parameters.AdminsKey).Where(x => x.IsInBlackList == false))
                 {
-                    answer.AppendLine(StylingHelper.MakeItStyled($"{clan.Name} - {clan.Tag}", UiTextStyle.Name));
+                    var newsLetter = "Рассылка выключена";
+
+                    var chatId = "ChatId Не установлен";
+
+                    if (!string.IsNullOrEmpty(clan.ClanChatId))
+                    {
+                        chatId = $"Айди чата: {clan.ClanChatId}";
+                    }
+                    if (clan.NewsLetterOn)
+                    {
+                        newsLetter = "Рассылка включена";
+                    }
+
+                    answer.AppendLine(StylingHelper.MakeItStyled($"{clan.Name} - {clan.Tag}\n{newsLetter} - {chatId}\n", UiTextStyle.Name));
                 }
             }
 
-            answer.AppendLine(StylingHelper.MakeItStyled("\nДля переопределения модерируемого клана введите один из тегов, представленных выше. ", UiTextStyle.Default));
+            answer.AppendLine(StylingHelper.MakeItStyled("Для переопределения модерируемого клана введите один из тегов, представленных выше. ", UiTextStyle.Default));
 
             ResponseSender.SendAnswer(parameters, true, SplitAnswer(answer.ToString()));
         }

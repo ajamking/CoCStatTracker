@@ -20,7 +20,7 @@ public static class DeleteFromDbCommandHandler
         {
             var clan = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
 
-            NotFoundException.ThrowByPredicate(() => clan is null, "DeleteTrackedClan is failed, no such clan found");
+            NotFoundException.ThrowByPredicate(() => clan == null, "DeleteTrackedClan is failed, no such clan found");
 
             dbContext.TrackedClans.Remove(clan);
 
@@ -37,7 +37,7 @@ public static class DeleteFromDbCommandHandler
                 .OrderByDescending(x => x.StartedOn)
                 .ToList();
 
-            NotFoundException.ThrowByPredicate(() => clanWars is { Count: 0 }, "DeleteOldClanClanWars is failed, no tracked CWs for this clan");
+            NotFoundException.ThrowByPredicate(() => clanWars.Count == 0, "DeleteOldClanClanWars is failed, no tracked CWs for this clan");
 
             var clanWarsToRemove = new List<ClanWar>();
 
@@ -59,7 +59,7 @@ public static class DeleteFromDbCommandHandler
                 .OrderByDescending(x => x.StartedOn)
                 .ToList();
 
-            NotFoundException.ThrowByPredicate(() => raids is { Count: 0 }, "DeleteClanRaids is failed, no tracked Raids for this clan");
+            NotFoundException.ThrowByPredicate(() => raids.Count == 0, "DeleteClanRaids is failed, no tracked Raids for this clan");
 
             var clanWarsToRemove = new List<ClanWar>();
 

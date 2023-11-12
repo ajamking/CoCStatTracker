@@ -12,7 +12,7 @@ public class D9GoblinsRH : BaseRequestHandler
 
     override public void Execute(BotUserRequestParameters parameters)
     {
-        parameters.DistrictType = ADistrictType.Goblin_Mines;
+        parameters.DistrictType = DistrictType.Goblin_Mines;
 
         var handler = new CurrentDistrictStatisticsRHBase();
 

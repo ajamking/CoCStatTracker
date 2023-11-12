@@ -18,10 +18,11 @@ public class BotUserRequestParameters
     public string TagToAddClan { get; set; }
     public string LastClanTagToMerge { get; set; }
     public string AdminKeyToMerge { get; set; }
+    public string ClanChatIdToMerge { get; set; }
 
     public int EntriesCount { get; set; } = 0;
     public UnitType UnitType { get; set; } = 0;
-    public ADistrictType DistrictType { get; set; } = 0;
+    public DistrictType DistrictType { get; set; } = 0;
 
     public BotUserRequestParameters(ITelegramBotClient botClient, Message message, string lastClanTagMessage, string lastMemberTagMessage)
     {

@@ -18,13 +18,16 @@ namespace Domain.Entities
         public int? TrackedClanId { get; set; }
         public virtual TrackedClan TrackedClan { get; set; }
 
-        public virtual ICollection<RaidMember> RaidMembers { get; set; }
         public virtual ICollection<RaidDefense> RaidDefenses { get; set; }
+        public virtual ICollection<AttackedClanOnRaid> AttackedClans { get; set; }
+        public virtual ICollection<RaidMember> RaidMembers { get; set; }
+      
 
         public CapitalRaid()
         {
-            RaidMembers = new HashSet<RaidMember>();
             RaidDefenses = new HashSet<RaidDefense>();
+            AttackedClans = new HashSet<AttackedClanOnRaid>();
+            RaidMembers = new HashSet<RaidMember>();
         }
     }
 }

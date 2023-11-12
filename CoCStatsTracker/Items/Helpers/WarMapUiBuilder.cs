@@ -37,11 +37,12 @@ public static class WarMapUiBuilder
 
         return new WarMapUi()
         {
+            UpdatedOn = clanWar.UpdatedOn,
             ClanName = clanWar.TrackedClan.Name,
             ClanTag = clanWar.TrackedClan.Tag,
-            OpponentClanName = clanWar.OpponentClanName,
-            OpponentClanTag = clanWar.OpponentClanTag,
-            PreparationStartTime = clanWar.PreparationStartTime.ToString(),
+            OpponentClanName = clanWar.OpponentsName,
+            OpponentClanTag = clanWar.OpponentsTag,
+            PreparationStartTime = clanWar.PreparationStartTime,
             StartedOn = clanWar.StartedOn,
             EndedOn = clanWar.EndedOn,
             WarMembers = warMembersUi,

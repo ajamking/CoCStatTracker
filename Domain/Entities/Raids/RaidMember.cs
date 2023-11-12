@@ -7,13 +7,12 @@ namespace Domain.Entities
     {
         public DateTime UpdatedOn { get; set; }
         public int TotalLoot { get; set; }
-        public string MemberTag { get; set; }
-        public string MemberName { get; set; }
-
+        public string Tag { get; set; }
+        public string Name { get; set; }
         public int? ClanMemberId { get; set; }
         public virtual ClanMember ClanMember { get; set; }
         public int? CapitalRaidId { get; set; }
-        public virtual CapitalRaid Raid { get; set; }
+        public virtual CapitalRaid CapitalRaid { get; set; }
 
         public virtual ICollection<RaidAttack> Attacks { get; set; }
 

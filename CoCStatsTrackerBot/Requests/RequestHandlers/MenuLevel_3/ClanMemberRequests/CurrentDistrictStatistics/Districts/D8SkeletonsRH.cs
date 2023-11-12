@@ -12,7 +12,7 @@ public class D8SkeletonsRH : BaseRequestHandler
 
     override public void Execute(BotUserRequestParameters parameters)
     {
-        parameters.DistrictType = ADistrictType.Skeleton_Park;
+        parameters.DistrictType = DistrictType.Skeleton_Park;
 
         var handler = new CurrentDistrictStatisticsRHBase();
 

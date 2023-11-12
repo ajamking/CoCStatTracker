@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace CoCStatsTracker.UIEntities;
 
@@ -21,5 +22,6 @@ public class TroopUi : UiEntity
 {
     public string Name { get; set; }
     public int Lvl { get; set; }
+    public string Village { get; set; }
     public bool? SuperTroopIsActivated { get; set; }
 }

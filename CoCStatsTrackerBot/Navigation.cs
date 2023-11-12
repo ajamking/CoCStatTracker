@@ -3,15 +3,27 @@ using CoCStatsTrackerBot.Helpers;
 using CoCStatsTrackerBot.Menu;
 using CoCStatsTrackerBot.Requests;
 using CoCStatsTrackerBot.Requests.RequestHandlers;
+using CoCStatsTrackerBot.Requests.RequestHandlers.SlashFunctionHandlers;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 
 namespace CoCStatsTrackerBot;
 
 public static class Navigation
 {
+    private static Dictionary<string, BotSlashFunction> _botSlashFunctions = new Dictionary<string, BotSlashFunction>() {
+       { "/group_get_chat_id", BotSlashFunction.GroupGetChatId },
+       { "/group_get_raid_short_info", BotSlashFunction.GroupGetRaidShortInfo },
+       { "/group_war_short_info", BotSlashFunction.GroupGetWarShortInfo },
+       { "/group_war_map", BotSlashFunction.GroupGetWarMap }
+    };
+
     private static Regex _tagRegex { get; set; } = new Regex(@"^#(\w{6,9})$");
+
+    private static Regex _adminUsersNameRegex { get; set; } = new Regex(@"^#(\w{6,9})-@\w");
 
     private static List<BaseRequestHandler> _allRequestHandlers = AllRequestHandlersConstructor.AllRequestHandlers;
 
@@ -21,14 +33,17 @@ public static class Navigation
 
     private static Func<BotUser, bool>[] _handlers = new[]
     {
+        AnyRequestHeaderMatchAction,
+        AnyBackInMenuAction,
+        BotHolderEnterNewClanTagToAddAction,
+        AdminEnterMemberUserNameAction,
+        AdminEnterClanTagAction,
+        UserEnterTagAction,
         BotHolderTokenAction,
         BotHolderEnterKeyToMergeAction,
-        BotHolderEnterNewClanTagToAddAction,
-        AnyBackInMenuAction,
+        BotHolderOrAdminEnterClanChatIdAction,
         AdminsKeyAction,
-        AdminEnterClanTagAction,
-        CommonUserEnterTagAction,
-        AnyRequestHeaderMatchAction,
+        HoldSlashFuncAction,
         TrashMessageAction
     };
 
@@ -67,12 +82,27 @@ public static class Navigation
 
     private static bool BotHolderEnterKeyToMergeAction(BotUser activeBotUser)
     {
-        if (activeBotUser.RequestHadnlerParameters.Message.Text.Contains('@') && (activeBotUser.CurrentMenuLevel is MenuLevel.DeveloperMenu2))
+        if (activeBotUser.RequestHadnlerParameters.Message.Text.Contains('$') && (activeBotUser.CurrentMenuLevel is MenuLevel.DeveloperMenu2))
         {
-            UpsertBotHolderNewAdninKeToMerge(activeBotUser.RequestHadnlerParameters.Message);
+            UpsertBotHolderNewAdninKeyToMerge(activeBotUser.RequestHadnlerParameters.Message);
 
             ResponseSender.SendAnswer(activeBotUser.RequestHadnlerParameters, true,
                             StylingHelper.MakeItStyled($"Новый токен для клана принят, можно устанавливать.", UiTextStyle.Default));
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool BotHolderOrAdminEnterClanChatIdAction(BotUser activeBotUser)
+    {
+        if (activeBotUser.RequestHadnlerParameters.Message.Text.Contains('*') && (activeBotUser.CurrentMenuLevel is MenuLevel.DeveloperMenu2 or MenuLevel.LeaderTgGroupCustomize2))
+        {
+            UpsertBotHolderNewTrackedClanChatId(activeBotUser.RequestHadnlerParameters.Message);
+
+            ResponseSender.SendAnswer(activeBotUser.RequestHadnlerParameters, true,
+                            StylingHelper.MakeItStyled($"Новый ChatId для клана принят, можно устанавливать.", UiTextStyle.Default));
 
             return true;
         }
@@ -159,7 +189,7 @@ public static class Navigation
                     return true;
                 }
             case MenuLevel.DeveloperMenu2 or MenuLevel.LeaderAddMenu2
-                 or MenuLevel.LeaderUpdateMenu2 or MenuLevel.LeaderDeleteMenu2:
+                 or MenuLevel.LeaderUpdateMenu2 or MenuLevel.LeaderDeleteMenu2 or MenuLevel.LeaderTgGroupCustomize2:
                 {
                     _allRequestHandlers
                     .First(x => x.HandlerMenuLevel == MenuLevel.Leader1)
@@ -236,7 +266,23 @@ public static class Navigation
         return false;
     }
 
-    private static bool CommonUserEnterTagAction(BotUser activeBotUser)
+    private static bool AdminEnterMemberUserNameAction(BotUser activeBotUser)
+    {
+        var msgText = activeBotUser.RequestHadnlerParameters.Message.Text;
+
+        if (_adminUsersNameRegex.IsMatch(msgText) && activeBotUser.CurrentMenuLevel is MenuLevel.LeaderTgGroupCustomize2)
+        {
+            var answer = UserNameAdder.TryAddUserNames(activeBotUser.RequestHadnlerParameters.LastClanTagToMerge, msgText);
+
+            ResponseSender.SendAnswer(activeBotUser.RequestHadnlerParameters, true, answer);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool UserEnterTagAction(BotUser activeBotUser)
     {
         if (!activeBotUser.RequestHadnlerParameters.Message.Text.Contains('#'))
         {
@@ -254,15 +300,6 @@ public static class Navigation
                 ResponseSender.SendAnswer(activeBotUser.RequestHadnlerParameters, true,
                    StylingHelper.MakeItStyled($"Тег задан корректно! Теперь вы можете получить информацию об этом клане. Выберите интересующий пункт из меню.", UiTextStyle.Default));
 
-                if (activeBotUser.CurrentMenuLevel == MenuLevel.Member1)
-                {
-                    new ClanInfoMenuHandler().ShowKeyboard(activeBotUser.RequestHadnlerParameters);
-
-                    activeBotUser.CurrentMenuLevel = MenuLevel.ClanInfo2;
-
-                    activeBotUser.PreviousMenuLevel = MenuLevel.Member1;
-                }
-
                 return true;
             }
             else if (GetFromDbQueryHandler.CheckMemberExists(activeBotUser.RequestHadnlerParameters.Message.Text))
@@ -272,22 +309,15 @@ public static class Navigation
                 ResponseSender.SendAnswer(activeBotUser.RequestHadnlerParameters, true,
                     StylingHelper.MakeItStyled($"Тег задан корректно! Теперь вы можете получить информацию об этом игроке. Выберите интересующий пункт из меню.", UiTextStyle.Default));
 
-                if (activeBotUser.CurrentMenuLevel == MenuLevel.Member1)
-                {
-                    new PlayerInfoMenuHandler().ShowKeyboard(activeBotUser.RequestHadnlerParameters);
-
-                    activeBotUser.CurrentMenuLevel = MenuLevel.PlayerInfo2;
-
-                    activeBotUser.PreviousMenuLevel = MenuLevel.Member1;
-                }
-
                 return true;
             }
             else
             {
                 ResponseSender.SendAnswer(activeBotUser.RequestHadnlerParameters, true,
-                    StylingHelper.MakeItStyled($"Тег был задан в корректной форме, но ни игрок ни клан с таким тегом" +
-                    $" не отслеживаются или подписка клана была приостановлена. Попробуйте ввести другой тег.", UiTextStyle.Default));
+                    StylingHelper.MakeItStyled($"Тег был задан в корректной форме, но ни игрок ни клан с таким тегом не отслеживаются или подписка клана была приостановлена." +
+                    $"\n\nЕсли вы хотите воспользоваться услугами бота - обратитесь к администратору (ссылка в шапке профиля бота)." +
+                    $"\n\nЕсли вы уверены, что бот отслеживает ваш клан - попробуйте ввести другой тег.", UiTextStyle.Default));
+
 
                 return true;
             }
@@ -338,6 +368,7 @@ public static class Navigation
                      or MenuLevel.LeaderAddMenu2
                      or MenuLevel.LeaderUpdateMenu2
                      or MenuLevel.LeaderDeleteMenu2
+                     or MenuLevel.LeaderTgGroupCustomize2
                      or MenuLevel.LeaderDeleteRaidsMenu3
                      or MenuLevel.LeaderDeleteClanWarsMenu3))
             {
@@ -351,10 +382,11 @@ public static class Navigation
             }
             //Проверка установленного для изменения клана
             else if (string.IsNullOrEmpty(activeBotUser.RequestHadnlerParameters.LastClanTagToMerge) &&
-                requestHandler.HandlerMenuLevel is MenuLevel.LeaderAddMenu2 or MenuLevel.LeaderUpdateMenu2 or MenuLevel.LeaderDeleteMenu2)
+                requestHandler.HandlerMenuLevel is MenuLevel.LeaderAddMenu2 or MenuLevel.LeaderUpdateMenu2
+                or MenuLevel.LeaderDeleteMenu2 or MenuLevel.LeaderTgGroupCustomize2)
             {
                 ResponseSender.SendAnswer(activeBotUser.RequestHadnlerParameters, true,
-            StylingHelper.MakeItStyled($"Для использования этих функций необходимо сначала выбрать редактируемый клан.\n Доступные кланы ➙ скопировать и отправить нужный тег.", UiTextStyle.Default));
+            StylingHelper.MakeItStyled($"Для использования этих функций необходимо сначала выбрать редактируемый клан.\nДоступные кланы ➙ скопировать и отправить нужный тег.", UiTextStyle.Default));
             }
             else
             {
@@ -364,6 +396,35 @@ public static class Navigation
             }
 
             return true;
+        }
+
+        return false;
+    }
+
+    private static bool HoldSlashFuncAction(BotUser activeBotUser)
+    {
+        foreach (var slashFunc in _botSlashFunctions)
+        {
+            if (activeBotUser.RequestHadnlerParameters.Message.Text.Contains(slashFunc.Key))
+            {
+                if (activeBotUser.RequestHadnlerParameters.Message.Chat.Type
+                         is ChatType.Channel
+                         or ChatType.Group
+                         or ChatType.Supergroup)
+                {
+                    SlashFunctionHandler.Handle(activeBotUser.RequestHadnlerParameters, _botSlashFunctions[slashFunc.Key]);
+
+                    return true;
+                }
+                else
+                {
+                    ResponseSender.SendAnswer(activeBotUser.RequestHadnlerParameters, true,
+                        StylingHelper.MakeItStyled($"Функции, начинающиеся с /group_ предназначены лишь для использования в зарегистрированных группах.\n" +
+                        $"Для получения более подробной информации - ознакомьтесь с руководством.", UiTextStyle.Default));
+
+                    return true;
+                }
+            }
         }
 
         return false;
@@ -436,7 +497,7 @@ public static class Navigation
         _botUsers.First(x => x.ChatId == message.Chat.Id).RequestHadnlerParameters.IsBotHolder = true;
     }
 
-    private static void UpsertBotHolderNewAdninKeToMerge(Message message)
+    private static void UpsertBotHolderNewAdninKeyToMerge(Message message)
     {
         _botUsers.First(x => x.ChatId == message.Chat.Id).RequestHadnlerParameters.AdminKeyToMerge = message.Text;
     }
@@ -444,6 +505,13 @@ public static class Navigation
     private static void UpsertBotHolderNewTrackedClanTag(Message message)
     {
         _botUsers.First(x => x.ChatId == message.Chat.Id).RequestHadnlerParameters.TagToAddClan = message.Text;
+    }
+
+    private static void UpsertBotHolderNewTrackedClanChatId(Message message)
+    {
+        var newClanChatId = message.Text.Substring(1);
+
+        _botUsers.First(x => x.ChatId == message.Chat.Id).RequestHadnlerParameters.ClanChatIdToMerge = newClanChatId;
     }
     #endregion
 }

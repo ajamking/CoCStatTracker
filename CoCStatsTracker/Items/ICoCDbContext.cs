@@ -15,7 +15,7 @@ namespace CoCStatTracker
         public DbSet<WarMember> WarMembers { get; set; }
 
         public DbSet<CapitalRaid> CapitalRaids { get; set; }
-        public DbSet<RaidAttack> RaidAttacks { get; set; }
+        public DbSet<RaidMember> RaidAttacks { get; set; }
         public DbSet<RaidMember> RaidMembers { get; set; }
         public DbSet<RaidDefense> RaidDefenses { get; set; }
         public DbSet<DestroyedFriendlyDistrict> DestroyedFriendlyDistricts { get; set; }

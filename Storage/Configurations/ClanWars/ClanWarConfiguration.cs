@@ -13,9 +13,9 @@ namespace Storage.Configurations.ClanWars
             builder.Property(p => p.PreparationStartTime).IsRequired();
             builder.Property(p => p.StartedOn).IsRequired();
             builder.Property(p => p.EndedOn).IsRequired();
-            builder.Property(p => p.OpponentClanTag).IsRequired();
-            builder.Property(p => p.OpponentClanName).IsRequired();
-            builder.Property(p => p.OpponentClanLevel).IsRequired();
+            builder.Property(p => p.OpponentsTag).IsRequired();
+            builder.Property(p => p.OpponentsName).IsRequired();
+            builder.Property(p => p.OpponentsLevel).IsRequired();
 
             builder
           .HasOne<TrackedClan>(x => x.TrackedClan)

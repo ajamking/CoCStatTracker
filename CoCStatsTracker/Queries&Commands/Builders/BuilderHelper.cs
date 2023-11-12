@@ -31,6 +31,25 @@ public static class BuilderHelper
         }
     }
 
+    public static string GetWarPreferenceRu(this string warPreference)
+    {
+        switch (warPreference)
+        {
+            case "in":
+                {
+                    return "Зелёный";
+                }
+            case "out":
+                {
+                    return "Красный";
+                }
+            default:
+                {
+                    return "Красный";
+                }
+        }
+    }
+
     public static string GetLeagueRU(this PlayerApi playerApi)
     {
         if (playerApi == null || playerApi.League == null)
@@ -38,7 +57,41 @@ public static class BuilderHelper
             return "Без лиги";
         }
 
-        switch (playerApi.League.Name)
+        return GetLeagueString(playerApi.League.Name);
+    }
+
+    public static string GetLeagueRU(this ClanApi clanApi, ClanLeagueType leagueType)
+    {
+        switch (leagueType)
+        {
+            case ClanLeagueType.ClanWarLeague:
+                {
+                    if (clanApi == null || clanApi.WarLeague == null)
+                    {
+                        return "Без лиги";
+                    }
+
+                    return GetLeagueString(clanApi.WarLeague.Name);
+                }
+            case ClanLeagueType.ClanCapitalLeague:
+                {
+                    if (clanApi == null || clanApi.CapitalLeague == null)
+                    {
+                        return "Без лиги";
+                    }
+
+                    return GetLeagueString(clanApi.CapitalLeague.Name);
+                }
+            default:
+                {
+                    return "Без лиги";
+                }
+        }
+    }
+
+    private static string GetLeagueString(this string leagueApiName)
+    {
+        switch (leagueApiName)
         {
             case "Unranked":
                 {
@@ -149,23 +202,10 @@ public static class BuilderHelper
 
 
     }
+}
 
-    public static string GetWarPreferenceRu(this string warPreference)
-    {
-        switch (warPreference)
-        {
-            case "in":
-                {
-                    return "Зелёный";
-                }
-            case "out":
-                {
-                    return "Красный";
-                }
-            default:
-                {
-                    return "Красный";
-                }
-        }
-    }
+public enum ClanLeagueType
+{
+    ClanWarLeague,
+    ClanCapitalLeague
 }

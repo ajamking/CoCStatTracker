@@ -12,7 +12,7 @@ public class D2BarbariansRH : BaseRequestHandler
 
     override public void Execute(BotUserRequestParameters parameters)
     {
-        parameters.DistrictType = ADistrictType.Barbarian_Camp;
+        parameters.DistrictType = DistrictType.Barbarian_Camp;
 
         var handler = new CurrentDistrictStatisticsRHBase();
 

@@ -31,7 +31,8 @@ namespace Domain.Entities
 
         public int DonationsSent { get; set; }
         public int DonationsRecieved { get; set; }
-        public int TotalCapitalContributions { get; set; }
+        public int TotalCapitalGoldContributed { get; set; }
+        public int TotalCapitalGoldLooted { get; set; }
 
         public string League { get; set; }
     }

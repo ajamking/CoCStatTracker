@@ -1,4 +1,6 @@
-﻿using CoCStatsTracker.UIEntities;
+﻿using CoCStatsTracker.ApiEntities;
+using CoCStatsTracker.UIEntities;
+using System.ComponentModel;
 using System.Text;
 
 namespace CoCStatsTrackerBot.Requests;
@@ -12,30 +14,24 @@ public class CurrentStatisticsFunctions
         str.AppendLine(StylingHelper.MakeItStyled("Общая информация о последней войне клана", UiTextStyle.Header));
         str.AppendLine(StylingHelper.MakeItStyled(currentClanWarUi.ClanName + " - " + currentClanWarUi.ClanTag, UiTextStyle.Name));
         str.AppendLine();
-        str.AppendLine(StylingHelper.MakeItStyled("Противник: ", UiTextStyle.Subtitle));
-        str.AppendLine(StylingHelper.MakeItStyled(currentClanWarUi.OpponentName + " - " + currentClanWarUi.OpponentTag, UiTextStyle.Name));
-        str.AppendLine();
-        str.AppendLine(StylingHelper.MakeItStyled("Даты войны: ", UiTextStyle.Subtitle));
-        str.AppendLine(StylingHelper.MakeItStyled(currentClanWarUi.StartedOn + " - ", UiTextStyle.Default));
-        str.AppendLine(StylingHelper.MakeItStyled(currentClanWarUi.EndedOn.ToString(), UiTextStyle.Default));
-        str.AppendLine();
-        str.AppendLine(StylingHelper.MakeItStyled("Состояние: ", UiTextStyle.Subtitle));
-        str.AppendLine(StylingHelper.MakeItStyled(currentClanWarUi.Result, UiTextStyle.Default));
-        str.AppendLine();
-        str.AppendLine(StylingHelper.MakeItStyled("Доступно атак участникам - " + currentClanWarUi.AttackPerMember, UiTextStyle.Default));
-        str.AppendLine();
-        str.AppendLine(StylingHelper.MakeItStyled("Суммарное число атак: ", UiTextStyle.Subtitle));
-        str.AppendLine(StylingHelper.MakeItStyled(currentClanWarUi.AttacksCount + " : " + currentClanWarUi.OpponentAttacksCount, UiTextStyle.Default));
-        str.AppendLine(StylingHelper.MakeItStyled("Суммарное количество звезд: ", UiTextStyle.Subtitle));
-        str.AppendLine(StylingHelper.MakeItStyled(currentClanWarUi.TotalStarsEarned + " : " + currentClanWarUi.OpponentStarsCount, UiTextStyle.Default));
-        str.AppendLine(StylingHelper.MakeItStyled("Суммарный процент разрушений: ", UiTextStyle.Subtitle));
-        str.AppendLine(StylingHelper.MakeItStyled(Math.Round(currentClanWarUi.DestructionPercentage, 1) + " : " + Math.Round(currentClanWarUi.OpponentDestructionPercentage, 1), UiTextStyle.Default));
-        str.AppendLine();
-        str.AppendLine(StylingHelper.MakeItStyled("Игроки, проведшие не все атаки:", UiTextStyle.Subtitle));
 
-        foreach (var nonAttacker in currentClanWarUi.NonAttackersCw)
+        str.AppendLine(GetWarMainInfoHat(currentClanWarUi));
+
+        if (currentClanWarUi.NonAttackersCw.Count != currentClanWarUi.MembersResults.Count && currentClanWarUi.NonAttackersCw.Count != 0)
         {
-            str.AppendLine(StylingHelper.MakeItStyled($"{nonAttacker.Key} Атак: {nonAttacker.Value}", UiTextStyle.Name));
+            str.AppendLine(StylingHelper.MakeItStyled("Игроки, проведшие не все атаки:", UiTextStyle.Subtitle));
+
+            foreach (var nonAttacker in currentClanWarUi.NonAttackersCw)
+            {
+                var telegramUserName = "";
+
+                if (!string.IsNullOrEmpty(nonAttacker.TelegramUserName))
+                {
+                    telegramUserName = nonAttacker.TelegramUserName;
+                }
+
+                str.AppendLine(StylingHelper.MakeItStyled($"{nonAttacker.Name} Атак: {nonAttacker.AttacksCount} {telegramUserName}", UiTextStyle.Name));
+            }
         }
 
         return str.ToString();
@@ -57,11 +53,16 @@ public class CurrentStatisticsFunctions
         str.AppendLine(StylingHelper.MakeItStyled("Противник:", UiTextStyle.Subtitle));
         str.AppendLine(StylingHelper.MakeItStyled(warMapUi.OpponentClanName + " - " + warMapUi.OpponentClanTag, UiTextStyle.Name));
         str.AppendLine();
-        str.AppendLine(StylingHelper.MakeItStyled("Даты войны::", UiTextStyle.Subtitle));
-        str.AppendLine(StylingHelper.MakeItStyled(warMapUi.PreparationStartTime + " - ", UiTextStyle.Default));
-        str.AppendLine(StylingHelper.MakeItStyled(warMapUi.StartedOn + " - ", UiTextStyle.Default));
-        str.AppendLine(StylingHelper.MakeItStyled(warMapUi.EndedOn.ToString(), UiTextStyle.Default));
+        str.AppendLine(warMapUi.UpdatedOn.GetUpdatedOnString());
         str.AppendLine();
+        str.AppendLine(StylingHelper.MakeItStyled("Начало подготовки:", UiTextStyle.Subtitle));
+        str.AppendLine(StylingHelper.MakeItStyled(warMapUi.PreparationStartTime.FormateToUiDateTime(), UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled("Начало войны:", UiTextStyle.Subtitle));
+        str.AppendLine(StylingHelper.MakeItStyled(warMapUi.StartedOn.FormateToUiDateTime(), UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled("Конец войны:", UiTextStyle.Subtitle));
+        str.AppendLine(StylingHelper.MakeItStyled(warMapUi.EndedOn.FormateToUiDateTime(), UiTextStyle.Default));
+        str.AppendLine();
+        str.AppendLine(StylingHelper.MakeItStyled("Карта войны:", UiTextStyle.Subtitle));
         str.AppendLine($@"``` ");
 
         for (int i = 0; i < warMembers.Count; i++)
@@ -70,23 +71,11 @@ public class CurrentStatisticsFunctions
 
             var opponent = enemyWarMembers[i];
 
-            var properMateName = StylingHelper.GetProperString(mate.Name, maxNameLength);
+            var properMateName = StylingHelper.GetCenteredString(StylingHelper.GetProperName(mate.Name, maxNameLength), maxNameLength);
 
-            var properOpponentName = StylingHelper.GetProperString(opponent.Name, maxNameLength);
+            var properOpponentName = StylingHelper.GetProperName(StylingHelper.GetCenteredString(opponent.Name, maxNameLength), maxNameLength);
 
             var position = StylingHelper.GetCenteredString((i + 1).ToString(), 2);
-
-            if (properMateName.Length >= maxNameLength)
-            {
-                properMateName = properMateName.Substring(0, maxNameLength);
-            }
-
-            properMateName = StylingHelper.GetCenteredString(properMateName, maxNameLength);
-
-            if (properOpponentName.Length >= maxNameLength)
-            {
-                properOpponentName = properOpponentName.Substring(0, maxNameLength);
-            }
 
             var membersThLevel = mate.TownHallLevel.ToString();
 
@@ -102,8 +91,6 @@ public class CurrentStatisticsFunctions
                 opponentThLevel += " ";
             }
 
-            properOpponentName = StylingHelper.GetCenteredString(properOpponentName, maxNameLength);
-
             var mapStr = $@"{properMateName} {membersThLevel} |{position}| {opponent.TownHallLevel} {properOpponentName}";
 
             str.AppendLine($@"{StylingHelper.Ecranize(mapStr)}");
@@ -118,102 +105,46 @@ public class CurrentStatisticsFunctions
     {
         var str = new StringBuilder();
 
-        var totalAttacksCount = 0;
-
-        var offensiveReward = raidsUi.OffensiveReward;
-
-        var totalReward = offensiveReward + raidsUi.DefensiveReward;
-
-        foreach (var defeatedClan in raidsUi.DefeatedClans)
-        {
-            totalAttacksCount += defeatedClan.TotalAttacksCount;
-        }
-
         str.AppendLine(StylingHelper.MakeItStyled("Общая информация о последнем рейде клана", UiTextStyle.Header));
         str.AppendLine(StylingHelper.MakeItStyled(raidsUi.ClanName + " - " + raidsUi.ClanTag, UiTextStyle.Name));
         str.AppendLine();
-        str.AppendLine(StylingHelper.MakeItStyled("Даты дней рейдов:", UiTextStyle.Subtitle));
-        str.AppendLine(StylingHelper.MakeItStyled(raidsUi.StartedOn + " - ", UiTextStyle.Default));
-        str.AppendLine(StylingHelper.MakeItStyled(raidsUi.EndedOn.ToString(), UiTextStyle.Default));
-        str.AppendLine();
-        str.AppendLine(StylingHelper.MakeItStyled("Проведено атак: " + totalAttacksCount, UiTextStyle.Subtitle));
-        str.AppendLine(StylingHelper.MakeItStyled("Повержено кланов: " + raidsUi.RaidsCompleted, UiTextStyle.Subtitle));
-        str.AppendLine(StylingHelper.MakeItStyled("Разрушено районов: " + raidsUi.DefeatedDistrictsCount, UiTextStyle.Subtitle));
-        str.AppendLine(StylingHelper.MakeItStyled("Награблено золота: " + raidsUi.TotalCapitalLoot, UiTextStyle.Subtitle));
-        str.AppendLine();
-        str.AppendLine(StylingHelper.MakeItStyled("Медали рейдов: ", UiTextStyle.Subtitle));
-        str.AppendLine(StylingHelper.MakeItStyled("За атаку: " + offensiveReward, UiTextStyle.Default));
-        str.AppendLine(StylingHelper.MakeItStyled("За защиту: " + raidsUi.DefensiveReward, UiTextStyle.Default));
-        str.AppendLine(StylingHelper.MakeItStyled("Суммарно: " + totalReward, UiTextStyle.Default));
-        str.AppendLine();
-        str.AppendLine(StylingHelper.MakeItStyled("Общие показатели обороны: ", UiTextStyle.Subtitle));
+        str.Append(GetRaidsMainInfoHat(raidsUi));
 
-        var averageDefenses = 0.0;
-
-        foreach (var defense in raidsUi.Defenses)
+        if (raidsUi.NonAttackersRaids.Count != 0)
         {
-            str.AppendLine(StylingHelper.MakeItStyled("[" + defense.AttackersTag + "] " + "[" + defense.AttackersName + "] " +
-                "[" + defense.TotalAttacksCount + "]", UiTextStyle.Name));
+            str.AppendLine(StylingHelper.MakeItStyled("ПРОВЕЛИ НЕ ВСЕ АТАКИ:", UiTextStyle.Subtitle));
+            str.AppendLine();
 
-            averageDefenses += defense.TotalAttacksCount;
+            foreach (var nonAttacker in raidsUi.NonAttackersRaids)
+            {
+                var telegramUserName = "";
+
+                if (!string.IsNullOrEmpty(nonAttacker.TelegramUserName))
+                {
+                    telegramUserName = nonAttacker.TelegramUserName;
+                }
+
+                str.AppendLine(StylingHelper.MakeItStyled($"{nonAttacker.Name} Атак: {nonAttacker.AttacksCount} {telegramUserName}", UiTextStyle.Name));
+            }
         }
-
-        str.AppendLine(StylingHelper.MakeItStyled("Выдержано атак в среднем: " + Math.Round(averageDefenses / raidsUi.Defenses.Count, 2), UiTextStyle.Subtitle));
-        str.AppendLine();
-        str.AppendLine(StylingHelper.MakeItStyled("Общие показатели нападения: ", UiTextStyle.Subtitle));
-
-        var averageAttacks = 0.0;
-
-        foreach (var defeatedClan in raidsUi.DefeatedClans)
-        {
-            str.AppendLine(StylingHelper.MakeItStyled("[" + defeatedClan.ClanTag + "] " + "[" + defeatedClan.ClanName + "] " +
-                "[" + defeatedClan.TotalAttacksCount + "]", UiTextStyle.Name));
-
-            averageAttacks += defeatedClan.TotalAttacksCount;
-        }
-
-        str.AppendLine(StylingHelper.MakeItStyled("Потрачено атак в среднем: " + Math.Round(averageAttacks / raidsUi.DefeatedClans.Count, 2), UiTextStyle.Subtitle));
-        str.AppendLine();
-        str.AppendLine(StylingHelper.MakeItStyled("Игроки, проведшие не все атаки:", UiTextStyle.Subtitle));
-
-        foreach (var nonAttacker in raidsUi.NonAttackersRaids)
-        {
-            str.AppendLine(StylingHelper.MakeItStyled($"{nonAttacker.Key} Атак: {nonAttacker.Value}", UiTextStyle.Name));
-        }
-
-        str.AppendLine();
 
         return str.ToString();
     }
 
-    public static string GetDistrictStatistics(RaidUi raidUi, ADistrictType districtType)
+    public static string GetDistrictStatistics(RaidUi raidUi, DistrictType districtType)
     {
         var maxNameLength = 18;
         var max2ColumnLength = 3;
         var max3ColumnLength = 3;
 
-        var districtMapper = new Dictionary<ADistrictType, string>()
-        {
-            {ADistrictType.Capital_Peak, "Capital Peak" },
-            {ADistrictType.Barbarian_Camp, "Barbarian Camp" },
-            {ADistrictType.Wizard_Valley, "Wizard Valley" },
-            {ADistrictType.Balloon_Lagoon, "Balloon Lagoon" },
-            {ADistrictType.Builders_Workshop, "Builder's Workshop" },
-            {ADistrictType.Dragon_Cliffs, "Dragon Cliffs" },
-            {ADistrictType.Golem_Quarry, "Golem Quarry" },
-            {ADistrictType.Skeleton_Park, "Skeleton Park" },
-            {ADistrictType.Goblin_Mines, "Goblin Mines" },
-
-        };
-
-        var chosenDistrictName = districtMapper.First(x => x.Key == districtType).Value;
+        var chosenDistrictName = FunctionsLogicHelper.AllDistricts.First(x => x.Key == districtType).Value;
 
         var avgPercent = 0.0;
         var counter = 0;
 
         foreach (var clan in raidUi.DefeatedClans)
         {
-            foreach (var district in clan.AttackedDistricts.Where(x => x.DistrictName == chosenDistrictName))
+            foreach (var district in clan.DefeatedEmemyDistricts.Where(x => x.Name == chosenDistrictName))
             {
                 foreach (var attack in district.Attacks)
                 {
@@ -233,13 +164,15 @@ public class CurrentStatisticsFunctions
         str.AppendLine(StylingHelper.MakeItStyled("Показатели игроков клана", UiTextStyle.Header));
         str.AppendLine(StylingHelper.MakeItStyled(raidUi.ClanName + " - " + raidUi.ClanTag, UiTextStyle.Name));
         str.AppendLine();
-        str.AppendLine(StylingHelper.MakeItStyled("В атаках на район", UiTextStyle.Subtitle));
-        str.AppendLine(StylingHelper.MakeItStyled(chosenDistrictName, UiTextStyle.Name));
+        str.Append(StylingHelper.MakeItStyled("В атаках на район: ", UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled($"{chosenDistrictName}", UiTextStyle.Header));
         str.AppendLine();
-        str.AppendLine(StylingHelper.MakeItStyled("Разрушений за атаку в среднем: " + avgPercent + "%", UiTextStyle.Default));
+        str.AppendLine(raidUi.UpdatedOn.GetUpdatedOnString());
         str.AppendLine();
-        str.AppendLine(StylingHelper.MakeItStyled("Показатели атак", UiTextStyle.Subtitle));
+        str.Append(StylingHelper.MakeItStyled("Разрушений за атаку в среднем: ", UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled($"{avgPercent}%", UiTextStyle.Name));
         str.AppendLine();
+        str.AppendLine(StylingHelper.MakeItStyled("Показатели атак:", UiTextStyle.Subtitle));
 
         str.AppendLine($"``` " +
                            $"|{StylingHelper.GetCenteredString("Игрок", maxNameLength)}" +
@@ -251,13 +184,19 @@ public class CurrentStatisticsFunctions
             $"|{new string('-', max2ColumnLength)}" +
             $"|{new string('-', max3ColumnLength)}|");
 
+        var tableWidth = maxNameLength + max2ColumnLength + max3ColumnLength + 2;
+
+        str.AppendLine($" {StylingHelper.GetCenteredString(" ", tableWidth + 2)}");
+
         foreach (var clan in raidUi.DefeatedClans)
         {
-            foreach (var district in clan.AttackedDistricts.Where(x => x.DistrictName == chosenDistrictName))
+            str.AppendLine($" |{StylingHelper.GetCenteredStringDash(StylingHelper.GetProperName(clan.Name, maxNameLength), tableWidth)}|");
+
+            foreach (var district in clan.DefeatedEmemyDistricts.Where(x => x.Name == chosenDistrictName))
             {
                 foreach (var attack in district.Attacks)
                 {
-                    var properName = StylingHelper.GetProperString(attack.PlayerName, maxNameLength);
+                    var properName = StylingHelper.GetProperName(attack.AttackerName, maxNameLength);
 
                     str.Append($" |{StylingHelper.GetCenteredString(properName, maxNameLength)}|");
 
@@ -265,15 +204,196 @@ public class CurrentStatisticsFunctions
 
                     str.AppendLine($"{StylingHelper.GetCenteredString(attack.DestructionPercentTo.ToString(), max3ColumnLength)}|");
                 }
-            }
 
-            str.AppendLine($" " +
-            $"|{new string('-', maxNameLength)}" +
-            $"|{new string('-', max2ColumnLength)}" +
-            $"|{new string('-', max3ColumnLength)}|");
+                str.AppendLine($" {StylingHelper.GetCenteredString(" ", tableWidth + 2)}");
+            }
         }
 
         str.Append("```\n");
+
+        return str.ToString();
+    }
+
+    public static string GetRaidsMainInfoHat(RaidUi raidUi)
+    {
+        var str = new StringBuilder();
+
+        var offensiveReward = raidUi.OffensiveReward;
+
+        var totalReward = offensiveReward + raidUi.DefensiveReward;
+
+        str.AppendLine(raidUi.UpdatedOn.GetUpdatedOnString());
+
+        str.Append(StylingHelper.MakeItStyled("\nНачало рейдов:  ", UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled(raidUi.StartedOn.FormateToUiDateTime(), UiTextStyle.Subtitle));
+        str.Append(StylingHelper.MakeItStyled("Конец рейдов:  ", UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled(raidUi.EndedOn.FormateToUiDateTime(), UiTextStyle.Subtitle));
+
+        var firstColumnLength = 18;
+        var secondColumnLength = 9;
+
+        str.AppendLine($"\n``` " +
+                $"|{StylingHelper.GetCenteredString("Параметр", firstColumnLength)}" +
+                $"|{StylingHelper.GetCenteredString("Значение", secondColumnLength)}|");
+
+        str.AppendLine(StylingHelper.GetTableDeviderLine(DeviderType.Colunmn, firstColumnLength, secondColumnLength));
+
+        var raidMedalsPrediction = FunctionsLogicHelper.GetCurrentRaidMedalsRewardPrediction(raidUi);
+
+        var dic = new Dictionary<string, string>()
+        {
+            { "Награблено золота", $"{raidUi.TotalCapitalLoot.GetDividedString()}" },
+            { "Разрушено районов", $"{raidUi.DefeatedDistrictsCount}" },
+            { "Проведено атак", $"{raidUi.TotalAttacksCount}" },
+            { "Атаковано кланов", $"{raidUi.DefeatedClans.Count}" },
+            { "Медали за атаку", $"{offensiveReward.GetDividedString()}" },
+            { "Медали за защиту", $"{raidUi.DefensiveReward}" },
+            { "Медалей суммарно", $"{totalReward.GetDividedString()}" },
+            { "Прогноз за атаку", $"{raidMedalsPrediction.OffensePrediction.GetDividedString()}" },
+            { "Прогноз за защиту", $"{raidMedalsPrediction.DefensePrediction.GetDividedString()}" },
+            { "Прогноз суммарно", $"{raidMedalsPrediction.SummPrediction.GetDividedString()}" },
+        };
+
+        foreach (var item in dic)
+        {
+            str.Append($" |{item.Key.PadRight(firstColumnLength)}|");
+
+            str.AppendLine($"{StylingHelper.GetCenteredString(item.Value.ToString(), secondColumnLength)}|");
+        }
+
+        str.Append("```");
+
+        str.AppendLine(StylingHelper.MakeItStyled("\nПояснение таблицы:", UiTextStyle.TableAnnotation));
+        str.AppendLine(StylingHelper.MakeItStyled("Атаки - число проведенных атак;", UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled("Р-н - количество полностью уничтоженных районов;", UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled("Золото - суммарно награбленное золото;", UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled("Защиты/Атаки ~123 - среднее количество атак, затрачиваемых на полное уничтожение клана.\n", UiTextStyle.Default));
+
+        var maxClanNameLength = 10;
+        var maxAttackLength = 5;
+        var maxDDCLength = 3;
+        var maxGoldLootedLength = 7;
+
+        var tableLength = maxClanNameLength + maxAttackLength + maxDDCLength + maxGoldLootedLength + 2;
+
+        str.AppendLine($"``` " +
+                 $"|{StylingHelper.GetCenteredString("Клан", maxClanNameLength)}" +
+                 $"|{StylingHelper.GetCenteredString("Aтаки", maxAttackLength)}" +
+                 $"|{StylingHelper.GetCenteredString("Р-н", maxDDCLength)}" +
+                 $"|{StylingHelper.GetCenteredString("Золото", maxGoldLootedLength)}|");
+
+        str.AppendLine(StylingHelper.GetTableDeviderLine(DeviderType.Colunmn, maxClanNameLength, maxAttackLength, maxDDCLength, maxGoldLootedLength));
+
+        str.AppendLine(StylingHelper.GetTableDeviderLine(DeviderType.Whitespace, maxClanNameLength, maxAttackLength, maxDDCLength, maxGoldLootedLength));
+
+        var totalLoseDefenses = raidUi.Defenses
+            .Where(x => x.DestroyedFriendlyDistrictsCount == FunctionsLogicHelper.AllDistricts.Count);
+
+        var averageDefenses = Math.Round((double)totalLoseDefenses
+            .Sum(x => x.TotalAttacksCount)
+            / totalLoseDefenses.Count(), 2);
+
+        str.AppendLine($" |{StylingHelper.GetCenteredStringDash($" Защиты ~{averageDefenses} ", tableLength + 1)}|");
+
+        str.AppendLine(StylingHelper.GetTableDeviderLine(DeviderType.Dashes, maxClanNameLength, maxAttackLength, maxDDCLength, maxGoldLootedLength));
+
+        foreach (var defense in raidUi.Defenses.OrderByDescending(x => x.TotalAttacksCount))
+        {
+            var properName = StylingHelper.GetProperName(defense.EnemyClanName, maxClanNameLength);
+
+            str.Append($" |{StylingHelper.GetCenteredString(properName, maxClanNameLength)}|");
+
+            str.Append($"{StylingHelper.GetCenteredString(defense.TotalAttacksCount.ToString(), maxAttackLength)}|");
+
+            str.Append($"{StylingHelper.GetCenteredString(defense.DestroyedFriendlyDistrictsCount.ToString(), maxDDCLength)}|");
+
+            str.AppendLine($"{StylingHelper.GetCenteredString(defense.TotalEnemyLoot.GetDividedString().ToString(), maxGoldLootedLength)}|");
+        }
+
+        str.AppendLine($" {StylingHelper.GetCenteredString(" ", tableLength)}");
+
+        var totalDefeatedClans = raidUi.DefeatedClans
+            .Where(x => x.DefeatedEmemyDistricts.Count == FunctionsLogicHelper.AllDistricts.Count);
+
+        var averageAttacks = Math.Round((double)totalDefeatedClans
+            .Sum(x => x.TotalAttacksCount)
+            / totalDefeatedClans.Count(), 2);
+
+        str.AppendLine($" |{StylingHelper.GetCenteredStringDash($" Атаки ~{averageAttacks} ", tableLength + 1)}|");
+
+        str.AppendLine(StylingHelper.GetTableDeviderLine(DeviderType.Dashes, maxClanNameLength, maxAttackLength, maxDDCLength, maxGoldLootedLength));
+
+        foreach (var defeatedClan in raidUi.DefeatedClans.OrderByDescending(x => x.TotalAttacksCount))
+        {
+            var destroyedDistrictsCount = 0;
+
+            destroyedDistrictsCount = defeatedClan.DefeatedEmemyDistricts.Where(x => x.Attacks.Any(x => x.DestructionPercentTo == 100)).Count();
+
+            var properName = StylingHelper.GetProperName(defeatedClan.Name, maxClanNameLength);
+
+            str.Append($" |{StylingHelper.GetCenteredString(properName, maxClanNameLength)}|");
+
+            str.Append($"{StylingHelper.GetCenteredString(defeatedClan.TotalAttacksCount.ToString(), maxAttackLength)}|");
+
+            str.Append($"{StylingHelper.GetCenteredString(destroyedDistrictsCount.ToString(), maxDDCLength)}|");
+
+            str.AppendLine($"{StylingHelper.GetCenteredString(defeatedClan.TotalLoot.GetDividedString().ToString(), maxGoldLootedLength)}|");
+        }
+
+        str.Append("```\n");
+
+        return str.ToString();
+    }
+
+    public static string GetWarMainInfoHat(CwCwlUi cw)
+    {
+        var str = new StringBuilder();
+
+        str.AppendLine(cw.UpdatedOn.GetUpdatedOnString());
+
+
+        str.AppendLine(StylingHelper.MakeItStyled("\nНачало подготовки:", UiTextStyle.Subtitle));
+        str.AppendLine(StylingHelper.MakeItStyled(cw.PreparationStartTime.FormateToUiDateTime(), UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled("Начало войны:", UiTextStyle.Subtitle));
+        str.AppendLine(StylingHelper.MakeItStyled(cw.StartedOn.FormateToUiDateTime(), UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled("Конец войны:", UiTextStyle.Subtitle));
+        str.AppendLine(StylingHelper.MakeItStyled(cw.EndedOn.FormateToUiDateTime(), UiTextStyle.Default));
+
+        str.AppendLine(StylingHelper.MakeItStyled($"\nРезультат: {cw.Result}", UiTextStyle.Subtitle));
+
+        str.AppendLine(StylingHelper.MakeItStyled($"\nСуммарное число атак: {cw.AttacksCount} : {cw.OpponentAttacksCount}", UiTextStyle.Subtitle));
+        str.AppendLine(StylingHelper.MakeItStyled($"Суммарно звезд: {cw.TotalStarsEarned} : {cw.OpponentStarsCount}", UiTextStyle.Subtitle));
+        str.AppendLine(StylingHelper.MakeItStyled($"Суммарный % разрушений: {Math.Round(cw.DestructionPercentage, 1)} : " +
+            $"{Math.Round(cw.OpponentDestructionPercentage, 1)}", UiTextStyle.Subtitle));
+
+        var firstColumnLength = 16;
+        var secondColumnLength = 12;
+
+        str.AppendLine($"\n``` " +
+                $"|{StylingHelper.GetCenteredString("Параметр", firstColumnLength)}" +
+                $"|{StylingHelper.GetCenteredString("Значение", secondColumnLength)}|");
+
+        str.AppendLine(StylingHelper.GetTableDeviderLine(DeviderType.Colunmn, firstColumnLength, secondColumnLength));
+
+        var dic = new Dictionary<string, string>()
+        {
+            { "Противник", $"{cw.OpponentName.GetProperName(secondColumnLength)}" },
+            { "Тег противника", $"{cw.OpponentTag}" },
+            { "Проведено КВ", $"{(cw.OppinentWarWins + cw.OppinentWarDraws + cw.OppinentWarLoses).GetDividedString()}" },
+            { "Побед в КВ", $"{cw.OppinentWarWins.GetDividedString()}" },
+            { "Поражений в КВ", $"{cw.OppinentWarLoses.GetDividedString()}" },
+            { "Ничьих в КВ", $"{cw.OppinentWarDraws.GetDividedString()}" },
+            { "Винстрик в КВ", $"{cw.OpponentWarWinStreak.GetDividedString()}" },
+        };
+
+        foreach (var item in dic)
+        {
+            str.Append($" |{item.Key.PadRight(firstColumnLength)}|");
+
+            str.AppendLine($"{StylingHelper.GetCenteredString(item.Value.ToString(), secondColumnLength)}|");
+        }
+
+        str.Append("```");
 
         return str.ToString();
     }

@@ -1,12 +1,12 @@
-﻿using System.Text;
+﻿using CoCStatsTracker.UIEntities;
+using System.Text;
 
 namespace CoCStatsTrackerBot.Requests;
 
 public static class StylingHelper
 {
-    /// <summary>
+
     /// Стилизует текст в соответствии с Telegram MarkdownV2
-    /// </summary>
     public static string MakeItStyled(string str, UiTextStyle textStyle)
     {
         switch (textStyle)
@@ -26,17 +26,13 @@ public static class StylingHelper
         }
     }
 
-    /// <summary>
     /// Формирует гиперссылку
-    /// </summary>
     public static string GetInlineLink(string text, string link)
     {
         return $@"[{text}]({Ecranize(link)})";
     }
 
-    /// <summary>
     /// Возвращает первое слово в строке
-    /// </summary>
     public static string GetFirstWord(string str)
     {
         try
@@ -50,9 +46,7 @@ public static class StylingHelper
         }
     }
 
-    /// <summary>
     /// Центрирует строку, отбивая пробелами слева и справа.
-    /// </summary>
     public static string GetCenteredString(string str, int maxStringWidth)
     {
         if (str.Length >= maxStringWidth)
@@ -67,13 +61,32 @@ public static class StylingHelper
         return new string(' ', leftPadding) + str + new string(' ', rightPadding);
     }
 
-    /// <summary>
+    /// Центрирует строку, отбивая тире слева и справа.
+    public static string GetCenteredStringDash(string str, int maxStringWidth)
+    {
+        if (str.Length >= maxStringWidth)
+        {
+            return str;
+        }
+
+        int leftPadding = (maxStringWidth - str.Length) / 2;
+
+        int rightPadding = maxStringWidth - str.Length - leftPadding;
+
+        return new string('-', leftPadding) + str + new string('-', rightPadding);
+    }
+
     /// Экранирует символы в строке. В ТГ разметке MarkdownV2 некоторые символы зарезервированы и их приходится экранировать
-    /// </summary>
     public static string Ecranize(string str)
     {
         var reservedSymbols = @"_*,`.[]()~'><#+-/=|{}!""№;%:?*\";
-        StringBuilder newStr = new StringBuilder("");
+
+        if (!str.Any(x => reservedSymbols.Contains(x)))
+        {
+            return str;
+        }
+
+        StringBuilder newStr = new StringBuilder(str.Length);
 
         foreach (var c in str)
         {
@@ -91,9 +104,7 @@ public static class StylingHelper
         return newStr.ToString();
     }
 
-    /// <summary>
     /// Определяет максимальную длину строки для двух ячеек UI таблицы.
-    /// </summary>
     public static UiTableMaxSize DefineTableMaxSize(Dictionary<string, string> dic, string firstColumnName, string secondColumnName)
     {
         var uiTablemaxSize = new UiTableMaxSize();
@@ -123,37 +134,30 @@ public static class StylingHelper
         return uiTablemaxSize;
     }
 
-    /// <summary>
     /// Заменяет различные смайлики и т.д. в строке на символ ! с фиксированной шириной и возвращает корректно отображающееся в MarkDown таблице строку.
-    /// </summary>
-    public static string GetProperString(string str, int maxStringLength)
+    public static string GetProperName(this string str, int maxStringLength)
     {
         var tempName = new StringBuilder(str.Length);
 
-        var haveInvalidSymbols = false;
-
         foreach (var symbol in str)
         {
-            var ab = char.IsSurrogate(symbol);
-
-            if ((char.IsLetterOrDigit(symbol) || char.IsWhiteSpace(symbol) || char.IsPunctuation(symbol)) && symbol != '\\')
+            if (char.IsDigit(symbol) ||
+                char.IsWhiteSpace(symbol) ||
+                char.IsPunctuation(symbol) ||
+                (symbol >= 'a' && symbol <= 'z') ||
+                (symbol >= 'A' && symbol <= 'Z') ||
+                (symbol >= 'а' && symbol <= 'я') ||
+                (symbol >= 'А' && symbol <= 'Я'))
             {
                 tempName.Append(symbol);
             }
             else
             {
-                haveInvalidSymbols = true;
-
                 tempName.Append("?");
             }
         }
 
         var result = tempName.ToString();
-
-        if (haveInvalidSymbols)
-        {
-            result = result.Substring(0, result.Length - 2);
-        }
 
         if (result.Length > maxStringLength)
         {
@@ -165,7 +169,95 @@ public static class StylingHelper
         }
     }
 
+    public static string GetDividedString(this int value)
+    {
+        var devidedString = string.Format("{0:N}", value);
 
+        return devidedString.Remove(devidedString.Length - 3);
+    }
+
+    public static string GetDividedString(this double value)
+    {
+        var devidedString = string.Format("{0:N}", value);
+
+        return devidedString.Remove(devidedString.Length - 3);
+    }
+
+    public static string FormateToUiDateTime(this DateTime dateTime)
+    {
+        var answer = $"{dateTime.ToString("dd:MM")} числа, в {dateTime.ToString("HH:mm")}";
+
+        return answer;
+    }
+
+    public static string GetTimeLeft(this DateTime endenOn)
+    {
+        return $"{Math.Round(endenOn.Subtract(DateTime.Now).TotalHours, 0)}ч. {endenOn.Subtract(DateTime.Now).Minutes}м.";
+    }
+
+    public static string GetUpdatedOnString(this DateTime updatedOn)
+    {
+        var answer = StylingHelper.MakeItStyled($"Обновлено: {updatedOn.FormateToUiDateTime()}", UiTextStyle.Subtitle);
+
+        return answer;
+    }
+
+    public static string GetTableDeviderLine(DeviderType deviderType, params int[] widths)
+    {
+        var str = new StringBuilder(widths.Sum() + widths.Count());
+
+        str.Append(" ");
+
+        var symbol = '-';
+
+        switch (deviderType)
+        {
+            case DeviderType.Colunmn:
+                {
+                    foreach (var width in widths)
+                    {
+                        str.Append($"|{new string(symbol, width)}");
+                    }
+
+                    str.Append("|");
+
+                    break;
+                }
+            case DeviderType.Dashes:
+                {
+                    str.Append("|");
+
+                    foreach (var width in widths)
+                    {
+                        str.Append($"{new string(symbol, width + 1)}");
+                    }
+
+                    str.Remove(str.Length - 1, 1);
+
+                    str.Append("|");
+
+                    break;
+                }
+            case DeviderType.Whitespace:
+                {
+                    symbol = ' ';
+
+                    foreach (var width in widths)
+                    {
+                        str.Append($"{new string(symbol, width + 1)}");
+                    }
+
+                    str.Append(' ');
+
+                    break;
+                }
+
+            default:
+                break;
+        }
+
+        return str.ToString();
+    }
 }
 
 /// <summary>
@@ -185,6 +277,14 @@ public enum UiTextStyle
     Subtitle,
     Default
 }
+
+public enum DeviderType
+{
+    Colunmn,
+    Dashes,
+    Whitespace
+}
+
 
 //Позвляет вычислить длину символа и тд. Это очень сложно адекватно применить, так что забыли. Но тут пока оставим.
 public static class InlineCharCounter

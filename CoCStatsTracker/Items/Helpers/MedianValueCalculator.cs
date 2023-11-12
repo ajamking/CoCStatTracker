@@ -80,7 +80,7 @@ public static class MedianValueCalculator
 
                         foreach (var raidMember in member.RaidMemberships)
                         {
-                            raidAttacks.AddRange(raidMember.Attacks.Where(x => x.OpponentDistrictName != "Capital Peak"));
+                            raidAttacks.AddRange(raidMember.Attacks.Where(x => x.DefeatedEmemyDistrict.Name != "Capital Peak"));
                         }
 
                         var sortedAttacks = raidAttacks.OrderByDescending(x => x.DestructionPercentTo - x.DestructionPercentFrom).ToList();

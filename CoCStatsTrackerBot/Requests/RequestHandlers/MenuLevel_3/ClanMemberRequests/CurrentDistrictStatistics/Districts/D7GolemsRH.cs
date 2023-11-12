@@ -12,7 +12,7 @@ public class D7GolemsRH : BaseRequestHandler
 
     override public void Execute(BotUserRequestParameters parameters)
     {
-        parameters.DistrictType = ADistrictType.Golem_Quarry;
+        parameters.DistrictType = DistrictType.Golem_Quarry;
 
         var handler = new CurrentDistrictStatisticsRHBase();
 

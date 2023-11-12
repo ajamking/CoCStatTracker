@@ -9,7 +9,7 @@ public class WarMapUi : UiEntity
     public string ClanName { get; set; }
     public string OpponentClanName { get; set; }
     public string OpponentClanTag { get; set; }
-    public string PreparationStartTime { get; set; }
+    public DateTime PreparationStartTime { get; set; }
     public DateTime PreparationStartedOn { get; set; }
     public DateTime StartedOn { get; set; }
     public DateTime EndedOn { get; set; }

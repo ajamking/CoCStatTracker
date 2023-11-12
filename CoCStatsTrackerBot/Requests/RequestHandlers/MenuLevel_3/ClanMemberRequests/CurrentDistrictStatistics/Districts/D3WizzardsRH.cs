@@ -12,7 +12,7 @@ public class D3WizzardsRH : BaseRequestHandler
 
     override public void Execute(BotUserRequestParameters parameters)
     {
-        parameters.DistrictType = ADistrictType.Wizard_Valley;
+        parameters.DistrictType = DistrictType.Wizard_Valley;
 
         var handler = new CurrentDistrictStatisticsRHBase();
 

@@ -12,7 +12,7 @@ public class D4BaloonsRH : BaseRequestHandler
 
     override public void Execute(BotUserRequestParameters parameters)
     {
-        parameters.DistrictType = ADistrictType.Balloon_Lagoon;
+        parameters.DistrictType = DistrictType.Balloon_Lagoon;
 
         var handler = new CurrentDistrictStatisticsRHBase();
 

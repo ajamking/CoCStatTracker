@@ -3,6 +3,7 @@ using CoCStatsTracker.Items.Helpers;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CoCStatsTracker.Builders;
 
@@ -34,13 +35,18 @@ public class CapitalRaidBuilder
         Raid.TrackedClan = clan;
     }
 
-    public void SetRaidMembers(ICollection<RaidMember> members)
-    {
-        Raid.RaidMembers = members;
-    }
-
     public void SetRaidDefenses(ICollection<RaidDefense> defenses)
     {
         Raid.RaidDefenses = defenses;
+    }
+
+    public void SetAttackedClans(ICollection<AttackedClanOnRaid> attackedClans)
+    {
+        Raid.AttackedClans = attackedClans;
+    }
+
+    public void SetRaidMembers(ICollection<RaidMember> members)
+    {
+        Raid.RaidMembers = members;
     }
 }

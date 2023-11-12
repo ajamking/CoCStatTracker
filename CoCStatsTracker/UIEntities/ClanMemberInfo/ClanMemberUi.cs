@@ -2,6 +2,7 @@
 
 public class ClanMemberUi : UiEntity
 {
+    public string TelegramUserName { get; set; }
     public string Tag { get; set; }
     public string Name { get; set; }
     public string ClanTag { get; set; }

@@ -26,7 +26,7 @@ public static class GetFromDbQueryHandler
             uiClans.AddRange(dbContext.TrackedClans
                 .Select(Mapper.MapToUi).ToList());
 
-            NotFoundException.ThrowByPredicate(() => uiClans is { Count: 0 }, "No tracked clans were found in DB");
+            NotFoundException.ThrowByPredicate(() => uiClans.Count == 0, "No tracked clans were found in DB");
 
             return uiClans;
         }
@@ -38,7 +38,7 @@ public static class GetFromDbQueryHandler
         {
             var uiClan = Mapper.MapToUi(dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag));
 
-            NotFoundException.ThrowByPredicate(() => uiClan is null, "No such Clan was found in DB");
+            NotFoundException.ThrowByPredicate(() => uiClan == null, "No such Clan was found in DB");
 
             return uiClan;
         }
@@ -52,11 +52,11 @@ public static class GetFromDbQueryHandler
 
             var trackedClan = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
 
-            NotFoundException.ThrowByPredicate(() => trackedClan is null, "No such clan was found in DB");
+            NotFoundException.ThrowByPredicate(() => trackedClan == null, "No such clan was found in DB");
 
             var wars = trackedClan.ClanWars;
 
-            NotFoundException.ThrowByPredicate(() => wars is { Count: 0 }, "NNo tracked ClanWars were found in DB");
+            NotFoundException.ThrowByPredicate(() => wars.Count == 0, "No tracked ClanWars were found in DB");
 
             foreach (var clanWar in wars)
             {
@@ -75,11 +75,11 @@ public static class GetFromDbQueryHandler
 
             var trackedClan = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
 
-            NotFoundException.ThrowByPredicate(() => trackedClan is null, "No such clan was found in DB");
+            NotFoundException.ThrowByPredicate(() => trackedClan == null, "No such clan was found in DB");
 
             var raids = trackedClan.CapitalRaids;
 
-            NotFoundException.ThrowByPredicate(() => raids is { Count: 0 }, "No tracked Raids were found in DB");
+            NotFoundException.ThrowByPredicate(() => raids.Count == 0, "No tracked Raids were found in DB");
 
             foreach (var raid in trackedClan.CapitalRaids)
             {
@@ -98,11 +98,11 @@ public static class GetFromDbQueryHandler
 
             var trackedClan = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
 
-            NotFoundException.ThrowByPredicate(() => trackedClan is null, "No such clan was found in DB");
+            NotFoundException.ThrowByPredicate(() => trackedClan == null, "No such clan was found in DB");
 
             var clanMembers = trackedClan.ClanMembers;
 
-            NotFoundException.ThrowByPredicate(() => clanMembers is { Count: 0 }, "No tracked ClanMembers were found in DB");
+            NotFoundException.ThrowByPredicate(() => clanMembers.Count == 0, "No tracked ClanMembers were found in DB");
 
             foreach (var member in trackedClan.ClanMembers)
             {
@@ -122,7 +122,7 @@ public static class GetFromDbQueryHandler
 
             var clanMembers = clan.ClanMembers.ToList();
 
-            NotFoundException.ThrowByPredicate(() => clanMembers is { Count: 0 }, "No ClanMembers was found in DB");
+            NotFoundException.ThrowByPredicate(() => clanMembers.Count == 0, "No ClanMembers was found in DB");
 
             var averagePerfomances = new List<AverageRaidsPerfomanceUi>();
 
@@ -130,11 +130,11 @@ public static class GetFromDbQueryHandler
             {
                 if (member.RaidMemberships != null && member.RaidMemberships.Count != 0)
                 {
-                    averagePerfomances.Add(Mapper.MapToUi(member.RaidMemberships, member.Clan));
+                    averagePerfomances.Add(Mapper.MapToUi(member.RaidMemberships, member.TrackedClan));
                 }
             }
 
-            NotFoundException.ThrowByPredicate(() => averagePerfomances is { Count: 0 }, "No tracked RaidMemberships were found in DB");
+            NotFoundException.ThrowByPredicate(() => averagePerfomances.Count == 0, "No tracked RaidMemberships were found in DB");
 
             return averagePerfomances;
         }
@@ -146,7 +146,7 @@ public static class GetFromDbQueryHandler
         {
             var clan = dbContext.TrackedClans.First(x => x.Tag == clanTag);
 
-            NotFoundException.ThrowByPredicate(() => clan is null, "No such Clan was found in DB");
+            NotFoundException.ThrowByPredicate(() => clan == null, "No such Clan was found in DB");
 
             var currentClanMembers = clan.ClanMembers;
 
@@ -162,7 +162,7 @@ public static class GetFromDbQueryHandler
                 }
             }
 
-            NotFoundException.ThrowByPredicate(() => seasonStatistics is { Count: 0 }, "Can`t calculate seasonalStatistics");
+            NotFoundException.ThrowByPredicate(() => seasonStatistics.Count == 0, "Can`t calculate seasonalStatistics");
 
             return seasonStatistics;
         }
@@ -176,7 +176,7 @@ public static class GetFromDbQueryHandler
         {
             var uiClanMember = Mapper.MapToUi(dbContext.ClanMembers.FirstOrDefault(x => x.Tag == playersTag));
 
-            NotFoundException.ThrowByPredicate(() => uiClanMember is null, "No such ClanMember was found in DB");
+            NotFoundException.ThrowByPredicate(() => uiClanMember == null, "No such ClanMember was found in DB");
 
             return uiClanMember;
         }
@@ -191,7 +191,7 @@ public static class GetFromDbQueryHandler
 
             var uiArmy = Mapper.MapToUi(searchingClanMember?.Units, searchingClanMember);
 
-            NotFoundException.ThrowByPredicate(() => uiArmy is { Units.Count: 0 }, "No tracked Units were found in DB");
+            NotFoundException.ThrowByPredicate(() => uiArmy.Units.Count == 0, "No tracked Units were found in DB");
 
             return uiArmy;
         }
@@ -207,7 +207,7 @@ public static class GetFromDbQueryHandler
                 .FirstOrDefault(x => x.Tag == playersTag)?.WarMemberships?
                 .Select(Mapper.MapToUi).ToList());
 
-            NotFoundException.ThrowByPredicate(() => uiCwCwlMemberships is { Count: 0 }, "No tracked CwCwlMemberships were found in DB");
+            NotFoundException.ThrowByPredicate(() => uiCwCwlMemberships.Count == 0, "No tracked CwCwlMemberships were found in DB");
 
             uiCwCwlMemberships.OrderByDescending(x => x.StartedOn);
 
@@ -225,7 +225,7 @@ public static class GetFromDbQueryHandler
                 .FirstOrDefault(x => x.Tag == playersTag).RaidMemberships
                 .Select(Mapper.MapToUi).ToList());
 
-            NotFoundException.ThrowByPredicate(() => uiRaidMemberships is { Count: 0 }, "No tracked RaidMemberships were found in DB");
+            NotFoundException.ThrowByPredicate(() => uiRaidMemberships.Count == 0, "No tracked RaidMemberships were found in DB");
 
             uiRaidMemberships.OrderByDescending(x => x.StartedOn);
 
@@ -239,7 +239,9 @@ public static class GetFromDbQueryHandler
     {
         using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
         {
-            return dbContext.TrackedClans.Any(x => x.Tag == clanTag);
+            return dbContext.TrackedClans
+                .Where(x => x.IsInBlackList == false)
+                .Any(x => x.Tag == clanTag);
         }
     }
 
@@ -247,7 +249,9 @@ public static class GetFromDbQueryHandler
     {
         using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
         {
-            return dbContext.ClanMembers.Any(x => x.Tag == memberTag);
+            return dbContext.ClanMembers
+                .Where(x=>x.TrackedClan.IsInBlackList==false)
+                .Any(x => x.Tag == memberTag);
         }
     }
 

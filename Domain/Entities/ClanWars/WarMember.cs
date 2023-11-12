@@ -24,7 +24,6 @@ namespace Domain.Entities
         public WarMember()
         {
             WarAttacks = new HashSet<WarAttack>();
-
         }
     }
 }

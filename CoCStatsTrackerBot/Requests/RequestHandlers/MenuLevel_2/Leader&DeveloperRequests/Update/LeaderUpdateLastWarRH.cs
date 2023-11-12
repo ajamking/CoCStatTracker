@@ -33,7 +33,7 @@ public class LeaderUpdateLastWarRH : BaseRequestHandler
         }
         catch (NotFoundException e)
         {
-            ResponseSender.SendAnswer(parameters, true, DefaultNotFoundMessage);
+            ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled($"Обновить последнюю войну невозможно, в базе нет сведений о войнах этого клана. Попробуйте добавить, а не обновлять.", UiTextStyle.Default));
         }
         catch (FailedPullFromApiException e)
         {

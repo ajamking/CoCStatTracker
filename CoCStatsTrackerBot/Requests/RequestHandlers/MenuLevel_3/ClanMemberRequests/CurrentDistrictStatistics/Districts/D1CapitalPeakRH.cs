@@ -12,7 +12,7 @@ public class D1CapitalPeakRH : BaseRequestHandler
 
     override public void Execute(BotUserRequestParameters parameters)
     {
-        parameters.DistrictType = ADistrictType.Capital_Peak;
+        parameters.DistrictType = DistrictType.Capital_Peak;
 
         var handler = new CurrentDistrictStatisticsRHBase();
 

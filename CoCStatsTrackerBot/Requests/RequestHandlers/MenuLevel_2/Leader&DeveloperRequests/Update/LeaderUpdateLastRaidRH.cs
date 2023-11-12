@@ -21,7 +21,7 @@ public class LeaderUpdateLastRaidRH : BaseRequestHandler
         }
         catch (NotFoundException e)
         {
-            ResponseSender.SendAnswer(parameters, true, DefaultNotFoundMessage);
+            ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled($"Обновить последний рейд невозможно, в базе нет сведений о рейдах этого клана. Попробуйте добавить, а не обновлять.", UiTextStyle.Default));
         }
         catch (Exception e)
         {

@@ -19,13 +19,13 @@ public class RaidMemberBuilder
         Member.UpdatedOn = DateTime.Now;
 
         Member.TotalLoot = member.CapitalResourcesLooted;
-        Member.MemberTag = member.Tag;
-        Member.MemberName = member.Name;
+        Member.Tag = member.Tag;
+        Member.Name = member.Name;
     }
 
     public void SetRaid(CapitalRaid raid)
     {
-        Member.Raid = raid;
+        Member.CapitalRaid = raid;
     }
 
     public void SetRaidMemberAttacks(ICollection<RaidAttack> attacks)

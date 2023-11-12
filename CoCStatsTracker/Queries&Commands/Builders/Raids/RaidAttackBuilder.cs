@@ -12,23 +12,20 @@ public class RaidAttackBuilder
         RaidAttack = raidAttack ?? new RaidAttack();
     }
 
-    public void SetBaseProperties(AttackOnDistrictApi memberAttackApi, AttackedCapitalApi raidOnClanApi,
-        DistrictApi destroyedDistrictApi, int previousDestructionPercent)
+    public void SetBaseProperties(int destructionPercentFrom, int destructionPercentTo)
     {
-        RaidAttack = new RaidAttack()
-        {
-            MemberTag = memberAttackApi.Attacker.Tag,
-            MemberName = memberAttackApi.Attacker.Name,
+        RaidAttack.DestructionPercentFrom = destructionPercentFrom;
+        RaidAttack.DestructionPercentTo = destructionPercentTo;
+    }
 
-            OpponentClanTag = raidOnClanApi.DefenderClan.Tag,
-            OpponentClanName = raidOnClanApi.DefenderClan.Name,
-            OpponentClanLevel = raidOnClanApi.DefenderClan.Level,
-            OpponentDistrictName = destroyedDistrictApi.Name,
-            OpponentDistrictLevel = destroyedDistrictApi.DistrictLevel,
+    public void SetDefeatedDistrict(DefeatedEmemyDistrict defeatedEmemyDistrict)
+    {
+        RaidAttack.DefeatedEmemyDistrict = defeatedEmemyDistrict;
+    }
 
-            DestructionPercentTo = memberAttackApi.DestructionPercentTo,
-            DestructionPercentFrom = previousDestructionPercent
-        };
+    public void SetAttackedClan(AttackedClanOnRaid raidOnClan)
+    {
+        RaidAttack.AttackedClan = raidOnClan;
     }
 
     public void SetRaidMember(RaidMember raidMember)

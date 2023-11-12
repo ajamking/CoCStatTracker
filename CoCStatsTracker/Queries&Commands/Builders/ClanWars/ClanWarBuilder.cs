@@ -34,12 +34,20 @@ public class ClanWarBuilder
         ClanWar.StarsCount = clanWarApi.ClanResults.StarsCount;
         ClanWar.DestructionPercentage = clanWarApi.ClanResults.DestructionPercentage;
 
-        ClanWar.OpponentClanTag = clanWarApi.OpponentResults.Tag;
-        ClanWar.OpponentClanName = clanWarApi.OpponentResults.Name;
-        ClanWar.OpponentClanLevel = clanWarApi.OpponentResults.ClanLevel;
+        ClanWar.OpponentsTag = clanWarApi.OpponentResults.Tag;
+        ClanWar.OpponentsName = clanWarApi.OpponentResults.Name;
+        ClanWar.OpponentsLevel = clanWarApi.OpponentResults.ClanLevel;
         ClanWar.OpponentAttacksCount = clanWarApi.OpponentResults.AttacksCount;
         ClanWar.OpponentStarsCount = clanWarApi.OpponentResults.StarsCount;
         ClanWar.OpponentDestructionPercentage = clanWarApi.OpponentResults.DestructionPercentage;
+    }
+
+    public void SetOpponentWarStatistics(ClanApi clanInfoFromApi)
+    {
+        ClanWar.OpponentWarWinStreak = clanInfoFromApi.WarWinStreak;
+        ClanWar.OppinentWarWins = clanInfoFromApi.WarWins;
+        ClanWar.OppinentWarDraws = clanInfoFromApi.WarTIes;
+        ClanWar.OppinentWarLoses = clanInfoFromApi.WarLoses;
     }
 
     public void SetTrackedClan(TrackedClan clan)

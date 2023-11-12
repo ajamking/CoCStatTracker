@@ -5,6 +5,8 @@ namespace Domain.Entities
 {
     public class TrackedClan : Entity
     {
+        public string ClansTelegramChatId { get; set; }
+        public bool RegularNewsLetterOn { get; set; }
         public string AdminsKey { get; set; }
         public bool IsInBlackList { get; set; }
         public DateTime UpdatedOn { get; set; }

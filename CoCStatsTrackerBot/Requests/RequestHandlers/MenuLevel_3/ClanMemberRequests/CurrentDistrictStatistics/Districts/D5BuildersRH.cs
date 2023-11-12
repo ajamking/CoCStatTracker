@@ -12,7 +12,7 @@ public class D5BuildersRH : BaseRequestHandler
 
     override public void Execute(BotUserRequestParameters parameters)
     {
-        parameters.DistrictType = ADistrictType.Builders_Workshop;
+        parameters.DistrictType = DistrictType.Builders_Workshop;
 
         var handler = new CurrentDistrictStatisticsRHBase();
 

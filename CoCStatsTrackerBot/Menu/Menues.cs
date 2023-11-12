@@ -152,7 +152,7 @@ public class PlayerArmy3 : BaseMenu
         Keyboard = new(new[]
         {
         new KeyboardButton[] { "Герои", "Осадные машины игрока" },
-        new KeyboardButton[] { "Активные супер юниты игрока", "Все войска" },
+        new KeyboardButton[] { "Активные супер юниты игрока", "Обычные войска" },
         new KeyboardButton[] { "Назад" },
         })
         { ResizeKeyboard = true };
@@ -224,8 +224,9 @@ public class LeaderMenu1 : BaseMenu
 
         Keyboard = new(new[]
         {
-        new KeyboardButton[] { "Доступные кланы", "Добавление" },
-        new KeyboardButton[] { "Обновление", "Удаление",  },
+        new KeyboardButton[] { "Доступные кланы" },
+        new KeyboardButton[] { "Добавление", "Обновление" },
+        new KeyboardButton[] { "Удаление", "Настройки ТГ группы" },
         new KeyboardButton[] { "Меню создателя", "Назад" }
         })
         { ResizeKeyboard = true };
@@ -242,10 +243,10 @@ public class DeveloperMenu2 : BaseMenu
 
         Keyboard = new(new[]
         {
-        new KeyboardButton[] { "Все кланы", "Установить клану токен" },
+        new KeyboardButton[] { "Главное окно разработчика", "Установить клану токен" },
         new KeyboardButton[] { "Добавить клан в БД", "Удалить клан из БД", },
         new KeyboardButton[] { "Добавить клан в ЧС", "Удалить клан из ЧС" },
-        new KeyboardButton[] { "Назад" }
+        new KeyboardButton[] { "Установить клану ChatId.", "Назад" }
         })
         { ResizeKeyboard = true };
 
@@ -303,6 +304,24 @@ public class LeaderDeleteMenu2 : BaseMenu
         { ResizeKeyboard = true };
 
         MenuLevel = MenuLevel.LeaderDeleteMenu2;
+    }
+}
+
+public class TgGroupCustomize : BaseMenu
+{
+    public TgGroupCustomize()
+    {
+        Header = "Настройки ТГ группы";
+
+        Keyboard = new(new[]
+        {
+        new KeyboardButton[] { "Руководство", "Список членов клана" },
+        new KeyboardButton[] { "Включить рассылку", "Выключить рассылку" },
+        new KeyboardButton[] { "Установить клану ChatId", "Назад" }
+        })
+        { ResizeKeyboard = true };
+
+        MenuLevel = MenuLevel.LeaderTgGroupCustomize2;
     }
 }
 
@@ -366,6 +385,7 @@ public enum MenuLevel
     LeaderAddMenu2,
     LeaderUpdateMenu2,
     LeaderDeleteMenu2,
+    LeaderTgGroupCustomize2,
     DeveloperMenu2,
 
     LeaderDeleteClanWarsMenu3,

@@ -78,6 +78,7 @@ public class ClanMemberBuilder
             unit.SuperTroopIsActivated = troop.SuperTroopIsActivated;
             unit.Type = TroopDefiner.DefineUnitType(troop.Name);
             unit.ClanMember = ClanMember;
+
             units.Add(unit);
         }
 
@@ -94,12 +95,14 @@ public class ClanMemberBuilder
             units.Add(hero);
         }
 
+        ClanMember.Units.Clear();
+
         ClanMember.Units = units;
     }
 
     public void SetTrackedClan(TrackedClan trackedClan)
     {
-        ClanMember.Clan = trackedClan;
+        ClanMember.TrackedClan = trackedClan;
     }
 
     public void AddRaidMembership(RaidMember membership)
@@ -112,5 +115,8 @@ public class ClanMemberBuilder
         ClanMember.WarMemberships.Add(warMember);
     }
 
-   
+    public void SetTelegramUserName(string userName)
+    {
+        ClanMember.TelegramUserName = userName;
+    }
 }

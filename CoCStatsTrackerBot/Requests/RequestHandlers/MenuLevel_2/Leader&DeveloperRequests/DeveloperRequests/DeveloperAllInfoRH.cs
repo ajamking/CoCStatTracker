@@ -8,7 +8,7 @@ public class DeveloperAllInfoRH : BaseRequestHandler
 {
     public DeveloperAllInfoRH()
     {
-        Header = "Все кланы";
+        Header = "Главное окно разработчика";
         HandlerMenuLevel = MenuLevel.DeveloperMenu2;
     }
 
@@ -16,28 +16,56 @@ public class DeveloperAllInfoRH : BaseRequestHandler
     {
         try
         {
-            var answer = new StringBuilder(StylingHelper.MakeItStyled("Клан, выбранный в качестве изменяемого: ", UiTextStyle.Default));
+            var answer = new StringBuilder(1000);
 
-            answer.Append(CheckAndGetPropertyString(parameters.LastClanTagToMerge));
+            answer.AppendLine(StylingHelper.MakeItStyled("Изменяемые параметры текущей сессии:\n", UiTextStyle.Header));
 
-            answer.Append(StylingHelper.MakeItStyled("\n\nНовый токен клана для вставки: ", UiTextStyle.Default));
+            answer.Append(StylingHelper.MakeItStyled("Клан, выбранный в качестве изменяемого: ", UiTextStyle.Default));
 
-            answer.Append(CheckAndGetPropertyString(parameters.AdminKeyToMerge));
+            answer.AppendLine(CheckAndGetPropertyString(parameters.LastClanTagToMerge));
 
-            answer.Append(StylingHelper.MakeItStyled("\n\nНовый тег клана для добавления: ", UiTextStyle.Default));
+            answer.Append(StylingHelper.MakeItStyled("\nНовый токен клана для вставки: ", UiTextStyle.Default));
 
-            answer.Append(CheckAndGetPropertyString(parameters.TagToAddClan));
+            answer.AppendLine(CheckAndGetPropertyString(parameters.AdminKeyToMerge));
 
-            answer.AppendLine(StylingHelper.MakeItStyled("\n\nКланы, которые вы можете модерировать: ", UiTextStyle.Default));
+            answer.Append(StylingHelper.MakeItStyled("\nНовый тег клана для добавления: ", UiTextStyle.Default));
+
+            answer.AppendLine(CheckAndGetPropertyString(parameters.TagToAddClan));
+
+            answer.Append(StylingHelper.MakeItStyled("\nНовый ChatId клана для добавления: ", UiTextStyle.Default));
+
+            answer.AppendLine(CheckAndGetPropertyString(parameters.ClanChatIdToMerge));
+
+            answer.AppendLine(StylingHelper.MakeItStyled("\n💠💠💠💠💠💠💠💠💠💠💠💠💠💠\n", UiTextStyle.Default));
+            
+            answer.AppendLine(StylingHelper.MakeItStyled("Кланы, которые вы можете модерировать:", UiTextStyle.Header));
 
             foreach (var clan in GetFromDbQueryHandler.GetAllTrackedClansUi())
             {
-                answer.AppendLine(StylingHelper.MakeItStyled($"{clan.Name} - {clan.Tag} - {clan.AdminsKey} - {clan.IsInBlackList}", UiTextStyle.Name));
+                var isInBlackListText = "Подписка активна";
+
+                if (clan.IsInBlackList)
+                {
+                    isInBlackListText = "Подписка приостановлена";
+                }
+
+                var haveChatIdText = "ChatId не определен";
+
+                if (!string.IsNullOrEmpty(clan.ClanChatId))
+                {
+                    haveChatIdText = clan.ClanChatId;
+                }
+
+                answer.AppendLine(StylingHelper.MakeItStyled($"\n[{clan.Name}] - [{clan.Tag}] - [{clan.AdminsKey}]\n[{haveChatIdText}] - [{isInBlackListText}]", UiTextStyle.Name));
             }
 
-            answer.AppendLine(StylingHelper.MakeItStyled("\nДля переопределения модерируемого клана введите один из тегов, представленных выше. ", UiTextStyle.Default));
+            answer.AppendLine(StylingHelper.MakeItStyled("\n💠💠💠💠💠💠💠💠💠💠💠💠💠💠\n", UiTextStyle.Default));
 
-            answer.AppendLine(StylingHelper.MakeItStyled("\nДля переопределения нового токена клана для вставки введите что-нибудь, начинаюшееся с @", UiTextStyle.Default));
+            answer.AppendLine(StylingHelper.MakeItStyled("Подсказки:", UiTextStyle.Header));
+
+            answer.AppendLine(StylingHelper.MakeItStyled("Для переопределения модерируемого клана введите один из тегов, представленных выше.\n\n" +
+                "Для переопределения нового токена клана для вставки введите что-нибудь, начинаюшееся с $\n\n" +
+                "Для переопределения ChatId клана введите chatId канала, добавив в начало строки символ *", UiTextStyle.Default));
 
             ResponseSender.SendAnswer(parameters, true, SplitAnswer(answer.ToString()));
         }

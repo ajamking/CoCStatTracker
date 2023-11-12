@@ -1,4 +1,6 @@
-﻿using Domain.Entities;
+﻿using CoCStatsTracker.UIEntities.ClanInfo;
+using Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,9 +8,9 @@ namespace CoCStatsTracker.Items.Helpers;
 
 public static class NonAttackersHelper
 {
-    public static Dictionary<string, int> GetNonAttackersRaids(TrackedClan clan)
+    public static List<NonAttacker> GetNonAttackersRaids(TrackedClan clan)
     {
-        var membersWithout6Attacks = new Dictionary<string, int>();
+        var membersWithoutAttacks = new List<NonAttacker>();
 
         var count = 0;
 
@@ -18,7 +20,7 @@ public static class NonAttackersHelper
 
         foreach (var member in clan.ClanMembers)
         {
-            if (member.RaidMemberships.FirstOrDefault(x => x.Raid.StartedOn == raid.StartedOn) == null)
+            if (member.RaidMemberships.FirstOrDefault(x => x.CapitalRaid.StartedOn == raid.StartedOn) == null)
             {
                 isAnyApsent = true;
             }
@@ -28,9 +30,15 @@ public static class NonAttackersHelper
         {
             foreach (var clanMember in clan.ClanMembers)
             {
-                if (raid.RaidMembers.FirstOrDefault(x => x.MemberTag == clanMember.Tag) == null)
+                if (raid.RaidMembers.FirstOrDefault(x => x.Tag == clanMember.Tag) == null)
                 {
-                    membersWithout6Attacks.Add(clanMember.Name, 0);
+                    membersWithoutAttacks.Add(new NonAttacker()
+                    {
+                        Tag = clanMember.Name,
+                        Name = clanMember.Name,
+                        AttacksCount = 0,
+                        TelegramUserName = clanMember.TelegramUserName
+                    });
 
                     count++;
                 }
@@ -43,24 +51,25 @@ public static class NonAttackersHelper
             {
                 if (raidMember.Attacks.Count != 6)
                 {
-                    membersWithout6Attacks.Add(raidMember.MemberName, raidMember.Attacks.Count);
+                    membersWithoutAttacks.Add(new NonAttacker()
+                    {
+                        Tag = raidMember.Tag,
+                        Name = raidMember.Name,
+                        AttacksCount = raidMember.Attacks.Count,
+                        TelegramUserName = TryGetTelegramUserName(raidMember.Tag)
+                    });
 
                     count++;
                 }
             }
         }
 
-        if (count != 0)
-        {
-            return membersWithout6Attacks;
-        }
-
-        return null;
+        return membersWithoutAttacks;
     }
 
-    public static Dictionary<string, int> GetNonAttackersCw(ClanWar clanWar)
+    public static List<NonAttacker> GetNonAttackersCw(ClanWar clanWar)
     {
-        var membersWithoutAttacks = new Dictionary<string, int>();
+        var membersWithoutAttacks = new List<NonAttacker>();
 
         if (clanWar.WarMembers.Any(x => x.WarAttacks.Count != 1))
         {
@@ -68,16 +77,38 @@ public static class NonAttackersHelper
             {
                 if (warMember.WarAttacks.Count < clanWar.AttackPerMember)
                 {
-                    membersWithoutAttacks.Add(warMember.Name, warMember.WarAttacks.Count);
+                    membersWithoutAttacks.Add(new NonAttacker()
+                    {
+                        Name = warMember.Name,
+                        Tag = warMember.Tag,
+                        AttacksCount = warMember.WarAttacks.Count,
+                        TelegramUserName = TryGetTelegramUserName(warMember.Tag)
+                    });
                 }
             }
         }
 
-        if (membersWithoutAttacks.Count != 0)
-        {
-            return membersWithoutAttacks;
-        }
+        return membersWithoutAttacks;
+    }
 
-        return null;
+    private static string TryGetTelegramUserName(string memberTag)
+    {
+        try
+        {
+            var clanMemberUi = GetFromDbQueryHandler.GetClanMemberUi(memberTag);
+
+            var result = "";
+
+            if (clanMemberUi != null && clanMemberUi.TelegramUserName != null)
+            {
+                result = clanMemberUi.TelegramUserName;
+            }
+
+            return result;
+        }
+        catch (Exception e)
+        {
+            return "";
+        }
     }
 }

@@ -27,9 +27,9 @@ public class TrackedClanBuilder
         Clan.ClanPoints = clanApi.ClanPoints;
         Clan.ClanVersusPoints = clanApi.ClanVersusPoints;
         Clan.ClanCapitalPoints = clanApi.ClanCapitalPoints;
-        Clan.CapitalLeague = clanApi.CapitalLeague.Name;
+        Clan.CapitalLeague = clanApi.GetLeagueRU(ClanLeagueType.ClanCapitalLeague);
         Clan.IsWarLogPublic = clanApi.IsWarLogPublic;
-        Clan.WarLeague = clanApi.WarLeague.Name;
+        Clan.WarLeague = clanApi.GetLeagueRU(ClanLeagueType.ClanWarLeague);
         Clan.WarWinStreak = clanApi.WarWinStreak;
         Clan.WarWins = clanApi.WarWins;
         Clan.WarTies = clanApi.WarTIes;
@@ -69,7 +69,8 @@ public class TrackedClanBuilder
                 WarPreference = member.WarPreference,
                 DonationsSent = member.DonationsSent,
                 DonationsRecieved = member.DonationsRecieved,
-                TotalCapitalContributions = member.TotalCapitalGoldContributed,
+                TotalCapitalGoldContributed = member.TotalCapitalGoldContributed,
+                TotalCapitalGoldLooted = member.TotalCapitalGoldLooted,
                 League = member.League,
             });
         }
@@ -85,5 +86,10 @@ public class TrackedClanBuilder
     public void AddCapitalRaid(CapitalRaid raid)
     {
         Clan.CapitalRaids.Add(raid);
+    }
+
+    public void SetTelegramChatId(string chatId)
+    {
+        Clan.ClansTelegramChatId = chatId;
     }
 }

@@ -1,6 +1,8 @@
 ﻿using CoCStatsTracker.ApiEntities;
 using Domain.Entities;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace CoCStatsTracker.Builders;
 
@@ -25,8 +27,10 @@ public class RaidDefenseBuilder
             raidDefense.AttackerClanName = defense.AttackerClan.Name;
             raidDefense.AttackerClanLevel = defense.AttackerClan.Level;
             raidDefense.TotalAttacksCount = defense.AttackCount;
-            raidDefense.DistrictsDestroyed = defense.DistrictsDestroyedCount;
+            raidDefense.DestroyedFriendlyDistrictsCount = defense.DistrictsDestroyedCount;
             raidDefense.DestroyedFriendlyDistricts = SetDestroyedFriendlyDistricts(defense.DistrictsDestroyed);
+
+            raidDefense.TotalEnemyLoot = defense.DistrictsDestroyed.Sum(district => district.TotalLooted);
 
             raidDefenses.Add(raidDefense);
         }

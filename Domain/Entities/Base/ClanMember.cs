@@ -5,6 +5,7 @@ namespace Domain.Entities
 {
     public class ClanMember : Entity
     {
+        public string TelegramUserName { get; set; }
         public DateTime UpdatedOn { get; set; }
         public string Tag { get; set; }
         public string Name { get; set; }
@@ -34,7 +35,7 @@ namespace Domain.Entities
         public string League { get; set; }
 
         public int? TrackedClanId { get; set; }
-        public virtual TrackedClan Clan { get; set; }
+        public virtual TrackedClan TrackedClan { get; set; }
 
         public virtual ICollection<Troop> Units { get; set; }
         public virtual ICollection<WarMember> WarMemberships { get; set; }

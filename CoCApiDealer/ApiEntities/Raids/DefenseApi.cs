@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 
 namespace CoCStatsTracker.ApiEntities;
+
 public class DefenseApi
 {
     [JsonProperty("attacker")]
@@ -17,5 +18,4 @@ public class DefenseApi
 
     [JsonProperty("districts")]
     public DistrictApi[] DistrictsDestroyed { get; set; }
-
 }

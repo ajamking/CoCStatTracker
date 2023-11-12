@@ -12,7 +12,7 @@ public class D6DragonsRH : BaseRequestHandler
 
     override public void Execute(BotUserRequestParameters parameters)
     {
-        parameters.DistrictType = ADistrictType.Dragon_Cliffs;
+        parameters.DistrictType = DistrictType.Dragon_Cliffs;
 
         var handler = new CurrentDistrictStatisticsRHBase();
 

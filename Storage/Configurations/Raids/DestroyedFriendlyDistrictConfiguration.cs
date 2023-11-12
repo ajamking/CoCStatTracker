@@ -8,7 +8,7 @@ namespace Storage.Configurations.ClanWars
     {
         public void Configure(EntityTypeBuilder<DestroyedFriendlyDistrict> builder)
         {
-            builder.ToTable("DestroyedFriendlyDistrict");
+            builder.ToTable("DestroyedFriendlyDistricts");
 
             builder
               .HasOne<RaidDefense>(x => x.RaidDefense)

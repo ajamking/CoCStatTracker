@@ -14,18 +14,22 @@ public static class ResponseSender
 
             if (answerIsValid)
             {
-                Console.WriteLine($"---\n{DateTime.Now}: На: \"{parameters.Message.Text}\" от {botUserIdentitficator}. Ответ выдан - {answerIsValid}\n---");
-
                 foreach (var answer in splitedAnswer)
                 {
                     await parameters.BotClient.SendTextMessageAsync(parameters.Message.Chat.Id,
                           text: answer,
                           parseMode: ParseMode.MarkdownV2);
                 }
+
+                WriteToConsole($"---\n{DateTime.Now}: На: \"{parameters.Message.Text}\" от {botUserIdentitficator}. Ответ выдан - {answerIsValid}\n---", ConsoleColor.Green);
             }
             else
             {
-                Console.WriteLine($"---\n{DateTime.Now}: На: \"{parameters.Message.Text}\" от {botUserIdentitficator}. Ответ выдан - {answerIsValid}\n---");
+                await parameters.BotClient.SendTextMessageAsync(parameters.Message.Chat.Id,
+                      text: StylingHelper.MakeItStyled("Произошла внутреняя ошибка, обратитесь к администратору.", UiTextStyle.Default),
+                      parseMode: ParseMode.MarkdownV2);
+
+                WriteToConsole($"---\n{DateTime.Now}: На: \"{parameters.Message.Text}\" от {botUserIdentitficator}. Ответ выдан - {answerIsValid}\n---", ConsoleColor.DarkRed);
 
                 Console.WriteLine($"Текст ошибки:");
 
@@ -33,16 +37,20 @@ public static class ResponseSender
                 {
                     Console.WriteLine($"{answer}\n");
                 }
-
-                await parameters.BotClient.SendTextMessageAsync(parameters.Message.Chat.Id,
-                      text: StylingHelper.MakeItStyled("Произошла внутреняя ошибка, обратитесь к администратору.", UiTextStyle.Default),
-                      parseMode: ParseMode.MarkdownV2);
             }
         }
         catch (Exception e)
         {
+            WriteToConsole("Что-то не так со сформированным сообщением, ответ не был выдан.", ConsoleColor.DarkRed);
             return;
         }
+    }
+
+    private static void WriteToConsole(string message, ConsoleColor colour)
+    {
+        Console.ForegroundColor = colour;
+        Console.WriteLine(message);
+        Console.ResetColor();
     }
 
     private static string DeterMineUserIdentificator(Message message) => message switch
