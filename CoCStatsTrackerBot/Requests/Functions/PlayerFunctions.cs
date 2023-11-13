@@ -420,9 +420,7 @@ public static class PlayerFunctions
         {
             if (unit.Village != "home" && counter == 0)
             {
-                str.AppendLine($" " +
-                    $"|{StylingHelper.GetCenteredStringDash("ДС", maxNameLength)}" +
-                    $"|{new string('-', maxLvlLength)}|");
+                str.AppendLine($" |{StylingHelper.GetCenteredStringDash("ДС", maxNameLength)}|{new string('-', maxLvlLength)}|");
 
                 counter++;
             }

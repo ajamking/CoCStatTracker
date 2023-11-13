@@ -17,11 +17,11 @@ public class StartMenuHandler : BaseRequestHandler
 
         answer.AppendLine(StylingHelper.MakeItStyled("Я - уникальный бот для сбора всевозможной статистики вашего клана в игре Clash of Clans\n", UiTextStyle.Name));
 
-        answer.AppendLine(StylingHelper.GetInlineLink("Руководство по использованию", "https://t.me/CoC_Stats_Tracker_Bot_Community/5/24"));
-
-        answer.AppendLine(StylingHelper.GetInlineLink("\nГруппа пользователей бота", "https://t.me/CoC_Stats_Tracker_Bot_Community"));
+        answer.AppendLine(StylingHelper.GetInlineLink("Группа пользователей бота", "https://t.me/CoC_Stats_Tracker_Bot_Community"));
 
         answer.AppendLine(StylingHelper.GetInlineLink("\nАдминистратор", "https://t.me/StatsTrackerManager"));
+
+        answer.AppendLine(StylingHelper.GetInlineLink("\nРуководство по использованию", "https://disk.yandex.ru/d/ZcPoSyQsDSPImA"));
 
         answer.AppendLine(StylingHelper.MakeItStyled("\nКраткое описание:\n", UiTextStyle.TableAnnotation));
 

@@ -40,7 +40,7 @@ public class DeveloperAllInfoRH : BaseRequestHandler
             
             answer.AppendLine(StylingHelper.MakeItStyled("Кланы, которые вы можете модерировать:", UiTextStyle.Header));
 
-            foreach (var clan in GetFromDbQueryHandler.GetAllTrackedClansUi())
+            foreach (var clan in GetFromDbQueryHandler.GetAllTrackedClans())
             {
                 var isInBlackListText = "Подписка активна";
 
@@ -51,9 +51,9 @@ public class DeveloperAllInfoRH : BaseRequestHandler
 
                 var haveChatIdText = "ChatId не определен";
 
-                if (!string.IsNullOrEmpty(clan.ClanChatId))
+                if (!string.IsNullOrEmpty(clan.ClansTelegramChatId))
                 {
-                    haveChatIdText = clan.ClanChatId;
+                    haveChatIdText = clan.ClansTelegramChatId;
                 }
 
                 answer.AppendLine(StylingHelper.MakeItStyled($"\n[{clan.Name}] - [{clan.Tag}] - [{clan.AdminsKey}]\n[{haveChatIdText}] - [{isInBlackListText}]", UiTextStyle.Name));

@@ -67,7 +67,7 @@ public class ClanInfo2 : BaseMenu
         new KeyboardButton[] { "Главное о клане", "Члены клана" },
         new KeyboardButton[] { "История войн","История рейдов" },
         new KeyboardButton[] { "Осадные машины","Активные супер юниты" },
-        new KeyboardButton[] {  "Показатели месяца", "Назад" }
+        new KeyboardButton[] { "Показатели месяца", "Назад" }
         })
         { ResizeKeyboard = true };
 
@@ -84,7 +84,7 @@ public class ClanCurrentRaidInfo2 : BaseMenu
         Keyboard = new(new[]
         {
         new KeyboardButton[] { "Главное о рейде", "Показатели рейда" },
-        new KeyboardButton[] {  "Статистика по районам", "Назад" },
+        new KeyboardButton[] { "Статистика по районам", "Назад" },
         })
         { ResizeKeyboard = true };
 
@@ -170,7 +170,8 @@ public class ClanWarHistory3 : BaseMenu
         Keyboard = new(new[]
         {
         new KeyboardButton[] { "Последняя война", "Последние 3" },
-        new KeyboardButton[] { "Последние 5", "Назад" },
+        new KeyboardButton[] { "Последние 5", "Последние 10" },
+        new KeyboardButton[] { "Назад" },
         })
         { ResizeKeyboard = true };
 
@@ -187,8 +188,8 @@ public class ClanRaidHistory3 : BaseMenu
         Keyboard = new(new[]
         {
         new KeyboardButton[] { "Последний рейд", "Последние_3" },
-        new KeyboardButton[] { "Последние_5", "Средние показатели игроков" },
-        new KeyboardButton[] { "Назад"},
+        new KeyboardButton[] { "Последние_5", "Последние_10" },
+        new KeyboardButton[] { "Средние показатели игроков", "Назад" },
         })
         { ResizeKeyboard = true };
 
@@ -282,7 +283,7 @@ public class LeaderUpdateMenu2 : BaseMenu
         new KeyboardButton[] { "Описание функций",},
         new KeyboardButton[] { "Характеристики клана", "Игроков клана",},
         new KeyboardButton[] { "Обновить последний рейд", "Обновить последнюю войну"},
-        new KeyboardButton[] { "Сезонные показатели", "Назад" }
+        new KeyboardButton[] { "Сбросить сезонные показатели", "Назад" }
         })
         { ResizeKeyboard = true };
 
@@ -361,6 +362,76 @@ public class LeaderDeleteClanWarsMenu3 : BaseMenu
     }
 }
 
+public class OtherMenu1 : BaseMenu
+{
+    public OtherMenu1()
+    {
+        Header = "Прочее";
+
+        Keyboard = new(new[]
+        {
+        new KeyboardButton[] { "Дефолтные планировки столицы", "Полезные ссылки" },
+        new KeyboardButton[] { "Контакты", "Оставить отзыв" },
+        new KeyboardButton[] { "CoC Стикеры", "Назад" }
+        })
+        { ResizeKeyboard = true };
+
+        MenuLevel = MenuLevel.Other1;
+    }
+}
+
+public class Layouts2 : BaseMenu
+{
+    public Layouts2()
+    {
+        Header = "Планировки";
+
+        Keyboard = new(new[]
+        {
+        new KeyboardButton[] { "Основная деревня", "Деревня строителя" },
+        new KeyboardButton[] { "Столица кланов", "Назад" },
+        })
+        { ResizeKeyboard = true };
+
+        MenuLevel = MenuLevel.Layouts2;
+    }
+}
+
+public class ThLayouts3 : BaseMenu
+{
+    public ThLayouts3()
+    {
+        Header = "Планировки";
+
+        Keyboard = new(new[]
+        {
+        new KeyboardButton[] { "Тх 11", "Тх 12" },
+        new KeyboardButton[] { "Тх 13", "Тх 14" },
+        new KeyboardButton[] { "Тх 15", "Назад" },
+        })
+        { ResizeKeyboard = true };
+
+        MenuLevel = MenuLevel.ThLayouts3;
+    }
+}
+
+public class BbLayouts3 : BaseMenu
+{
+    public BbLayouts3()
+    {
+        Header = "Планировки";
+
+        Keyboard = new(new[]
+        {
+        new KeyboardButton[] { "Дс 8", "Дс 9" },
+        new KeyboardButton[] { "Дс 10", "Назад" },
+        })
+        { ResizeKeyboard = true };
+
+        MenuLevel = MenuLevel.BbLayouts3;
+    }
+}
+
 
 public enum MenuLevel
 {
@@ -390,4 +461,11 @@ public enum MenuLevel
 
     LeaderDeleteClanWarsMenu3,
     LeaderDeleteRaidsMenu3,
+
+    Other1,
+
+    Layouts2,
+
+    ThLayouts3,
+    BbLayouts3,
 }

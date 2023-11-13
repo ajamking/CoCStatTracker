@@ -1,10 +1,12 @@
-﻿namespace CoCStatsTrackerBot.Requests;
+﻿using CoCStatsTrackerBot.Menu;
+
+namespace CoCStatsTrackerBot.Requests;
 
 public class OtherMenuHandler : BaseRequestHandler
 {
     public OtherMenuHandler()
     {
         Header = "Прочее";
-        //HandlerMenuLevel = MenuLevels.Member1;
+        HandlerMenuLevel = MenuLevel.Other1;
     }
 }

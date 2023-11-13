@@ -7,7 +7,7 @@ public class LeaderUpdateSeasonStatisticsRH : BaseRequestHandler
 {
     public LeaderUpdateSeasonStatisticsRH()
     {
-        Header = "Сезонные показатели";
+        Header = "Сбросить сезонные показатели";
         HandlerMenuLevel = MenuLevel.LeaderUpdateMenu2;
     }
 

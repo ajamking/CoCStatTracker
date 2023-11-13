@@ -183,9 +183,13 @@ public static class FunctionsLogicHelper
             {
                 summDeadUnits += maxDedUnitsPerAttack * 3 + 50;
             }
-            if (district.TotalDestructionPercent <= 100 && district.AttacksCount >= 5)
+            if (district.TotalDestructionPercent <= 100 && district.AttacksCount == 5)
             {
-                summDeadUnits += maxDedUnitsPerAttack * 4 + 50;
+                summDeadUnits += maxDedUnitsPerAttack * 4 + 100;
+            }
+            if (district.TotalDestructionPercent <= 100 && district.AttacksCount >= 6)
+            {
+                summDeadUnits += maxDedUnitsPerAttack * 5 + 100;
             }
             else
             {

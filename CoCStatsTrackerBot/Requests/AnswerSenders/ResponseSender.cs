@@ -21,7 +21,7 @@ public static class ResponseSender
                           parseMode: ParseMode.MarkdownV2);
                 }
 
-                WriteToConsole($"---\n{DateTime.Now}: На: \"{parameters.Message.Text}\" от {botUserIdentitficator}. Ответ выдан - {answerIsValid}\n---", ConsoleColor.Green);
+                WriteToConsole($"---\n{DateTime.Now}: На: \"{parameters.Message.Text}\" от {botUserIdentitficator} {parameters.Message.Chat.Id}. Ответ выдан - {answerIsValid}\n---", ConsoleColor.Green);
             }
             else
             {
@@ -53,9 +53,9 @@ public static class ResponseSender
         Console.ResetColor();
     }
 
-    private static string DeterMineUserIdentificator(Message message) => message switch
+    public static string DeterMineUserIdentificator(Message message) => message switch
     {
-        _ when !string.IsNullOrEmpty(message.Chat.Username) => message.Chat.Username,
+        _ when !string.IsNullOrEmpty(message.Chat.Username) => $"@{message.Chat.Username}",
         _ when !string.IsNullOrEmpty(message.Chat.FirstName) => message.Chat.FirstName,
         _ => message.Chat.Id.ToString(),
     };

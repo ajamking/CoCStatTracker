@@ -4,7 +4,6 @@ using CoCStatsTrackerBot.Menu;
 using CoCStatsTrackerBot.Requests;
 using CoCStatsTrackerBot.Requests.RequestHandlers;
 using CoCStatsTrackerBot.Requests.RequestHandlers.SlashFunctionHandlers;
-using System.Linq;
 using System.Text.RegularExpressions;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -31,6 +30,8 @@ public static class Navigation
 
     private static readonly string _botHolderToken = System.IO.File.ReadAllText(@"./../../../../CustomSolutionElements/MyPersonalKey.txt");
 
+    private static readonly long _adminsChatIdForFeedbacks = 6621123435;
+
     private static Func<BotUser, bool>[] _handlers = new[]
     {
         AnyRequestHeaderMatchAction,
@@ -44,6 +45,7 @@ public static class Navigation
         BotHolderOrAdminEnterClanChatIdAction,
         AdminsKeyAction,
         HoldSlashFuncAction,
+        FeedBackAction,
         TrashMessageAction
     };
 
@@ -64,7 +66,6 @@ public static class Navigation
         }
     }
 
-    #region Actions
     private static bool BotHolderTokenAction(BotUser activeBotUser)
     {
         if (activeBotUser.RequestHadnlerParameters.Message.Text == _botHolderToken)
@@ -206,6 +207,26 @@ public static class Navigation
                     .ShowKeyboard(activeBotUser.RequestHadnlerParameters);
 
                     activeBotUser.CurrentMenuLevel = MenuLevel.LeaderDeleteMenu2;
+
+                    return true;
+                }
+            case MenuLevel.Layouts2:
+                {
+                    _allRequestHandlers
+                    .First(x => x.HandlerMenuLevel == MenuLevel.Other1)
+                    .ShowKeyboard(activeBotUser.RequestHadnlerParameters);
+
+                    activeBotUser.CurrentMenuLevel = MenuLevel.Other1;
+
+                    return true;
+                }
+            case MenuLevel.BbLayouts3 or MenuLevel.ThLayouts3:
+                {
+                    _allRequestHandlers
+                    .First(x => x.HandlerMenuLevel == MenuLevel.Layouts2)
+                    .ShowKeyboard(activeBotUser.RequestHadnlerParameters);
+
+                    activeBotUser.CurrentMenuLevel = MenuLevel.Layouts2;
 
                     return true;
                 }
@@ -412,7 +433,7 @@ public static class Navigation
                          or ChatType.Group
                          or ChatType.Supergroup)
                 {
-                    SlashFunctionHandler.Handle(activeBotUser.RequestHadnlerParameters, _botSlashFunctions[slashFunc.Key]);
+                    AllSlashFunctionHandler.Handle(activeBotUser.RequestHadnlerParameters, _botSlashFunctions[slashFunc.Key]);
 
                     return true;
                 }
@@ -430,15 +451,34 @@ public static class Navigation
         return false;
     }
 
+    private static bool FeedBackAction(BotUser activeBotUser)
+    {
+        if (activeBotUser.RequestHadnlerParameters.Message.Text.ToLower().Contains("отзыв"))
+        {
+            var userName = ResponseSender.DeterMineUserIdentificator(activeBotUser.RequestHadnlerParameters.Message);
+
+            activeBotUser.RequestHadnlerParameters.BotClient.SendTextMessageAsync(_adminsChatIdForFeedbacks,
+                       text: StylingHelper.MakeItStyled($"ОТЗЫВ от {userName}\n[{activeBotUser.RequestHadnlerParameters.Message.Chat.Id}]\n\n" +
+                       $"{activeBotUser.RequestHadnlerParameters.Message.Text}", UiTextStyle.Default),
+                       parseMode: ParseMode.MarkdownV2);
+
+            ResponseSender.SendAnswer(activeBotUser.RequestHadnlerParameters, true, StylingHelper.MakeItStyled($"Отзыв принят!", UiTextStyle.Default));
+
+            return true;
+        }
+
+        return false;
+    }
+
     private static bool TrashMessageAction(BotUser activeBotUser)
     {
         ResponseSender.SendAnswer(activeBotUser.RequestHadnlerParameters, true,
-            StylingHelper.MakeItStyled($"Вы сказали {activeBotUser.RequestHadnlerParameters.Message.Text}, но я еще не знаю таких сложных вещей.🥺 \r\n" +
-            $"Выберите что-то из меню или введите корректный тег игрока или кална.😁", UiTextStyle.Default));
+            StylingHelper.MakeItStyled($"Кодовое слово или команда ﴾ {activeBotUser.RequestHadnlerParameters.Message.Text} ﴿ не предусмотрены.\n" +
+            $"\nВоспользуйтесь меню (кнопка находится правой нижней части интерфейса) " +
+            $"или введите корректный тег.", UiTextStyle.Default));
 
         return true;
     }
-    #endregion
 
 
     #region EditBotUserProperties

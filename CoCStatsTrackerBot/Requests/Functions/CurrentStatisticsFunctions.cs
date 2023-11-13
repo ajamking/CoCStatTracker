@@ -30,7 +30,7 @@ public class CurrentStatisticsFunctions
                     telegramUserName = nonAttacker.TelegramUserName;
                 }
 
-                str.AppendLine(StylingHelper.MakeItStyled($"{nonAttacker.Name} Атак: {nonAttacker.AttacksCount} {telegramUserName}", UiTextStyle.Name));
+                str.AppendLine(StylingHelper.MakeItStyled($"{nonAttacker.Name} ﴾ {nonAttacker.AttacksCount} ﴿ {telegramUserName}", UiTextStyle.Name));
             }
         }
 
@@ -92,9 +92,9 @@ public class CurrentStatisticsFunctions
                 opponentThLevel += " ";
             }
 
-            var mapStr = $"{properMateName} {membersThLevel} |{position}| {opponent.TownHallLevel} {properOpponentName}";
+            var mapStr = $"{properMateName.Replace("\\\\", "\\")} {membersThLevel} |{position}| {opponent.TownHallLevel} {properOpponentName}";
 
-            str.AppendLine($@"{StylingHelper.Ecranize(mapStr)}");
+            str.AppendLine($@"{StylingHelper.MakeItStyled(mapStr, UiTextStyle.Default)}");
         }
 
         str.AppendLine($@"```");
@@ -236,8 +236,8 @@ public class CurrentStatisticsFunctions
         str.Append(StylingHelper.MakeItStyled("Конец рейдов:  ", UiTextStyle.Default));
         str.AppendLine(StylingHelper.MakeItStyled(raidUi.EndedOn.FormateToUiDateTime(), UiTextStyle.Subtitle));
 
-        var firstColumnLength = 20;
-        var secondColumnLength = 11;
+        var firstColumnLength = 21;
+        var secondColumnLength = 9;
 
         str.AppendLine($"\n``` " +
                 $"|{StylingHelper.GetCenteredString("Параметр", firstColumnLength)}" +
@@ -253,15 +253,45 @@ public class CurrentStatisticsFunctions
             { "Разрушено районов", $"{raidUi.DefeatedDistrictsCount}" },
             { "Проведено атак", $"{raidUi.TotalAttacksCount}" },
             { "Атаковано кланов", $"{raidUi.DefeatedClans.Count}" },
-            { "Медали за атаку", $"{offensiveReward.GetDividedString()}" },
-            { "Медали за защиту", $"{raidUi.DefensiveReward}" },
-            { "Медалей суммарно", $"{totalReward.GetDividedString()}" },
-            { "Прогноз за атаку", $"{raidMedalsPrediction.OffensePrediction.GetDividedString()}" },
-            { "Прогноз за защиту", $"{raidMedalsPrediction.DefensePrediction.GetDividedString()}" },
-            { "Прогноз суммарно", $"{raidMedalsPrediction.SummPrediction.GetDividedString()}" },
         };
 
         foreach (var item in dic)
+        {
+            str.Append($" |{item.Key.PadRight(firstColumnLength)}|");
+
+            str.AppendLine($"{StylingHelper.GetCenteredString(item.Value.ToString(), secondColumnLength)}|");
+        }
+
+        str.AppendLine(StylingHelper.GetTableDeviderLine(DeviderType.Whitespace, firstColumnLength, secondColumnLength));
+
+        str.AppendLine($" |{StylingHelper.GetCenteredStringDash("Прогноз наград", firstColumnLength)}|{new string('-', secondColumnLength)}|");
+
+        var predictDic = new Dictionary<string, string>()
+        {
+            { "Медали за атаку", $"{raidMedalsPrediction.OffensePrediction.GetDividedString()}" },
+            { "Медали за защиту", $"{raidMedalsPrediction.DefensePrediction.GetDividedString()}" },
+            { "Медалей суммарно", $"{raidMedalsPrediction.SummPrediction.GetDividedString()}" },
+        };
+
+        foreach (var item in predictDic)
+        {
+            str.Append($" |{item.Key.PadRight(firstColumnLength)}|");
+
+            str.AppendLine($"{StylingHelper.GetCenteredString(item.Value.ToString(), secondColumnLength)}|");
+        }
+
+        str.AppendLine(StylingHelper.GetTableDeviderLine(DeviderType.Whitespace, firstColumnLength, secondColumnLength));
+
+        str.AppendLine($" |{StylingHelper.GetCenteredStringDash("Фактические награды", firstColumnLength)}|{new string('-', secondColumnLength)}|");
+
+        var lootDic = new Dictionary<string, string>()
+        {
+            { "Медали за атаку", $"{offensiveReward.GetDividedString()}" },
+            { "Медали за защиту", $"{raidUi.DefensiveReward}" },
+            { "Медалей суммарно", $"{totalReward.GetDividedString()}" },
+        };
+
+        foreach (var item in lootDic)
         {
             str.Append($" |{item.Key.PadRight(firstColumnLength)}|");
 

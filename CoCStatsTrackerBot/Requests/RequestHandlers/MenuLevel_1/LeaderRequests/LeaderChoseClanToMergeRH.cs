@@ -29,7 +29,7 @@ public class LeaderChoseClanToMergeRH : BaseRequestHandler
 
             answer.AppendLine(StylingHelper.MakeItStyled("\n\nКланы, которые вы можете модерировать: ", UiTextStyle.Default));
 
-            var trackedClans = GetFromDbQueryHandler.GetAllTrackedClansUi();
+            var trackedClans = GetFromDbQueryHandler.GetAllTrackedClans();
 
             if (parameters.IsBotHolder)
             {
@@ -39,16 +39,16 @@ public class LeaderChoseClanToMergeRH : BaseRequestHandler
 
                     var chatId = "ChatId Не установлен";
 
-                    if (!string.IsNullOrEmpty(clan.ClanChatId))
+                    if (!string.IsNullOrEmpty(clan.ClansTelegramChatId))
                     {
-                        chatId = $"Айди чата: {clan.ClanChatId}";
+                        chatId = $"Айди чата: {clan.ClansTelegramChatId}";
                     }
-                    if (clan.NewsLetterOn)
+                    if (clan.RegularNewsLetterOn)
                     {
                         newsLetter = "Рассылка включена";
                     }
 
-                    answer.AppendLine(StylingHelper.MakeItStyled($"{clan.Name} - {clan.Tag}\n{newsLetter} - {chatId}\n", UiTextStyle.Name));
+                    answer.AppendLine(StylingHelper.MakeItStyled($"{clan.Name} - {clan.Tag}\n[ {newsLetter} ] - [ {chatId} ]\n", UiTextStyle.Name));
                 }
             }
             else
@@ -59,16 +59,16 @@ public class LeaderChoseClanToMergeRH : BaseRequestHandler
 
                     var chatId = "ChatId Не установлен";
 
-                    if (!string.IsNullOrEmpty(clan.ClanChatId))
+                    if (!string.IsNullOrEmpty(clan.ClansTelegramChatId))
                     {
-                        chatId = $"Айди чата: {clan.ClanChatId}";
+                        chatId = $"Айди чата: {clan.ClansTelegramChatId}";
                     }
-                    if (clan.NewsLetterOn)
+                    if (clan.RegularNewsLetterOn)
                     {
                         newsLetter = "Рассылка включена";
                     }
 
-                    answer.AppendLine(StylingHelper.MakeItStyled($"{clan.Name} - {clan.Tag}\n{newsLetter} - {chatId}\n", UiTextStyle.Name));
+                    answer.AppendLine(StylingHelper.MakeItStyled($"{clan.Name} - {clan.Tag}\n[ {newsLetter} ] - [ {chatId} ]\n", UiTextStyle.Name));
                 }
             }
 

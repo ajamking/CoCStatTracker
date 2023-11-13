@@ -2,19 +2,19 @@
 
 namespace CoCStatsTrackerBot.Requests;
 
-public class ClanWarHistoryRH5 : BaseRequestHandler
+public class ClanRaidHistoryRH10 : BaseRequestHandler
 {
-    public ClanWarHistoryRH5()
+    public ClanRaidHistoryRH10()
     {
-        Header = "Последние 5";
+        Header = "Последние_10";
         HandlerMenuLevel = MenuLevel.ClanWarsHistory3;
     }
 
     override public void Execute(BotUserRequestParameters parameters)
     {
-        parameters.EntriesCount = 5;
+        parameters.EntriesCount = 10;
 
-        var handler = new ClanWarHistoryRHBase();
+        var handler = new ClanRaidHistoryRHBase();
 
         handler.Execute(parameters);
     }
