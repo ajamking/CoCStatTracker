@@ -5,5 +5,5 @@ public enum BotSlashFunction
     GroupGetChatId,
     GroupGetRaidShortInfo,
     GroupGetWarShortInfo,
-    GroupGetWarMap
+    GroupGetWarMap,
 }

@@ -14,10 +14,8 @@ public class TrackedClanBuilder
         Clan = trackedClan ?? new TrackedClan();
     }
 
-    public void SetBaseProperties(ClanApi clanApi, string adminsKey)
+    public void SetBaseProperties(ClanApi clanApi)
     {
-        Clan.AdminsKey = adminsKey;
-
         Clan.UpdatedOn = DateTime.Now;
         Clan.Tag = clanApi.Tag;
         Clan.Name = clanApi.Name;
@@ -86,10 +84,5 @@ public class TrackedClanBuilder
     public void AddCapitalRaid(CapitalRaid raid)
     {
         Clan.CapitalRaids.Add(raid);
-    }
-
-    public void SetTelegramChatId(string chatId)
-    {
-        Clan.ClansTelegramChatId = chatId;
     }
 }

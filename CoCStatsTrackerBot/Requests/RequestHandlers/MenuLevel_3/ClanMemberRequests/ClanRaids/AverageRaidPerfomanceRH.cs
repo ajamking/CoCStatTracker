@@ -1,5 +1,5 @@
 ﻿using CoCStatsTracker;
-using CoCStatsTrackerBot.Menu;
+using CoCStatsTrackerBot.BotMenues;
 
 namespace CoCStatsTrackerBot.Requests;
 
@@ -15,13 +15,13 @@ public class AverageRaidPerfomanceRH : BaseRequestHandler
     {
         try
         {
-            var averagePergomances = GetFromDbQueryHandler.GetAllClanMembersAverageRaidPerfomanceUi(parameters.LastClanTagMessage);
+            var averagePergomances = GetFromDbQueryHandler.GetAverageRaidmembersPerfomanceUi(parameters.LastClanTagMessage);
 
             var answer = ClanFunctions.GetMembersAverageRaidsPerfomance(averagePergomances);
 
             ResponseSender.SendAnswer(parameters, true, SplitAnswer(answer));
         }
-        catch (NotFoundException e)
+        catch (NotFoundException)
         {
             ResponseSender.SendAnswer(parameters, true, DefaultNotFoundMessage);
         }

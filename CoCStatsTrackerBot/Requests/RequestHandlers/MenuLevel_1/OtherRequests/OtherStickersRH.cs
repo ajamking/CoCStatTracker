@@ -1,4 +1,4 @@
-﻿using CoCStatsTrackerBot.Menu;
+﻿using CoCStatsTrackerBot.BotMenues;
 using System.Text;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;

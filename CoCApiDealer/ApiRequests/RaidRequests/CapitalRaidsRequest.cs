@@ -5,13 +5,13 @@ namespace CoCApiDealer.ApiRequests;
 
 public class CapitalRaidsRequest : BaseApiRequest
 {
-    public async Task<RaidsApi> CallApi(string clanTag, int limit = 0)
+    public static async Task<RaidsApi> CallApi(string clanTag, int limit = 0)
     {
         try
         {
             var requestType = AllowedRequests.CapitalRaids;
 
-            var apiRequestResult = await new ApiRequestBuilder(_httpClient, clanTag, requestType, limit).CallApi();
+            var apiRequestResult = await new ApiRequestBuilder(HttpClient, clanTag, requestType, limit).CallApi();
 
             var capitalRaidsInfo = JsonConvert.DeserializeObject<RaidsApi>(apiRequestResult);
 
@@ -20,7 +20,7 @@ public class CapitalRaidsRequest : BaseApiRequest
 
             return capitalRaidsInfo;
         }
-        catch (ApiNullOrEmtyResponseException ex)
+        catch (ApiNullOrEmtyResponseException)
         {
             return null;
         }

@@ -22,56 +22,54 @@ public static class AddToDbCommandHandler
 
     public static void ResetDb()
     {
-        using (AppDbContext dbContext = new AppDbContext(_dbConnectionString, true))
-        {
-            dbContext.SaveChanges();
-        }
+        using AppDbContext dbContext = new(_dbConnectionString, true);
+
+        dbContext.SaveChanges();
     }
 
-    public static void AddTrackedClan(string clanTag, string adminsKey)
+    public static void AddTrackedClan(string clanTag)
     {
-        using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
-        {
-            var trackedClanBuilder = new TrackedClanBuilder();
+        using AppDbContext dbContext = new(_dbConnectionString);
 
-            var clanInfoFromApi = new ClanInfoRequest().CallApi(clanTag).Result;
+        var trackedClanBuilder = new TrackedClanBuilder();
 
-            FailedPullFromApiException.ThrowByPredicate(() => clanInfoFromApi == null, "AddTrackedClan is failed, clan from API is null");
+        var clanInfoFromApi = ClanInfoRequest.CallApi(clanTag).Result;
 
-            AlreadyExistsException.ThrowByPredicate(() => dbContext.TrackedClans
-            .Any(x => x.Tag == clanInfoFromApi.Tag), "AddTrackedClan is failed, this clan already exists");
+        FailedPullFromApiException.ThrowByPredicate(() => clanInfoFromApi == null, "AddTrackedClan is failed, clan from API is null");
 
-            trackedClanBuilder.SetBaseProperties(clanInfoFromApi, adminsKey);
+        AlreadyExistsException.ThrowByPredicate(() => dbContext.TrackedClans
+        .Any(x => x.Tag == clanInfoFromApi.Tag), "AddTrackedClan - is failed, this clan already exists");
 
-            dbContext.TrackedClans.Add(trackedClanBuilder.Clan);
+        trackedClanBuilder.SetBaseProperties(clanInfoFromApi);
 
-            dbContext.SaveChanges();
-        }
+        dbContext.TrackedClans.Add(trackedClanBuilder.Clan);
+
+        dbContext.SaveChanges();
     }
 
     public static void AddClanMembers(string clanTag)
     {
-        var clanInfoFromApi = new ClanInfoRequest().CallApi(clanTag).Result;
+        var clanInfoFromApi = ClanInfoRequest.CallApi(clanTag).Result;
 
-        FailedPullFromApiException.ThrowByPredicate(() => clanInfoFromApi == null, "AddClanMembers is failed, clan from API is null");
+        FailedPullFromApiException.ThrowByPredicate(() => clanInfoFromApi == null, "AddClanMembers - is failed, clan from API is null");
 
         var clanMembersTagsFromApi = clanInfoFromApi.Members;
 
         var clanMembers = new List<ClanMember>();
 
-        using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
+        using (AppDbContext dbContext = new(_dbConnectionString))
         {
             var trackedClan = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
 
-            NotFoundException.ThrowByPredicate(() => trackedClan.Id == 0, "AddClanMembers is failed, no such clan found");
+            NotFoundException.ThrowByPredicate(() => trackedClan == null || trackedClan.Id == 0, "AddClanMembers - is failed, no such clan found");
 
-            AlreadyExistsException.ThrowByPredicate(() => trackedClan.ClanMembers.Count > 0, "AddClanMembers is failed, clanMembers already exists");
+            AlreadyExistsException.ThrowByPredicate(() => trackedClan.ClanMembers.Count > 0, "AddClanMembers - is failed, clanMembers already exists");
 
             var trackedClanBuilder = new TrackedClanBuilder(trackedClan);
 
             var SetMemberPropertyTasks = clanMembersTagsFromApi.Select(async x =>
             {
-                var playerInfoFromApi = await (new PlayerRequest().CallApi(x.Tag));
+                var playerInfoFromApi = await (PlayerRequest.CallApi(x.Tag));
 
                 var clanMemberBuilder = new ClanMemberBuilder();
 
@@ -96,54 +94,52 @@ public static class AddToDbCommandHandler
 
     private static void AddLastClanMembersStaticstics(string clanTag)
     {
-        using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
-        {
-            var trackedClan = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
+        using AppDbContext dbContext = new(_dbConnectionString);
 
-            NotFoundException.ThrowByPredicate(() => trackedClan.Id == 0, "AddLastClanMembersStaticstics is failed, no such clan found");
+        var trackedClan = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
 
-            var trackedClanBuilder = new TrackedClanBuilder(trackedClan);
+        NotFoundException.ThrowByPredicate(() => trackedClan == null || trackedClan.Id == 0, "AddLastClanMembersStaticstics - is failed, no such clan found");
 
-            trackedClanBuilder.SetLastClanMembersStaticstics(trackedClanBuilder.Clan.ClanMembers);
+        var trackedClanBuilder = new TrackedClanBuilder(trackedClan);
 
-            dbContext.SaveChanges();
-        }
+        trackedClanBuilder.SetLastClanMembersStaticstics(trackedClanBuilder.Clan.ClanMembers);
+
+        dbContext.SaveChanges();
     }
 
 
     public static void AddCurrentRaidToClan(string clanTag)
     {
-        var raidInfoFromApiresult = new CapitalRaidsRequest().CallApi(clanTag, 1).Result;
+        var raidInfoFromApiresult = CapitalRaidsRequest.CallApi(clanTag, 1).Result;
 
         FailedPullFromApiException.ThrowByPredicate(() => raidInfoFromApiresult == null, "AddCurrentRaidToClan is failed, Raid form API is null");
 
         var raidInfoFromApi = raidInfoFromApiresult.RaidsInfo.First();
 
-        using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
-        {
-            var trackedClan = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
+        using AppDbContext dbContext = new(_dbConnectionString);
 
-            NotFoundException.ThrowByPredicate(() => trackedClan.Id == 0, "AddCurrentRaidToClan is failed, no such clan found");
+        var trackedClan = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
 
-            AlreadyExistsException.ThrowByPredicate(() => trackedClan.CapitalRaids
-            .Any(x => x.StartedOn == DateTimeParser.ParseToDateTime(raidInfoFromApi.StartTime).ToLocalTime()), "AddCurrentRaidToClan is failed, this raid already exists");
+        NotFoundException.ThrowByPredicate(() => trackedClan == null || trackedClan.Id == 0, "AddCurrentRaidToClan is failed, no such clan found");
 
-            var trackedClanBuilder = new TrackedClanBuilder(trackedClan);
+        AlreadyExistsException.ThrowByPredicate(() => trackedClan.CapitalRaids
+        .Any(x => x.StartedOn == DateTimeParser.ParseToDateTime(raidInfoFromApi.StartTime).ToLocalTime()), "AddCurrentRaidToClan is failed, this raid already exists");
 
-            var raidBuilder = new CapitalRaidBuilder();
+        var trackedClanBuilder = new TrackedClanBuilder(trackedClan);
 
-            raidBuilder.SetBaseProperties(raidInfoFromApi);
+        var raidBuilder = new CapitalRaidBuilder();
 
-            raidBuilder.SetTrackedClan(trackedClanBuilder.Clan);
+        raidBuilder.SetBaseProperties(raidInfoFromApi);
 
-            raidBuilder = AddRaidDefenses(raidBuilder, raidInfoFromApi);
+        raidBuilder.SetTrackedClan(trackedClanBuilder.Clan);
 
-            raidBuilder = AddAttackedClansAndRaidMembers(trackedClanBuilder, raidBuilder, raidInfoFromApi);
+        raidBuilder = AddRaidDefenses(raidBuilder, raidInfoFromApi);
 
-            trackedClanBuilder.AddCapitalRaid(raidBuilder.Raid);
+        raidBuilder = AddAttackedClansAndRaidMembers(trackedClanBuilder, raidBuilder, raidInfoFromApi);
 
-            dbContext.SaveChanges();
-        }
+        trackedClanBuilder.AddCapitalRaid(raidBuilder.Raid);
+
+        dbContext.SaveChanges();
     }
 
     public static CapitalRaidBuilder AddRaidDefenses(CapitalRaidBuilder raidBuilder, RaidApi raidInfoFromApi)
@@ -254,7 +250,7 @@ public static class AddToDbCommandHandler
         foreach (var raidMemberBuilder in raidMemberBuilders)
         {
             raidMemberBuilder.SetRaidMemberAttacks(allRaidAttacks
-                .Where(x=>x.RaidMember.Tag == raidMemberBuilder.Member.Tag).ToList());
+                .Where(x => x.RaidMember.Tag == raidMemberBuilder.Member.Tag).ToList());
         }
 
         raidBuilder.SetAttackedClans(attackedClans);
@@ -269,91 +265,89 @@ public static class AddToDbCommandHandler
 
     public static void AddCurrentClanWarToClan(string clanTag)
     {
-        var currentWarInfoFromApi = new CurrentWarRequest().CallApi(clanTag).Result;
+        var currentWarInfoFromApi = CurrentWarRequest.CallApi(clanTag).Result;
 
         FailedPullFromApiException.ThrowByPredicate(() => currentWarInfoFromApi == null,
             "AddCurrentClanWarToClan clan is not in classic war.");
 
-        using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
-        {
-            var trackedClan = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
+        using AppDbContext dbContext = new(_dbConnectionString);
 
-            NotFoundException.ThrowByPredicate(() => trackedClan.Id == 0, "AddCurrentClanWarToClan is failed, no such clan found");
+        var trackedClanDb = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
 
-            AlreadyExistsException.ThrowByPredicate(() => trackedClan.ClanWars
-           .Any(x => x.StartedOn == DateTimeParser.ParseToDateTime(currentWarInfoFromApi.StartTime)), "AddCurrentClanWarToClan is failed, this war already exists");
+        NotFoundException.ThrowByPredicate(() => trackedClanDb == null || trackedClanDb.Id == 0, "AddCurrentClanWarToClan is failed, no such clan found");
 
-            var trackedClanBuilder = new TrackedClanBuilder(trackedClan);
+        AlreadyExistsException.ThrowByPredicate(() => trackedClanDb.ClanWars
+       .Any(x => x.StartedOn == DateTimeParser.ParseToDateTime(currentWarInfoFromApi.StartTime)), "AddCurrentClanWarToClan is failed, this war already exists");
 
-            var clanWarBuilder = new ClanWarBuilder();
+        var trackedClanBuilder = new TrackedClanBuilder(trackedClanDb);
 
-            clanWarBuilder.SetBaseProperties(currentWarInfoFromApi);
+        var clanWarBuilder = new ClanWarBuilder();
 
-            clanWarBuilder.SetOpponentWarStatistics(new ClanInfoRequest().CallApi(clanTag).Result);
+        clanWarBuilder.SetBaseProperties(currentWarInfoFromApi);
 
-            clanWarBuilder.SetTrackedClan(trackedClanBuilder.Clan);
+        clanWarBuilder.SetOpponentWarStatistics(ClanInfoRequest.CallApi(clanTag).Result);
 
-            clanWarBuilder = AddEnemyWarMembers(clanWarBuilder, currentWarInfoFromApi);
+        clanWarBuilder.SetTrackedClan(trackedClanBuilder.Clan);
 
-            clanWarBuilder = AddCwMembersWithAttacks(trackedClanBuilder, clanWarBuilder, currentWarInfoFromApi);
+        clanWarBuilder = AddEnemyWarMembers(clanWarBuilder, currentWarInfoFromApi);
 
-            trackedClanBuilder.AddClanWar(clanWarBuilder.ClanWar);
+        clanWarBuilder = AddCwMembersWithAttacks(trackedClanBuilder, clanWarBuilder, currentWarInfoFromApi);
 
-            dbContext.SaveChanges();
-        }
+        trackedClanBuilder.AddClanWar(clanWarBuilder.ClanWar);
+
+        dbContext.SaveChanges();
     }
 
-    public static void AddCwlClanWarsToClan(string clanTag)
+    public static void AddCurrentCwlClanWarsToClan(string clanTag)
     {
-        var cwlGroupRequest = new CwlGroupRequest().CallApi(clanTag).Result;
+        var cwlGroupRequest = CwlGroupRequest.CallApi(clanTag).Result;
 
         FailedPullFromApiException.ThrowByPredicate(() => cwlGroupRequest == null, "AddCwlWarsToClan is failed, clan is not in CWL group");
 
         var cwlWarsApi = GetCwlWars(cwlGroupRequest, clanTag);
 
-        using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
+        using AppDbContext dbContext = new(_dbConnectionString);
+
+        var trackedClanDb = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
+
+        NotFoundException.ThrowByPredicate(() => trackedClanDb == null || trackedClanDb.Id == 0, "AddCwlWarsToClan is failed, no such clan found");
+
+        foreach (var cwlWarInfoFromApi in cwlWarsApi)
         {
-            var trackedClan = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
-
-            NotFoundException.ThrowByPredicate(() => trackedClan is { Id: 0 }, "AddCwlWarsToClan is failed, no such clan found");
-
-            foreach (var cwlWarInfoFromApi in cwlWarsApi)
+            if (trackedClanDb.ClanWars.Any(x => x.StartedOn == cwlWarInfoFromApi.StartTime.ParseToDateTime()))
             {
-                if (trackedClan.ClanWars.Any(x => x.StartedOn == cwlWarInfoFromApi.StartTime.ParseToDateTime()))
-                {
-                    continue;
-                }
-
-                var trackedClanBuilder = new TrackedClanBuilder(trackedClan);
-
-                var clanWarBuilder = new ClanWarBuilder();
-
-                if (cwlWarInfoFromApi.OpponentResults.Tag == clanTag)
-                {
-                    var newClanResults = cwlWarInfoFromApi.OpponentResults;
-
-                    var nweOpponentResults = cwlWarInfoFromApi.ClanResults;
-
-                    cwlWarInfoFromApi.ClanResults = newClanResults;
-
-                    cwlWarInfoFromApi.OpponentResults = nweOpponentResults;
-                }
-
-                clanWarBuilder.SetTrackedClan(trackedClanBuilder.Clan);
-
-                clanWarBuilder.SetBaseProperties(cwlWarInfoFromApi, true, 1);
-
-                clanWarBuilder.SetOpponentWarStatistics(new ClanInfoRequest().CallApi(clanTag).Result);
-
-                clanWarBuilder = AddEnemyWarMembers(clanWarBuilder, cwlWarInfoFromApi);
-
-                clanWarBuilder = AddCwMembersWithAttacks(trackedClanBuilder, clanWarBuilder, cwlWarInfoFromApi);
-
-                trackedClanBuilder.AddClanWar(clanWarBuilder.ClanWar);
+                continue;
             }
 
-            dbContext.SaveChanges();
+            var trackedClanBuilder = new TrackedClanBuilder(trackedClanDb);
+
+            var clanWarBuilder = new ClanWarBuilder();
+
+            if (cwlWarInfoFromApi.OpponentResults.Tag == clanTag)
+            {
+                var newClanResults = cwlWarInfoFromApi.OpponentResults;
+
+                var nweOpponentResults = cwlWarInfoFromApi.ClanResults;
+
+                cwlWarInfoFromApi.ClanResults = newClanResults;
+
+                cwlWarInfoFromApi.OpponentResults = nweOpponentResults;
+            }
+
+            clanWarBuilder.SetTrackedClan(trackedClanBuilder.Clan);
+
+            clanWarBuilder.SetBaseProperties(cwlWarInfoFromApi, true, 1);
+
+            clanWarBuilder.SetOpponentWarStatistics(ClanInfoRequest.CallApi(clanTag).Result);
+
+            clanWarBuilder = AddEnemyWarMembers(clanWarBuilder, cwlWarInfoFromApi);
+
+            clanWarBuilder = AddCwMembersWithAttacks(trackedClanBuilder, clanWarBuilder, cwlWarInfoFromApi);
+
+            trackedClanBuilder.AddClanWar(clanWarBuilder.ClanWar);
         }
+
+        dbContext.SaveChanges();
     }
 
     public static List<ClanWarApi> GetCwlWars(CwlGroupApi cwlGroupRequest, string clanTag)
@@ -364,7 +358,7 @@ public static class AddToDbCommandHandler
         {
             foreach (var warTag in round.WarTags)
             {
-                var cwlWar = new CwlWarRequest().CallApi(warTag).Result;
+                var cwlWar = CwlWarRequest.CallApi(warTag).Result;
 
                 FailedPullFromApiException.ThrowByPredicate(() => cwlWar == null, "GetCwlWarTags is failed, bad cwlWarTag");
 
@@ -436,10 +430,7 @@ public static class AddToDbCommandHandler
 
             warMemberBuilder.SetClanMember(clanMemberOnWar);
 
-            if (clanMemberOnWar != null)
-            {
-                clanMemberOnWar.WarMemberships.Add(warMemberBuilder.WarMember);
-            }
+            clanMemberOnWar?.WarMemberships.Add(warMemberBuilder.WarMember);
 
             warMembers.Add(warMemberBuilder.WarMember);
         }

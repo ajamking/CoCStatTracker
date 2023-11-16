@@ -2,8 +2,9 @@
 
 public class ApiRequestBuilder
 {
-    private string _tag = string.Empty;
-    private string _limit = string.Empty;
+    private readonly string _tag;
+
+    private readonly string _limit;
 
     public HttpClient HttpClient { get; }
     public AllowedRequest AllowedRequest { get; }
@@ -18,6 +19,10 @@ public class ApiRequestBuilder
         {
             _limit = "?limit=" + limit.ToString();
         }
+        else
+        {
+            _limit = string.Empty;
+        }
 
         HttpClient = authorizedClient;
 
@@ -26,9 +31,9 @@ public class ApiRequestBuilder
 
     public async Task<string> CallApi()
     {
-        FinalRequestUrl = @$"{BaseUrl}/{AllowedRequest.SearchBy}/%23{_tag.Substring(1)}/{AllowedRequest.LastEndPointWord}{_limit}";
+        FinalRequestUrl = @$"{BaseUrl}/{AllowedRequest.SearchBy}/%23{_tag[1..]}/{AllowedRequest.LastEndPointWord}{_limit}";
 
-        using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, FinalRequestUrl);
+        using HttpRequestMessage request = new(HttpMethod.Get, FinalRequestUrl);
 
         using HttpResponseMessage responce = HttpClient.Send(request);
 

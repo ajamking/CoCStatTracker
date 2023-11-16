@@ -2,5 +2,5 @@
 
 public class BaseApiRequest
 {
-    public static HttpClient _httpClient = new CoCApiClientFactory().GetHttpClient();
+    public static HttpClient HttpClient { get; set; } = CoCApiClientFactory.GetHttpClient();
 }

@@ -1,5 +1,5 @@
 ﻿using CoCStatsTracker;
-using CoCStatsTrackerBot.Menu;
+using CoCStatsTrackerBot.BotMenues;
 
 namespace CoCStatsTrackerBot.Requests;
 
@@ -17,18 +17,18 @@ public class LeaderAddLastRaidRH : BaseRequestHandler
         {
             AddToDbCommandHandler.AddCurrentRaidToClan(parameters.LastClanTagToMerge);
 
-            var lastRaid = GetFromDbQueryHandler.GetAllRaidsUi(parameters.LastClanTagToMerge).OrderByDescending(x => x.StartedOn).First();
+            var lastRaid = GetFromDbQueryHandler.GetLastRaidUi(parameters.LastClanTagToMerge);
 
             var answer = StylingHelper.MakeItStyled($"Операция успешна.\n" +
                 $"Добавлен рейд: {lastRaid.StartedOn.ToShortDateString()} - {lastRaid.EndedOn.ToShortTimeString()} {lastRaid.State}", UiTextStyle.Default);
 
             ResponseSender.SendAnswer(parameters, true, SplitAnswer(answer));
         }
-        catch (NotFoundException e)
+        catch (NotFoundException)
         {
             ResponseSender.SendAnswer(parameters, true, DefaultNotFoundMessage);
         }
-        catch (AlreadyExistsException e)
+        catch (AlreadyExistsException)
         {
             ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Последний рейд уже отслеживается, добавить его невозможно, но можно обновить или удалить в других вкладках.", UiTextStyle.Default));
         }

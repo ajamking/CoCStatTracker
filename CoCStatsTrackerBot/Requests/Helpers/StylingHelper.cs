@@ -9,21 +9,15 @@ public static class StylingHelper
     /// Стилизует текст в соответствии с Telegram MarkdownV2
     public static string MakeItStyled(string str, UiTextStyle textStyle)
     {
-        switch (textStyle)
+        return textStyle switch
         {
-            case UiTextStyle.Header:
-                return $@"_*{Ecranize(str)}*_".ToUpper();
-            case UiTextStyle.Subtitle:
-                return $@"_*{Ecranize(str)}*_";
-            case UiTextStyle.TableAnnotation:
-                return $@"__*{Ecranize(str)}*__";
-            case UiTextStyle.Name:
-                return $@"*{Ecranize(str)}*";
-            case UiTextStyle.Default:
-                return Ecranize(str);
-            default:
-                return Ecranize($@"Text Style Error");
-        }
+            UiTextStyle.Header => $@"_*{Ecranize(str)}*_".ToUpper(),
+            UiTextStyle.Subtitle => $@"_*{Ecranize(str)}*_",
+            UiTextStyle.TableAnnotation => $@"__*{Ecranize(str)}*__",
+            UiTextStyle.Name => $@"*{Ecranize(str)}*",
+            UiTextStyle.Default => Ecranize(str),
+            _ => Ecranize($@"Text Style Error"),
+        };
     }
 
     /// Формирует гиперссылку
@@ -90,13 +84,13 @@ public static class StylingHelper
             return str;
         }
 
-        StringBuilder newStr = new StringBuilder(str.Length);
+        StringBuilder newStr = new(str.Length);
 
         foreach (var c in str)
         {
             if (reservedSymbols.Contains(c))
             {
-                newStr.Append(@"\");
+                newStr.Append('\\');
                 newStr.Append(c);
             }
             else
@@ -136,7 +130,7 @@ public static class StylingHelper
             }
             else
             {
-                tempName.Append("?");
+                tempName.Append('?');
             }
         }
 
@@ -144,7 +138,7 @@ public static class StylingHelper
 
         if (result.Length > maxStringLength)
         {
-            return result.Substring(0, maxStringLength);
+            return result[..maxStringLength];
         }
         else
         {
@@ -168,14 +162,9 @@ public static class StylingHelper
 
     public static string FormateToUiDateTime(this DateTime dateTime)
     {
-        var answer = $"{dateTime.ToString(@"dd\ MMM")} в {dateTime.ToString("HH:mm")}";
+        var answer = $"{dateTime:dd\\ MMM} в {dateTime:HH:mm}";
 
         return answer;
-    }
-
-    public static string GetTimeLeft(this DateTime endenOn)
-    {
-        return $"{Math.Round(endenOn.Subtract(DateTime.Now).TotalHours, 0)}ч. {endenOn.Subtract(DateTime.Now).Minutes}м.";
     }
 
     public static string GetUpdatedOnString(this DateTime updatedOn)
@@ -187,9 +176,9 @@ public static class StylingHelper
 
     public static string GetTableDeviderLine(DeviderType deviderType, params int[] widths)
     {
-        var str = new StringBuilder(widths.Sum() + widths.Count());
+        var str = new StringBuilder(widths.Sum() + widths.Length);
 
-        str.Append(" ");
+        str.Append(' ');
 
         var symbol = '-';
 
@@ -202,13 +191,13 @@ public static class StylingHelper
                         str.Append($"|{new string(symbol, width)}");
                     }
 
-                    str.Append("|");
+                    str.Append('|');
 
                     break;
                 }
             case DeviderType.Dashes:
                 {
-                    str.Append("|");
+                    str.Append('|');
 
                     foreach (var width in widths)
                     {
@@ -217,7 +206,7 @@ public static class StylingHelper
 
                     str.Remove(str.Length - 1, 1);
 
-                    str.Append("|");
+                    str.Append('|');
 
                     break;
                 }

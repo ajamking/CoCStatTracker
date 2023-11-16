@@ -26,7 +26,7 @@ public static class AllSlashFunctionHandler
                     break;
             }
         }
-        catch (NotFoundException e)
+        catch (NotFoundException)
         {
             ResponseSender.SendAnswer(parameters, true, BaseRequestHandler.DefaultNotFoundMessage);
         }
@@ -48,9 +48,9 @@ public static class AllSlashFunctionHandler
 
         foreach (var clan in clans)
         {
-            var allRaids = GetFromDbQueryHandler.GetAllRaidsUi(clan.Tag).OrderByDescending(x => x.StartedOn);
+            var lastCapitalRaidUi = GetFromDbQueryHandler.GetLastRaidUi(clan.Tag);
 
-            var answer = CurrentStatisticsFunctions.GetCurrentRaidShortInfo(allRaids.First());
+            var answer = CurrentStatisticsFunctions.GetCurrentRaidShortInfo(lastCapitalRaidUi);
 
             ResponseSender.SendAnswer(parameters, true, SplitAnswer(answer));
         }
@@ -62,9 +62,9 @@ public static class AllSlashFunctionHandler
 
         foreach (var clan in clans)
         {
-            var allClanwars = GetFromDbQueryHandler.GetAllClanWarsUi(clan.Tag).OrderByDescending(x => x.StartedOn);
+            var lastClanWar = GetFromDbQueryHandler.GetLastClanWarUi(clan.Tag);
 
-            var answer = CurrentStatisticsFunctions.GetCurrentWarShortInfo(allClanwars.First());
+            var answer = CurrentStatisticsFunctions.GetCurrentWarShortInfo(lastClanWar);
 
             ResponseSender.SendAnswer(parameters, true, SplitAnswer(answer));
         }
@@ -76,14 +76,13 @@ public static class AllSlashFunctionHandler
 
         foreach (var clan in clans)
         {
-            var allClanwars = GetFromDbQueryHandler.GetAllClanWarsUi(clan.Tag).OrderByDescending(x => x.StartedOn);
+            var lastClanWarUi = GetFromDbQueryHandler.GetLastClanWarUi(clan.Tag);
 
-            var answer = CurrentStatisticsFunctions.GetCurrentWarMap(allClanwars.First().WarMap);
+            var answer = CurrentStatisticsFunctions.GetCurrentWarMap(lastClanWarUi.WarMap);
 
             ResponseSender.SendAnswer(parameters, true, SplitAnswer(answer));
         }
     }
-
 
     private static string[] SplitAnswer(string answer) => answer.Split(new[] { BaseRequestHandler.MessageSplitToken }, StringSplitOptions.RemoveEmptyEntries).ToArray();
 }

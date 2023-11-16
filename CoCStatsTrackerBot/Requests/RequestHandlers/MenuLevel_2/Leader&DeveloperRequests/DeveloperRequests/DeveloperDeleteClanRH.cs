@@ -1,5 +1,5 @@
 ﻿using CoCStatsTracker;
-using CoCStatsTrackerBot.Menu;
+using CoCStatsTrackerBot.BotMenues;
 
 namespace CoCStatsTrackerBot.Requests;
 
@@ -26,7 +26,7 @@ public class DeveloperDeleteClanRH : BaseRequestHandler
                 ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Тег для изменяемого клана не проставлен.", UiTextStyle.Default));
             }
         }
-        catch (NotFoundException e)
+        catch (NotFoundException)
         {
             ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Такого клана нет в БД, удаление невозможно.", UiTextStyle.Default));
         }

@@ -1,5 +1,5 @@
 ﻿using CoCStatsTracker;
-using CoCStatsTrackerBot.Menu;
+using CoCStatsTrackerBot.BotMenues;
 
 namespace CoCStatsTrackerBot.Requests;
 
@@ -19,14 +19,14 @@ public class LeaderDeleteWarsRHBase : BaseRequestHandler
 
             DeleteFromDbCommandHandler.DeleteClanWars(parameters.LastClanTagToMerge, parameters.EntriesCount);
 
-            var clanWarsAfterRemove = GetFromDbQueryHandler.GetAllRaidsUi(parameters.LastClanTagToMerge).Count;
+            var clanWarsAfterRemove = GetFromDbQueryHandler.GetAllClanWarsUi(parameters.LastClanTagToMerge).Count;
 
             var answer = StylingHelper.MakeItStyled($"Операция успешна.\n" +
                 $"Записей удалено: {clanWars - clanWarsAfterRemove}", UiTextStyle.Default);
 
             ResponseSender.SendAnswer(parameters, true, SplitAnswer(answer));
         }
-        catch (NotFoundException e)
+        catch (NotFoundException)
         {
             ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Все записи о войнах удалены.", UiTextStyle.Default));
         }

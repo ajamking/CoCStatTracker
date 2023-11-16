@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 
 namespace CoCStatsTracker.ApiEntities;
+
 public class AttackedClanInfoApi
 {
     [JsonProperty("tag")]

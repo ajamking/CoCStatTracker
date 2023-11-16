@@ -1,5 +1,5 @@
 ﻿using CoCStatsTracker;
-using CoCStatsTrackerBot.Menu;
+using CoCStatsTrackerBot.BotMenues;
 
 namespace CoCStatsTrackerBot.Requests;
 
@@ -21,7 +21,7 @@ public class ClanRaidHistoryRHBase : BaseRequestHandler
 
             ResponseSender.SendAnswer(parameters, true, SplitAnswer(answer));
         }
-        catch (NotFoundException e)
+        catch (NotFoundException)
         {
             ResponseSender.SendAnswer(parameters, true, DefaultNotFoundMessage);
         }

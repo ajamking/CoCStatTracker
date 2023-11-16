@@ -1,6 +1,5 @@
 ﻿using CoCStatsTracker.UIEntities;
 using Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 using Storage;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,249 +16,284 @@ public static class GetFromDbQueryHandler
     }
 
     /*--------------Клан--------------*/
-    public static List<ClanUi> GetAllTrackedClansUi()
+    public static List<TrackedClanUi> GetAllTrackedClansUi()
     {
-        using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
-        {
-            var uiClans = new List<ClanUi>();
+        using AppDbContext dbContext = new(_dbConnectionString);
 
-            uiClans.AddRange(dbContext.TrackedClans
-                .Select(Mapper.MapToUi).ToList());
+        var trackedClansUi = new List<TrackedClanUi>();
 
-            NotFoundException.ThrowByPredicate(() => uiClans.Count == 0, "No tracked clans were found in DB");
+        var trackedClansDb = dbContext.TrackedClans;
 
-            return uiClans;
-        }
+        NotFoundException.ThrowByPredicate(() => trackedClansDb == null || !trackedClansDb.Any(), "GetAllTrackedClansUi - No tracked clans were found in DB");
+
+        trackedClansUi.AddRange(trackedClansDb.Select(Mapper.MapToUi).ToList());
+
+        return trackedClansUi;
     }
 
-    public static ClanUi GetTrackedClanUi(string clanTag)
+    public static TrackedClanUi GetTrackedClanUi(string clanTag)
     {
-        using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
-        {
-            var uiClan = Mapper.MapToUi(dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag));
+        using AppDbContext dbContext = new(_dbConnectionString);
 
-            NotFoundException.ThrowByPredicate(() => uiClan == null, "No such Clan was found in DB");
+        var trackedClanDb = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
 
-            return uiClan;
-        }
+        NotFoundException.ThrowByPredicate(() => trackedClanDb == null, "GetTrackedClanUi - No such Clan was found in DB");
+
+        return Mapper.MapToUi(trackedClanDb);
     }
 
-    public static List<CwCwlUi> GetAllClanWarsUi(string clanTag)
+    public static List<TrackedClan> GetAllTrackedClans()
     {
-        using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
-        {
-            var uiClanWars = new List<CwCwlUi>();
+        using AppDbContext dbContext = new(_dbConnectionString);
 
-            var trackedClan = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
+        var trackedClansDb = dbContext.TrackedClans;
 
-            NotFoundException.ThrowByPredicate(() => trackedClan == null, "No such clan was found in DB");
+        NotFoundException.ThrowByPredicate(() => trackedClansDb == null || !trackedClansDb.Any(), "GetAllTrackedClans - No tracked clans were found in DB");
 
-            var wars = trackedClan.ClanWars;
-
-            NotFoundException.ThrowByPredicate(() => wars.Count == 0, "No tracked ClanWars were found in DB");
-
-            foreach (var clanWar in wars)
-            {
-                uiClanWars.Add(Mapper.MapToUi(clanWar));
-            }
-
-            return uiClanWars;
-        }
+        return trackedClansDb.ToList();
     }
 
-    public static List<RaidUi> GetAllRaidsUi(string clanTag)
+    public static TrackedClan GetTrackedClan(string clanTag)
     {
-        using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
-        {
-            var uiRaids = new List<RaidUi>();
+        using AppDbContext dbContext = new(_dbConnectionString);
 
-            var trackedClan = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
+        var trackedClanDb = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
 
-            NotFoundException.ThrowByPredicate(() => trackedClan == null, "No such clan was found in DB");
+        NotFoundException.ThrowByPredicate(() => trackedClanDb == null, "GetTrackedClan - No such Clan was found in DB");
 
-            var raids = trackedClan.CapitalRaids;
-
-            NotFoundException.ThrowByPredicate(() => raids.Count == 0, "No tracked Raids were found in DB");
-
-            foreach (var raid in trackedClan.CapitalRaids)
-            {
-                uiRaids.Add(Mapper.MapToUi(raid, trackedClan));
-            }
-
-            return uiRaids;
-        }
+        return trackedClanDb;
     }
+
 
     public static List<ClanMemberUi> GetAllClanMembersUi(string clanTag)
     {
-        using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
+        using AppDbContext dbContext = new(_dbConnectionString);
+
+        var clanMembersUi = new List<ClanMemberUi>();
+
+        var trackedClanDb = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
+
+        NotFoundException.ThrowByPredicate(() => trackedClanDb == null, "GetAllClanMembersUi - No such clan was found in DB");
+
+        NotFoundException.ThrowByPredicate(() => trackedClanDb.ClanMembers == null || trackedClanDb.ClanMembers.Count == 0, "GetAllClanMembersUi - No tracked ClanMembers were found in DB");
+
+        var clanMembersDb = trackedClanDb.ClanMembers;
+
+        foreach (var member in trackedClanDb.ClanMembers)
         {
-            var uiClanMembers = new List<ClanMemberUi>();
-
-            var trackedClan = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
-
-            NotFoundException.ThrowByPredicate(() => trackedClan == null, "No such clan was found in DB");
-
-            var clanMembers = trackedClan.ClanMembers;
-
-            NotFoundException.ThrowByPredicate(() => clanMembers.Count == 0, "No tracked ClanMembers were found in DB");
-
-            foreach (var member in trackedClan.ClanMembers)
-            {
-                uiClanMembers.Add(Mapper.MapToUi(member));
-            }
-
-            return uiClanMembers;
+            clanMembersUi.Add(Mapper.MapToUi(member));
         }
+
+        return clanMembersUi;
     }
 
-    public static List<MedianRaidPerfomanse> GetAllClanMembersAverageRaidPerfomanceUi(string clanTag)
+    public static List<MedianRaidPerfomanseUi> GetAverageRaidmembersPerfomanceUi(string clanTag)
     {
-        using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
+        using AppDbContext dbContext = new(_dbConnectionString);
+
+        var trackedClanDb = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
+
+        NotFoundException.ThrowByPredicate(() => trackedClanDb == null, "GetAverageRaidmembersPerfomanceUi - No such clan was found in DB");
+
+        NotFoundException.ThrowByPredicate(() => trackedClanDb.ClanMembers == null || trackedClanDb.ClanMembers.Count == 0, "GetAverageRaidmembersPerfomanceUi - No tracked ClanMembers were found in DB");
+
+        var clanMembersDb = trackedClanDb.ClanMembers;
+
+        var averagePerfomancesUi = new List<MedianRaidPerfomanseUi>();
+
+        foreach (var member in clanMembersDb)
         {
-            var clan = dbContext.TrackedClans
-                .FirstOrDefault(x => x.Tag == clanTag);
-
-            var clanMembers = clan.ClanMembers.ToList();
-
-            NotFoundException.ThrowByPredicate(() => clanMembers.Count == 0, "No ClanMembers was found in DB");
-
-            var averagePerfomances = new List<MedianRaidPerfomanse>();
-
-            foreach (var member in clanMembers)
+            if (member.RaidMemberships != null && member.RaidMemberships.Count != 0)
             {
-                if (member.RaidMemberships != null && member.RaidMemberships.Count != 0)
-                {
-                    averagePerfomances.Add(Mapper.MapToUi(member.RaidMemberships, member.TrackedClan));
-                }
+                averagePerfomancesUi.Add(Mapper.MapToUi(member.RaidMemberships, member.TrackedClan));
             }
-
-            NotFoundException.ThrowByPredicate(() => averagePerfomances.Count == 0, "No tracked RaidMemberships were found in DB");
-
-            return averagePerfomances;
         }
+
+        NotFoundException.ThrowByPredicate(() => averagePerfomancesUi.Count == 0, "GetAverageRaidmembersPerfomanceUi - No tracked RaidMemberships were found in DB");
+
+        return averagePerfomancesUi;
     }
 
     public static List<SeasonStatisticsUi> GetSeasonStatisticsUi(string clanTag)
     {
-        using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
+        using AppDbContext dbContext = new(_dbConnectionString);
+
+        var trackedClanDb = dbContext.TrackedClans.First(x => x.Tag == clanTag);
+
+        NotFoundException.ThrowByPredicate(() => trackedClanDb == null, "GetSeasonStatisticsUi - No such Clan was found in DB");
+
+        NotFoundException.ThrowByPredicate(() => trackedClanDb.ClanMembers == null || trackedClanDb.ClanMembers.Count == 0, "GetAverageRaidmembersPerfomanceUi - No tracked ClanMembers were found in DB");
+
+        var currentClanMembersDb = trackedClanDb.ClanMembers;
+
+        var obsoleteClanMembersDb = trackedClanDb.PreviousClanMembersStaticstics;
+
+        var seasonStatisticsUi = new List<SeasonStatisticsUi>();
+
+        foreach (var member in currentClanMembersDb)
         {
-            var clan = dbContext.TrackedClans.First(x => x.Tag == clanTag);
-
-            NotFoundException.ThrowByPredicate(() => clan == null, "No such Clan was found in DB");
-
-            var currentClanMembers = clan.ClanMembers;
-
-            var obsoleteClanMembers = clan.PreviousClanMembersStaticstics;
-
-            var seasonStatistics = new List<SeasonStatisticsUi>();
-
-            foreach (var member in currentClanMembers)
+            if (obsoleteClanMembersDb.Any(x => x.Tag == member.Tag))
             {
-                if (obsoleteClanMembers.Any(x => x.Tag == member.Tag))
-                {
-                    seasonStatistics.Add(Mapper.MapToUi(member, obsoleteClanMembers.First(x => x.Tag == member.Tag), clan.PreviousClanMembersStaticstics.FirstOrDefault().UpdatedOn));
-                }
+                seasonStatisticsUi.Add(Mapper.MapToUi(member, obsoleteClanMembersDb.First(x => x.Tag == member.Tag), trackedClanDb.PreviousClanMembersStaticstics.FirstOrDefault().UpdatedOn));
             }
-
-            NotFoundException.ThrowByPredicate(() => seasonStatistics.Count == 0, "Can`t calculate seasonalStatistics");
-
-            return seasonStatistics;
         }
+
+        NotFoundException.ThrowByPredicate(() => seasonStatisticsUi.Count == 0, "GetAverageRaidmembersPerfomanceUi - Can`t calculate seasonalStatistics");
+
+        return seasonStatisticsUi;
+    }
+
+    /*--------------Клан Войны--------------*/
+    public static List<ClanWarUi> GetAllClanWarsUi(string clanTag)
+    {
+        using AppDbContext dbContext = new(_dbConnectionString);
+
+        var clanWarsUi = new List<ClanWarUi>();
+
+        var trackedClanDb = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
+
+        NotFoundException.ThrowByPredicate(() => trackedClanDb == null, "GetAllClanWarsUi - No such clan was found in DB");
+
+        var clanWarsDb = trackedClanDb.ClanWars;
+
+        NotFoundException.ThrowByPredicate(() => clanWarsDb == null || clanWarsDb.Count == 0, "GetAllClanWarsUi - No tracked ClanWars were found in DB");
+
+        clanWarsUi.AddRange(clanWarsDb.Select(Mapper.MapToUi).ToList());
+
+        return clanWarsUi;
+    }
+
+    public static ClanWarUi GetLastClanWarUi(string clanTag)
+    {
+        using AppDbContext dbContext = new(_dbConnectionString);
+
+        var trackedClanDb = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
+
+        NotFoundException.ThrowByPredicate(() => trackedClanDb == null, "GetLastClanWarUi - No such clan was found in DB");
+
+        NotFoundException.ThrowByPredicate(() => trackedClanDb.ClanWars == null || trackedClanDb.ClanWars.Count == 0, "GetLastClanWarUi - No tracked ClanWars were found in DB");
+
+        var lastWarDb = trackedClanDb.ClanWars.OrderByDescending(x => x.EndedOn).First();
+
+        return Mapper.MapToUi(lastWarDb);
+    }
+
+
+    /*--------------Клан Рейды--------------*/
+    public static List<CapitalRaidUi> GetAllRaidsUi(string clanTag)
+    {
+        using AppDbContext dbContext = new(_dbConnectionString);
+
+        var capitalRaidsUi = new List<CapitalRaidUi>();
+
+        var trackedClanDb = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
+
+        NotFoundException.ThrowByPredicate(() => trackedClanDb == null, "GetAllRaidsUi - No such clan was found in DB");
+
+        NotFoundException.ThrowByPredicate(() => trackedClanDb.CapitalRaids == null || trackedClanDb.CapitalRaids.Count == 0, "GetAllRaidsUi - No tracked Raids were found in DB");
+
+        var capitalRaidsDb = trackedClanDb.CapitalRaids;
+
+        foreach (var raid in trackedClanDb.CapitalRaids)
+        {
+            capitalRaidsUi.Add(Mapper.MapToUi(raid, trackedClanDb));
+        }
+
+        return capitalRaidsUi;
+    }
+
+    public static CapitalRaidUi GetLastRaidUi(string clanTag)
+    {
+        using AppDbContext dbContext = new(_dbConnectionString);
+
+        var trackedClanDb = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
+
+        NotFoundException.ThrowByPredicate(() => trackedClanDb == null, "GetLastRaidUi - No such clan was found in DB");
+
+        NotFoundException.ThrowByPredicate(() => trackedClanDb.CapitalRaids == null || trackedClanDb.CapitalRaids.Count == 0, "GetLastRaidUi - No tracked Raids were found in DB");
+
+        var lastRaidDb = trackedClanDb.CapitalRaids.OrderByDescending(x => x.EndedOn).First();
+
+        return Mapper.MapToUi(lastRaidDb, trackedClanDb);
     }
 
 
     /*--------------Клан мембер--------------*/
     public static ClanMemberUi GetClanMemberUi(string playersTag)
     {
-        using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
-        {
-            var uiClanMember = Mapper.MapToUi(dbContext.ClanMembers.FirstOrDefault(x => x.Tag == playersTag));
+        using AppDbContext dbContext = new(_dbConnectionString);
 
-            NotFoundException.ThrowByPredicate(() => uiClanMember == null, "No such ClanMember was found in DB");
+        var clanMemberDb = dbContext.ClanMembers.FirstOrDefault(x => x.Tag == playersTag);
 
-            return uiClanMember;
-        }
+        NotFoundException.ThrowByPredicate(() => clanMemberDb == null, "GetClanMemberUi - No such ClanMember was found in DB");
+
+        var uiClanMember = Mapper.MapToUi(clanMemberDb);
+
+        return uiClanMember;
     }
 
     public static ArmyUi GetMembersArmyUi(string playersTag)
     {
-        using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
-        {
-            var searchingClanMember = dbContext.ClanMembers
-               .FirstOrDefault(x => x.Tag == playersTag);
+        using AppDbContext dbContext = new(_dbConnectionString);
 
-            var uiArmy = Mapper.MapToUi(searchingClanMember?.Units, searchingClanMember);
+        var clanMemberDb = dbContext.ClanMembers.FirstOrDefault(x => x.Tag == playersTag);
 
-            NotFoundException.ThrowByPredicate(() => uiArmy.Units.Count == 0, "No tracked Units were found in DB");
+        NotFoundException.ThrowByPredicate(() => clanMemberDb == null, "GetMembersArmyUi - No such ClanMember was found in DB");
 
-            return uiArmy;
-        }
+        NotFoundException.ThrowByPredicate(() => clanMemberDb.Units == null || clanMemberDb.Units.Count == 0, "GetMembersArmyUi - No tracked Units were found in DB");
+
+        var armyUi = Mapper.MapToUi(clanMemberDb?.Units, clanMemberDb);
+
+        return armyUi;
     }
 
-    public static List<CwCwlMembershipUi> GetAllMemberСwCwlMembershipsUi(string playersTag)
+    public static List<WarMembershipsUi> GetAllWarMembershipsUi(string playersTag)
     {
-        using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
-        {
-            var uiCwCwlMemberships = new List<CwCwlMembershipUi>();
+        using AppDbContext dbContext = new(_dbConnectionString);
 
-            uiCwCwlMemberships.AddRange(dbContext.ClanMembers
-                .FirstOrDefault(x => x.Tag == playersTag)?.WarMemberships?
-                .Select(Mapper.MapToUi).ToList());
+        var uiCwCwlMemberships = new List<WarMembershipsUi>();
 
-            NotFoundException.ThrowByPredicate(() => uiCwCwlMemberships.Count == 0, "No tracked CwCwlMemberships were found in DB");
+        var warMembershipsDb = dbContext.ClanMembers.FirstOrDefault(x => x.Tag == playersTag).WarMemberships;
 
-            uiCwCwlMemberships.OrderByDescending(x => x.StartedOn);
+        NotFoundException.ThrowByPredicate(() => uiCwCwlMemberships == null || uiCwCwlMemberships.Count == 0, "GetAllWarMembershipsUi - No tracked WarMemberships were found in DB");
 
-            return uiCwCwlMemberships;
-        }
+        uiCwCwlMemberships.AddRange(warMembershipsDb.Select(Mapper.MapToUi).ToList());
+
+        return uiCwCwlMemberships;
     }
 
     public static List<RaidMembershipUi> GetAllMemberRaidMembershipsUi(string playersTag)
     {
-        using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
-        {
-            var uiRaidMemberships = new List<RaidMembershipUi>();
+        using AppDbContext dbContext = new(_dbConnectionString);
 
-            uiRaidMemberships.AddRange(dbContext.ClanMembers
-                .FirstOrDefault(x => x.Tag == playersTag).RaidMemberships
-                .Select(Mapper.MapToUi).ToList());
+        var uiRaidMemberships = new List<RaidMembershipUi>();
 
-            NotFoundException.ThrowByPredicate(() => uiRaidMemberships.Count == 0, "No tracked RaidMemberships were found in DB");
+        var raidMembershipsDb = dbContext.ClanMembers.FirstOrDefault(x => x.Tag == playersTag).RaidMemberships;
 
-            uiRaidMemberships.OrderByDescending(x => x.StartedOn);
+        NotFoundException.ThrowByPredicate(() => raidMembershipsDb == null || raidMembershipsDb.Count == 0, "GetAllMemberRaidMembershipsUi - No tracked WarMemberships were found in DB");
 
-            return uiRaidMemberships;
-        }
+        uiRaidMemberships.AddRange(raidMembershipsDb.Select(Mapper.MapToUi).ToList());
+
+        return uiRaidMemberships;
     }
 
 
     /*--------------Для проверки вводимых тегов--------------*/
     public static bool CheckClanExists(string clanTag)
     {
-        using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
-        {
-            return dbContext.TrackedClans
-                .Where(x => x.IsInBlackList == false)
-                .Any(x => x.Tag == clanTag);
-        }
+        using AppDbContext dbContext = new(_dbConnectionString);
+
+        return dbContext.TrackedClans
+            .Where(x => x.IsInBlackList == false)
+            .Any(x => x.Tag == clanTag);
     }
 
     public static bool CheckMemberExists(string memberTag)
     {
-        using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
-        {
-            return dbContext.ClanMembers
-                .Where(x=>x.TrackedClan.IsInBlackList==false)
-                .Any(x => x.Tag == memberTag);
-        }
-    }
+        using AppDbContext dbContext = new(_dbConnectionString);
 
-    public static List<TrackedClan> GetAllTrackedClans()
-    {
-        using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
-        {
-            return dbContext.TrackedClans.ToList();
-        }
+        return dbContext.ClanMembers
+            .Where(x => x.TrackedClan.IsInBlackList == false)
+            .Any(x => x.Tag == memberTag);
     }
 }

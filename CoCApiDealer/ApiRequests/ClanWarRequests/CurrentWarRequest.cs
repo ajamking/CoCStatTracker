@@ -5,13 +5,13 @@ namespace CoCApiDealer.ApiRequests;
 
 public class CurrentWarRequest : BaseApiRequest
 {
-    public async Task<ClanWarApi> CallApi(string clanTag)
+    public static async Task<ClanWarApi> CallApi(string clanTag)
     {
         try
         {
             var requestType = AllowedRequests.CurrentWar;
 
-            var apiRequestResult = await new ApiRequestBuilder(_httpClient, clanTag, requestType).CallApi();
+            var apiRequestResult = await new ApiRequestBuilder(HttpClient, clanTag, requestType).CallApi();
 
             var currentWar = JsonConvert.DeserializeObject<ClanWarApi>(apiRequestResult);
 
@@ -21,7 +21,7 @@ public class CurrentWarRequest : BaseApiRequest
             return currentWar;
 
         }
-        catch (ApiNullOrEmtyResponseException ex)
+        catch (ApiNullOrEmtyResponseException)
         {
             return null;
         }

@@ -106,7 +106,7 @@ public static class NonAttackersHelper
 
             return result;
         }
-        catch (Exception e)
+        catch
         {
             return "";
         }

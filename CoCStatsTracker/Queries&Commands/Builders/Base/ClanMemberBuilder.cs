@@ -4,8 +4,6 @@ using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Xml;
 
 namespace CoCStatsTracker.Builders;
 
@@ -54,48 +52,40 @@ public class ClanMemberBuilder
 
         foreach (var troop in troops)
         {
-            var unit = new Troop();
-
-            unit.Name = troop.Name;
+            var unit = new Troop()
+            {
+                Name = troop.Name,
+                Village = troop.Village,
+                SuperTroopIsActivated = troop.SuperTroopIsActivated,
+                Type = TroopDefiner.DefineUnitType(troop.Name),
+                ClanMember = ClanMember,
+            };
 
             if (TroopDefiner.BaseUnitsForSupers.ContainsKey(unit.Name))
             {
-                try
-                {
-                    unit.Level = troops.FirstOrDefault(x => x.Name == TroopDefiner.BaseUnitsForSupers[unit.Name]).Level;
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Ошибка при попытке присвоения уровня супер юниту:\n" + e.Message);
-                }
+                unit.Level = troops.FirstOrDefault(x => x.Name == TroopDefiner.BaseUnitsForSupers[unit.Name]).Level;
             }
             else
             {
                 unit.Level = troop.Level;
             }
 
-            unit.Village = troop.Village;
-            unit.SuperTroopIsActivated = troop.SuperTroopIsActivated;
-            unit.Type = TroopDefiner.DefineUnitType(troop.Name);
-            unit.ClanMember = ClanMember;
-
             units.Add(unit);
         }
 
         foreach (var troop in heroes)
         {
-            var hero = new Troop();
-
-            hero.Name = troop.Name;
-            hero.Level = troop.Level;
-            hero.Village = troop.Village;
-            hero.SuperTroopIsActivated = troop.SuperTroopIsActivated;
-            hero.Type = TroopDefiner.DefineUnitType(troop.Name);
+            var hero = new Troop()
+            {
+                Name = troop.Name,
+                Level = troop.Level,
+                Village = troop.Village,
+                SuperTroopIsActivated = troop.SuperTroopIsActivated,
+                Type = TroopDefiner.DefineUnitType(troop.Name),
+            };
 
             units.Add(hero);
         }
-
-        ClanMember.Units.Clear();
 
         ClanMember.Units = units;
     }

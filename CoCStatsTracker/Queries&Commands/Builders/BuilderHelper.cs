@@ -1,11 +1,7 @@
 ﻿using CoCStatsTracker.ApiEntities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoCStatsTracker.Builders;
+
 public static class BuilderHelper
 {
     public static string GetRoleRu(this string role)

@@ -1,6 +1,6 @@
 ﻿using CoCStatsTracker;
 using CoCStatsTracker.UIEntities;
-using CoCStatsTrackerBot.Menu;
+using CoCStatsTrackerBot.BotMenues;
 
 namespace CoCStatsTrackerBot.Requests;
 
@@ -29,7 +29,7 @@ public class ClanActiveSuperUnitsRH : BaseRequestHandler
 
             ResponseSender.SendAnswer(parameters, true, SplitAnswer(answer));
         }
-        catch (NotFoundException e)
+        catch (NotFoundException)
         {
             ResponseSender.SendAnswer(parameters, true, DefaultNotFoundMessage);
         }

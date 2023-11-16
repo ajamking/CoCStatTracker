@@ -1,5 +1,5 @@
 ﻿using CoCStatsTracker;
-using CoCStatsTrackerBot.Menu;
+using CoCStatsTrackerBot.BotMenues;
 
 namespace CoCStatsTrackerBot.Requests;
 
@@ -26,7 +26,7 @@ public class DeveloperSetClanTokenRH : BaseRequestHandler
                 ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Токен для клана успешно переопределен.", UiTextStyle.Default));
             }
         }
-        catch (NotFoundException e)
+        catch (NotFoundException)
         {
             ResponseSender.SendAnswer(parameters, true, DefaultNotFoundMessage);
         }

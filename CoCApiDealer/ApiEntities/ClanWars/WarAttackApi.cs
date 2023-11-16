@@ -2,7 +2,6 @@
 
 namespace CoCStatsTracker.ApiEntities;
 
-
 public class WarAttackApi
 {
     [JsonProperty("attackerTag")]

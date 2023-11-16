@@ -1,6 +1,6 @@
 ﻿using CoCStatsTracker;
 using CoCStatsTracker.Items.Exceptions;
-using CoCStatsTrackerBot.Menu;
+using CoCStatsTrackerBot.BotMenues;
 
 namespace CoCStatsTrackerBot.Requests;
 
@@ -20,16 +20,16 @@ public class LeaderAddLastWarRH : BaseRequestHandler
             {
                 AddToDbCommandHandler.AddCurrentClanWarToClan(parameters.LastClanTagToMerge);
 
-                var lastWar = GetFromDbQueryHandler.GetAllClanWarsUi(parameters.LastClanTagToMerge).OrderByDescending(x => x.StartedOn).First();
+                var lastClanWarUi = GetFromDbQueryHandler.GetLastClanWarUi(parameters.LastClanTagToMerge);
 
                 var answer = StylingHelper.MakeItStyled($"Операция успешна.\n" +
-                    $"Добавлена война: {lastWar.StartedOn.ToShortDateString()} - {lastWar.EndedOn.ToShortTimeString()} {lastWar.Result}", UiTextStyle.Default);
+                    $"Добавлена война: {lastClanWarUi.StartedOn.ToShortDateString()} - {lastClanWarUi.EndedOn.ToShortTimeString()}\nРезультат - {lastClanWarUi.Result}", UiTextStyle.Default);
 
                 ResponseSender.SendAnswer(parameters, true, SplitAnswer(answer));
             }
-            catch (FailedPullFromApiException e)
+            catch (FailedPullFromApiException)
             {
-                AddToDbCommandHandler.AddCwlClanWarsToClan(parameters.LastClanTagToMerge);
+                AddToDbCommandHandler.AddCurrentCwlClanWarsToClan(parameters.LastClanTagToMerge);
 
                 var answer = StylingHelper.MakeItStyled($"Операция успешна.\n" +
                     $"Добавлены все недостающие войны с ЛВК.", UiTextStyle.Default);
@@ -38,15 +38,15 @@ public class LeaderAddLastWarRH : BaseRequestHandler
             }
           
         }
-        catch (NotFoundException e)
+        catch (NotFoundException)
         {
             ResponseSender.SendAnswer(parameters, true, DefaultNotFoundMessage);
         }
-        catch (AlreadyExistsException e)
+        catch (AlreadyExistsException)
         {
             ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Последняя война уже отслеживается, добавить ее невозможно, но можно обновить или удалить в других вкладках.", UiTextStyle.Default));
         }
-        catch (FailedPullFromApiException e)
+        catch (FailedPullFromApiException)
         {
             ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Выполнение операции на данный момент невозможно.\n" +
                 "Бот сможет получить сведения о войнах клана лишь если история войн будет общедоступной.", UiTextStyle.Default));

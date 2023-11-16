@@ -15,7 +15,7 @@ public static class ClanMemberMedianValueCalculator
             {
                 case MedianValueType.ClanWar:
                     {
-                        if (member.WarMemberships.Count == 0)
+                        if (member.WarMemberships.Count == 0 || !member.WarMemberships.Select(x => x.WarAttacks).Any())
                         {
                             return 0;
                         }
@@ -29,11 +29,13 @@ public static class ClanMemberMedianValueCalculator
 
                         var sortedAttacks = warAttacks.OrderByDescending(x => x.DestructionPercent).ToList();
 
+                        if (sortedAttacks.Count == 0) { return 0; }
+
                         return sortedAttacks[sortedAttacks.Count / 2].DestructionPercent;
                     }
                 case MedianValueType.ClanWarWithout1415Th:
                     {
-                        if (member.WarMemberships.Count == 0)
+                        if (member.WarMemberships.Count == 0 || !member.WarMemberships.Select(x => x.WarAttacks).Any())
                         {
                             return 0;
                         }
@@ -47,11 +49,13 @@ public static class ClanMemberMedianValueCalculator
 
                         var sortedAttacks = warAttacks.OrderByDescending(x => x.DestructionPercent).ToList();
 
+                        if (sortedAttacks.Count == 0) { return 0; }
+
                         return sortedAttacks[sortedAttacks.Count / 2].DestructionPercent;
                     }
                 case MedianValueType.Raids:
                     {
-                        if (member.RaidMemberships.Count == 0)
+                        if (member.RaidMemberships.Count == 0 || !member.RaidMemberships.Select(x => x.Attacks).Any())
                         {
                             return 0;
                         }
@@ -65,13 +69,15 @@ public static class ClanMemberMedianValueCalculator
 
                         var sortedAttacks = raidAttacks.OrderByDescending(x => x.DestructionPercentTo - x.DestructionPercentFrom).ToList();
 
+                        if (sortedAttacks.Count == 0) { return 0; }
+
                         var resultAttack = sortedAttacks[sortedAttacks.Count / 2];
 
                         return resultAttack.DestructionPercentTo - resultAttack.DestructionPercentFrom;
                     }
                 case MedianValueType.RaidsWithoutPeak:
                     {
-                        if (member.RaidMemberships.Count == 0)
+                        if (member.RaidMemberships.Count == 0 || !member.RaidMemberships.Select(x => x.Attacks).Any())
                         {
                             return 0;
                         }
@@ -84,6 +90,8 @@ public static class ClanMemberMedianValueCalculator
                         }
 
                         var sortedAttacks = raidAttacks.OrderByDescending(x => x.DestructionPercentTo - x.DestructionPercentFrom).ToList();
+
+                        if (sortedAttacks.Count == 0) { return 0; }
 
                         var resultAttack = sortedAttacks[sortedAttacks.Count / 2];
 

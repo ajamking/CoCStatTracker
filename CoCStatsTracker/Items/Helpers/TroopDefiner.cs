@@ -5,7 +5,7 @@ namespace CoCStatsTracker.Items.Helpers;
 
 public static class TroopDefiner
 {
-    public static Dictionary<string, string> BaseUnitsForSupers = new Dictionary<string, string>()
+    public static Dictionary<string, string> BaseUnitsForSupers { get; } = new()
     {
         { "Super Barbarian","Barbarian" },
         { "Super Archer","Archer" },
@@ -24,7 +24,6 @@ public static class TroopDefiner
         { "Super Minion","Minion" },
         { "Super Hog Rider","Hog Rider"}
     };
-
 
     public static UnitType DefineUnitType(string name)
     {

@@ -1,5 +1,5 @@
 ﻿using CoCStatsTracker;
-using CoCStatsTrackerBot.Menu;
+using CoCStatsTrackerBot.BotMenues;
 
 namespace CoCStatsTrackerBot.Requests;
 
@@ -15,13 +15,13 @@ public class CurrentRaidShortInfoRH : BaseRequestHandler
     {
         try
         {
-            var allRaids = GetFromDbQueryHandler.GetAllRaidsUi(parameters.LastClanTagMessage).OrderByDescending(x => x.StartedOn);
+            var lastRaidUi = GetFromDbQueryHandler.GetLastRaidUi(parameters.LastClanTagMessage);
 
-            var answer = CurrentStatisticsFunctions.GetCurrentRaidShortInfo(allRaids.First());
+            var answer = CurrentStatisticsFunctions.GetCurrentRaidShortInfo(lastRaidUi);
 
             ResponseSender.SendAnswer(parameters, true, SplitAnswer(answer));
         }
-        catch (NotFoundException e)
+        catch (NotFoundException)
         {
             ResponseSender.SendAnswer(parameters, true, DefaultNotFoundMessage);
         }

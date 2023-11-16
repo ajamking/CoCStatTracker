@@ -1,13 +1,11 @@
-﻿using CoCStatsTracker.ApiEntities;
-using CoCStatsTracker.UIEntities;
-using System.ComponentModel;
+﻿using CoCStatsTracker.UIEntities;
 using System.Text;
 
 namespace CoCStatsTrackerBot.Requests;
 
 public class CurrentStatisticsFunctions
 {
-    public static string GetCurrentWarShortInfo(CwCwlUi currentClanWarUi)
+    public static string GetCurrentWarShortInfo(ClanWarUi currentClanWarUi)
     {
         var str = new StringBuilder();
 
@@ -39,7 +37,7 @@ public class CurrentStatisticsFunctions
 
     public static string GetCurrentWarMap(WarMapUi warMapUi)
     {
-        var maxNameLength = 14;
+        var maxNameLength = 16;
 
         var warMembers = warMapUi.WarMembers.OrderBy(x => x.MapPosition).ToList();
 
@@ -52,9 +50,9 @@ public class CurrentStatisticsFunctions
 
         str.AppendLine(StylingHelper.MakeItStyled("Противник:", UiTextStyle.Subtitle));
         str.AppendLine(StylingHelper.MakeItStyled($"{warMapUi.OpponentClanName} - {warMapUi.OpponentClanTag}\n", UiTextStyle.Name));
-      
+
         str.AppendLine(warMapUi.UpdatedOn.GetUpdatedOnString());
- 
+
         str.AppendLine(StylingHelper.MakeItStyled("\nНачало подготовки:", UiTextStyle.Subtitle));
         str.AppendLine(StylingHelper.MakeItStyled(warMapUi.PreparationStartTime.FormateToUiDateTime(), UiTextStyle.Default));
         str.AppendLine(StylingHelper.MakeItStyled("Начало войны:", UiTextStyle.Subtitle));
@@ -102,7 +100,7 @@ public class CurrentStatisticsFunctions
         return str.ToString();
     }
 
-    public static string GetCurrentRaidShortInfo(RaidUi raidsUi)
+    public static string GetCurrentRaidShortInfo(CapitalRaidUi raidsUi)
     {
         var str = new StringBuilder();
 
@@ -131,7 +129,7 @@ public class CurrentStatisticsFunctions
         return str.ToString();
     }
 
-    public static string GetDistrictStatistics(RaidUi raidUi, DistrictType districtType)
+    public static string GetDistrictStatistics(CapitalRaidUi raidUi, DistrictType districtType)
     {
         var maxNameLength = 18;
         var max2ColumnLength = 5;
@@ -165,15 +163,15 @@ public class CurrentStatisticsFunctions
 
         str.AppendLine(StylingHelper.MakeItStyled("Показатели игроков клана", UiTextStyle.Header));
         str.AppendLine(StylingHelper.MakeItStyled($"{raidUi.ClanName} - {raidUi.ClanTag}\n", UiTextStyle.Name));
-  
+
         str.Append(StylingHelper.MakeItStyled("В атаках на район: ", UiTextStyle.Default));
         str.AppendLine(StylingHelper.MakeItStyled($"{chosenDistrictName}\n", UiTextStyle.Header));
 
         str.AppendLine(raidUi.UpdatedOn.GetUpdatedOnString());
-   
+
         str.Append(StylingHelper.MakeItStyled("\nРазрушений за атаку в среднем: ", UiTextStyle.Default));
         str.AppendLine(StylingHelper.MakeItStyled($"{avgPercent}%", UiTextStyle.Name));
-   
+
         str.AppendLine(StylingHelper.MakeItStyled("\nПоказатели атак:", UiTextStyle.Subtitle));
 
         str.AppendLine($"``` " +
@@ -220,7 +218,7 @@ public class CurrentStatisticsFunctions
         return str.ToString();
     }
 
-    public static string GetRaidsMainInfoHat(RaidUi raidUi)
+    public static string GetRaidsMainInfoHat(CapitalRaidUi raidUi)
     {
         var str = new StringBuilder();
 
@@ -232,9 +230,14 @@ public class CurrentStatisticsFunctions
 
         str.Append(StylingHelper.MakeItStyled("\nНачало рейдов:  ", UiTextStyle.Default));
         str.AppendLine(StylingHelper.MakeItStyled(raidUi.StartedOn.FormateToUiDateTime(), UiTextStyle.Subtitle));
-
         str.Append(StylingHelper.MakeItStyled("Конец рейдов:  ", UiTextStyle.Default));
         str.AppendLine(StylingHelper.MakeItStyled(raidUi.EndedOn.FormateToUiDateTime(), UiTextStyle.Subtitle));
+
+        if (Math.Round(raidUi.EndedOn.Subtract(DateTime.Now).TotalHours, 0) > 0)
+        {
+            str.AppendLine(StylingHelper.MakeItStyled("Осталось времени до конца:", UiTextStyle.Subtitle));
+            str.AppendLine(StylingHelper.MakeItStyled(raidUi.EndedOn.GetTimeLeft(), UiTextStyle.Default));
+        }
 
         var firstColumnLength = 21;
         var secondColumnLength = 9;
@@ -382,7 +385,7 @@ public class CurrentStatisticsFunctions
         return str.ToString();
     }
 
-    public static string GetWarMainInfoHat(CwCwlUi cw)
+    public static string GetWarMainInfoHat(ClanWarUi cw)
     {
         var str = new StringBuilder();
 
@@ -394,6 +397,12 @@ public class CurrentStatisticsFunctions
         str.AppendLine(StylingHelper.MakeItStyled(cw.StartedOn.FormateToUiDateTime(), UiTextStyle.Default));
         str.AppendLine(StylingHelper.MakeItStyled("Конец войны:", UiTextStyle.Subtitle));
         str.AppendLine(StylingHelper.MakeItStyled(cw.EndedOn.FormateToUiDateTime(), UiTextStyle.Default));
+
+        if (Math.Round(cw.EndedOn.Subtract(DateTime.Now).TotalHours, 0) > 0)
+        {
+            str.AppendLine(StylingHelper.MakeItStyled("Осталось времени до конца:", UiTextStyle.Subtitle));
+            str.AppendLine(StylingHelper.MakeItStyled(cw.EndedOn.GetTimeLeft(), UiTextStyle.Default));
+        }
 
         str.AppendLine(StylingHelper.MakeItStyled($"\nРезультат: {cw.Result}", UiTextStyle.Subtitle));
 

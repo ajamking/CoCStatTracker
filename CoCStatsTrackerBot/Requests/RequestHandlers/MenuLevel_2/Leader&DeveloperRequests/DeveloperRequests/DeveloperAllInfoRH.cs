@@ -1,5 +1,5 @@
 ﻿using CoCStatsTracker;
-using CoCStatsTrackerBot.Menu;
+using CoCStatsTrackerBot.BotMenues;
 using System.Text;
 
 namespace CoCStatsTrackerBot.Requests;
@@ -69,7 +69,7 @@ public class DeveloperAllInfoRH : BaseRequestHandler
 
             ResponseSender.SendAnswer(parameters, true, SplitAnswer(answer.ToString()));
         }
-        catch (NotFoundException e)
+        catch (NotFoundException)
         {
             ResponseSender.SendAnswer(parameters, true, DefaultNotFoundMessage);
         }
@@ -79,7 +79,7 @@ public class DeveloperAllInfoRH : BaseRequestHandler
         }
     }
 
-    private string CheckAndGetPropertyString(string str)
+    private static string CheckAndGetPropertyString(string str)
     {
         if (string.IsNullOrEmpty(str))
         {

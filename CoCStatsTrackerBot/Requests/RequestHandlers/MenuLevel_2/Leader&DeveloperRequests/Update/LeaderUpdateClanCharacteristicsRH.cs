@@ -1,5 +1,5 @@
 ﻿using CoCStatsTracker;
-using CoCStatsTrackerBot.Menu;
+using CoCStatsTrackerBot.BotMenues;
 
 namespace CoCStatsTrackerBot.Requests;
 
@@ -15,12 +15,12 @@ public class LeaderUpdateClanCharacteristicsRH : BaseRequestHandler
     {
         try
         {
-            UpdateDbCommandHandler.UpdateTrackedClanBaseProperties(parameters.LastClanTagToMerge, parameters.AdminsKey);
+            UpdateDbCommandHandler.UpdateTrackedClanBaseProperties(parameters.LastClanTagToMerge);
 
             ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled($"Операция успешна, основные показатели клана обновлены.", UiTextStyle.Default));
 
         }
-        catch (NotFoundException e)
+        catch (NotFoundException)
         {
             ResponseSender.SendAnswer(parameters, true, DefaultNotFoundMessage);
         }

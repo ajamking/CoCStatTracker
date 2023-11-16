@@ -1,5 +1,5 @@
 ﻿using CoCStatsTracker;
-using CoCStatsTrackerBot.Menu;
+using CoCStatsTrackerBot.BotMenues;
 using System.Text;
 
 namespace CoCStatsTrackerBot.Requests;
@@ -44,7 +44,7 @@ public class LeaderUpdateInfoRH : BaseRequestHandler
 
             ResponseSender.SendAnswer(parameters, true, msg.ToString());
         }
-        catch (NotFoundException e)
+        catch (NotFoundException)
         {
             ResponseSender.SendAnswer(parameters, true, DefaultNotFoundMessage);
         }

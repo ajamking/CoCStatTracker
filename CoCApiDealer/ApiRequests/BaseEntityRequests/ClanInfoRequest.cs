@@ -5,13 +5,13 @@ namespace CoCApiDealer.ApiRequests;
 
 public class ClanInfoRequest : BaseApiRequest
 {
-    public async Task<ClanApi> CallApi(string clanTag)
+    public static async Task<ClanApi> CallApi(string clanTag)
     {
         try
         {
             var requestType = AllowedRequests.Clan;
 
-            var apiRequestResult = await new ApiRequestBuilder(_httpClient, clanTag, requestType).CallApi();
+            var apiRequestResult = await new ApiRequestBuilder(HttpClient, clanTag, requestType).CallApi();
 
             var clanInfo = JsonConvert.DeserializeObject<ClanApi>(apiRequestResult);
 
@@ -20,7 +20,7 @@ public class ClanInfoRequest : BaseApiRequest
 
             return clanInfo;
         }
-        catch (ApiNullOrEmtyResponseException ex)
+        catch (ApiNullOrEmtyResponseException)
         {
             return null;
         }

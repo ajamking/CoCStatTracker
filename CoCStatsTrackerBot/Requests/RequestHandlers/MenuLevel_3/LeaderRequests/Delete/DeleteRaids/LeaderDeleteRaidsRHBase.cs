@@ -1,5 +1,5 @@
 ﻿using CoCStatsTracker;
-using CoCStatsTrackerBot.Menu;
+using CoCStatsTrackerBot.BotMenues;
 
 namespace CoCStatsTrackerBot.Requests;
 
@@ -26,7 +26,7 @@ public class LeaderDeleteRaidsRHBase : BaseRequestHandler
 
             ResponseSender.SendAnswer(parameters, true, SplitAnswer(answer));
         }
-        catch (NotFoundException e)
+        catch (NotFoundException)
         {
             ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Все записи о рейдах удалены.", UiTextStyle.Default));
         }

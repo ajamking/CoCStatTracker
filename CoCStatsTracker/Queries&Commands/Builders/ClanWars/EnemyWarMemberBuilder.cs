@@ -24,5 +24,4 @@ public class EnemyWarMemberBuilder
     {
         EnemyWarMember.ClanWar = clanWar;
     }
-
 }

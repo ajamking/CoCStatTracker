@@ -1,6 +1,6 @@
 ﻿using CoCStatsTracker;
 using CoCStatsTracker.Items.Exceptions;
-using CoCStatsTrackerBot.Menu;
+using CoCStatsTrackerBot.BotMenues;
 
 namespace CoCStatsTrackerBot.Requests;
 
@@ -22,20 +22,20 @@ public class LeaderUpdateLastWarRH : BaseRequestHandler
 
                 ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled($"Операция успешна, информация о последней войне обновлена", UiTextStyle.Default));
             }
-            catch (FailedPullFromApiException e)
+            catch (FailedPullFromApiException)
             {
-                UpdateDbCommandHandler.UpdateCwlClanWars(parameters.LastClanTagToMerge);
+                UpdateDbCommandHandler.UpdateCurrentCwlClanWars(parameters.LastClanTagToMerge);
 
                 ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled($"Операция успешна, информация о ранее зафиксированных " +
                     $"войнах текущей лиги обновлена.", UiTextStyle.Default));
             }
             
         }
-        catch (NotFoundException e)
+        catch (NotFoundException)
         {
             ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled($"Обновить последнюю войну невозможно, в базе нет сведений о войнах этого клана. Попробуйте добавить, а не обновлять.", UiTextStyle.Default));
         }
-        catch (FailedPullFromApiException e)
+        catch (FailedPullFromApiException)
         {
             ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Выполнение операции на данный момент невозможно.\n" +
                 "Бот сможет получить сведения о войнах клана лишь если история войн будет общедоступной.", UiTextStyle.Default));

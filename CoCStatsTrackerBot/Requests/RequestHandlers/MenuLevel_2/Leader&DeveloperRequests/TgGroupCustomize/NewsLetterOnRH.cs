@@ -1,5 +1,5 @@
 ﻿using CoCStatsTracker;
-using CoCStatsTrackerBot.Menu;
+using CoCStatsTrackerBot.BotMenues;
 using System.Text;
 
 namespace CoCStatsTrackerBot.Requests;
@@ -20,7 +20,7 @@ public class NewsLetterOnRH : BaseRequestHandler
 
             if (!string.IsNullOrEmpty(parameters.LastClanTagToMerge))
             {
-                UpdateDbCommandHandler.ResetRegularNewsLetter(parameters.LastClanTagToMerge, true);
+                UpdateDbCommandHandler.ResetClanRegularNewsLetter(parameters.LastClanTagToMerge, true);
 
                 ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Рассылка включена.", UiTextStyle.Default));
             }
@@ -29,7 +29,7 @@ public class NewsLetterOnRH : BaseRequestHandler
                 ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Для использования этой функции необходимо выбрать модерируемый клан.", UiTextStyle.Default));
             }
         }
-        catch (NotFoundException e)
+        catch (NotFoundException)
         {
             ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Либо такой клан не отслеживается, либо в нем нет участников.", UiTextStyle.Default));
         }

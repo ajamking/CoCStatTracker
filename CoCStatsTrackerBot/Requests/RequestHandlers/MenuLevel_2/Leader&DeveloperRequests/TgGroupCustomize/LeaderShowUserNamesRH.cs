@@ -1,5 +1,5 @@
 ﻿using CoCStatsTracker;
-using CoCStatsTrackerBot.Menu;
+using CoCStatsTrackerBot.BotMenues;
 using System.Text;
 
 namespace CoCStatsTrackerBot.Requests;
@@ -50,7 +50,7 @@ public class LeaderShowUserNamesRH : BaseRequestHandler
             ResponseSender.SendAnswer(parameters, true, answer.ToString());
 
         }
-        catch (NotFoundException e)
+        catch (NotFoundException)
         {
             ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Либо такой клан не отслеживается, либо в нем нет участников.", UiTextStyle.Default));
         }

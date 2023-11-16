@@ -3,7 +3,6 @@ using CoCStatsTracker.UIEntities;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Metrics;
 using System.Linq;
 
 namespace CoCStatsTracker;
@@ -13,9 +12,9 @@ public static class Mapper
     //
     //ClanInfoUi
     //
-    public static ClanUi MapToUi(TrackedClan clan)
+    public static TrackedClanUi MapToUi(TrackedClan clan)
     {
-        var warLogType = "";
+        string warLogType;
 
         if (clan.IsWarLogPublic == false)
             warLogType = "Закрытая";
@@ -29,7 +28,7 @@ public static class Mapper
             clanMembers.Add(MapToUi(member));
         }
 
-        return new ClanUi
+        return new TrackedClanUi
         {
             UpdatedOn = clan.UpdatedOn,
             ClanChatId = clan.ClansTelegramChatId,
@@ -58,7 +57,7 @@ public static class Mapper
         };
     }
 
-    public static CwCwlUi MapToUi(ClanWar clanWar)
+    public static ClanWarUi MapToUi(ClanWar clanWar)
     {
         var warAttacks = new List<ClanWarAttackUi>();
 
@@ -93,14 +92,14 @@ public static class Mapper
             warAttacks.Add(playerPerfomance);
         }
 
-        return new CwCwlUi
+        return new ClanWarUi
         {
             UpdatedOn = clanWar.UpdatedOn,
             PreparationStartTime = clanWar.PreparationStartTime,
             StartedOn = clanWar.StartedOn,
             EndedOn = clanWar.EndedOn,
 
-            WarMembersCount = clanWar.WarMembers.Count(),
+            WarMembersCount = clanWar.WarMembers.Count,
             AttackPerMember = clanWar.AttackPerMember,
             ClanTag = clanWar.TrackedClan.Tag,
             ClanName = clanWar.TrackedClan.Name,
@@ -127,9 +126,9 @@ public static class Mapper
         };
     }
 
-    public static RaidUi MapToUi(CapitalRaid raid, TrackedClan trackedClan)
+    public static CapitalRaidUi MapToUi(CapitalRaid raid, TrackedClan trackedClan)
     {
-        return new RaidUi
+        return new CapitalRaidUi
         {
             TotalAttacksCount = raid.TotalAttacks,
             UpdatedOn = raid.UpdatedOn,
@@ -242,7 +241,7 @@ public static class Mapper
         };
     }
 
-    public static CwCwlMembershipUi MapToUi(WarMember member)
+    public static WarMembershipsUi MapToUi(WarMember member)
     {
         var attacks = new List<WarAttackUi>(member.WarAttacks.Count);
 
@@ -261,7 +260,7 @@ public static class Mapper
             });
         }
 
-        return new CwCwlMembershipUi
+        return new WarMembershipsUi
         {
             UpdatedOn = member.UpdatedOn,
             Tag = member.Tag,
@@ -282,7 +281,7 @@ public static class Mapper
 
     public static RaidMembershipUi MapToUi(RaidMember raidMember)
     {
-        var attacks = new List<RaidAttackUi>(raidMember.Attacks.Count());
+        var attacks = new List<RaidAttackUi>(raidMember.Attacks.Count);
 
         foreach (var attack in raidMember.Attacks)
         {
@@ -311,7 +310,7 @@ public static class Mapper
         };
     }
 
-    public static MedianRaidPerfomanse MapToUi(ICollection<RaidMember> raidMemberships, TrackedClan trackedClan)
+    public static MedianRaidPerfomanseUi MapToUi(ICollection<RaidMember> raidMemberships, TrackedClan trackedClan)
     {
         var medianDestructionPercent = 0;
 
@@ -337,7 +336,7 @@ public static class Mapper
 
         medianCapitalLoot = sortedTotalLoots[sortedTotalLoots.Count / 2].TotalLoot;
 
-        return new MedianRaidPerfomanse
+        return new MedianRaidPerfomanseUi
         {
             ClanName = trackedClan.Name,
             ClanTag = trackedClan.Tag,

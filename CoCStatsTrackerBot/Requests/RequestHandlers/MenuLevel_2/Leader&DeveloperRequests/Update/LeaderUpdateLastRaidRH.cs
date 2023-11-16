@@ -1,5 +1,5 @@
 ﻿using CoCStatsTracker;
-using CoCStatsTrackerBot.Menu;
+using CoCStatsTrackerBot.BotMenues;
 
 namespace CoCStatsTrackerBot.Requests;
 
@@ -19,7 +19,7 @@ public class LeaderUpdateLastRaidRH : BaseRequestHandler
 
             ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled($"Операция успешна, информация о последнем рейде обновлена", UiTextStyle.Default));
         }
-        catch (NotFoundException e)
+        catch (NotFoundException)
         {
             ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled($"Обновить последний рейд невозможно, в базе нет сведений о рейдах этого клана. Попробуйте добавить, а не обновлять.", UiTextStyle.Default));
         }

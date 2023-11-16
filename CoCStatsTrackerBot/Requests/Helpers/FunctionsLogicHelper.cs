@@ -3,12 +3,12 @@
 namespace CoCStatsTrackerBot.Requests;
 public static class FunctionsLogicHelper
 {
-    private static Dictionary<int, int> _districtHallCostsByLvl = new Dictionary<int, int>()
+    private static readonly Dictionary<int, int> _districtHallCostsByLvl = new()
     {
             {1,  135  }, {2,  225  },  {3,  350  }, {4,  405  }, {5,  460  },
     };
 
-    private static Dictionary<int, int> _capitalHallCostsByLvl = new Dictionary<int, int>()
+    private static readonly Dictionary<int, int> _capitalHallCostsByLvl = new()
     {
             {2,  180  }, {3,  360  }, {4,  585  }, {5,  810  }, {6,  1115 }, {7,  1240 },  {8,  1260 }, {9,  1375 }, {10, 1450 },
     };
@@ -58,7 +58,7 @@ public static class FunctionsLogicHelper
     };
 
 
-    public static List<DistrictUi> SortAsOnMap(this ICollection<DistrictUi> districts)
+    public static List<DistrictUi> SortDistrictsAsOnMap(this ICollection<DistrictUi> districts)
     {
         var newDistrictsList = new List<DistrictUi>();
 
@@ -70,13 +70,14 @@ public static class FunctionsLogicHelper
         return newDistrictsList;
     }
 
-    public static RaidPrediction GetCurrentRaidMedalsRewardPrediction(RaidUi raidsUi)
+    public static RaidPrediction GetCurrentRaidMedalsRewardPrediction(CapitalRaidUi raidsUi)
     {
-        var predict = new RaidPrediction();
+        var predict = new RaidPrediction
+        {
+            OffensePrediction = GetOffensePrediction(raidsUi),
 
-        predict.OffensePrediction = GetOffensePrediction(raidsUi);
-
-        predict.DefensePrediction = GetDefensePrediction(raidsUi);
+            DefensePrediction = GetDefensePrediction(raidsUi),
+        };
 
         predict.SummPrediction = predict.DefensePrediction + predict.OffensePrediction;
 
@@ -102,7 +103,13 @@ public static class FunctionsLogicHelper
         return machineLevels;
     }
 
-    private static int GetOffensePrediction(RaidUi raidsUi)
+    public static string GetTimeLeft(this DateTime endenOn)
+    {
+        return $"{Math.Round(endenOn.Subtract(DateTime.Now).TotalHours, 0)}ч. {endenOn.Subtract(DateTime.Now).Minutes}м.";
+    }
+
+
+    private static int GetOffensePrediction(CapitalRaidUi raidsUi)
     {
         var maxMemberAttacksPerRaid = 6;
 
@@ -129,7 +136,7 @@ public static class FunctionsLogicHelper
                     destroyedDistricts.DefeatedOtherDistricts[district.Level]++;
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
             }
@@ -146,7 +153,7 @@ public static class FunctionsLogicHelper
         return offenseResult + magicNumber;
     }
 
-    private static int GetDefensePrediction(RaidUi raidsUi)
+    private static int GetDefensePrediction(CapitalRaidUi raidsUi)
     {
         var betterDefense = raidsUi.Defenses.OrderByDescending(defense => defense.TotalAttacksCount).FirstOrDefault();
 
@@ -199,19 +206,17 @@ public static class FunctionsLogicHelper
 
         return summDeadUnits / magicDivider;
     }
-
-    
 }
 
 public class DistrictsForPrediction
 {
-    private static int _chCapacity = 10;
+    private static readonly int _chCapacity = 10;
 
-    private static int _dhCapacity = 5;
+    private static readonly int _dhCapacity = 5;
 
-    public Dictionary<int, int> DefeatedCapitalHalls = new Dictionary<int, int>(_chCapacity);
+    public Dictionary<int, int> DefeatedCapitalHalls = new(_chCapacity);
 
-    public Dictionary<int, int> DefeatedOtherDistricts = new Dictionary<int, int>(_dhCapacity);
+    public Dictionary<int, int> DefeatedOtherDistricts = new(_dhCapacity);
 
     public DistrictsForPrediction()
     {

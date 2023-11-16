@@ -2,16 +2,14 @@
 
 namespace CoCApiDealer.ApiRequests;
 
-public class CoCApiClientFactory
+public static class CoCApiClientFactory
 {
-    private HttpClient _client = new HttpClient();
+    private static readonly HttpClient _client = new();
 
     public static string DevelopersKey { get; set; } = File.ReadAllText(@"./../../../../CustomSolutionElements/DevelopersKey.txt");
 
-    public HttpClient GetHttpClient()
+    public static HttpClient GetHttpClient()
     {
-        var abc = Environment.CurrentDirectory;
-
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", DevelopersKey);
 
         return _client;

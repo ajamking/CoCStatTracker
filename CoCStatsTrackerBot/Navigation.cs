@@ -1,6 +1,6 @@
 ﻿using CoCStatsTracker;
 using CoCStatsTrackerBot.Helpers;
-using CoCStatsTrackerBot.Menu;
+using CoCStatsTrackerBot.BotMenues;
 using CoCStatsTrackerBot.Requests;
 using CoCStatsTrackerBot.Requests.RequestHandlers;
 using CoCStatsTrackerBot.Requests.RequestHandlers.SlashFunctionHandlers;
@@ -8,31 +8,31 @@ using System.Text.RegularExpressions;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using System.IO;
 
 namespace CoCStatsTrackerBot;
 
 public static class Navigation
 {
-    private static Dictionary<string, BotSlashFunction> _botSlashFunctions = new Dictionary<string, BotSlashFunction>() {
+    private static readonly Dictionary<string, BotSlashFunction> _botSlashFunctions = new() {
        { "/group_get_chat_id", BotSlashFunction.GroupGetChatId },
        { "/group_get_raid_short_info", BotSlashFunction.GroupGetRaidShortInfo },
        { "/group_war_short_info", BotSlashFunction.GroupGetWarShortInfo },
        { "/group_war_map", BotSlashFunction.GroupGetWarMap }
     };
 
-    private static Regex _tagRegex { get; set; } = new Regex(@"^#(\w{6,9})$");
+    private static Regex TagRegex { get; set; } = new Regex(@"^#(\w{6,9})$");
+    private static Regex AdminUsersNameRegex { get; set; } = new Regex(@"^#(\w{6,9})-@\w");
 
-    private static Regex _adminUsersNameRegex { get; set; } = new Regex(@"^#(\w{6,9})-@\w");
+    private static readonly List<BotUser> _botUsers = new();
 
-    private static List<BaseRequestHandler> _allRequestHandlers = AllRequestHandlersConstructor.AllRequestHandlers;
-
-    private static List<BotUser> _botUsers = new List<BotUser>();
+    private static readonly List<BaseRequestHandler> _allRequestHandlers = AllRequestHandlersConstructor.AllRequestHandlers;
 
     private static readonly string _botHolderToken = System.IO.File.ReadAllText(@"./../../../../CustomSolutionElements/MyPersonalKey.txt");
 
     private static readonly long _adminsChatIdForFeedbacks = 6621123435;
 
-    private static Func<BotUser, bool>[] _handlers = new[]
+    private static readonly Func<BotUser, bool>[] _handlers = new[]
     {
         AnyRequestHeaderMatchAction,
         AnyBackInMenuAction,
@@ -46,6 +46,7 @@ public static class Navigation
         AdminsKeyAction,
         HoldSlashFuncAction,
         FeedBackAction,
+        AdminBanUserAction,
         TrashMessageAction
     };
 
@@ -118,7 +119,7 @@ public static class Navigation
         if (messageText.Contains('#') && activeBotUser.CurrentMenuLevel is MenuLevel.DeveloperMenu2 &&
             !GetFromDbQueryHandler.GetAllTrackedClansUi().Where(x => x.Tag == messageText).Any())
         {
-            if (_tagRegex.IsMatch(messageText))
+            if (TagRegex.IsMatch(messageText))
             {
                 UpsertBotHolderNewTrackedClanTag(activeBotUser.RequestHadnlerParameters.Message);
 
@@ -291,7 +292,7 @@ public static class Navigation
     {
         var msgText = activeBotUser.RequestHadnlerParameters.Message.Text;
 
-        if (_adminUsersNameRegex.IsMatch(msgText) && activeBotUser.CurrentMenuLevel is MenuLevel.LeaderTgGroupCustomize2)
+        if (AdminUsersNameRegex.IsMatch(msgText) && activeBotUser.CurrentMenuLevel is MenuLevel.LeaderTgGroupCustomize2)
         {
             var answer = UserNameAdder.TryAddUserNames(activeBotUser.RequestHadnlerParameters.LastClanTagToMerge, msgText);
 
@@ -312,7 +313,7 @@ public static class Navigation
 
         var message = activeBotUser.RequestHadnlerParameters.Message;
 
-        if (_tagRegex.IsMatch(message.Text))
+        if (TagRegex.IsMatch(message.Text))
         {
             if (GetFromDbQueryHandler.CheckClanExists(activeBotUser.RequestHadnlerParameters.Message.Text))
             {
@@ -451,6 +452,55 @@ public static class Navigation
         return false;
     }
 
+    private static bool AdminBanUserAction(BotUser activeBotUser)
+    {
+        var msg = activeBotUser.RequestHadnlerParameters.Message.Text;
+
+        if (msg.ToLower().Contains("ban") && activeBotUser.RequestHadnlerParameters.IsBotHolder == true)
+        {
+            var messages = msg.Split(' ');
+
+            if (messages[0] == "/ban")
+            {
+                using StreamWriter writer = new(Program.BanListPath, true);
+
+                writer.WriteLine(messages[1]);
+
+                activeBotUser.RequestHadnlerParameters.BotClient.SendTextMessageAsync(activeBotUser.ChatId,
+                      text: StylingHelper.MakeItStyled($"Пользователь забанен.", UiTextStyle.Default),
+                      parseMode: ParseMode.MarkdownV2);
+            }
+            if (messages[0] == "/unBan")
+            {
+                var answer = "Пользователя с таким chatId нет в бан листе";
+
+                var banList = System.IO.File.ReadAllLines(Program.BanListPath).ToList();
+
+                if (banList.Contains(messages[1]))
+                {
+                    banList.Remove(messages[1]);
+
+                    using StreamWriter writer = new(Program.BanListPath, false);
+
+                    foreach (var bannedUser in banList)
+                    {
+                        writer.WriteLine(bannedUser);
+                    }
+
+                    answer = $"Пользователя разбанен, банлист:\n\n{string.Join('\n', banList)}";
+                }
+
+                activeBotUser.RequestHadnlerParameters.BotClient.SendTextMessageAsync(activeBotUser.ChatId,
+                     text: StylingHelper.MakeItStyled(answer, UiTextStyle.Name),
+                     parseMode: ParseMode.MarkdownV2);
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
     private static bool FeedBackAction(BotUser activeBotUser)
     {
         if (activeBotUser.RequestHadnlerParameters.Message.Text.ToLower().Contains("отзыв"))
@@ -549,7 +599,7 @@ public static class Navigation
 
     private static void UpsertBotHolderNewTrackedClanChatId(Message message)
     {
-        var newClanChatId = message.Text.Substring(1);
+        var newClanChatId = message.Text[1..];
 
         _botUsers.First(x => x.ChatId == message.Chat.Id).RequestHadnlerParameters.ClanChatIdToMerge = newClanChatId;
     }

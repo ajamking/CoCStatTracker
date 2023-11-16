@@ -1,6 +1,6 @@
 ﻿using CoCStatsTracker;
 using CoCStatsTrackerBot.Helpers;
-using CoCStatsTrackerBot.Menu;
+using CoCStatsTrackerBot.BotMenues;
 
 namespace CoCStatsTrackerBot.Requests;
 
@@ -18,7 +18,7 @@ public class AllTrackedClansInfoRH : BaseRequestHandler
         {
             TagsConditionChecker.SendClanTagMessageIsEmpty(parameters);
         }
-        catch (NotFoundException e)
+        catch (NotFoundException)
         {
             ResponseSender.SendAnswer(parameters, true, DefaultNotFoundMessage);
         }

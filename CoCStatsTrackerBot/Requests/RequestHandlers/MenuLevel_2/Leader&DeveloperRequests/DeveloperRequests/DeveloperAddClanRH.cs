@@ -1,5 +1,5 @@
 ﻿using CoCStatsTracker;
-using CoCStatsTrackerBot.Menu;
+using CoCStatsTrackerBot.BotMenues;
 
 namespace CoCStatsTrackerBot.Requests;
 
@@ -15,9 +15,9 @@ public class DeveloperAddClanRH : BaseRequestHandler
     {
         try
         {
-            if (!(string.IsNullOrEmpty(parameters.TagToAddClan) && string.IsNullOrEmpty(parameters.AdminKeyToMerge)))
+            if (!string.IsNullOrEmpty(parameters.TagToAddClan))
             {
-                AddToDbCommandHandler.AddTrackedClan(parameters.TagToAddClan, parameters.AdminKeyToMerge);
+                AddToDbCommandHandler.AddTrackedClan(parameters.TagToAddClan);
 
                 AddToDbCommandHandler.AddClanMembers(parameters.TagToAddClan);
 
@@ -25,14 +25,14 @@ public class DeveloperAddClanRH : BaseRequestHandler
             }
             else
             {
-                ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Тег для нового клана или токен главы не проставлены.", UiTextStyle.Default));
+                ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Тег для нового клана не был введен.", UiTextStyle.Default));
             }
         }
-        catch (NotFoundException e)
+        catch (NotFoundException)
         {
             ResponseSender.SendAnswer(parameters, true, DefaultNotFoundMessage);
         }
-        catch (AlreadyExistsException e)
+        catch (AlreadyExistsException)
         {
             ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Этот клан уже отслеживается, добавить его нельзя.", UiTextStyle.Default));
         }

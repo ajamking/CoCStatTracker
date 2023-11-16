@@ -16,59 +16,64 @@ public static class DeleteFromDbCommandHandler
 
     public static void DeleteTrackedClan(string clanTag)
     {
-        using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
-        {
-            var clan = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
+        using AppDbContext dbContext = new(_dbConnectionString);
 
-            NotFoundException.ThrowByPredicate(() => clan == null, "DeleteTrackedClan is failed, no such clan found");
+        var clan = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
 
-            dbContext.TrackedClans.Remove(clan);
+        NotFoundException.ThrowByPredicate(() => clan == null, "DeleteTrackedClan - is failed, no such clan found");
 
-            dbContext.SaveChanges();
-        }
+        dbContext.TrackedClans.Remove(clan);
+
+        dbContext.SaveChanges();
     }
 
     public static void DeleteClanWars(string clanTag, int countToSave)
     {
-        using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
+        using AppDbContext dbContext = new(_dbConnectionString);
+
+        var trackedClanDb = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
+
+        NotFoundException.ThrowByPredicate(() => trackedClanDb == null, "DeleteClanWars - is failed, no tracked CWs for this clan");
+
+        NotFoundException.ThrowByPredicate(() => trackedClanDb.ClanWars == null || trackedClanDb.ClanWars.Count == 0, "DeleteClanWars - is failed, no tracked CWs for this clan");
+
+        var clanWars = dbContext.ClanWars
+            .Where(x => x.TrackedClan.Tag == clanTag)
+            .OrderByDescending(x => x.StartedOn)
+            .ToList();
+
+        var clanWarsToRemove = new List<ClanWar>();
+
+        for (int i = countToSave; i < clanWars.Count; i++)
         {
-            var clanWars = dbContext.ClanWars
-                .Where(x => x.TrackedClan.Tag == clanTag)
-                .OrderByDescending(x => x.StartedOn)
-                .ToList();
-
-            NotFoundException.ThrowByPredicate(() => clanWars.Count == 0, "DeleteOldClanClanWars is failed, no tracked CWs for this clan");
-
-            var clanWarsToRemove = new List<ClanWar>();
-
-            for (int i = countToSave; i < clanWars.Count; i++)
-            {
-                dbContext.ClanWars.Remove(clanWars[i]);
-            }
-
-            dbContext.SaveChanges();
+            dbContext.ClanWars.Remove(clanWars[i]);
         }
+
+        dbContext.SaveChanges();
     }
 
     public static void DeleteClanRaids(string clanTag, int countToSave)
     {
-        using (AppDbContext dbContext = new AppDbContext(_dbConnectionString))
+        using AppDbContext dbContext = new(_dbConnectionString);
+
+        var trackedClanDb = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
+
+        NotFoundException.ThrowByPredicate(() => trackedClanDb == null, "DeleteClanRaids - is failed, no tracked CWs for this clan");
+
+        NotFoundException.ThrowByPredicate(() => trackedClanDb.CapitalRaids == null || trackedClanDb.CapitalRaids.Count == 0, "DeleteClanRaids - is failed, no tracked CWs for this clan");
+
+        var raids = dbContext.CapitalRaids
+            .Where(x => x.TrackedClan.Tag == clanTag)
+            .OrderByDescending(x => x.StartedOn)
+            .ToList();
+
+        var clanWarsToRemove = new List<ClanWar>();
+
+        for (int i = countToSave; i < raids.Count; i++)
         {
-            var raids = dbContext.CapitalRaids
-                .Where(x => x.TrackedClan.Tag == clanTag)
-                .OrderByDescending(x => x.StartedOn)
-                .ToList();
-
-            NotFoundException.ThrowByPredicate(() => raids.Count == 0, "DeleteClanRaids is failed, no tracked Raids for this clan");
-
-            var clanWarsToRemove = new List<ClanWar>();
-
-            for (int i = countToSave; i < raids.Count; i++)
-            {
-                dbContext.CapitalRaids.Remove(raids[i]);
-            }
-
-            dbContext.SaveChanges();
+            dbContext.CapitalRaids.Remove(raids[i]);
         }
+
+        dbContext.SaveChanges();
     }
 }

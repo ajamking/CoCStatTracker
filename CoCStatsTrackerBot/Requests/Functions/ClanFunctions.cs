@@ -5,7 +5,7 @@ namespace CoCStatsTrackerBot.Requests;
 
 public static class ClanFunctions
 {
-    public static string GetClanShortInfo(ClanUi clanUi)
+    public static string GetClanShortInfo(TrackedClanUi clanUi)
     {
         var dic = new Dictionary<string, string>()
         {
@@ -187,7 +187,7 @@ public static class ClanFunctions
 
                         if (properName.Length > maxNameLength)
                         {
-                            properName = properName.Substring(0, maxNameLength);
+                            properName = properName[..maxNameLength];
                         }
 
                         members += properName + ";  ";
@@ -269,7 +269,7 @@ public static class ClanFunctions
         return str.ToString();
     }
 
-    public static string GetRaidsHistory(List<RaidUi> raidsUi, int recordsCount, string messageSplitToken)
+    public static string GetRaidsHistory(List<CapitalRaidUi> raidsUi, int recordsCount, string messageSplitToken)
     {
         var str = new StringBuilder();
 
@@ -312,7 +312,7 @@ public static class ClanFunctions
 
                     var districtCounter = 0;
 
-                    foreach (var district in defeatedClan.DefeatedEmemyDistricts.SortAsOnMap())
+                    foreach (var district in defeatedClan.DefeatedEmemyDistricts.SortDistrictsAsOnMap())
                     {
                         foreach (var attack in district.Attacks)
                         {
@@ -352,7 +352,7 @@ public static class ClanFunctions
         return str.ToString();
     }
 
-    public static string GetClanWarHistory(List<CwCwlUi> clanWarsUi, int recordsCount, string messageSplitToken)
+    public static string GetClanWarHistory(List<ClanWarUi> clanWarsUi, int recordsCount, string messageSplitToken)
     {
         var str = new StringBuilder();
 
@@ -445,7 +445,7 @@ public static class ClanFunctions
         return str.ToString();
     }
 
-    public static string GetMembersAverageRaidsPerfomance(List<MedianRaidPerfomanse> playersPerfomances)
+    public static string GetMembersAverageRaidsPerfomance(List<MedianRaidPerfomanseUi> playersPerfomances)
     {
         var maxNameLength = 12;
         var maxDestructionPercentLength = 5;

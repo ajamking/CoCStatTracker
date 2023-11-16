@@ -1,9 +1,6 @@
 ﻿using CoCStatsTracker.ApiEntities;
-using CoCStatsTracker.Items.Helpers;
 using Domain.Entities;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace CoCStatsTracker.Builders;
 

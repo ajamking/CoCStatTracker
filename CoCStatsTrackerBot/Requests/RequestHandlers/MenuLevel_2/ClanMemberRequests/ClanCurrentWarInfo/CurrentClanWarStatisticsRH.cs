@@ -1,5 +1,6 @@
 ﻿using CoCStatsTracker;
-using CoCStatsTrackerBot.Menu;
+using CoCStatsTracker.UIEntities;
+using CoCStatsTrackerBot.BotMenues;
 
 namespace CoCStatsTrackerBot.Requests;
 
@@ -17,13 +18,13 @@ public class CurrentClanWarStatisticsRH : BaseRequestHandler
         {
             parameters.EntriesCount = 1;
 
-            var allClanWars = GetFromDbQueryHandler.GetAllClanWarsUi(parameters.LastClanTagMessage).OrderByDescending(x => x.StartedOn).ToList();
+            var lastClanWarUi = GetFromDbQueryHandler.GetLastClanWarUi(parameters.LastClanTagMessage);
 
-            var answer = ClanFunctions.GetClanWarHistory(allClanWars, parameters.EntriesCount, MessageSplitToken);
+            var answer = ClanFunctions.GetClanWarHistory(new List<ClanWarUi>() { lastClanWarUi }, parameters.EntriesCount, MessageSplitToken);
 
             ResponseSender.SendAnswer(parameters, true, SplitAnswer(answer));
         }
-        catch (NotFoundException e)
+        catch (NotFoundException)
         {
             ResponseSender.SendAnswer(parameters, true, DefaultNotFoundMessage);
         }

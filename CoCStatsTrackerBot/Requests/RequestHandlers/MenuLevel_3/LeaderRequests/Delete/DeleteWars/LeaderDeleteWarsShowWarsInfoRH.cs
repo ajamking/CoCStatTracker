@@ -1,5 +1,5 @@
 ﻿using CoCStatsTracker;
-using CoCStatsTrackerBot.Menu;
+using CoCStatsTrackerBot.BotMenues;
 using System.Text;
 
 namespace CoCStatsTrackerBot.Requests;
@@ -38,7 +38,7 @@ public class LeaderDeleteWarsShowWarsInfoRH : BaseRequestHandler
 
             ResponseSender.SendAnswer(parameters, true, SplitAnswer(answer.ToString()));
         }
-        catch (NotFoundException e)
+        catch (NotFoundException)
         {
             ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Все записи о войнах удалены или не отслеживались вовсе.", UiTextStyle.Default));
         }

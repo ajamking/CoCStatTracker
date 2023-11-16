@@ -5,13 +5,13 @@ namespace CoCApiDealer.ApiRequests;
 
 public class CwlGroupRequest : BaseApiRequest
 {
-    public async Task<CwlGroupApi> CallApi(string clanTag)
+    public static async Task<CwlGroupApi> CallApi(string clanTag)
     {
         try
         {
             var requestType = AllowedRequests.CurrentCwl;
 
-            var apiRequestResult = await new ApiRequestBuilder(_httpClient, clanTag, requestType).CallApi();
+            var apiRequestResult = await new ApiRequestBuilder(HttpClient, clanTag, requestType).CallApi();
 
             var cwlGroup = JsonConvert.DeserializeObject<CwlGroupApi>(apiRequestResult);
 
@@ -24,7 +24,7 @@ public class CwlGroupRequest : BaseApiRequest
             return cwlGroup;
 
         }
-        catch (ApiNullOrEmtyResponseException ex)
+        catch (ApiNullOrEmtyResponseException)
         {
             return null;
         }

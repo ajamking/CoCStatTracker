@@ -16,4 +16,3 @@ public class RaidDefenseConfiguration : IEntityTypeConfiguration<RaidDefense>
             .OnDelete(DeleteBehavior.Cascade);
     }
 }
-

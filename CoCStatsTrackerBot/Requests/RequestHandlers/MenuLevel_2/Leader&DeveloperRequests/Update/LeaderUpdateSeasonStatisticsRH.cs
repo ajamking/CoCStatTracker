@@ -1,5 +1,5 @@
 ﻿using CoCStatsTracker;
-using CoCStatsTrackerBot.Menu;
+using CoCStatsTrackerBot.BotMenues;
 
 namespace CoCStatsTrackerBot.Requests;
 
@@ -19,7 +19,7 @@ public class LeaderUpdateSeasonStatisticsRH : BaseRequestHandler
 
             ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled($"Операция успешна, сезонные показатели игроков сброшены, отсчет начат заново.", UiTextStyle.Default));
         }
-        catch (NotFoundException e)
+        catch (NotFoundException)
         {
             ResponseSender.SendAnswer(parameters, true, DefaultNotFoundMessage);
         }

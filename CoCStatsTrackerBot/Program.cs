@@ -1,5 +1,6 @@
 ﻿using CoCStatsTracker;
 using CoCStatsTrackerBot.Requests;
+using System.Net.NetworkInformation;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
@@ -10,20 +11,23 @@ namespace CoCStatsTrackerBot;
 /// <summary>
 /// Тег клана:	"#YPPGCCY8", "#UQQGYJJP", "#VUJCUQ9Y"
 /// 
+/// #2Q9C292Y2  #2Q8028UJL - не крутили ЛВК
+/// 
+/// 
 /// Тег игрока: AJAMKING: #G8P9Q299R Зануда051: #LRPLYJ9U2
 /// </summary>
 
 class Program
 {
-    private static TelegramBotClient _client = new TelegramBotClient(token: System.IO.File.ReadAllText(@"./../../../../CustomSolutionElements/TelegramBotClientToken.txt"));
+    private static readonly TelegramBotClient _client = new(token: System.IO.File.ReadAllText(@"./../../../../CustomSolutionElements/TelegramBotClientToken.txt"));
 
-    private static  string _bannListPath = @"./../../../../CustomSolutionElements/BannedUsers.txt";
+    public static string BanListPath { get; } = @"./../../../../CustomSolutionElements/BannedUsers.txt";
 
-    async static Task Main(string[] args)
+    async static Task Main()
     {
-        GroupMessageSender.SendMessageToClanGroups(_client);
+        //CreateNewTestDb("#YPPGCCY8", "#UQQGYJJP", "#VUJCUQ9Y");
 
-        //CreateNewTestDb("#YPPGCCY8", "#UQQGYJJP");
+        BotBackgroundTasksManager.StartAstync(_client);
 
         _client.StartReceiving(HandleUpdateAsync, HandleError);
 
@@ -36,19 +40,22 @@ class Program
 
     async static Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
     {
+        //Console.WriteLine(Environment.CurrentManagedThreadId);
+
         try
         {
             if (update.Type == UpdateType.Message && update?.Message?.Text != null)
             {
-                if (System.IO.File.ReadAllLines(_bannListPath).Contains(update.Message.Chat.Id.ToString()))
+                if (System.IO.File.ReadAllLines(BanListPath).Contains(update.Message.Chat.Id.ToString()))
                 {
                     await botClient.SendTextMessageAsync(update.Message.Chat.Id,
-                        text: StylingHelper.MakeItStyled("Вы были заблокированы за неподобающее поведение и больше не можете пользоваться ботом.", UiTextStyle.Default),
+                        text: StylingHelper.MakeItStyled("Вы были заблокированы за неподобающее поведение и " +
+                        "больше не можете пользоваться ботом.", UiTextStyle.Default),
                         parseMode: ParseMode.MarkdownV2);
 
                     return;
                 }
-               
+
                 Console.Write($"{DateTime.Now}: Принято сообщение: \"{update.Message.Text}\" от ");
 
                 Console.ForegroundColor = ConsoleColor.Magenta;
@@ -57,7 +64,8 @@ class Program
 
                 Console.ResetColor();
 
-                Navigation.Execute(botClient, update.Message);
+                await Task.Run(() => Navigation.Execute(botClient, update.Message));
+                //Navigation.Execute(botClient, update.Message);
 
                 return;
             }
@@ -93,20 +101,33 @@ class Program
         {
             if (clanTag == "#VUJCUQ9Y")
             {
-                AddToDbCommandHandler.AddTrackedClan(clanTag, adminsKey: "$VIKAND");
+                AddToDbCommandHandler.AddTrackedClan(clanTag);
+
+                UpdateDbCommandHandler.ResetClanChatId(clanTag, "-1002146710907");
+
+                UpdateDbCommandHandler.ResetClanAdminKey(clanTag, "$Vikand0707");
             }
             else
             {
-                AddToDbCommandHandler.AddTrackedClan(clanTag, adminsKey: "$KEFamily0707");
+                AddToDbCommandHandler.AddTrackedClan(clanTag);
+
+                UpdateDbCommandHandler.ResetClanAdminKey(clanTag, "$KEFamily0707");
             }
 
             AddToDbCommandHandler.AddClanMembers(clanTag);
 
             AddToDbCommandHandler.AddCurrentRaidToClan(clanTag);
 
-            AddToDbCommandHandler.AddCurrentClanWarToClan(clanTag);
+            try
+            {
+                AddToDbCommandHandler.AddCurrentClanWarToClan(clanTag);
+            }
+            catch
+            {
+                AddToDbCommandHandler.AddCurrentCwlClanWarsToClan(clanTag);
+            }
 
-            Console.WriteLine("Clan aded");
+            Console.WriteLine($"Clan {clanTag} aded");
         }
     }
 }

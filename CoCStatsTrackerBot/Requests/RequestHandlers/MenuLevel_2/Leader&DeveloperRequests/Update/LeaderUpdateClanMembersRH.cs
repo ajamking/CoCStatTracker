@@ -1,5 +1,5 @@
 ﻿using CoCStatsTracker;
-using CoCStatsTrackerBot.Menu;
+using CoCStatsTrackerBot.BotMenues;
 
 namespace CoCStatsTrackerBot.Requests;
 
@@ -19,7 +19,7 @@ public class LeaderUpdateClanMembersRH : BaseRequestHandler
 
             ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled($"Операция успешна, базовые показатели игроков обновлены", UiTextStyle.Default));
         }
-        catch (NotFoundException e)
+        catch (NotFoundException)
         {
             ResponseSender.SendAnswer(parameters, true, DefaultNotFoundMessage);
         }

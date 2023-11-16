@@ -1,5 +1,4 @@
-﻿using CoCStatsTracker.ApiEntities;
-using Domain.Entities;
+﻿using Domain.Entities;
 
 namespace CoCStatsTracker.Builders;
 

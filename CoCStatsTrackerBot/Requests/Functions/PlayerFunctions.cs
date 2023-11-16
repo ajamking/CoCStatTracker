@@ -120,7 +120,7 @@ public static class PlayerFunctions
         return str.ToString();
     }
 
-    public static string GetWarStatistics(List<CwCwlMembershipUi> cwCwlMembershipsUi, int recordsCount, string messageSplitToken)
+    public static string GetWarStatistics(List<WarMembershipsUi> cwCwlMembershipsUi, int recordsCount, string messageSplitToken)
     {
         //Эмпирически подобранные константы для адекватного отображения таблицы.
         var maxAttackLenght = 6;
@@ -307,7 +307,7 @@ public static class PlayerFunctions
                 {
                     if (attack.DistrictName.Length > maxDistrictLenght)
                     {
-                        attack.DistrictName = attack.DistrictName.Substring(0, maxDistrictLenght);
+                        attack.DistrictName = attack.DistrictName[..maxDistrictLenght];
                     }
 
                     str.Append($" |{StylingHelper.GetCenteredString(attackNumber.ToString(), maxAttackLenght)}|");

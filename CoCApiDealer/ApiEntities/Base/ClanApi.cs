@@ -66,8 +66,4 @@ public class ClanCapitalApi
 {
     [JsonProperty("capitalHallLevel")]
     public int CapitalHallLevel { get; set; }
-
-
 }
-
-
