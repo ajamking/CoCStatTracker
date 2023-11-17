@@ -14,6 +14,8 @@ public class WarLogRequest : BaseApiRequest
 
             var apiRequestResult = await new ApiRequestBuilder(HttpClient, clanTag, requestType, limit).CallApi();
 
+            ApiInMaintenanceException.ThrowByPredicate(() => apiRequestResult.Contains("inMaintenance"), "Api is at maintenance, cant get searching info.");
+
             var warLog = JsonConvert.DeserializeObject<WarLogApi>(apiRequestResult);
 
             ApiNullOrEmtyResponseException.ThrowByPredicate(() => warLog == null,
@@ -21,7 +23,7 @@ public class WarLogRequest : BaseApiRequest
 
             return warLog;
         }
-        catch (ApiNullOrEmtyResponseException)
+        catch (Exception ex)
         {
             return null;
         }

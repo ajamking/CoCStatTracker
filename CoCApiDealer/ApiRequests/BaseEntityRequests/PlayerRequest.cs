@@ -13,15 +13,16 @@ public class PlayerRequest : BaseApiRequest
 
             var apiRequestResult = await new ApiRequestBuilder(HttpClient, clanTag, requestType).CallApi();
 
+            ApiInMaintenanceException.ThrowByPredicate(() => apiRequestResult.Contains("inMaintenance"), "Api is at maintenance, cant get searching info.");
+
             var playerInfo = JsonConvert.DeserializeObject<PlayerApi>(apiRequestResult);
 
             ApiNullOrEmtyResponseException.ThrowByPredicate(() => playerInfo == null || playerInfo.Tag == null,
                     "PlayerRequest is failed, Nothing came from API");
 
             return playerInfo;
-
         }
-        catch (ApiNullOrEmtyResponseException)
+        catch (Exception ex)
         {
             return null;
         }

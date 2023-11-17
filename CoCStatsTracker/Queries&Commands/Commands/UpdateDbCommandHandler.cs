@@ -81,6 +81,10 @@ public static class UpdateDbCommandHandler
 
         trackedClanBuilder.SetClanMembers(updatedClanMembers);
 
+        var obsoleteMembersWithoutClan = dbContext.ClanMembers.Where(x => x.TrackedClanId == null);
+
+        dbContext.ClanMembers.RemoveRange(obsoleteMembersWithoutClan);
+
         dbContext.SaveChanges();
     }
 

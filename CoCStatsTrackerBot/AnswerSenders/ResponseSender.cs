@@ -1,8 +1,11 @@
-﻿using Telegram.Bot;
+﻿using CoCStatsTrackerBot.Requests;
+using System;
+using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
-namespace CoCStatsTrackerBot.Requests;
+namespace CoCStatsTrackerBot;
 
 public static class ResponseSender
 {
@@ -27,7 +30,11 @@ public static class ResponseSender
             {
                 await parameters.BotClient.SendTextMessageAsync(parameters.Message.Chat.Id,
                       text: StylingHelper.MakeItStyled("Произошла внутреняя ошибка, обратитесь к администратору.", UiTextStyle.Default),
-                      parseMode: ParseMode.MarkdownV2);
+                parseMode: ParseMode.MarkdownV2);
+
+                var tempException = new Exception();
+
+                tempException.LogException(parameters.Message.Chat.Username, parameters.Message.Chat.Id, parameters.Message.Text, "Что-то пошло не так, был выдан ответ-заглушка.");
 
                 WriteToConsole($"---\n{DateTime.Now}: На: \"{parameters.Message.Text}\" от {botUserIdentificator}. Ответ выдан - {answerIsValid}\n---", ConsoleColor.DarkRed);
 
@@ -47,7 +54,11 @@ public static class ResponseSender
         }
         catch (Exception e)
         {
-            WriteToConsole($"Что-то не так со сформированным сообщением, ответ не был выдан. {e.Message}", ConsoleColor.DarkRed);
+            var customMessage = "Что-то не так со сформированным сообщением, ответ не был выдан.";
+
+            e.LogException(parameters.Message.Chat.Username, parameters.Message.Chat.Id, parameters.Message.Text, customMessage);
+
+            WriteToConsole($"{customMessage} {e.Message}", ConsoleColor.DarkRed);
 
             return;
         }
@@ -73,6 +84,8 @@ public static class ResponseSender
         {
             case 429:
                 {
+                    exception.LogException(parameters.Message.Chat.Username, parameters.Message.Chat.Id, parameters.Message.Text);
+
                     WriteToConsole($"Слишком много сообщений от: {parameters.Message.Chat.Username} {parameters.Message.Chat.Id}" + exception.Message, ConsoleColor.DarkRed);
 
                     using StreamWriter writer = new(Program.BanListPath, true);
@@ -87,6 +100,8 @@ public static class ResponseSender
                 }
             default:
                 {
+                    exception.LogException(parameters.Message.Chat.Username, parameters.Message.Chat.Id, parameters.Message.Text);
+
                     WriteToConsole($"На запрос от: {parameters.Message.Chat.Username} {parameters.Message.Chat.Id} HandleBotApiExceptions словил исключение: {exception.Message}", ConsoleColor.DarkRed);
 
                     await parameters.BotClient.SendTextMessageAsync(parameters.Message.Chat.Id,

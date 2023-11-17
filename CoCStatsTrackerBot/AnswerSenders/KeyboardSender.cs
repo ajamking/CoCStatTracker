@@ -1,7 +1,8 @@
-﻿using Telegram.Bot;
+﻿using CoCStatsTrackerBot.Requests;
+using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace CoCStatsTrackerBot.Requests;
+namespace CoCStatsTrackerBot;
 
 public static class KeyboardSender
 {

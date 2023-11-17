@@ -18,7 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решен
 		CustomSolutionElements\BannedUsers.txt = CustomSolutionElements\BannedUsers.txt
 		CustomSolutionElements\CoCStatsTracker.db = CustomSolutionElements\CoCStatsTracker.db
 		CustomSolutionElements\DevelopersKey.txt = CustomSolutionElements\DevelopersKey.txt
-		CustomSolutionElements\LogTrace.txt = CustomSolutionElements\LogTrace.txt
+		CustomSolutionElements\ErrorLogs.txt = CustomSolutionElements\ErrorLogs.txt
 		CustomSolutionElements\MyPersonalKey.txt = CustomSolutionElements\MyPersonalKey.txt
 		CustomSolutionElements\TelegramBotClientToken.txt = CustomSolutionElements\TelegramBotClientToken.txt
 	EndProjectSection

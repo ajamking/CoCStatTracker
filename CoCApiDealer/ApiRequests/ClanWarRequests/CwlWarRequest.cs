@@ -13,6 +13,8 @@ public class CwlWarRequest : BaseApiRequest
 
             var apiRequestResult = await new ApiRequestBuilder(HttpClient, cwlWarTag, requestType).CallApi();
 
+            ApiInMaintenanceException.ThrowByPredicate(() => apiRequestResult.Contains("inMaintenance"), "Api is at maintenance, cant get searching info.");
+
             var currentCwlWar = JsonConvert.DeserializeObject<ClanWarApi>(apiRequestResult);
 
             ApiNullOrEmtyResponseException.ThrowByPredicate(() => currentCwlWar == null || currentCwlWar.StartTime == null,
@@ -20,7 +22,7 @@ public class CwlWarRequest : BaseApiRequest
 
             return currentCwlWar;
         }
-        catch (ApiNullOrEmtyResponseException)
+        catch (Exception ex)
         {
             return null;
         }

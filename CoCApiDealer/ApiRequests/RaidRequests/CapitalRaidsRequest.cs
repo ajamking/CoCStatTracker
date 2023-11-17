@@ -13,6 +13,8 @@ public class CapitalRaidsRequest : BaseApiRequest
 
             var apiRequestResult = await new ApiRequestBuilder(HttpClient, clanTag, requestType, limit).CallApi();
 
+            ApiInMaintenanceException.ThrowByPredicate(() => apiRequestResult.Contains("inMaintenance"), "Api is at maintenance, cant get searching info.");
+
             var capitalRaidsInfo = JsonConvert.DeserializeObject<RaidsApi>(apiRequestResult);
 
             ApiNullOrEmtyResponseException.ThrowByPredicate(() => capitalRaidsInfo == null || capitalRaidsInfo.RaidsInfo == null,
@@ -20,7 +22,7 @@ public class CapitalRaidsRequest : BaseApiRequest
 
             return capitalRaidsInfo;
         }
-        catch (ApiNullOrEmtyResponseException)
+        catch (Exception ex)
         {
             return null;
         }

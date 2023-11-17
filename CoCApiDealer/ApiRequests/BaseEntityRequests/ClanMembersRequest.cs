@@ -14,6 +14,8 @@ public class ClanMembersRequest : BaseApiRequest
 
             var apiRequestResult = await new ApiRequestBuilder(HttpClient, clanTag, requestType).CallApi();
 
+            ApiInMaintenanceException.ThrowByPredicate(() => apiRequestResult.Contains("inMaintenance"), "Api is at maintenance, cant get searching info.");
+
             var clanMembers = JsonConvert.DeserializeObject<ClanMembersApi>(apiRequestResult);
 
             ApiNullOrEmtyResponseException.ThrowByPredicate(() => clanMembers == null || clanMembers.Members.Length == 0,
@@ -21,7 +23,7 @@ public class ClanMembersRequest : BaseApiRequest
 
             return clanMembers;
         }
-        catch (ApiNullOrEmtyResponseException)
+        catch (Exception ex)
         {
             return null;
         }

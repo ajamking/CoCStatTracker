@@ -1,7 +1,9 @@
 ﻿using CoCStatsTracker;
+using CoCStatsTracker.Items.Exceptions;
 using CoCStatsTrackerBot.Requests;
 using Domain.Entities;
 using System.Net.NetworkInformation;
+using System.Security.Cryptography;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
 
@@ -9,6 +11,13 @@ namespace CoCStatsTrackerBot;
 
 public static class BotBackgroundTasksManager
 {
+    private static string _hashOfErrorLogFile = null;
+
+    static BotBackgroundTasksManager()
+    {
+        _hashOfErrorLogFile = GetHashOfErrorLogsFile();
+    }
+
     public static async Task StartAstync(ITelegramBotClient botClient)
     {
         while (CheckInternetConnection())
@@ -31,6 +40,10 @@ public static class BotBackgroundTasksManager
 
             Console.WriteLine($"<{DateTime.Now:HH:mm:ss}> Сообщения разосланы.\n");
 
+            await SendLogFileToAdmin();
+
+            await TryChangeSeasonalStatistics();
+
             await Task.Delay(TimeSpan.FromHours(1));
         }
     }
@@ -41,16 +54,20 @@ public static class BotBackgroundTasksManager
 
         ExecuteUpdate(() => UpdateDbCommandHandler.UpdateTrackedClanClanMembers(clan.Tag), $"[{clan.Tag}] - {clan.Name}");
 
+
+        ExecuteUpdate(() => AddToDbCommandHandler.AddCurrentRaidToClan(clan.Tag), $"[{clan.Tag}] - {clan.Name}");
+
         ExecuteUpdate(() => UpdateDbCommandHandler.UpdateClanCurrentRaid(clan.Tag), $"[{clan.Tag}] - {clan.Name}");
 
-        try
-        {
-            UpdateDbCommandHandler.UpdateCurrentCwlClanWars(clan.Tag);
-        }
-        catch
-        {
-            ExecuteUpdate(() => UpdateDbCommandHandler.UpdateCurrentClanWar(clan.Tag), $"[{clan.Tag}] - {clan.Name}");
-        }
+
+        ExecuteUpdate(() => AddToDbCommandHandler.AddCurrentCwlClanWarsToClan(clan.Tag), $"[{clan.Tag}] - {clan.Name}");
+
+        ExecuteUpdate(() => UpdateDbCommandHandler.UpdateCurrentCwlClanWars(clan.Tag), $"[{clan.Tag}] - {clan.Name}");
+
+
+        ExecuteUpdate(() => AddToDbCommandHandler.AddCurrentClanWarToClan(clan.Tag), $"[{clan.Tag}] - {clan.Name}");
+
+        ExecuteUpdate(() => UpdateDbCommandHandler.UpdateCurrentClanWar(clan.Tag), $"[{clan.Tag}] - {clan.Name}");
 
         Console.WriteLine($"[{clan.Tag}] - {clan.Name} - Клан полностью обновлен.");
     }
@@ -61,11 +78,20 @@ public static class BotBackgroundTasksManager
         {
             action.Invoke();
         }
+        catch (AlreadyExistsException)
+        {
+            return;
+        }
+        catch (FailedPullFromApiException)
+        {
+            return;
+        }
         catch (Exception ex)
         {
             Console.WriteLine($"{clanTagAndName} - Обновление частично не прошло, ошибка: {ex.Message}");
         }
     }
+
 
     private static void SendDailyMessages(List<TrackedClan> trackedClans, ITelegramBotClient botClient)
     {
@@ -107,7 +133,7 @@ public static class BotBackgroundTasksManager
         {
             var warTimeLeft = Math.Round(clanWarUi.EndedOn.Subtract(DateTime.Now).TotalHours, 2);
 
-            if (warTimeLeft > 0 && warTimeLeft < 3)
+            if (warTimeLeft > 0.5 && warTimeLeft < 1.5)
             {
                 var answer = CurrentStatisticsFunctions.GetCurrentWarShortInfo(clanWarUi);
 
@@ -134,5 +160,44 @@ public static class BotBackgroundTasksManager
 
             return false;
         }
+    }
+
+    private static async Task SendLogFileToAdmin()
+    {
+        var newHash = GetHashOfErrorLogsFile();
+
+        if (_hashOfErrorLogFile != newHash)
+        {
+            await Program.BotClient.SendDocumentAsync(Program.AdminsChatId,
+                      document: Program.ExceptionLogsPath);
+
+            _hashOfErrorLogFile = newHash;
+        }
+    }
+
+    private static async Task TryChangeSeasonalStatistics()
+    {
+        var trackedClansUi = GetFromDbQueryHandler.GetAllTrackedClansUi();
+
+        foreach (var clan in trackedClansUi)
+        {
+            var seasonalStatisticsUi = GetFromDbQueryHandler.GetSeasonStatisticsUi(clan.Tag);
+
+            if ((DateTime.Now - seasonalStatisticsUi.First().InitializedOn).TotalDays > 30)
+            {
+                UpdateDbCommandHandler.ResetLastClanMembersStaticstics(clan.Tag);
+            }
+        }
+    }
+
+    private static string GetHashOfErrorLogsFile()
+    {
+        using var md5 = MD5.Create();
+
+        using var stream = File.OpenRead(Program.ExceptionLogsPath);
+
+        var hash = md5.ComputeHash(stream);
+
+        return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
     }
 }

@@ -1,6 +1,5 @@
 ﻿using CoCStatsTracker;
 using CoCStatsTrackerBot.Requests;
-using System.Net.NetworkInformation;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
@@ -19,17 +18,23 @@ namespace CoCStatsTrackerBot;
 
 class Program
 {
-    private static readonly TelegramBotClient _client = new(token: System.IO.File.ReadAllText(@"./../../../../CustomSolutionElements/TelegramBotClientToken.txt"));
+    private static readonly string _botClientToken = System.IO.File.ReadAllText(@"./../../../../CustomSolutionElements/TelegramBotClientToken.txt");
+
+    public static TelegramBotClient BotClient { get; } = new(token: _botClientToken);
 
     public static string BanListPath { get; } = @"./../../../../CustomSolutionElements/BannedUsers.txt";
+
+    public static string ExceptionLogsPath { get; } = @"./../../../../CustomSolutionElements/ErrorLogs.txt";
+
+    public static string AdminsChatId { get; } = "6621123435";
 
     async static Task Main()
     {
         //CreateNewTestDb("#YPPGCCY8", "#UQQGYJJP", "#VUJCUQ9Y");
 
-        BotBackgroundTasksManager.StartAstync(_client);
+        BotBackgroundTasksManager.StartAstync(BotClient);
 
-        _client.StartReceiving(HandleUpdateAsync, HandleError);
+        BotClient.StartReceiving(HandleUpdateAsync, HandleError);
 
         Console.WriteLine("Bot started");
 
@@ -65,13 +70,14 @@ class Program
                 Console.ResetColor();
 
                 await Task.Run(() => Navigation.Execute(botClient, update.Message));
-                //Navigation.Execute(botClient, update.Message);
 
                 return;
             }
         }
         catch (Exception e)
         {
+            e.LogException(update.Message.Chat.Username, update.Message.Chat.Id, update.Message.Text, "Проигнорировали исключение в HandleUpdateAsync");
+
             Console.WriteLine("Проигнорировали исключение " + e.Message + "в чате " + update.Message);
         }
     }

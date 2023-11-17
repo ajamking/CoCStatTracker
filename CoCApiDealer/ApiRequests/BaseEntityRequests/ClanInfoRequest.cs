@@ -13,6 +13,8 @@ public class ClanInfoRequest : BaseApiRequest
 
             var apiRequestResult = await new ApiRequestBuilder(HttpClient, clanTag, requestType).CallApi();
 
+            ApiInMaintenanceException.ThrowByPredicate(() => apiRequestResult.Contains("inMaintenance"), "Api is at maintenance, cant get searching info.");
+
             var clanInfo = JsonConvert.DeserializeObject<ClanApi>(apiRequestResult);
 
             ApiNullOrEmtyResponseException.ThrowByPredicate(() => clanInfo == null || clanInfo.Tag == null,
@@ -20,7 +22,7 @@ public class ClanInfoRequest : BaseApiRequest
 
             return clanInfo;
         }
-        catch (ApiNullOrEmtyResponseException)
+        catch (Exception ex)
         {
             return null;
         }

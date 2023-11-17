@@ -195,8 +195,6 @@ public static class BuilderHelper
                     return "Без лиги";
                 }
         }
-
-
     }
 }
 

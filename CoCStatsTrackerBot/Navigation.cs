@@ -30,8 +30,6 @@ public static class Navigation
 
     private static readonly string _botHolderToken = System.IO.File.ReadAllText(@"./../../../../CustomSolutionElements/MyPersonalKey.txt");
 
-    private static readonly long _adminsChatIdForFeedbacks = 6621123435;
-
     private static readonly Func<BotUser, bool>[] _handlers = new[]
     {
         AnyRequestHeaderMatchAction,
@@ -47,6 +45,7 @@ public static class Navigation
         HoldSlashFuncAction,
         FeedBackAction,
         AdminBanUserAction,
+        IsAliveAction,
         TrashMessageAction
     };
 
@@ -507,12 +506,24 @@ public static class Navigation
         {
             var userName = ResponseSender.DeterMineUserIdentificator(activeBotUser.RequestHadnlerParameters.Message);
 
-            activeBotUser.RequestHadnlerParameters.BotClient.SendTextMessageAsync(_adminsChatIdForFeedbacks,
+            activeBotUser.RequestHadnlerParameters.BotClient.SendTextMessageAsync(Program.AdminsChatId,
                        text: StylingHelper.MakeItStyled($"ОТЗЫВ от {userName}\n[{activeBotUser.RequestHadnlerParameters.Message.Chat.Id}]\n\n" +
                        $"{activeBotUser.RequestHadnlerParameters.Message.Text}", UiTextStyle.Default),
                        parseMode: ParseMode.MarkdownV2);
 
             ResponseSender.SendAnswer(activeBotUser.RequestHadnlerParameters, true, StylingHelper.MakeItStyled($"Отзыв принят!", UiTextStyle.Default));
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool IsAliveAction(BotUser activeBotUser)
+    {
+        if (activeBotUser.RequestHadnlerParameters.Message.Text.ToLower().Contains("жив"))
+        {
+            ResponseSender.SendAnswer(activeBotUser.RequestHadnlerParameters, true, StylingHelper.MakeItStyled($"Жив!", UiTextStyle.Default));
 
             return true;
         }
