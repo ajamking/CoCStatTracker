@@ -19,7 +19,7 @@ public class StartMenuHandler : BaseRequestHandler
 
         answer.AppendLine(StylingHelper.GetInlineLink("Группа пользователей бота", "https://t.me/CoC_Stats_Tracker_Bot_Community"));
 
-        answer.AppendLine(StylingHelper.GetInlineLink("\nАдминистратор", "https://t.me/StatsTrackerManager"));
+        answer.AppendLine(StylingHelper.GetInlineLink("\nАдминистратор", "https://t.me/StatsTrackerAdmin"));
 
         answer.AppendLine(StylingHelper.GetInlineLink("\nРуководство по использованию", "https://disk.yandex.ru/d/ZcPoSyQsDSPImA"));
 
