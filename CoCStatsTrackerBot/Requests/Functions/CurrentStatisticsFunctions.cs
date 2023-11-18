@@ -141,7 +141,7 @@ public class CurrentStatisticsFunctions
         var max2ColumnLength = 5;
         var max3ColumnLength = 5;
 
-        var chosenDistrictName = FunctionsLogicHelper.AllDistricts.First(x => x.Key == districtType).Value;
+        var chosenDistrictName = FunctionsLogicHelper.AllDistrictsRU.First(x => x.Key == districtType).Value;
 
         var avgPercent = 0.0;
 

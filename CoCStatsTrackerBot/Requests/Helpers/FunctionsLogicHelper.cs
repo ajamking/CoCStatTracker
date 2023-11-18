@@ -26,6 +26,19 @@ public static class FunctionsLogicHelper
             {DistrictType.Goblin_Mines, "Goblin Mines" },
     };
 
+    public static Dictionary<DistrictType, string> AllDistrictsRU { get; set; } = new Dictionary<DistrictType, string>()
+    {
+            {DistrictType.Capital_Peak, "Столичный пик" },
+            {DistrictType.Barbarian_Camp, "Лагерь варваров" },
+            {DistrictType.Wizard_Valley, "Долина колдунов" },
+            {DistrictType.Balloon_Lagoon, "Лагуна шаров" },
+            {DistrictType.Builders_Workshop, "Мастерская строителя" },
+            {DistrictType.Dragon_Cliffs, "Драконьи утесы" },
+            {DistrictType.Golem_Quarry, "Карьер големов" },
+            {DistrictType.Skeleton_Park, "Парк скелетов" },
+            {DistrictType.Goblin_Mines, "Гоблинские шахты" },
+    };
+
     public static Dictionary<string, string> SuperUnitsMapper { get; set; } = new Dictionary<string, string>()
     {
                 { "Super Barbarian", "Суперварвар"},
