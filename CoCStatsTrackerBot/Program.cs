@@ -1,7 +1,7 @@
-﻿using CoCApiDealer.ApiRequests;
-using CoCStatsTracker;
+﻿using CoCStatsTracker;
 using CoCStatsTrackerBot.Requests;
 using Microsoft.Extensions.Hosting;
+using System.Text;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
@@ -32,6 +32,8 @@ class Program
 
     async static Task Main()
     {
+        Console.OutputEncoding = Encoding.UTF8;
+
         //CreateNewTestDb("#YPPGCCY8", "#UQQGYJJP", "#VUJCUQ9Y");
 
         BotBackgroundTasksManager.StartAstync(BotClient);
