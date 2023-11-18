@@ -62,7 +62,10 @@ public static class UpdateDbCommandHandler
 
             clanMemberBuilder.SetBaseProperties(playerInfoFromApi);
 
-            dbContext.Units.RemoveRange(dbContext.Units.Where(x => x.ClanMemberId == oldClanMemberDb.Id));
+            if (oldClanMemberDb != null && dbContext.Units.Where(x => x.ClanMemberId == oldClanMemberDb.Id).Any())
+            {
+                dbContext.Units.RemoveRange(dbContext.Units.Where(x => x.ClanMemberId == oldClanMemberDb.Id));
+            }
 
             clanMemberBuilder.SetUnits(playerInfoFromApi.Troops, playerInfoFromApi.Heroes);
 
