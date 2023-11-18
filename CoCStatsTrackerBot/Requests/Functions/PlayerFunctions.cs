@@ -12,9 +12,9 @@ public static class PlayerFunctions
 
         str.AppendLine(StylingHelper.MakeItStyled("Краткая информация об игроке", UiTextStyle.Header));
         str.AppendLine(StylingHelper.MakeItStyled($"{clanMemberui.Name} - {clanMemberui.Tag}\n", UiTextStyle.Name));
-     
+
         str.AppendLine(clanMemberui.UpdatedOn.GetUpdatedOnString());
-  
+
         str.AppendLine(StylingHelper.MakeItStyled("\nПояснение таблицы:", UiTextStyle.TableAnnotation));
         str.AppendLine(StylingHelper.MakeItStyled("μ% - медианный процент разрушений.", UiTextStyle.Default));
         str.AppendLine(StylingHelper.MakeItStyled("З/С - золото столицы.\n", UiTextStyle.Default));
@@ -63,7 +63,7 @@ public static class PlayerFunctions
 
         str.AppendLine(StylingHelper.MakeItStyled("Информация об игроке", UiTextStyle.Header));
         str.AppendLine(StylingHelper.MakeItStyled($"{clanMemberUi.Name} - {clanMemberUi.Tag}\n", UiTextStyle.Name));
-      
+
         str.AppendLine(clanMemberUi.UpdatedOn.GetUpdatedOnString());
 
         str.AppendLine(StylingHelper.MakeItStyled("\nПояснение таблицы:", UiTextStyle.TableAnnotation));
@@ -154,7 +154,7 @@ public static class PlayerFunctions
             }
 
             str.AppendLine(uiMembership.UpdatedOn.GetUpdatedOnString());
-      ;
+            ;
             str.AppendLine(StylingHelper.MakeItStyled("\nНачало подготовки:", UiTextStyle.Subtitle));
             str.AppendLine(StylingHelper.MakeItStyled(uiMembership.PreparationStartedOn.FormateToUiDateTime(), UiTextStyle.Default));
             str.AppendLine(StylingHelper.MakeItStyled("Начало войны:", UiTextStyle.Subtitle));
@@ -169,9 +169,9 @@ public static class PlayerFunctions
                 str.AppendLine(StylingHelper.MakeItStyled(uiMembership.EndedOn.GetTimeLeft(), UiTextStyle.Default));
             }
 
-       
+
             str.AppendLine(StylingHelper.MakeItStyled($"\nПозиция на карте: {uiMembership.MapPosition}", UiTextStyle.Subtitle));
-  
+
             str.AppendLine(StylingHelper.MakeItStyled("\nХудшая защита:", UiTextStyle.Subtitle));
 
             if (uiMembership.BestOpponentsTime == 0 || uiMembership.BestOpponentsPercent == 0 || uiMembership.BestOpponentStars == 0)
@@ -254,9 +254,9 @@ public static class PlayerFunctions
         var str = new StringBuilder();
 
         str.AppendLine(StylingHelper.MakeItStyled("Показатели игрока", UiTextStyle.Header));
-       
+
         str.AppendLine(StylingHelper.MakeItStyled($"{raidMembershipsUi.First().Name} - {raidMembershipsUi.First().Tag}\n", UiTextStyle.Name));
-     
+
         if (recordsCount > 1)
         {
             str.AppendLine(StylingHelper.MakeItStyled("В рейдах на стороне клана", UiTextStyle.Header));
@@ -339,46 +339,39 @@ public static class PlayerFunctions
     {
         var chosenUnits = new List<TroopUi>();
 
-        try
+        switch (uniType)
         {
-            switch (uniType)
-            {
-                case UnitType.Hero:
+            case UnitType.Hero:
+                {
+                    chosenUnits = armyUi.Heroes;
+                    break;
+                }
+            case UnitType.SiegeMachine:
+                {
+                    chosenUnits = armyUi.SiegeMachines;
+                    break;
+                }
+            case UnitType.SuperUnit:
+                {
+                    foreach (var unit in armyUi.SuperUnits)
                     {
-                        chosenUnits = armyUi.Heroes;
-                        break;
-                    }
-                case UnitType.SiegeMachine:
-                    {
-                        chosenUnits = armyUi.SiegeMachines;
-                        break;
-                    }
-                case UnitType.SuperUnit:
-                    {
-                        foreach (var unit in armyUi.SuperUnits)
+                        if (unit.SuperTroopIsActivated == true)
                         {
-                            if (unit.SuperTroopIsActivated == true)
-                            {
-                                chosenUnits.Add(unit);
-                            }
+                            chosenUnits.Add(unit);
                         }
-                        break;
                     }
-                case UnitType.EveryUnit:
-                    {
-                        chosenUnits.AddRange(armyUi.Pets);
-                        chosenUnits.AddRange(armyUi.Units);
-                        break;
-                    }
-                default:
-                    {
-                        return "Ошибка при определении типа юнита";
-                    }
-            }
-        }
-        catch (Exception)
-        {
-            return "Этот игрок пока не обзавелся юнитами такого типа";
+                    break;
+                }
+            case UnitType.EveryUnit:
+                {
+                    chosenUnits.AddRange(armyUi.Pets);
+                    chosenUnits.AddRange(armyUi.Units);
+                    break;
+                }
+            default:
+                {
+                    return "Ошибка при определении типа юнита";
+                }
         }
 
         var str = new StringBuilder();

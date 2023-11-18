@@ -1,0 +1,9 @@
+2023-11-18 15:11:01.294 +03:00 [ERR] 
+------------------------------------
+На сообщение Осадные машины игрока от godfather98 [411592573]
+Произошла ошибка: Bad Request: message is too long
+Дополнительное сообщение: 
+Стактрейс:    at Telegram.Bot.TelegramBotClient.MakeRequestAsync[TResponse](IRequest`1 request, CancellationToken cancellationToken)
+   at Telegram.Bot.TelegramBotClientExtensions.SendTextMessageAsync(ITelegramBotClient botClient, ChatId chatId, String text, Nullable`1 parseMode, IEnumerable`1 entities, Nullable`1 disableWebPagePreview, Nullable`1 disableNotification, Nullable`1 protectContent, Nullable`1 replyToMessageId, Nullable`1 allowSendingWithoutReply, IReplyMarkup replyMarkup, CancellationToken cancellationToken)
+   at CoCStatsTrackerBot.ResponseSender.SendAnswer(BotUserRequestParameters parameters, Boolean answerIsValid, String[] splitedAnswer) in C:\Users\tedto\OneDrive\Desktop\Программирование\CoCStatsTracker\CoCStatsTrackerBot\AnswerSenders\ResponseSender.cs:line 22
+

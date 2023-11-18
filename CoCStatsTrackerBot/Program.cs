@@ -20,7 +20,9 @@ namespace CoCStatsTrackerBot;
 
 class Program
 {
-    private static readonly string _botClientToken = System.IO.File.ReadAllText(@"./../../../../CustomSolutionElements/BotClientToken.txt");
+    private static string _botClientToken = System.IO.File.ReadAllText(@"./../../../../CustomSolutionElements/BotClientToken.txt");
+
+    private static string _botClientTokenTest = System.IO.File.ReadAllText(@"./../../../../CustomSolutionElements/BotClientTokenTEST.txt");
 
     public static string BanListPath { get; } = @"./../../../../CustomSolutionElements/BannedUsers.txt";
 
