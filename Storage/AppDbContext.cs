@@ -8,7 +8,7 @@ namespace Storage;
 
 public class AppDbContext : DbContext, ICoCDbContext
 {
-    public string ConnectionString { get; }
+    public string ConnectionString { get; } = "Data Source=./../../../../CustomSolutionElements/CoCStatsTracker.db";
 
     public DbSet<TrackedClan> TrackedClans { get; set; }
     public DbSet<ClanMember> ClanMembers { get; set; }
@@ -27,10 +27,8 @@ public class AppDbContext : DbContext, ICoCDbContext
     public DbSet<RaidDefense> RaidDefenses { get; set; }
     public DbSet<DestroyedFriendlyDistrict> DestroyedFriendlyDistricts { get; set; }
 
-    public AppDbContext(string connectionString, bool firstStrat = false)
+    public AppDbContext(bool firstStrat = false)
     {
-        ConnectionString = connectionString;
-
         if (firstStrat)
         {
             Database.EnsureDeleted();
@@ -44,9 +42,6 @@ public class AppDbContext : DbContext, ICoCDbContext
         optionsBuilder
             .UseLazyLoadingProxies()
             .UseSqlite(ConnectionString);
-
-        //optionsBuilder.LogTo(Console.WriteLine); //удалить и сделать нормальный
-
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -60,7 +55,7 @@ public class AppDbContext : DbContext, ICoCDbContext
         modelBuilder.ApplyConfiguration(new EnemyWarMemberConfiguration());
         modelBuilder.ApplyConfiguration(new WarAttackConfiguration());
         modelBuilder.ApplyConfiguration(new WarMemberConfiguration());
-    
+
         modelBuilder.ApplyConfiguration(new CapitalRaidConfigurartion());
         modelBuilder.ApplyConfiguration(new RaidDefenseConfiguration());
         modelBuilder.ApplyConfiguration(new DestroyedFriendlyDistrictConfiguration());

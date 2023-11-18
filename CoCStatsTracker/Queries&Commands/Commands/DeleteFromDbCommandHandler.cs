@@ -7,16 +7,9 @@ namespace CoCStatsTracker;
 
 public static class DeleteFromDbCommandHandler
 {
-    private static string _dbConnectionString = "Data Source=./../../../../CustomSolutionElements/CoCStatsTracker.db";
-
-    public static void SetConnectionString(string dbConnectionString)
-    {
-        _dbConnectionString = dbConnectionString;
-    }
-
     public static void DeleteTrackedClan(string clanTag)
     {
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         var clan = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
 
@@ -29,7 +22,7 @@ public static class DeleteFromDbCommandHandler
 
     public static void DeleteClanWars(string clanTag, int countToSave)
     {
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         var trackedClanDb = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
 
@@ -54,7 +47,7 @@ public static class DeleteFromDbCommandHandler
 
     public static void DeleteClanRaids(string clanTag, int countToSave)
     {
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         var trackedClanDb = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
 

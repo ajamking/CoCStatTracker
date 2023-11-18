@@ -8,7 +8,6 @@ using System.Text.RegularExpressions;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using System.IO;
 
 namespace CoCStatsTrackerBot;
 
@@ -28,7 +27,7 @@ public static class Navigation
 
     private static readonly List<BaseRequestHandler> _allRequestHandlers = AllRequestHandlersConstructor.AllRequestHandlers;
 
-    private static readonly string _botHolderToken = System.IO.File.ReadAllText(@"./../../../../CustomSolutionElements/MyPersonalKey.txt");
+    private static readonly string _botHolderToken = "gamabunta0707";
 
     private static readonly Func<BotUser, bool>[] _handlers = new[]
     {

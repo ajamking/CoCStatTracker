@@ -13,20 +13,13 @@ namespace CoCStatsTracker;
 
 public static class UpdateDbCommandHandler
 {
-    private static string _dbConnectionString = "Data Source=./../../../../CustomSolutionElements/CoCStatsTracker.db";
-
-    public static void SetConnectionString(string dbConnectionString)
-    {
-        _dbConnectionString = dbConnectionString;
-    }
-
     public static void UpdateTrackedClanBaseProperties(string clanTag)
     {
         var clanInfoFromApi = ClanInfoRequest.CallApi(clanTag).Result;
 
         FailedPullFromApiException.ThrowByPredicate(() => clanInfoFromApi == null, "UpdateTrackedClanBaseProperties - is failed, Clan from API is null");
 
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         var trackedClanDb = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
 
@@ -47,7 +40,7 @@ public static class UpdateDbCommandHandler
 
         var clanMembersTagsFromApi = clanInfoFromApi.Members;
 
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         var trackedClanDb = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
 
@@ -90,7 +83,7 @@ public static class UpdateDbCommandHandler
 
     public static void ResetLastClanMembersStaticstics(string clanTag)
     {
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         var trackedClanDb = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
 
@@ -112,7 +105,7 @@ public static class UpdateDbCommandHandler
 
         var raidInfoFromApi = raidInfoFromApiresult.RaidsInfo.First();
 
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         var trackedClanDb = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
 
@@ -151,7 +144,7 @@ public static class UpdateDbCommandHandler
         FailedPullFromApiException.ThrowByPredicate(() => clanWarInfoFromApi == null,
             "UpdateCurrentClanWar clan is not in classic war.");
 
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         var trackedClanDb = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
 
@@ -189,7 +182,7 @@ public static class UpdateDbCommandHandler
 
         var cwlWarsApi = AddToDbCommandHandler.GetCwlWars(cwlGroupRequest, clanTag);
 
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         var trackedClanDb = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
 
@@ -313,7 +306,7 @@ public static class UpdateDbCommandHandler
 
     public static void ResetClanAdminKey(string clanTag, string newAdminsKey)
     {
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag).AdminsKey = newAdminsKey;
 
@@ -322,7 +315,7 @@ public static class UpdateDbCommandHandler
 
     public static void ResetClanIsBlasckListProperty(string clanTag, bool isInBlackList)
     {
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag).IsInBlackList = isInBlackList;
 
@@ -331,7 +324,7 @@ public static class UpdateDbCommandHandler
 
     public static void ResetClanChatId(string clanTag, string newChatId)
     {
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag).ClansTelegramChatId = newChatId;
 
@@ -340,7 +333,7 @@ public static class UpdateDbCommandHandler
 
     public static void ResetClanRegularNewsLetter(string clanTag, bool newsLetterIsOn)
     {
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag).RegularNewsLetterOn = newsLetterIsOn;
 
@@ -349,7 +342,7 @@ public static class UpdateDbCommandHandler
 
     public static void ResetMemberUserName(string memberTag, string newUserName)
     {
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         dbContext.ClanMembers.FirstOrDefault(x => x.Tag == memberTag).TelegramUserName = newUserName;
 

@@ -8,17 +8,10 @@ namespace CoCStatsTracker;
 
 public static class GetFromDbQueryHandler
 {
-    private static string _dbConnectionString = "Data Source=./../../../../CustomSolutionElements/CoCStatsTracker.db";
-
-    public static void SetConnectionString(string dbConnectionString)
-    {
-        _dbConnectionString = dbConnectionString;
-    }
-
     /*--------------Клан--------------*/
     public static List<TrackedClanUi> GetAllTrackedClansUi()
     {
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         var trackedClansUi = new List<TrackedClanUi>();
 
@@ -33,7 +26,7 @@ public static class GetFromDbQueryHandler
 
     public static TrackedClanUi GetTrackedClanUi(string clanTag)
     {
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         var trackedClanDb = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
 
@@ -44,7 +37,7 @@ public static class GetFromDbQueryHandler
 
     public static List<TrackedClan> GetAllTrackedClans()
     {
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         var trackedClansDb = dbContext.TrackedClans;
 
@@ -55,7 +48,7 @@ public static class GetFromDbQueryHandler
 
     public static TrackedClan GetTrackedClan(string clanTag)
     {
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         var trackedClanDb = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
 
@@ -67,7 +60,7 @@ public static class GetFromDbQueryHandler
 
     public static List<ClanMemberUi> GetAllClanMembersUi(string clanTag)
     {
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         var clanMembersUi = new List<ClanMemberUi>();
 
@@ -89,7 +82,7 @@ public static class GetFromDbQueryHandler
 
     public static List<MedianRaidPerfomanseUi> GetAverageRaidmembersPerfomanceUi(string clanTag)
     {
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         var trackedClanDb = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
 
@@ -116,7 +109,7 @@ public static class GetFromDbQueryHandler
 
     public static List<SeasonStatisticsUi> GetSeasonStatisticsUi(string clanTag)
     {
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         var trackedClanDb = dbContext.TrackedClans.First(x => x.Tag == clanTag);
 
@@ -146,7 +139,7 @@ public static class GetFromDbQueryHandler
     /*--------------Клан Войны--------------*/
     public static List<ClanWarUi> GetAllClanWarsUi(string clanTag)
     {
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         var clanWarsUi = new List<ClanWarUi>();
 
@@ -165,7 +158,7 @@ public static class GetFromDbQueryHandler
 
     public static ClanWarUi GetLastClanWarUi(string clanTag)
     {
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         var trackedClanDb = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
 
@@ -182,7 +175,7 @@ public static class GetFromDbQueryHandler
     /*--------------Клан Рейды--------------*/
     public static List<CapitalRaidUi> GetAllRaidsUi(string clanTag)
     {
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         var capitalRaidsUi = new List<CapitalRaidUi>();
 
@@ -204,7 +197,7 @@ public static class GetFromDbQueryHandler
 
     public static CapitalRaidUi GetLastRaidUi(string clanTag)
     {
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         var trackedClanDb = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
 
@@ -221,7 +214,7 @@ public static class GetFromDbQueryHandler
     /*--------------Клан мембер--------------*/
     public static ClanMemberUi GetClanMemberUi(string playersTag)
     {
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         var clanMemberDb = dbContext.ClanMembers.FirstOrDefault(x => x.Tag == playersTag);
 
@@ -234,7 +227,7 @@ public static class GetFromDbQueryHandler
 
     public static ArmyUi GetMembersArmyUi(string playersTag)
     {
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         var clanMemberDb = dbContext.ClanMembers.FirstOrDefault(x => x.Tag == playersTag);
 
@@ -249,7 +242,7 @@ public static class GetFromDbQueryHandler
 
     public static List<WarMembershipsUi> GetAllWarMembershipsUi(string playersTag)
     {
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         var uiCwCwlMemberships = new List<WarMembershipsUi>();
 
@@ -264,7 +257,7 @@ public static class GetFromDbQueryHandler
 
     public static List<RaidMembershipUi> GetAllMemberRaidMembershipsUi(string playersTag)
     {
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         var uiRaidMemberships = new List<RaidMembershipUi>();
 
@@ -281,7 +274,7 @@ public static class GetFromDbQueryHandler
     /*--------------Для проверки вводимых тегов--------------*/
     public static bool CheckClanExists(string clanTag)
     {
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         return dbContext.TrackedClans
             .Where(x => x.IsInBlackList == false)
@@ -290,7 +283,7 @@ public static class GetFromDbQueryHandler
 
     public static bool CheckMemberExists(string memberTag)
     {
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         return dbContext.ClanMembers
             .Where(x => x.TrackedClan.IsInBlackList == false)

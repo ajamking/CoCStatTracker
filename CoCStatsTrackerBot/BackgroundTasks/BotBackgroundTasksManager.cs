@@ -2,6 +2,7 @@
 using CoCStatsTracker.Items.Exceptions;
 using CoCStatsTrackerBot.Requests;
 using Domain.Entities;
+using System.Diagnostics;
 using System.Net.NetworkInformation;
 using System.Security.Cryptography;
 using Telegram.Bot;
@@ -146,6 +147,18 @@ public static class BotBackgroundTasksManager
 
     private static bool CheckInternetConnection()
     {
+        //var process = new Process();
+        //process.StartInfo.FileName = "ping";
+        //process.StartInfo.Arguments = "-c 5 google.com";
+        //process.StartInfo.RedirectStandardOutput = true;
+
+        //process.Start();
+        //process.WaitForExit();
+
+        ////Console.WriteLine(process.StandardOutput.ReadToEnd());
+
+        //return true;
+
         var myPing = new Ping();
 
         PingReply reply = myPing.Send("google.com", 10, new byte[32], new PingOptions());

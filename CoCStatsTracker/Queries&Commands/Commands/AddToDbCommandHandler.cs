@@ -13,23 +13,16 @@ namespace CoCStatsTracker;
 
 public static class AddToDbCommandHandler
 {
-    private static string _dbConnectionString = "Data Source=./../../../../CustomSolutionElements/CoCStatsTracker.db";
-
-    public static void SetConnectionString(string dbConnectionString)
-    {
-        _dbConnectionString = dbConnectionString;
-    }
-
     public static void ResetDb()
     {
-        using AppDbContext dbContext = new(_dbConnectionString, true);
+        using AppDbContext dbContext = new(true);
 
         dbContext.SaveChanges();
     }
 
     public static void AddTrackedClan(string clanTag)
     {
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         var trackedClanBuilder = new TrackedClanBuilder();
 
@@ -57,7 +50,7 @@ public static class AddToDbCommandHandler
 
         var clanMembers = new List<ClanMember>();
 
-        using (AppDbContext dbContext = new(_dbConnectionString))
+        using (AppDbContext dbContext = new())
         {
             var trackedClan = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
 
@@ -94,7 +87,7 @@ public static class AddToDbCommandHandler
 
     private static void AddLastClanMembersStaticstics(string clanTag)
     {
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         var trackedClan = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
 
@@ -116,7 +109,7 @@ public static class AddToDbCommandHandler
 
         var raidInfoFromApi = raidInfoFromApiresult.RaidsInfo.First();
 
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         var trackedClan = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
 
@@ -270,7 +263,7 @@ public static class AddToDbCommandHandler
         FailedPullFromApiException.ThrowByPredicate(() => currentWarInfoFromApi == null,
             "AddCurrentClanWarToClan clan is not in classic war.");
 
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         var trackedClanDb = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
 
@@ -306,7 +299,7 @@ public static class AddToDbCommandHandler
 
         var cwlWarsApi = GetCwlWars(cwlGroupRequest, clanTag);
 
-        using AppDbContext dbContext = new(_dbConnectionString);
+        using AppDbContext dbContext = new();
 
         var trackedClanDb = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
 

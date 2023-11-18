@@ -1,5 +1,7 @@
-﻿using CoCStatsTracker;
+﻿using CoCApiDealer.ApiRequests;
+using CoCStatsTracker;
 using CoCStatsTrackerBot.Requests;
+using Microsoft.Extensions.Hosting;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
@@ -18,13 +20,13 @@ namespace CoCStatsTrackerBot;
 
 class Program
 {
-    private static readonly string _botClientToken = System.IO.File.ReadAllText(@"./../../../../CustomSolutionElements/TelegramBotClientToken.txt");
-
-    public static TelegramBotClient BotClient { get; } = new(token: _botClientToken);
+    private static readonly string _botClientToken = System.IO.File.ReadAllText(@"./../../../../CustomSolutionElements/BotClientToken.txt");
 
     public static string BanListPath { get; } = @"./../../../../CustomSolutionElements/BannedUsers.txt";
 
     public static string ExceptionLogsPath { get; } = @"./../../../../CustomSolutionElements/ErrorLogs.txt";
+
+    public static TelegramBotClient BotClient { get; } = new(token: _botClientToken);
 
     public static string AdminsChatId { get; } = "6621123435";
 
@@ -38,9 +40,12 @@ class Program
 
         Console.WriteLine("Bot started");
 
-        Console.ReadLine();
+        var host = new HostBuilder()
+            .ConfigureHostConfiguration(h => { })
+            .UseConsoleLifetime()
+            .Build();
 
-        await Task.CompletedTask;
+        host.Run();
     }
 
     async static Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
