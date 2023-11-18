@@ -2,15 +2,21 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Storage.Configurations.ClanWars
+namespace Storage.Configurations.ClanWars;
+
+public class CapitalRaidConfigurartion : IEntityTypeConfiguration<CapitalRaid>
 {
-    public class CapitalRaidConfigurartion : IEntityTypeConfiguration<CapitalRaid>
+    public void Configure(EntityTypeBuilder<CapitalRaid> builder)
     {
-        public void Configure(EntityTypeBuilder<CapitalRaid> builder)
-        {
-            builder.ToTable("CapitalRaids");
-            builder.Property(p => p.StartedOn).IsRequired();
-            builder.Property(p => p.EndedOn).IsRequired();
-        }
+        builder.HasKey(x => x.Id);
+        builder.ToTable("CapitalRaids");
+        builder.Property(p => p.StartedOn).IsRequired();
+        builder.Property(p => p.EndedOn).IsRequired();
+
+        builder
+           .HasOne<TrackedClan>(x => x.TrackedClan)
+           .WithMany(x => x.CapitalRaids)
+           .HasForeignKey(t => t.TrackedClanId)
+           .OnDelete(DeleteBehavior.Cascade);
     }
 }

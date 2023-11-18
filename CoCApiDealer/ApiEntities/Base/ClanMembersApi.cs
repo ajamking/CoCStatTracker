@@ -7,7 +7,6 @@ public class ClanMembersApi
 {
     [JsonProperty("items")]
     public ClanMemberApi[] Members { get; set; }
-
 }
 
 public class ClanMemberApi

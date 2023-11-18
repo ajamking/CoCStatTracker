@@ -6,7 +6,6 @@ public class RaidsApi
 {
     [JsonProperty("items")]
     public RaidApi[] RaidsInfo { get; set; }
-
 }
 
 public class RaidApi
@@ -42,7 +41,7 @@ public class RaidApi
     public RaidMemberApi[] RaidMembers { get; set; }
 
     [JsonProperty("attackLog")]
-    public AttackedCapitalApi[] RaidOnClans { get; set; }
+    public AttackedCapitalApi[] AttackedCapitals { get; set; }
 
     [JsonProperty("defenseLog")]
     public DefenseApi[] RaidDefenses { get; set; }

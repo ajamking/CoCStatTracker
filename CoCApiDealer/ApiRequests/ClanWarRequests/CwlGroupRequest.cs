@@ -1,37 +1,33 @@
-﻿using CoCApiDealer.RequestsSettings;
-using CoCStatsTracker.ApiEntities;
+﻿using CoCStatsTracker.ApiEntities;
 using Newtonsoft.Json;
 
 namespace CoCApiDealer.ApiRequests;
 
 public class CwlGroupRequest : BaseApiRequest
 {
-    public async Task<CwlGroupApi> CallApi(string clanTag)
+    public static async Task<CwlGroupApi> CallApi(string clanTag)
     {
         try
         {
             var requestType = AllowedRequests.CurrentCwl;
 
-            var apiRequestResult = await new ApiRequestBuilder(_httpClient, clanTag, requestType).CallApi();
+            var apiRequestResult = await new ApiRequestBuilder(HttpClient, clanTag, requestType).CallApi();
+
+            ApiInMaintenanceException.ThrowByPredicate(() => apiRequestResult.Contains("inMaintenance"), "Api is at maintenance, cant get searching info.");
 
             var cwlGroup = JsonConvert.DeserializeObject<CwlGroupApi>(apiRequestResult);
 
-            if (cwlGroup.Season == null && 
-                cwlGroup.ParticipantClans == null && 
-                cwlGroup.Rounds == null && 
-                cwlGroup.State == null)
-            {
-                throw new Exception("Nothing came from API");
-            }
-            else
-            {
-                return cwlGroup;
-            }
+            ApiNullOrEmtyResponseException.ThrowByPredicate(() => (cwlGroup.Season == null ||
+                cwlGroup.State == null ||
+                cwlGroup.Rounds == null ||
+                cwlGroup.ParticipantClans == null),
+                "CwlGroupRequest is failed, Nothing came from API");
 
+            return cwlGroup;
         }
         catch (Exception ex)
         {
-            throw new ApiErrorException(ex);
+            return null;
         }
     }
 }

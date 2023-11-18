@@ -1,34 +1,30 @@
-﻿using CoCApiDealer.RequestsSettings;
-using CoCStatsTracker.ApiEntities;
+﻿using CoCStatsTracker.ApiEntities;
 using Newtonsoft.Json;
 
 namespace CoCApiDealer.ApiRequests;
 
 public class CurrentWarRequest : BaseApiRequest
 {
-    public async Task<ClanWarApi> CallApi(string clanTag)
+    public static async Task<ClanWarApi> CallApi(string clanTag)
     {
         try
         {
             var requestType = AllowedRequests.CurrentWar;
 
-            var apiRequestResult = await new ApiRequestBuilder(_httpClient, clanTag, requestType).CallApi();
+            var apiRequestResult = await new ApiRequestBuilder(HttpClient, clanTag, requestType).CallApi();
+
+            ApiInMaintenanceException.ThrowByPredicate(() => apiRequestResult.Contains("inMaintenance"), "Api is at maintenance, cant get searching info.");
 
             var currentWar = JsonConvert.DeserializeObject<ClanWarApi>(apiRequestResult);
 
-            if (currentWar == null)
-            {
-                throw new Exception("Nothing came from API");
-            }
-            else
-            {
-                return currentWar;
-            }
+            ApiNullOrEmtyResponseException.ThrowByPredicate(() => currentWar == null || currentWar.StartTime == null,
+                    "CurrentWarRequest is failed, Nothing came from API");
 
+            return currentWar;
         }
         catch (Exception ex)
         {
-            throw new ApiErrorException(ex);
+            return null;
         }
     }
 }

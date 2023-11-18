@@ -10,8 +10,6 @@ public class AttackOnDistrictApi
     [JsonProperty("destructionPercent")]
     public int DestructionPercentTo { get; set; }
 
-    // public int DestructionPercentForm { get =>  } //Отказались пока от этой идеи, сложно реализовать
-
     [JsonProperty("stars")]
     public int StarsTo { get; set; } // Не используем
 }

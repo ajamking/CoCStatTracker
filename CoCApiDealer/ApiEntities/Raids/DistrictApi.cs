@@ -11,18 +11,17 @@ public class DistrictApi
     public int DistrictLevel { get; set; }
 
     [JsonProperty("destructionPercent")]
-    public int DestructionPercent { get; set; } //Не используем
+    public int DestructionPercent { get; set; } 
 
     [JsonProperty("stars")]
     public int StarsCount { get; set; }  //Не используем
 
     [JsonProperty("attackCount")]
-    public int AttackCount { get; set; } //Не используем
+    public int AttackCount { get; set; } 
 
     [JsonProperty("totalLooted")]
-    public int TotalLooted { get; set; } //Не используем
+    public int TotalLooted { get; set; }
 
     [JsonProperty("attacks")]
     public AttackOnDistrictApi[] MemberAttacks { get; set; }
-
 }

@@ -1,35 +1,31 @@
-﻿using CoCApiDealer.RequestsSettings;
-using CoCStatsTracker.ApiEntities;
+﻿using CoCStatsTracker.ApiEntities;
 using Newtonsoft.Json;
 
 namespace CoCApiDealer.ApiRequests;
 
+//Пока не используется. Для получения полной информации о войнах, нужно брать именно последнюю, варлог бесполезен.
 public class WarLogRequest : BaseApiRequest
 {
-    public async Task<WarLogApi> CallApi(string clanTag, int limit = 0)
+    public static async Task<WarLogApi> CallApi(string clanTag, int limit = 1)
     {
         try
         {
             var requestType = AllowedRequests.WarLog;
 
-            var apiRequestResult = await new ApiRequestBuilder(_httpClient, clanTag, requestType, limit).CallApi();
+            var apiRequestResult = await new ApiRequestBuilder(HttpClient, clanTag, requestType, limit).CallApi();
+
+            ApiInMaintenanceException.ThrowByPredicate(() => apiRequestResult.Contains("inMaintenance"), "Api is at maintenance, cant get searching info.");
 
             var warLog = JsonConvert.DeserializeObject<WarLogApi>(apiRequestResult);
 
-            if (warLog == null)
-            {
-                throw new Exception("Nothing came from API");
-            }
-            else
-            {
-                return warLog;
-            }
+            ApiNullOrEmtyResponseException.ThrowByPredicate(() => warLog == null,
+               "WarLogRequest is failed, Nothing came from API");
 
+            return warLog;
         }
         catch (Exception ex)
         {
-
-            throw new ApiErrorException(ex);
+            return null;
         }
     }
 }

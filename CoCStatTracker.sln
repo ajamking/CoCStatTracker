@@ -15,11 +15,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCStatsTrackerBot", "CoCSt
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решения", "Элементы решения", "{77049C46-B867-43EC-BF4A-9FE82F7E3683}"
 	ProjectSection(SolutionItems) = preProject
-		CustomSolutionElements\AdminsKeyTxt.txt = CustomSolutionElements\AdminsKeyTxt.txt
+		CustomSolutionElements\BannedUsers.txt = CustomSolutionElements\BannedUsers.txt
+		CustomSolutionElements\BotClientToken.txt = CustomSolutionElements\BotClientToken.txt
+		CustomSolutionElements\ClashApiKey.txt = CustomSolutionElements\ClashApiKey.txt
 		CustomSolutionElements\CoCStatsTracker.db = CustomSolutionElements\CoCStatsTracker.db
-		CustomSolutionElements\DevelopersKey.txt = CustomSolutionElements\DevelopersKey.txt
-		CustomSolutionElements\LogTrace.txt = CustomSolutionElements\LogTrace.txt
-		CustomSolutionElements\TelegramBotClientToken.txt = CustomSolutionElements\TelegramBotClientToken.txt
+		CustomSolutionElements\ErrorLogs.txt = CustomSolutionElements\ErrorLogs.txt
 	EndProjectSection
 EndProject
 Global

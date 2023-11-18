@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 
 namespace CoCStatsTracker.ApiEntities;
+
 public class ClanWarApi
 {
     [JsonProperty("state")]
@@ -27,7 +28,3 @@ public class ClanWarApi
     [JsonProperty("opponent")]
     public ClanOnWarApi OpponentResults { get; set; }
 }
-
-
-
-

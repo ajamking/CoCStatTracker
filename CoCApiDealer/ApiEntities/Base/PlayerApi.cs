@@ -72,4 +72,32 @@ public class PlayerApi
 
     [JsonProperty("heroes")]
     public TroopApi[] Heroes { get; set; }
+
+    [JsonProperty("achievements")]
+    public Achievement[] Achievements { get; set; }
+
+}
+
+public class Achievement
+{
+    [JsonProperty("name")]
+    public string Name { get; set; }
+
+    [JsonProperty("stars")]
+    public int Stars { get; set; }
+
+    [JsonProperty("value")]
+    public int Value { get; set; }
+
+    [JsonProperty("target")]
+    public int Target { get; set; }
+
+    [JsonProperty("info")]
+    public string Info { get; set; }
+
+    [JsonProperty("completionInfo")]
+    public string CompletedInfo { get; set; }
+
+    [JsonProperty("village")]
+    public string Village { get; set; }
 }

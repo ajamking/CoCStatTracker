@@ -1,4 +1,4 @@
-﻿using CoCApiDealer.UIEntities;
+﻿using CoCStatsTracker.Items.Helpers;
 using CoCStatsTracker.UIEntities;
 using Domain.Entities;
 using System;
@@ -12,44 +12,36 @@ public static class Mapper
     //
     //ClanInfoUi
     //
-    public static ClanMemberUi MapToUi(ClanMember clanMember)
+    public static TrackedClanUi MapToUi(TrackedClan clan)
     {
-        return new ClanMemberUi
-        {
-            Tag = clanMember.Tag,
-            Name = clanMember.Name,
-            RoleInClan = clanMember.Role,
-            TownHallLevel = clanMember.TownHallLevel,
-            DonationsSent = clanMember.DonationsSent,
-            WarStars = clanMember.WarStars,
-            CapitalContributions = clanMember.TotalCapitalContributions
-        };
-    }
-
-    public static ClanUi MapToUi(TrackedClan clan)
-    {
-        var warLogType = "";
+        string warLogType;
 
         if (clan.IsWarLogPublic == false)
             warLogType = "Закрытая";
         else
             warLogType = "Общедоступная";
 
-        var clanMembers = new List<ClanMemberUi>();
+        var clanMembers = new List<ClanMemberUi>(clan.ClanMembers.Count);
 
         foreach (var member in clan.ClanMembers)
         {
             clanMembers.Add(MapToUi(member));
         }
 
-        return new ClanUi
+        return new TrackedClanUi
         {
+            UpdatedOn = clan.UpdatedOn,
+            ClanChatId = clan.ClansTelegramChatId,
+            NewsLetterOn = clan.RegularNewsLetterOn,
+
+            AdminsKey = clan.AdminsKey,
+            IsInBlackList = clan.IsInBlackList,
             Tag = clan.Tag,
             Name = clan.Name,
             Type = clan.Type,
             Description = clan.Description,
             ClanLevel = clan.ClanLevel,
-            ClanMembersCount = clan.ClanMembers.Count(),
+            ClanMembersCount = clan.ClanMembers.Count,
             ClanPoints = clan.ClanPoints,
             ClanVersusPoints = clan.ClanVersusPoints,
             ClanCapitalPoints = clan.ClanCapitalPoints,
@@ -58,22 +50,24 @@ public static class Mapper
             WarLeague = clan.WarLeague,
             WarWinStreak = clan.WarWinStreak,
             WarWins = clan.WarWins,
-            WarTies = clan.WarTies,
+            WarDraws = clan.WarTies,
             WarLoses = clan.WarLoses,
             CapitalHallLevel = clan.CapitalHallLevel,
             ClanMembers = clanMembers
         };
     }
 
-    public static CwCwlUi MapToUi(ClanWar clanWar)
+    public static ClanWarUi MapToUi(ClanWar clanWar)
     {
         var warAttacks = new List<ClanWarAttackUi>();
 
         foreach (var member in clanWar.WarMembers)
         {
-            var playerPerfomance = new ClanWarAttackUi { PlayerName = member.Name };
-
-            playerPerfomance.ThLevel = member.TownHallLevel;
+            var playerPerfomance = new ClanWarAttackUi
+            {
+                PlayerName = member.Name,
+                ThLevel = member.TownHallLevel
+            };
 
             var counter = 1;
 
@@ -81,15 +75,15 @@ public static class Mapper
             {
                 if (counter == 1)
                 {
-                    playerPerfomance.FirstEnemyThLevel = attack.EnemyWarMember.THLevel;
+                    playerPerfomance.FirstEnemyThLevel = attack.EnemyWarMember.TownHallLevel;
                     playerPerfomance.FirstStarsCount = attack.Stars;
                     playerPerfomance.FirstDestructionPercent = attack.DestructionPercent;
                 }
                 else
                 {
-                    playerPerfomance.SecondEnemyThLevel = attack.EnemyWarMember.THLevel;
+                    playerPerfomance.SecondEnemyThLevel = attack.EnemyWarMember.TownHallLevel;
                     playerPerfomance.SecondStarsCount = attack.Stars;
-                    playerPerfomance.SecondStarsCount = attack.DestructionPercent;
+                    playerPerfomance.SecondDestructionpercent = attack.DestructionPercent;
                 }
 
                 counter++;
@@ -98,12 +92,14 @@ public static class Mapper
             warAttacks.Add(playerPerfomance);
         }
 
-        return new CwCwlUi
+        return new ClanWarUi
         {
-
+            UpdatedOn = clanWar.UpdatedOn,
+            PreparationStartTime = clanWar.PreparationStartTime,
             StartedOn = clanWar.StartedOn,
             EndedOn = clanWar.EndedOn,
-            WarMembersCount = clanWar.WarMembers.Count(),
+
+            WarMembersCount = clanWar.WarMembers.Count,
             AttackPerMember = clanWar.AttackPerMember,
             ClanTag = clanWar.TrackedClan.Tag,
             ClanName = clanWar.TrackedClan.Name,
@@ -111,76 +107,31 @@ public static class Mapper
             TotalStarsEarned = clanWar.StarsCount,
             DestructionPercentage = clanWar.DestructionPercentage,
             AttacksCount = clanWar.AttacksCount,
+            OpponentWarWinStreak = clanWar.OpponentWarWinStreak,
+            OppinentWarDraws = clanWar.OppinentWarDraws,
+            OppinentWarLoses = clanWar.OppinentWarLoses,
+            OppinentWarWins = clanWar.OppinentWarWins,
 
-            OpponentName = clanWar.OpponentClanName,
-            OpponentTag = clanWar.OpponentClanTag,
+            OpponentName = clanWar.OpponentsName,
+            OpponentTag = clanWar.OpponentsTag,
             OpponentStarsCount = clanWar.OpponentStarsCount,
             OpponentDestructionPercentage = clanWar.OpponentDestructionPercentage,
             OpponentAttacksCount = clanWar.OpponentAttacksCount,
 
             Result = clanWar.Result,
             MembersResults = warAttacks,
+
+            WarMap = WarMapUiBuilder.Build(clanWar),
+            NonAttackersCw = NonAttackersHelper.GetNonAttackersCw(clanWar)
         };
     }
 
-    public static RaidsUi MapToUi(CapitalRaid raid)
+    public static CapitalRaidUi MapToUi(CapitalRaid raid, TrackedClan trackedClan)
     {
-        var defenses = new List<RaidDefenseUi>();
-
-        //Фиксируем сведения обо всех нападениях за одни рейды
-        foreach (var defense in raid.RaidDefenses)
+        return new CapitalRaidUi
         {
-            defenses.Add(new RaidDefenseUi
-            {
-                AttackersTag = defense.AttackerClanTag,
-                AttackersName = defense.AttackerClanName,
-                TotalAttacksCount = defense.TotalAttacksCount
-            });
-        }
-
-        var defeatedClans = new List<DefeatedClanUi>();
-
-        foreach (var clan in raid.DefeatedClans)
-        {
-            var defeatedDistricts = new List<DistrictUi>();
-
-            foreach (var district in clan.DefeatedDistricts)
-            {
-                var attacksOnChosenDistrict = new List<AttackOnDistrictUi>();
-
-                foreach (var attack in district.Attacks)
-                {
-                    attacksOnChosenDistrict.Add(new AttackOnDistrictUi
-                    {
-                        PlayerName = attack.MemberName,
-                        PlayerTag = attack.MemberTag,
-                        DestructionPercentFrom = attack.DestructionPercentFrom,
-                        DestructionPercentTo = attack.DestructionPercentTo,
-                    });
-                }
-
-                defeatedDistricts.Add(new DistrictUi
-                {
-                    DistrictName = district.Name,
-                    DistrictLevel = district.Level,
-                    Attacks = attacksOnChosenDistrict,
-                });
-            }
-
-            var attacsOnClanCount = 0;
-
-            foreach (var district in defeatedDistricts)
-            {
-                attacsOnClanCount += district.Attacks.Count;
-            }
-
-
-            defeatedClans.Add(new DefeatedClanUi { ClanName = clan.DefendersName, ClanTag = clan.DefendersTag, AttackedDistricts = defeatedDistricts, TotalAttacksCount = attacsOnClanCount });
-
-        }
-
-        return new RaidsUi
-        {
+            TotalAttacksCount = raid.TotalAttacks,
+            UpdatedOn = raid.UpdatedOn,
             State = raid.State,
             StartedOn = raid.StartedOn,
             EndedOn = raid.EndedOn,
@@ -190,128 +141,31 @@ public static class Mapper
             DefeatedDistrictsCount = raid.EnemyDistrictsDestoyed,
             DefensiveReward = raid.DefenSiveReward,
             OffensiveReward = raid.OffensiveReward,
-            RaidsCompleted = raid.DefeatedClans.Count,
-            Defenses = defenses,
-            DefeatedClans = defeatedClans,
+            Defenses = GetRaidDefensesUi(raid),
+            DefeatedClans = GetAttackedClans(raid),
+            NonAttackersRaids = NonAttackersHelper.GetNonAttackersRaids(trackedClan)
         };
     }
 
     //
     //ClanMemberInfoUi
     //
-    public static ArmyUi MapToArmyUi(ICollection<Troop> troops)
+    public static ClanMemberUi MapToUi(ClanMember clanMember)
     {
-        var superUnits = new List<TroopUi>();
-        var siegeMachines = new List<TroopUi>();
-        var heroes = new List<TroopUi>();
-        var pets = new List<TroopUi>();
-        var units = new List<TroopUi>();
-
-        foreach (var troop in troops)
+        if (clanMember == null)
         {
-            switch (troop.Type)
-            {
-                case UnitType.SuperUnit:
-                    superUnits.Add(new TroopUi
-                    {
-                        Name = troop.Name,
-                        Lvl = troop.Level.ToString(),
-                        SuperTroopIsActivated = troop.SuperTroopIsActivated.ToString()
-                    });
-                    break;
-
-                case UnitType.SiegeMachine:
-                    siegeMachines.Add(new TroopUi
-                    {
-                        Name = troop.Name,
-                        Lvl = troop.Level.ToString(),
-                        SuperTroopIsActivated = troop.SuperTroopIsActivated.ToString()
-                    });
-                    break;
-
-                case UnitType.Hero:
-                    heroes.Add(new TroopUi
-                    {
-                        Name = troop.Name,
-                        Lvl = troop.Level.ToString(),
-                        SuperTroopIsActivated = troop.SuperTroopIsActivated.ToString()
-                    });
-                    break;
-
-                case UnitType.Pet:
-                    pets.Add(new TroopUi
-                    {
-                        Name = troop.Name,
-                        Lvl = troop.Level.ToString(),
-                        SuperTroopIsActivated = troop.SuperTroopIsActivated.ToString()
-                    });
-                    break;
-
-                default:
-                    units.Add(new TroopUi
-                    {
-                        Name = troop.Name,
-                        Lvl = troop.Level.ToString(),
-                        SuperTroopIsActivated = troop.SuperTroopIsActivated.ToString()
-                    });
-                    break;
-            }
+            return new ClanMemberUi();
         }
 
-        return new ArmyUi
+        return new ClanMemberUi
         {
-            SuperUnits = superUnits,
-            SiegeMachines = siegeMachines,
-            Heroes = heroes,
-            Pets = pets,
-            Units = units,
-        };
-    }
+            UpdatedOn = clanMember.UpdatedOn,
+            TelegramUserName = clanMember.TelegramUserName,
 
-    public static CwCwlMembershipUi MapToCwCwlMembershipUi(WarMember member)
-    {
-        var attacks = new List<WarAttackUi>();
-
-        foreach (var attack in member.WarAttacks)
-        {
-            attacks.Add(new WarAttackUi
-            {
-                EnemyTag = attack.EnemyWarMember.Tag,
-                EnemyName = attack.EnemyWarMember.Name,
-                AttackOrder = attack.AttackOrder.ToString(),
-                Stars = attack.Stars.ToString(),
-                DestructionPercent = attack.DestructionPercent.ToString(),
-                Duration = attack.Duration.ToString(),
-                EnemyTHLevel = attack.EnemyWarMember.THLevel.ToString(),
-                EnemyMapPosition = attack.EnemyWarMember.MapPosition.ToString(),
-            });
-        }
-
-        return new CwCwlMembershipUi
-        {
-            Tag = member.Tag,
-            Name = member.Name,
-            ClanTag = member.ClanWar.TrackedClan.Tag,
-            ClanName = member.ClanWar.TrackedClan.Name,
-            StartedOn = member.ClanWar.StartedOn.ToString(),
-            EndedOn = member.ClanWar.EndedOn.ToString(),
-            TownHallLevel = member.TownHallLevel.ToString(),
-            MapPosition = member.MapPosition.ToString(),
-            BestOpponentStars = member.BestOpponentStars.ToString(),
-            BestOpponentsTime = member.BestOpponentTime.ToString(),
-            BestOpponentsPercent = member.BestOpponentPercent.ToString(),
-            Attacks = attacks,
-        };
-    }
-
-    public static PlayerInfoUi MapToPlayerInfoUi(ClanMember clanMember)
-    {
-        return new PlayerInfoUi
-        {
             Tag = clanMember.Tag,
             Name = clanMember.Name,
-            ClanTag = clanMember.Clan.Tag,
-            ClanName = clanMember.Clan.Name,
+            ClanTag = clanMember.TrackedClan.Tag,
+            ClanName = clanMember.TrackedClan.Name,
             RoleInClan = clanMember.Role,
             ExpLevel = clanMember.ExpLevel,
             TownHallLevel = clanMember.TownHallLevel,
@@ -327,87 +181,305 @@ public static class Mapper
             DonationsSent = clanMember.DonationsSent,
             DonationsRecieved = clanMember.DonationsRecieved,
             WarStars = clanMember.WarStars,
-            TotalCapitalContributions = clanMember.TotalCapitalContributions
+            TotalCapitalContributed = clanMember.TotalCapitalGoldContributed,
+            TotalCapitalGoldLooted = clanMember.TotalCapitalGoldLooted,
+
+            CwMedianDP = ClanMemberMedianValueCalculator.Calculate(clanMember, MedianValueType.ClanWar),
+            CwMedianDPWithout14_15Th = ClanMemberMedianValueCalculator.Calculate(clanMember, MedianValueType.ClanWarWithout1415Th),
+            RaidsMedianDP = ClanMemberMedianValueCalculator.Calculate(clanMember, MedianValueType.Raids),
+            RaidsMedianDPWithoutPeak = ClanMemberMedianValueCalculator.Calculate(clanMember, MedianValueType.RaidsWithoutPeak)
         };
     }
 
-    public static RaidMembershipUi MapToRaidMembershipUi(RaidMember raidMember)
+    public static ArmyUi MapToUi(ICollection<Troop> troops, ClanMember clanMember)
     {
-        var attacks = new List<RaidAttackUi>();
+        var superUnits = new List<TroopUi>();
+        var siegeMachines = new List<TroopUi>();
+        var heroes = new List<TroopUi>();
+        var pets = new List<TroopUi>();
+        var units = new List<TroopUi>();
+
+        foreach (var troop in troops)
+        {
+            switch (troop.Type)
+            {
+                case UnitType.SuperUnit:
+                    superUnits.Add(troop.MapToUi());
+                    break;
+
+                case UnitType.SiegeMachine:
+                    siegeMachines.Add(troop.MapToUi());
+                    break;
+
+                case UnitType.Hero:
+                    heroes.Add(troop.MapToUi());
+                    break;
+
+                case UnitType.Pet:
+                    pets.Add(troop.MapToUi());
+                    break;
+
+                default:
+                    units.Add(troop.MapToUi());
+                    break;
+            }
+        }
+
+        return new ArmyUi
+        {
+            UpdatedOn = clanMember.UpdatedOn,
+            SuperUnits = superUnits,
+            SiegeMachines = siegeMachines,
+            Heroes = heroes,
+            Pets = pets,
+            Units = units,
+            PlayerName = clanMember.Name,
+            PlayerTag = clanMember.Tag,
+            TownHallLevel = clanMember.TownHallLevel,
+            ClanTag = clanMember.TrackedClan.Tag,
+            ClanName = clanMember.TrackedClan.Name,
+        };
+    }
+
+    public static WarMembershipsUi MapToUi(WarMember member)
+    {
+        var attacks = new List<WarAttackUi>(member.WarAttacks.Count);
+
+        foreach (var attack in member.WarAttacks)
+        {
+            attacks.Add(new WarAttackUi
+            {
+                EnemyTag = attack.EnemyWarMember.Tag,
+                EnemyName = attack.EnemyWarMember.Name,
+                AttackOrder = attack.AttackOrder,
+                Stars = attack.Stars,
+                DestructionPercent = attack.DestructionPercent,
+                Duration = attack.Duration,
+                EnemyTHLevel = attack.EnemyWarMember.TownHallLevel,
+                EnemyMapPosition = attack.EnemyWarMember.MapPosition,
+            });
+        }
+
+        return new WarMembershipsUi
+        {
+            UpdatedOn = member.UpdatedOn,
+            Tag = member.Tag,
+            Name = member.Name,
+            ClanTag = member.ClanWar.TrackedClan.Tag,
+            ClanName = member.ClanWar.TrackedClan.Name,
+            PreparationStartedOn = member.ClanWar.PreparationStartTime,
+            StartedOn = member.ClanWar.StartedOn,
+            EndedOn = member.ClanWar.EndedOn,
+            TownHallLevel = member.TownHallLevel,
+            MapPosition = member.MapPosition,
+            BestOpponentStars = member.BestOpponentStars,
+            BestOpponentsTime = member.BestOpponentTime,
+            BestOpponentsPercent = member.BestOpponentPercent,
+            Attacks = attacks,
+        };
+    }
+
+    public static RaidMembershipUi MapToUi(RaidMember raidMember)
+    {
+        var attacks = new List<RaidAttackUi>(raidMember.Attacks.Count);
 
         foreach (var attack in raidMember.Attacks)
         {
             attacks.Add(new RaidAttackUi
             {
-                DefendersTag = attack.OpponentDistrict.DefeatedClan.DefendersTag,
-                DefendersName = attack.OpponentDistrict.DefeatedClan.DefendersName,
-                DistrictName = attack.OpponentDistrict.Name,
-                DistrictLevel = attack.OpponentDistrict.Level.ToString(),
-                DestructionPercentFrom = attack.DestructionPercentFrom.ToString(),
-                DestructionPercentTo = attack.DestructionPercentTo.ToString(),
+                DefendersTag = attack.AttackedClan.Tag,
+                DefendersName = attack.AttackedClan.Name,
+                DistrictName = attack.DefeatedEmemyDistrict.Name,
+                DistrictLevel = attack.DefeatedEmemyDistrict.Level,
+                DestructionPercentFrom = attack.DestructionPercentFrom,
+                DestructionPercentTo = attack.DestructionPercentTo,
             });
         }
 
         return new RaidMembershipUi
         {
+            UpdatedOn = raidMember.UpdatedOn,
             Tag = raidMember.ClanMember.Tag,
             Name = raidMember.ClanMember.Name,
-            ClanTag = raidMember.Raid.TrackedClan.Tag,
-            ClanName = raidMember.Raid.TrackedClan.Name,
-            StartedOn = raidMember.Raid.StartedOn.ToString(),
-            EndedOn = raidMember.Raid.EndedOn.ToString(),
-            TotalLoot = raidMember.TotalLoot.ToString(),
+            ClanTag = raidMember.CapitalRaid.TrackedClan.Tag,
+            ClanName = raidMember.CapitalRaid.TrackedClan.Name,
+            StartedOn = raidMember.CapitalRaid.StartedOn,
+            EndedOn = raidMember.CapitalRaid.EndedOn,
+            TotalLoot = raidMember.TotalLoot,
             Attacks = attacks,
         };
     }
 
-    public static AverageRaidsPerfomance MapToAverageRaidsPerfomance(ICollection<RaidMember> raidMemberships)
+    public static MedianRaidPerfomanseUi MapToUi(ICollection<RaidMember> raidMemberships, TrackedClan trackedClan)
     {
-        var avgCapitalLoot = 0.0;
-        var avgDestructionPercent = 0.0;
-        var attackCounter = 0;
+        var medianDestructionPercent = 0;
 
-        var playerName = "";
-        var playerTag = "";
+        var medianCapitalLoot = 0;
 
-        foreach (var raidMember in raidMemberships)
+        if (raidMemberships.Count == 0)
         {
-            playerName = raidMember.Name;
-            playerTag = raidMember.Tag;
+            medianDestructionPercent = 0;
 
-            avgCapitalLoot += raidMember.TotalLoot;
-
-            foreach (var attack in raidMember.Attacks)
-            {
-                avgDestructionPercent += (attack.DestructionPercentTo - attack.DestructionPercentFrom);
-                attackCounter++;
-            }
+            medianCapitalLoot = 0;
         }
 
-        avgDestructionPercent /= attackCounter;
+        var sortedAttacks = raidMemberships
+            .SelectMany(raidMember => raidMember.Attacks)
+            .OrderByDescending(x => x.DestructionPercentTo - x.DestructionPercentFrom)
+            .ToList();
 
-        avgCapitalLoot /= raidMemberships.Count();
+        var resultAttack = sortedAttacks[sortedAttacks.Count / 2];
 
-        return new AverageRaidsPerfomance
+        medianDestructionPercent = resultAttack.DestructionPercentTo - resultAttack.DestructionPercentFrom;
+
+        var sortedTotalLoots = raidMemberships.OrderByDescending(x => x.TotalLoot).ToList();
+
+        medianCapitalLoot = sortedTotalLoots[sortedTotalLoots.Count / 2].TotalLoot;
+
+        return new MedianRaidPerfomanseUi
         {
-            Tag = playerTag,
-            Name = playerName,
-            AverageDestructionPercent = Math.Round(avgDestructionPercent, 2),
-            AverageCapitalLoot = Math.Round(avgCapitalLoot, 2)
+            ClanName = trackedClan.Name,
+            ClanTag = trackedClan.Tag,
+
+            UpdatedOn = raidMemberships.FirstOrDefault().UpdatedOn,
+            Tag = raidMemberships.FirstOrDefault().Tag,
+            Name = raidMemberships.FirstOrDefault().Name,
+
+            RaidMembershipsCount = raidMemberships.Count,
+
+            MedianDestructionPersent = medianDestructionPercent,
+            MedianLoot = medianCapitalLoot,
         };
     }
 
-    public static ShortPlayerInfoUi MapToShortPlayerInfoUi(ClanMember clanMember)
+    public static SeasonStatisticsUi MapToUi(ClanMember currentClanMember, PreviousClanMember obsoleteClanMember, DateTime initializedOn)
     {
-        return new ShortPlayerInfoUi
+        return new SeasonStatisticsUi()
         {
-            Tag = clanMember.Tag,
-            Name = clanMember.Name,
-            WarPreference = clanMember.WarPreference,
-            DonationsSent = clanMember.DonationsSent,
-            DonationsRecieved = clanMember.DonationsRecieved,
-            WarStars = clanMember.WarStars,
-            TotalCapitalContributions = clanMember.TotalCapitalContributions,
+            InitializedOn = initializedOn,
+            UpdatedOn = currentClanMember.UpdatedOn,
+            ClanName = currentClanMember.TrackedClan.Name,
+            ClanTag = currentClanMember.TrackedClan.Tag,
+            Name = currentClanMember.Name,
+            Tag = currentClanMember.Tag,
+
+            DonationsSend = currentClanMember.DonationsSent - obsoleteClanMember.DonationsSent,
+            DonationRecieved = currentClanMember.DonationsRecieved - obsoleteClanMember.DonationsRecieved,
+            CapitalContributions = currentClanMember.TotalCapitalGoldContributed - obsoleteClanMember.TotalCapitalGoldContributed,
+            WarStarsEarned = currentClanMember.WarStars - obsoleteClanMember.WarStars,
+            AttackWins = currentClanMember.AttackWins - obsoleteClanMember.AttackWins,
+            VersusBattleWins = currentClanMember.VersusBattleWins - obsoleteClanMember.VersusBattleWins
         };
+    }
+
+
+
+    private static TroopUi MapToUi(this Troop troop)
+    {
+        return new TroopUi
+        {
+            Village = troop.Village,
+            Name = troop.Name,
+            Lvl = troop.Level,
+            SuperTroopIsActivated = troop.SuperTroopIsActivated
+        };
+    }
+
+    private static List<RaidDefenseUi> GetRaidDefensesUi(CapitalRaid raid)
+    {
+        var defenses = new List<RaidDefenseUi>();
+
+        foreach (var defense in raid.RaidDefenses)
+        {
+            var destroyedFriendlyDistricts = new List<DistrictUi>();
+
+            foreach (var district in defense.DestroyedFriendlyDistricts)
+            {
+                destroyedFriendlyDistricts.Add(new DistrictUi()
+                {
+                    Name = district.Name,
+                    Level = district.Level,
+                    AttacksCount = district.AttacksSpent,
+                    TotalDestructionPercent = district.TotalDestructionPersent
+                });
+            }
+
+            defenses.Add(new RaidDefenseUi
+            {
+                EnemyClanTag = defense.AttackerClanTag,
+                EnemyClanName = defense.AttackerClanName,
+                TotalAttacksCount = defense.TotalAttacksCount,
+                TotalEnemyLoot = defense.TotalEnemyLoot,
+                DestroyedFriendlyDistrictsCount = defense.DestroyedFriendlyDistricts.Where(x => x.TotalDestructionPersent == 100).Count(),
+                DestroyedFriendlyDistricts = destroyedFriendlyDistricts
+            });
+        }
+
+        return defenses;
+    }
+
+    private static List<AttackedClanUi> GetAttackedClans(CapitalRaid raid)
+    {
+        var attackedClansUi = new List<AttackedClanUi>();
+
+        foreach (var attackedClan in raid.AttackedClans)
+        {
+            var attackedClanUi = new AttackedClanUi()
+            {
+                Name = attackedClan.Name,
+                Tag = attackedClan.Tag,
+            };
+
+            var defeatedEmemyDistricts = new List<DistrictUi>();
+
+            foreach (var district in attackedClan.DefeatedEmemyDistricts)
+            {
+                var defeatedDistrictUi = new DistrictUi()
+                {
+                    Name = district.Name,
+                    Level = district.Level,
+                    Loot = district.TotalDistrictLoot,
+                };
+
+                var attacksOnDistrict = new List<AttackOnDistrictUi>();
+
+                var totalDistrictDestructionPercent = 0;
+
+                foreach (var attackOnDistrict in attackedClan.RaidAttacks.Where(x => x.DefeatedEmemyDistrict.Name == district.Name && x.DestructionPercentTo != 0))
+                {
+                    attacksOnDistrict.Add(new AttackOnDistrictUi()
+                    {
+                        AttackerName = attackOnDistrict.RaidMember.Name,
+                        AttackerTag = attackOnDistrict.RaidMember.Tag,
+
+                        DestructionPercentFrom = attackOnDistrict.DestructionPercentFrom,
+                        DestructionPercentTo = attackOnDistrict.DestructionPercentTo,
+                    });
+
+                    if (attackOnDistrict.DestructionPercentTo > totalDistrictDestructionPercent)
+                    {
+                        totalDistrictDestructionPercent = attackOnDistrict.DestructionPercentTo;
+                    }
+                }
+
+                defeatedDistrictUi.Attacks = attacksOnDistrict;
+
+                defeatedDistrictUi.AttacksCount = defeatedDistrictUi.Attacks.Count;
+
+                defeatedDistrictUi.TotalDestructionPercent = totalDistrictDestructionPercent;
+
+                defeatedEmemyDistricts.Add(defeatedDistrictUi);
+            }
+
+            attackedClanUi.DefeatedEmemyDistricts = defeatedEmemyDistricts;
+
+            attackedClanUi.TotalAttacksCount = attackedClanUi.DefeatedEmemyDistricts.Sum(x => x.AttacksCount);
+
+            attackedClanUi.TotalLoot = attackedClanUi.DefeatedEmemyDistricts.Sum(x => x.Loot);
+
+            attackedClansUi.Add(attackedClanUi);
+        }
+
+        return attackedClansUi;
     }
 }

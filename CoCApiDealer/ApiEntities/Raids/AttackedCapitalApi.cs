@@ -17,5 +17,5 @@ public class AttackedCapitalApi
     public int DistrictsDestroyedCount { get; set; }
 
     [JsonProperty("districts")]
-    public DistrictApi[] DistrictsDestroyed { get; set; }
+    public DistrictApi[] DestroyedDistricts { get; set; }
 }

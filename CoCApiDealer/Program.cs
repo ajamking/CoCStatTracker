@@ -1,17 +1,10 @@
-﻿public class Program
+﻿namespace CoCApiDealer
 {
-    /// <summary>
-    /// #YPPGCCY8 - тег клана
-    /// #2VGG92CL9 - тег игрока
-    /// </summary>
-
-    static async Task Main(string[] args)
+    public class Program
     {
-        var str = "12345";
+        static void Main()
+        {
 
-        Console.WriteLine(str.Substring(0, 10));
-
-        await Task.Delay(1000);
+        }
     }
-
 }

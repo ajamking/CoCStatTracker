@@ -2,14 +2,14 @@
 
 namespace Domain.Entities;
 
-public class RaidDefense
+public class RaidDefense : Entity
 {
-    public int Id { get; set; }
     public string AttackerClanTag { get; set; }
     public string AttackerClanName { get; set; }
     public int AttackerClanLevel { get; set; }
     public int TotalAttacksCount { get; set; }
-    public int DistrictsDestroyed { get; set; }
+    public int TotalEnemyLoot { get; set; }
+    public int DestroyedFriendlyDistrictsCount { get; set; }
 
     public int? CapitalRaidId { get; set; }
     public virtual CapitalRaid CapitalRaid { get; set; }

@@ -1,9 +1,7 @@
-﻿using CoCApiDealer;
-using CoCApiDealer.ApiRequests;
-using Domain.Entities;
-using Microsoft.Extensions.DependencyInjection;
-using Storage;
-using System.Reflection;
+﻿using CoCApiDealer.ApiRequests;
+using CoCStatsTracker;
+using CoCStatsTrackerBot.Requests;
+using Microsoft.Extensions.Hosting;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
@@ -12,68 +10,80 @@ using Telegram.Bot.Types.Enums;
 namespace CoCStatsTrackerBot;
 
 /// <summary>
-/// CЕрилог добавить ВЕЗДЕ.
+/// Тег клана:	"#YPPGCCY8", "#UQQGYJJP", "#VUJCUQ9Y"
 /// 
-/// Тег клана:	#YPPGCCY8   #UQQGYJJP
+/// #2Q9C292Y2  #2Q8028UJL - не крутили ЛВК
 /// 
-/// Тег игрока: #2VGG92CL9  #LRPLYJ9U2 #G8P9Q299R
+/// 
+/// Тег игрока: AJAMKING: #G8P9Q299R Зануда051: #LRPLYJ9U2
 /// </summary>
 
 class Program
 {
-    private static TelegramBotClient client = new TelegramBotClient(token: System.IO.File.ReadAllText(@"./../../../../CustomSolutionElements/TelegramBotClientToken.txt"));
+    private static readonly string _botClientToken = System.IO.File.ReadAllText(@"./../../../../CustomSolutionElements/BotClientToken.txt");
 
-    public static List<TrackedClan> TrackedClans { get; set; } = new List<TrackedClan>();
+    public static string BanListPath { get; } = @"./../../../../CustomSolutionElements/BannedUsers.txt";
 
-    async static Task Main(string[] args)
+    public static string ExceptionLogsPath { get; } = @"./../../../../CustomSolutionElements/ErrorLogs.txt";
+
+    public static TelegramBotClient BotClient { get; } = new(token: _botClientToken);
+
+    public static string AdminsChatId { get; } = "6621123435";
+
+    async static Task Main()
     {
-        //TempFunctions.GetNonAttackersRaids("#YPPGCCY8");
+        //CreateNewTestDb("#YPPGCCY8", "#UQQGYJJP", "#VUJCUQ9Y");
 
-        //var dbinit = new DBInit("#YPPGCCY8");
+        BotBackgroundTasksManager.StartAstync(BotClient);
 
-        var asf = new CwlGroupRequest();
-
-        var answ = asf.CallApi("#YPPGCCY8");
-
-        using var db = new AppDbContext("Data Source=./../../../../CustomSolutionElements/CoCStatsTracker.db");
-
-        TrackedClans = db.TrackedClans.ToList();
-
-        var testDaddyBuilder = new DaddyBuilder(TrackedClans[0]);
-
-        testDaddyBuilder.UpdateCurrentRaid();
-
-        TrackedClans[0] = testDaddyBuilder.TrackedClanBuilder.Clan;
-
-        db.Complete();
-
-        Console.WriteLine("Connection winh DB in MemberRequestHandler sucsessful");
-
-        client.StartReceiving(HandleUpdateAsync, HandleError);
+        BotClient.StartReceiving(HandleUpdateAsync, HandleError);
 
         Console.WriteLine("Bot started");
 
-        Console.ReadLine();
+        var host = new HostBuilder()
+            .ConfigureHostConfiguration(h => { })
+            .UseConsoleLifetime()
+            .Build();
 
-        await Task.CompletedTask;
+        host.Run();
     }
 
     async static Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
     {
+        //Console.WriteLine(Environment.CurrentManagedThreadId);
+
         try
         {
             if (update.Type == UpdateType.Message && update?.Message?.Text != null)
             {
-                Console.WriteLine(update.Message.Chat.Username + "  Отправил сообщение " + update.Message.Text + " " + DateTime.Now);
+                if (System.IO.File.ReadAllLines(BanListPath).Contains(update.Message.Chat.Id.ToString()))
+                {
+                    await botClient.SendTextMessageAsync(update.Message.Chat.Id,
+                        text: StylingHelper.MakeItStyled("Вы были заблокированы за неподобающее поведение и " +
+                        "больше не можете пользоваться ботом.", UiTextStyle.Default),
+                        parseMode: ParseMode.MarkdownV2);
 
-                await Navigator.HandleMessage(botClient, update.Message);
+                    return;
+                }
+
+                Console.Write($"{DateTime.Now}: Принято сообщение: \"{update.Message.Text}\" от ");
+
+                Console.ForegroundColor = ConsoleColor.Magenta;
+
+                Console.WriteLine($"@{update.Message.Chat.Username}");
+
+                Console.ResetColor();
+
+                await Task.Run(() => Navigation.Execute(botClient, update.Message));
 
                 return;
             }
         }
         catch (Exception e)
         {
-            Console.WriteLine("ignored exception" + e.Message + "in chat " + update.Message);
+            e.LogException(update.Message.Chat.Username, update.Message.Chat.Id, update.Message.Text, "Проигнорировали исключение в HandleUpdateAsync");
+
+            Console.WriteLine("Проигнорировали исключение " + e.Message + "в чате " + update.Message);
         }
     }
 
@@ -92,5 +102,43 @@ class Program
         Console.WriteLine(errorMessage);
 
         return Task.CompletedTask;
+    }
+
+    public static void CreateNewTestDb(params string[] ClanTags)
+    {
+        AddToDbCommandHandler.ResetDb();
+
+        foreach (var clanTag in ClanTags)
+        {
+            if (clanTag == "#VUJCUQ9Y")
+            {
+                AddToDbCommandHandler.AddTrackedClan(clanTag);
+
+                UpdateDbCommandHandler.ResetClanChatId(clanTag, "-1002146710907");
+
+                UpdateDbCommandHandler.ResetClanAdminKey(clanTag, "$Vikand0707");
+            }
+            else
+            {
+                AddToDbCommandHandler.AddTrackedClan(clanTag);
+
+                UpdateDbCommandHandler.ResetClanAdminKey(clanTag, "$KEFamily0707");
+            }
+
+            AddToDbCommandHandler.AddClanMembers(clanTag);
+
+            AddToDbCommandHandler.AddCurrentRaidToClan(clanTag);
+
+            try
+            {
+                AddToDbCommandHandler.AddCurrentClanWarToClan(clanTag);
+            }
+            catch
+            {
+                AddToDbCommandHandler.AddCurrentCwlClanWarsToClan(clanTag);
+            }
+
+            Console.WriteLine($"Clan {clanTag} aded");
+        }
     }
 }
