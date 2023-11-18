@@ -141,7 +141,7 @@ public class CurrentStatisticsFunctions
         var max2ColumnLength = 5;
         var max3ColumnLength = 5;
 
-        var chosenDistrictName = FunctionsLogicHelper.AllDistrictsRU.First(x => x.Key == districtType).Value;
+        var chosenDistrictName = FunctionsLogicHelper.AllDistricts.First(x => x.Key == districtType).Value;
 
         var avgPercent = 0.0;
 
@@ -171,7 +171,7 @@ public class CurrentStatisticsFunctions
         str.AppendLine(StylingHelper.MakeItStyled($"{raidUi.ClanName} - {raidUi.ClanTag}\n", UiTextStyle.Name));
 
         str.Append(StylingHelper.MakeItStyled("В атаках на район: ", UiTextStyle.Default));
-        str.AppendLine(StylingHelper.MakeItStyled($"{chosenDistrictName}\n", UiTextStyle.Header));
+        str.AppendLine(StylingHelper.MakeItStyled($"{FunctionsLogicHelper.AllDistrictsRU.First(x => x.Key == districtType).Value}\n", UiTextStyle.Header));
 
         str.AppendLine(raidUi.UpdatedOn.GetUpdatedOnString());
 
