@@ -7,3 +7,43 @@
    at Telegram.Bot.TelegramBotClientExtensions.SendTextMessageAsync(ITelegramBotClient botClient, ChatId chatId, String text, Nullable`1 parseMode, IEnumerable`1 entities, Nullable`1 disableWebPagePreview, Nullable`1 disableNotification, Nullable`1 protectContent, Nullable`1 replyToMessageId, Nullable`1 allowSendingWithoutReply, IReplyMarkup replyMarkup, CancellationToken cancellationToken)
    at CoCStatsTrackerBot.ResponseSender.SendAnswer(BotUserRequestParameters parameters, Boolean answerIsValid, String[] splitedAnswer) in C:\Users\tedto\OneDrive\Desktop\Программирование\CoCStatsTracker\CoCStatsTrackerBot\AnswerSenders\ResponseSender.cs:line 22
 
+2023-11-18 18:11:56.735 +03:00 [ERR] 
+------------------------------------
+На сообщение ExecuteUpdate от BaackGroundTask [1234567890]
+Произошла ошибка: An exception was thrown while attempting to evaluate a LINQ query parameter expression. See the inner exception for more information. To show additional information call 'DbContextOptionsBuilder.EnableSensitiveDataLogging'.
+Дополнительное сообщение: Обновление частично не прошло, ошибка
+Стактрейс:    at Microsoft.EntityFrameworkCore.Query.Internal.ParameterExtractingExpressionVisitor.GetValue(Expression expression, String& parameterName)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ParameterExtractingExpressionVisitor.GetValue(Expression expression, String& parameterName)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ParameterExtractingExpressionVisitor.Evaluate(Expression expression, Boolean generateParameter)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ParameterExtractingExpressionVisitor.Visit(Expression expression)
+   at System.Linq.Expressions.ExpressionVisitor.VisitBinary(BinaryExpression node)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ParameterExtractingExpressionVisitor.VisitBinary(BinaryExpression binaryExpression)
+   at System.Linq.Expressions.BinaryExpression.Accept(ExpressionVisitor visitor)
+   at System.Linq.Expressions.ExpressionVisitor.Visit(Expression node)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ParameterExtractingExpressionVisitor.Visit(Expression expression)
+   at System.Linq.Expressions.ExpressionVisitor.VisitLambda[T](Expression`1 node)
+   at System.Linq.Expressions.Expression`1.Accept(ExpressionVisitor visitor)
+   at System.Linq.Expressions.ExpressionVisitor.Visit(Expression node)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ParameterExtractingExpressionVisitor.Visit(Expression expression)
+   at System.Linq.Expressions.ExpressionVisitor.VisitUnary(UnaryExpression node)
+   at System.Linq.Expressions.UnaryExpression.Accept(ExpressionVisitor visitor)
+   at System.Linq.Expressions.ExpressionVisitor.Visit(Expression node)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ParameterExtractingExpressionVisitor.Visit(Expression expression)
+   at System.Dynamic.Utils.ExpressionVisitorUtils.VisitArguments(ExpressionVisitor visitor, IArgumentProvider nodes)
+   at System.Linq.Expressions.ExpressionVisitor.VisitMethodCall(MethodCallExpression node)
+   at System.Linq.Expressions.MethodCallExpression.Accept(ExpressionVisitor visitor)
+   at System.Linq.Expressions.ExpressionVisitor.Visit(Expression node)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ParameterExtractingExpressionVisitor.Visit(Expression expression)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ParameterExtractingExpressionVisitor.ExtractParameters(Expression expression, Boolean clearEvaluatedValues)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ParameterExtractingExpressionVisitor.ExtractParameters(Expression expression)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.ExtractParameters(Expression query, IParameterValues parameterValues, IDiagnosticsLogger`1 logger, Boolean parameterize, Boolean generateContextAccessors)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.Execute[TResult](Expression query)
+   at Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryProvider.Execute[TResult](Expression expression)
+   at Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryable`1.GetEnumerator()
+   at Microsoft.EntityFrameworkCore.Internal.InternalDbSet`1.RemoveRange(IEnumerable`1 entities)
+   at CoCStatsTracker.UpdateDbCommandHandler.<>c__DisplayClass1_0.<<UpdateTrackedClanClanMembers>b__3>d.MoveNext() in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTracker\Queries&Commands\Commands\UpdateDbCommandHandler.cs:line 65
+--- End of stack trace from previous location ---
+   at CoCStatsTracker.UpdateDbCommandHandler.UpdateTrackedClanClanMembers(String clanTag) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTracker\Queries&Commands\Commands\UpdateDbCommandHandler.cs:line 75
+   at CoCStatsTrackerBot.BotBackgroundTasksManager.<>c__DisplayClass3_0.<UpdateAllProperties>b__1() in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTrackerBot\BackgroundTasks\BotBackgroundTasksManager.cs:line 56
+   at CoCStatsTrackerBot.BotBackgroundTasksManager.ExecuteUpdate(Action action, String clanTagAndName) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTrackerBot\BackgroundTasks\BotBackgroundTasksManager.cs:line 80
+
