@@ -1,4 +1,5 @@
-﻿using CoCApiDealer.ApiRequests;
+﻿using System.Text;
+using CoCApiDealer.ApiRequests;
 using CoCStatsTracker;
 using CoCStatsTrackerBot.Requests;
 using Microsoft.Extensions.Hosting;
@@ -32,6 +33,8 @@ class Program
 
     async static Task Main()
     {
+        Console.OutputEncoding = Encoding.UTF8;
+
         //CreateNewTestDb("#YPPGCCY8", "#UQQGYJJP", "#VUJCUQ9Y");
 
         BotBackgroundTasksManager.StartAstync(BotClient);
