@@ -24,11 +24,12 @@ class Program
 
     private static string _botClientTokenTest = System.IO.File.ReadAllText(@"./../../../../CustomSolutionElements/BotClientTokenTEST.txt");
 
+    public static TelegramBotClient BotClient { get; } = new(token: _botClientToken);
+
+
     public static string BanListPath { get; } = @"./../../../../CustomSolutionElements/BannedUsers.txt";
 
     public static string ExceptionLogsPath { get; } = @"./../../../../CustomSolutionElements/ErrorLogs.txt";
-
-    public static TelegramBotClient BotClient { get; } = new(token: _botClientToken);
 
     public static string AdminsChatId { get; } = "6621123435";
 

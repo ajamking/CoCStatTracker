@@ -6,7 +6,11 @@ public static class CoCApiClientFactory
 {
     private static readonly HttpClient _client = new();
 
-    public static string DevelopersKey { get; } = File.ReadAllText(@"./../../../../CustomSolutionElements/ClashApiKey.txt");
+    private static string _developersKeyPC { get; } = File.ReadAllText(@"./../../../../CustomSolutionElements/ClashApiKeyPC.txt");
+
+    private static string _developersKeyVM { get; } = File.ReadAllText(@"./../../../../CustomSolutionElements/ClashApiKeyVM.txt");
+
+    public static string DevelopersKey { get; } = _developersKeyPC;
 
     public static HttpClient GetHttpClient()
     {
