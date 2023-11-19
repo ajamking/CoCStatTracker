@@ -57,3 +57,13 @@
    at CoCStatsTrackerBot.BotBackgroundTasksManager.<>c__DisplayClass3_0.<UpdateAllProperties>b__7() in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTrackerBot\BackgroundTasks\BotBackgroundTasksManager.cs:line 71
    at CoCStatsTrackerBot.BotBackgroundTasksManager.ExecuteUpdate(Action action, String clanTagAndName) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTrackerBot\BackgroundTasks\BotBackgroundTasksManager.cs:line 96
 
+2023-11-19 13:05:48.225 +03:00 [ERR] 
+------------------------------------
+На сообщение ExecuteUpdate от BaackGroundTask [1234567890]
+Произошла ошибка: Object reference not set to an instance of an object.
+Дополнительное сообщение: Обновление частично не прошло, ошибка
+Стактрейс:    at CoCStatsTracker.UpdateDbCommandHandler.UpdateCwMembersWithAttacks(TrackedClanBuilder trackedClanBuilder, ClanWarBuilder clanWarBuilder, ClanWarApi clanWarInfoFromApi) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTracker\Queries&Commands\Commands\UpdateDbCommandHandler.cs:line 278
+   at CoCStatsTracker.UpdateDbCommandHandler.UpdateCurrentClanWar(String clanTag) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTracker\Queries&Commands\Commands\UpdateDbCommandHandler.cs:line 177
+   at CoCStatsTrackerBot.BotBackgroundTasksManager.<>c__DisplayClass3_0.<UpdateAllProperties>b__7() in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTrackerBot\BackgroundTasks\BotBackgroundTasksManager.cs:line 71
+   at CoCStatsTrackerBot.BotBackgroundTasksManager.ExecuteUpdate(Action action, String clanTagAndName) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTrackerBot\BackgroundTasks\BotBackgroundTasksManager.cs:line 80
+

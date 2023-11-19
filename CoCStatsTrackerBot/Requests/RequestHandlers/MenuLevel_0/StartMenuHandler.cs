@@ -28,11 +28,11 @@ public class StartMenuHandler : BaseRequestHandler
         answer.AppendLine(StylingHelper.MakeItStyled("1. Бот предназначен для сбора и визуализации статиситики только отслеживаемых кланов.\n", UiTextStyle.Default));
 
         answer.AppendLine(StylingHelper.MakeItStyled("2. Все взаимодействие с ботом осуществляется через кнопочное меню (кнопка раскрытия меню " +
-            "находится в правой нижней части экрана), меню в левой нижней части - команды для групповых чатов.", UiTextStyle.Default));
+            "находится в правой нижней части экрана), меню в левой нижней части - команды для групповых чатов.\n", UiTextStyle.Default));
 
-        answer.AppendLine(StylingHelper.MakeItStyled("3. Бот находится в состоянии Альфа-теста, иногда может не работать или крашиться.\n", UiTextStyle.Default));
+        answer.AppendLine(StylingHelper.MakeItStyled("3. Бот находится в состоянии Бета-теста, иногда может не работать или крашиться.\n", UiTextStyle.Default));
 
-        answer.AppendLine(StylingHelper.MakeItStyled("4. Даты и время, выводимые ботом соответствют часовому поясу UTC+3 (московское время).\n", UiTextStyle.Default));
+        answer.AppendLine(StylingHelper.MakeItStyled("4. Даты и время, выводимые ботом, соответствют часовому поясу UTC+3 (московское время).\n", UiTextStyle.Default));
 
         ResponseSender.SendAnswer(parameters, true, answer.ToString());
     }
