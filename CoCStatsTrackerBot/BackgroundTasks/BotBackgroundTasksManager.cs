@@ -89,7 +89,7 @@ public static class BotBackgroundTasksManager
         }
         catch (Exception ex)
         {
-            ex.LogException("BaackGroundTask", 1234567890, "ExecuteUpdate", "Обновление частично не прошло, ошибка");
+            ex.LogException("BaackGroundTask", 1234567890, action.Method.Name, "Обновление частично не прошло, ошибка");
 
             Console.WriteLine($"{clanTagAndName} - Обновление частично не прошло, ошибка: {ex.Message}");
         }

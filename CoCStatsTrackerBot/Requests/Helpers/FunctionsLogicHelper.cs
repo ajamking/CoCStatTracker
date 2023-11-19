@@ -126,7 +126,7 @@ public static class FunctionsLogicHelper
     {
         var maxMemberAttacksPerRaid = 6;
 
-        var maxTotalRaidsAttakcs = 300;
+        var maxTotalRaidsAttakcs = raidsUi.TotalAttacksCount;
 
         var magicNumber = 6;
 
