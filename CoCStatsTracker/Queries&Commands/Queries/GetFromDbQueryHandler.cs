@@ -244,11 +244,11 @@ public static class GetFromDbQueryHandler
     {
         using AppDbContext dbContext = new();
 
-        var uiCwCwlMemberships = new List<WarMembershipsUi>();
-
         var warMembershipsDb = dbContext.ClanMembers.FirstOrDefault(x => x.Tag == playersTag).WarMemberships;
 
-        NotFoundException.ThrowByPredicate(() => uiCwCwlMemberships == null || uiCwCwlMemberships.Count == 0, "GetAllWarMembershipsUi - No tracked WarMemberships were found in DB");
+        NotFoundException.ThrowByPredicate(() => warMembershipsDb == null || warMembershipsDb.Count == 0, "GetAllWarMembershipsUi - No tracked WarMemberships were found in DB");
+
+        var uiCwCwlMemberships = new List<WarMembershipsUi>();
 
         uiCwCwlMemberships.AddRange(warMembershipsDb.Select(Mapper.MapToUi).ToList());
 
@@ -259,17 +259,16 @@ public static class GetFromDbQueryHandler
     {
         using AppDbContext dbContext = new();
 
-        var uiRaidMemberships = new List<RaidMembershipUi>();
-
         var raidMembershipsDb = dbContext.ClanMembers.FirstOrDefault(x => x.Tag == playersTag).RaidMemberships;
 
         NotFoundException.ThrowByPredicate(() => raidMembershipsDb == null || raidMembershipsDb.Count == 0, "GetAllMemberRaidMembershipsUi - No tracked WarMemberships were found in DB");
+        
+        var uiRaidMemberships = new List<RaidMembershipUi>();
 
         uiRaidMemberships.AddRange(raidMembershipsDb.Select(Mapper.MapToUi).ToList());
 
         return uiRaidMemberships;
     }
-
 
     /*--------------Для проверки вводимых тегов--------------*/
     public static bool CheckClanExists(string clanTag)

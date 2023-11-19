@@ -275,7 +275,7 @@ public static class UpdateDbCommandHandler
             {
                 foreach (var warAttack in warMemberApi.Attacks)
                 {
-                    var warAttackBuilder = new WarAttackBuilder(existingWarMember.WarAttacks
+                    var warAttackBuilder = new WarAttackBuilder(existingWarMember?.WarAttacks?
                         .FirstOrDefault(x => x.AttackOrder == warAttack.Order));
 
                     warAttackBuilder.SetBaseProperties(warAttack);
