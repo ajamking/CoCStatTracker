@@ -241,8 +241,8 @@ public class CurrentStatisticsFunctions
 
         if (Math.Round(raidUi.EndedOn.Subtract(DateTime.Now).TotalHours, 0) > 0)
         {
-            str.AppendLine(StylingHelper.MakeItStyled("Осталось времени до конца:", UiTextStyle.Subtitle));
-            str.AppendLine(StylingHelper.MakeItStyled(raidUi.EndedOn.GetTimeLeft(), UiTextStyle.Default));
+            str.Append(StylingHelper.MakeItStyled("\nОсталось времени до конца:  ", UiTextStyle.Default));
+            str.AppendLine(StylingHelper.MakeItStyled(raidUi.EndedOn.GetTimeLeft(), UiTextStyle.Subtitle));
         }
 
         var firstColumnLength = 21;
@@ -397,25 +397,31 @@ public class CurrentStatisticsFunctions
 
         str.AppendLine(cw.UpdatedOn.GetUpdatedOnString());
 
-        str.AppendLine(StylingHelper.MakeItStyled("\nНачало подготовки:", UiTextStyle.Subtitle));
-        str.AppendLine(StylingHelper.MakeItStyled(cw.PreparationStartTime.FormateToUiDateTime(), UiTextStyle.Default));
-        str.AppendLine(StylingHelper.MakeItStyled("Начало войны:", UiTextStyle.Subtitle));
-        str.AppendLine(StylingHelper.MakeItStyled(cw.StartedOn.FormateToUiDateTime(), UiTextStyle.Default));
-        str.AppendLine(StylingHelper.MakeItStyled("Конец войны:", UiTextStyle.Subtitle));
-        str.AppendLine(StylingHelper.MakeItStyled(cw.EndedOn.FormateToUiDateTime(), UiTextStyle.Default));
+        str.Append(StylingHelper.MakeItStyled("\nНачало подготовки:  ", UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled(cw.PreparationStartTime.FormateToUiDateTime(), UiTextStyle.Subtitle));
+        str.Append(StylingHelper.MakeItStyled("Начало войны:  ", UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled(cw.StartedOn.FormateToUiDateTime(), UiTextStyle.Subtitle));
+        str.Append(StylingHelper.MakeItStyled("Конец войны:  ", UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled(cw.EndedOn.FormateToUiDateTime(), UiTextStyle.Subtitle));
 
         if (Math.Round(cw.EndedOn.Subtract(DateTime.Now).TotalHours, 0) > 0)
         {
-            str.AppendLine(StylingHelper.MakeItStyled("Осталось времени до конца:", UiTextStyle.Subtitle));
-            str.AppendLine(StylingHelper.MakeItStyled(cw.EndedOn.GetTimeLeft(), UiTextStyle.Default));
+            str.Append(StylingHelper.MakeItStyled("\nОсталось времени до конца:  ", UiTextStyle.Default));
+            str.AppendLine(StylingHelper.MakeItStyled(cw.EndedOn.GetTimeLeft(), UiTextStyle.Subtitle));
         }
 
-        str.AppendLine(StylingHelper.MakeItStyled($"\nРезультат: {cw.Result}", UiTextStyle.Subtitle));
+        str.Append(StylingHelper.MakeItStyled($"\nСуммарное число атак:  ", UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled($"{cw.AttacksCount} : {cw.OpponentAttacksCount}", UiTextStyle.Subtitle));
 
-        str.AppendLine(StylingHelper.MakeItStyled($"\nСуммарное число атак: {cw.AttacksCount} : {cw.OpponentAttacksCount}", UiTextStyle.Subtitle));
-        str.AppendLine(StylingHelper.MakeItStyled($"Суммарно звезд: {cw.TotalStarsEarned} : {cw.OpponentStarsCount}", UiTextStyle.Subtitle));
-        str.AppendLine(StylingHelper.MakeItStyled($"Суммарный % разрушений: {Math.Round(cw.DestructionPercentage, 1)} : " +
-            $"{Math.Round(cw.OpponentDestructionPercentage, 1)}", UiTextStyle.Subtitle));
+        str.Append(StylingHelper.MakeItStyled($"Суммарно звезд:  ", UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled($"{cw.TotalStarsEarned} : {cw.OpponentStarsCount}", UiTextStyle.Subtitle));
+
+        str.Append(StylingHelper.MakeItStyled($"Суммарный % разрушений:  ", UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled($"{Math.Round(cw.DestructionPercentage, 1)}% : " +
+            $"{Math.Round(cw.OpponentDestructionPercentage, 1)}%", UiTextStyle.Subtitle));
+
+        str.Append(StylingHelper.MakeItStyled($"\nРезультат:  ", UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled($"{cw.Result}", UiTextStyle.Subtitle));
 
         var firstColumnLength = 16;
         var secondColumnLength = 12;

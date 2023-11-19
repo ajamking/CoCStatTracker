@@ -39,6 +39,69 @@ public static class FunctionsLogicHelper
             {DistrictType.Goblin_Mines, "Гоблинские шахты" },
     };
 
+    public static Dictionary<string, string> HeroesMapper { get; set; } = new Dictionary<string, string>()
+    {
+                { "Barbarian King", "Король варваров"},
+                { "Archer Queen", "Королева лучниц"},
+                { "Grand Warden", "Хранитель"},
+                { "Royal Champion", "Королевский чемпион"},
+                { "Battle Machine", "Боевая машина"},
+                { "Battle Copter", "Боевой вертолет"}
+    };
+
+    public static Dictionary<string, string> EveryUnitsMapper { get; set; } = new Dictionary<string, string>()
+    {
+                { "Barbarian", "Варвар"},
+                { "Archer", "Лучница"},
+                { "Goblin", "Гоблин"},
+                { "Giant", "Гигант"},
+                { "Wall Breaker", "Стенобой"},
+                { "Balloon", "Воздушный шар"},
+                { "Wizard", "Колдун"},
+                { "Healer", "Целительница"},
+                { "Dragon", "Дракон"},
+                { "P.E.K.K.A", "П.Е.К.К.А."},
+                { "Baby Dragon", "Дракончик"},
+                { "Miner", "Шахтер"},
+                { "Electro Dragon", "Электродракон"},
+                { "Yeti", "Йети"},
+                { "Dragon Rider", "Всадник на драконе"},
+                { "Electro Titan", "Электротитанида"},
+
+                { "Minion", "Миньон"},
+                { "Hog Rider", "Всадник на кабане"},
+                { "Valkyrie", "Валькирия"},
+                { "Golem", "Голем"},
+                { "Witch", "Ведьма"},
+                { "Lava Hound", "Адская гончая"},
+                { "Bowler", "Варвар"},
+                { "Ice Golem", "Ледяной голем"},
+                { "Headhunter", "Охотница за головами"},
+                { "Apprentice Warden", "Ученик хранителя"},
+
+                { "L.A.S.S.I", "Л.Э.С.С.И."},
+                { "Electro Owl", "Электросова"},
+                { "Mighty Yak", "Могучий як"},
+                { "Unicorn", "Единорог"},
+                { "Frosty", "Снежок"},
+                { "Diggy", "Копатик"},
+                { "Poison Lizard", "Ядовитый ящер"},
+                { "Phoenix", "Феникс"},
+
+                { "Raged Barbarian", "Яростный варвар"},
+                { "Sneaky Archer", "Коварная лучница"},
+                { "Boxer Giant", "Гигант-боксер"},
+                { "Beta Minion", "Радиоактивный миньон"},
+                { "Bomber", "Подрывник"},
+                //{ "Baby Dragon", "Дракончик"}, - уже описывался ранее.
+                { "Cannon Cart", "Повозка с пушкой"},
+                { "Night Witch", "Ночная ведьма"},
+                { "Drop Ship", "Скелетоносец"},
+                { "Power P.E.K.K.A", "Гипер-П.Е.К.К.А."},
+                { "Hog Glider", "Всадник на дельтаплане"},
+                { "Electrofire Wizard", "Огневержец"},
+    };
+
     public static Dictionary<string, string> SuperUnitsMapper { get; set; } = new Dictionary<string, string>()
     {
                 { "Super Barbarian", "Суперварвар"},

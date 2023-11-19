@@ -5,7 +5,6 @@ namespace CoCStatsTrackerBot.Requests;
 
 public static class StylingHelper
 {
-
     /// Стилизует текст в соответствии с Telegram MarkdownV2
     public static string MakeItStyled(string str, UiTextStyle textStyle)
     {
@@ -169,7 +168,9 @@ public static class StylingHelper
 
     public static string GetUpdatedOnString(this DateTime updatedOn)
     {
-        var answer = StylingHelper.MakeItStyled($"Обновлено: {updatedOn.FormateToUiDateTime()}", UiTextStyle.Subtitle);
+        var answer = MakeItStyled($"Обновлено:  ", UiTextStyle.Default);
+
+        answer += MakeItStyled($"{updatedOn.FormateToUiDateTime()}", UiTextStyle.Subtitle);
 
         return answer;
     }

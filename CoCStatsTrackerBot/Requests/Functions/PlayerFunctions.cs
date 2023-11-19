@@ -344,11 +344,29 @@ public static class PlayerFunctions
             case UnitType.Hero:
                 {
                     chosenUnits = armyUi.Heroes;
+
+                    foreach (var unit in chosenUnits)
+                    {
+                        if (FunctionsLogicHelper.HeroesMapper.ContainsKey(unit.Name))
+                        {
+                            unit.Name = FunctionsLogicHelper.HeroesMapper[unit.Name];
+                        }
+                    }
+
                     break;
                 }
             case UnitType.SiegeMachine:
                 {
                     chosenUnits = armyUi.SiegeMachines;
+
+                    foreach (var unit in chosenUnits)
+                    {
+                        if (FunctionsLogicHelper.SiegeMachinesMapper.ContainsKey(unit.Name))
+                        {
+                            unit.Name = FunctionsLogicHelper.SiegeMachinesMapper[unit.Name];
+                        }
+                    }
+
                     break;
                 }
             case UnitType.SuperUnit:
@@ -360,12 +378,30 @@ public static class PlayerFunctions
                             chosenUnits.Add(unit);
                         }
                     }
+
+                    foreach (var unit in chosenUnits)
+                    {
+                        if (FunctionsLogicHelper.SuperUnitsMapper.ContainsKey(unit.Name))
+                        {
+                            unit.Name = FunctionsLogicHelper.SuperUnitsMapper[unit.Name];
+                        }
+                    }
+
                     break;
                 }
             case UnitType.EveryUnit:
                 {
                     chosenUnits.AddRange(armyUi.Pets);
                     chosenUnits.AddRange(armyUi.Units);
+
+                    foreach (var unit in chosenUnits)
+                    {
+                        if (FunctionsLogicHelper.EveryUnitsMapper.ContainsKey(unit.Name))
+                        {
+                            unit.Name = FunctionsLogicHelper.EveryUnitsMapper[unit.Name];
+                        }
+                    }
+
                     break;
                 }
             default:
@@ -376,7 +412,7 @@ public static class PlayerFunctions
 
         var str = new StringBuilder();
 
-        var maxNameLength = 20;
+        var maxNameLength = 24;
         var maxLvlLength = 4;
 
         var dic = new Dictionary<UnitType, string>

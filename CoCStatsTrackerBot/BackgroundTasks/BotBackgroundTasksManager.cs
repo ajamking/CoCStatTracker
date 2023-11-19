@@ -116,7 +116,7 @@ public static class BotBackgroundTasksManager
         {
             var raidTimeLeft = Math.Round(lastRaidUi.EndedOn.Subtract(DateTime.Now).TotalHours, 2);
 
-            if (raidTimeLeft > 15 && raidTimeLeft < 16)
+            if (raidTimeLeft > 11 && raidTimeLeft < 12)
             {
                 var answer = CurrentStatisticsFunctions.GetCurrentRaidShortInfo(lastRaidUi);
 
@@ -135,7 +135,7 @@ public static class BotBackgroundTasksManager
         {
             var warTimeLeft = Math.Round(clanWarUi.EndedOn.Subtract(DateTime.Now).TotalHours, 2);
 
-            if (warTimeLeft > 0.5 && warTimeLeft < 1.5)
+            if (warTimeLeft > 2 && warTimeLeft < 1)
             {
                 var answer = CurrentStatisticsFunctions.GetCurrentWarShortInfo(clanWarUi);
 

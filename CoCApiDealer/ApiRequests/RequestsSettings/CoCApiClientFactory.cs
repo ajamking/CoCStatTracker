@@ -10,7 +10,7 @@ public static class CoCApiClientFactory
 
     private static string _developersKeyVM { get; } = File.ReadAllText(@"./../../../../CustomSolutionElements/ClashApiKeyVM.txt");
 
-    public static string DevelopersKey { get; } = _developersKeyPC;
+    public static string DevelopersKey { get; } = _developersKeyVM;
 
     public static HttpClient GetHttpClient()
     {
