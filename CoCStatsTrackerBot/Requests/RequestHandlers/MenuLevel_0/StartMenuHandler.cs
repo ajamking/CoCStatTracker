@@ -27,7 +27,8 @@ public class StartMenuHandler : BaseRequestHandler
 
         answer.AppendLine(StylingHelper.MakeItStyled("1. Бот предназначен для сбора и визуализации статиситики только отслеживаемых кланов.\n", UiTextStyle.Default));
 
-        answer.AppendLine(StylingHelper.MakeItStyled("2. Все взаимодействие с ботом осуществляется через кнопочное меню, команд содержащих символ \'/\' не предусмотрено.\n", UiTextStyle.Default));
+        answer.AppendLine(StylingHelper.MakeItStyled("2. Все взаимодействие с ботом осуществляется через кнопочное меню (кнопка раскрытия меню " +
+            "находится в правой нижней части экрана), меню в левой нижней части - команды для групповых чатов.", UiTextStyle.Default));
 
         answer.AppendLine(StylingHelper.MakeItStyled("3. Бот находится в состоянии Альфа-теста, иногда может не работать или крашиться.\n", UiTextStyle.Default));
 
