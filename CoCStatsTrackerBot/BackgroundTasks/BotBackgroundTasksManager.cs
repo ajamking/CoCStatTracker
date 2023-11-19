@@ -106,7 +106,6 @@ public static class BotBackgroundTasksManager
 
             SendWarMessage(clan, botClient);
         }
-
     }
 
     private static void SendRaidsMessage(TrackedClan clan, ITelegramBotClient botClient)
