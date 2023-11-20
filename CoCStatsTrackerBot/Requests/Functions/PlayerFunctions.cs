@@ -154,23 +154,23 @@ public static class PlayerFunctions
             }
 
             str.AppendLine(uiMembership.UpdatedOn.GetUpdatedOnString());
-            ;
-            str.AppendLine(StylingHelper.MakeItStyled("\nНачало подготовки:", UiTextStyle.Subtitle));
-            str.AppendLine(StylingHelper.MakeItStyled(uiMembership.PreparationStartedOn.FormateToUiDateTime(), UiTextStyle.Default));
-            str.AppendLine(StylingHelper.MakeItStyled("Начало войны:", UiTextStyle.Subtitle));
-            str.AppendLine(StylingHelper.MakeItStyled(uiMembership.StartedOn.FormateToUiDateTime(), UiTextStyle.Default));
-            str.AppendLine(StylingHelper.MakeItStyled("Конец войны:", UiTextStyle.Subtitle));
-            str.AppendLine(StylingHelper.MakeItStyled(uiMembership.EndedOn.FormateToUiDateTime(), UiTextStyle.Default));
+
+            str.Append(StylingHelper.MakeItStyled("\nНачало подготовки:  ", UiTextStyle.Default));
+            str.AppendLine(StylingHelper.MakeItStyled(uiMembership.PreparationStartedOn.FormateToUiDateTime(), UiTextStyle.Subtitle));
+            str.Append(StylingHelper.MakeItStyled("Начало войны:  ", UiTextStyle.Default));
+            str.AppendLine(StylingHelper.MakeItStyled(uiMembership.StartedOn.FormateToUiDateTime(), UiTextStyle.Subtitle));
+            str.Append(StylingHelper.MakeItStyled("Конец войны:  ", UiTextStyle.Default));
+            str.AppendLine(StylingHelper.MakeItStyled(uiMembership.EndedOn.FormateToUiDateTime(), UiTextStyle.Subtitle));
 
             if (uiMembership.EndedOn > DateTime.Now)
             {
                 str.AppendLine();
-                str.AppendLine(StylingHelper.MakeItStyled("Осталось до конца войны:", UiTextStyle.Subtitle));
-                str.AppendLine(StylingHelper.MakeItStyled(uiMembership.EndedOn.GetTimeLeft(), UiTextStyle.Default));
+                str.Append(StylingHelper.MakeItStyled("Осталось до конца войны:  ", UiTextStyle.Default));
+                str.AppendLine(StylingHelper.MakeItStyled(uiMembership.EndedOn.GetTimeLeft(), UiTextStyle.Subtitle));
             }
 
-
-            str.AppendLine(StylingHelper.MakeItStyled($"\nПозиция на карте: {uiMembership.MapPosition}", UiTextStyle.Subtitle));
+            str.Append(StylingHelper.MakeItStyled($"\nПозиция на карте:  ", UiTextStyle.Default));
+            str.AppendLine(StylingHelper.MakeItStyled($"{uiMembership.MapPosition}", UiTextStyle.Subtitle));
 
             str.AppendLine(StylingHelper.MakeItStyled("\nХудшая защита:", UiTextStyle.Subtitle));
 
@@ -195,8 +195,7 @@ public static class PlayerFunctions
             }
 
 
-            str.AppendLine();
-            str.AppendLine(StylingHelper.MakeItStyled("Показатели атак:", UiTextStyle.Subtitle));
+            str.AppendLine(StylingHelper.MakeItStyled("\nПоказатели атак:", UiTextStyle.Subtitle));
 
             if (uiMembership.Attacks.Count == 0)
             {
@@ -247,9 +246,9 @@ public static class PlayerFunctions
     {
         //Эмпирически подобранные константы для адекватного отображения таблицы.
         var maxAttackLenght = 1;
-        var maxDistrictLenght = 15;
-        var maxDestructionFrom = 5;
-        var maxDestructionTo = 5;
+        var maxDistrictLenght = 22;
+        var maxDestructionFrom = 3;
+        var maxDestructionTo = 3;
 
         var str = new StringBuilder();
 
@@ -278,12 +277,12 @@ public static class PlayerFunctions
                 str.AppendLine($@"{messageSplitToken}");
             }
 
-            str.AppendLine(StylingHelper.MakeItStyled("Начало рейдов", UiTextStyle.Subtitle));
-            str.AppendLine(StylingHelper.MakeItStyled(uiMembership.StartedOn.FormateToUiDateTime(), UiTextStyle.Default));
-            str.AppendLine(StylingHelper.MakeItStyled("Конец рейдов", UiTextStyle.Subtitle));
-            str.AppendLine(StylingHelper.MakeItStyled(uiMembership.EndedOn.FormateToUiDateTime(), UiTextStyle.Default));
-
-            str.AppendLine(StylingHelper.MakeItStyled("\nЗолота заработано: " + uiMembership.TotalLoot.GetDividedString(), UiTextStyle.Subtitle));
+            str.Append(StylingHelper.MakeItStyled("Начало рейдов:  ", UiTextStyle.Default));
+            str.AppendLine(StylingHelper.MakeItStyled(uiMembership.StartedOn.FormateToUiDateTime(), UiTextStyle.Subtitle));
+            str.Append(StylingHelper.MakeItStyled("Конец рейдов:  ", UiTextStyle.Default));
+            str.AppendLine(StylingHelper.MakeItStyled(uiMembership.EndedOn.FormateToUiDateTime(), UiTextStyle.Subtitle));
+            str.Append(StylingHelper.MakeItStyled("\nЗолота заработано:  ", UiTextStyle.Default));
+            str.AppendLine(StylingHelper.MakeItStyled(uiMembership.TotalLoot.GetDividedString(), UiTextStyle.Subtitle));
 
             str.AppendLine(StylingHelper.MakeItStyled("\nПоказатели атак:", UiTextStyle.Subtitle));
 
@@ -305,6 +304,13 @@ public static class PlayerFunctions
 
                 foreach (var attack in uiMembership.Attacks)
                 {
+                    if (FunctionsLogicHelper.AllDistrictsEn.ContainsValue(attack.DistrictName))
+                    {
+                        var enDistctictKeyValuePair = FunctionsLogicHelper.AllDistrictsEn.FirstOrDefault(x=>x.Value == attack.DistrictName);
+
+                        attack.DistrictName = FunctionsLogicHelper.AllDistrictsRU[enDistctictKeyValuePair.Key];
+                    }
+
                     if (attack.DistrictName.Length > maxDistrictLenght)
                     {
                         attack.DistrictName = attack.DistrictName[..maxDistrictLenght];

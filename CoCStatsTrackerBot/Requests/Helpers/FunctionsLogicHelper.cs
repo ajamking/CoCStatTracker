@@ -13,7 +13,7 @@ public static class FunctionsLogicHelper
             {2,  180  }, {3,  360  }, {4,  585  }, {5,  810  }, {6,  1115 }, {7,  1240 },  {8,  1260 }, {9,  1375 }, {10, 1450 },
     };
 
-    public static Dictionary<DistrictType, string> AllDistricts { get; set; } = new Dictionary<DistrictType, string>()
+    public static Dictionary<DistrictType, string> AllDistrictsEn { get; set; } = new Dictionary<DistrictType, string>()
     {
             {DistrictType.Capital_Peak, "Capital Peak" },
             {DistrictType.Barbarian_Camp, "Barbarian Camp" },
@@ -138,7 +138,7 @@ public static class FunctionsLogicHelper
     {
         var newDistrictsList = new List<DistrictUi>();
 
-        foreach (var districtType in AllDistricts)
+        foreach (var districtType in AllDistrictsEn)
         {
             newDistrictsList.AddRange(districts.Where(x => x.Name == districtType.Value));
         }
@@ -203,7 +203,7 @@ public static class FunctionsLogicHelper
                 {
                     continue;
                 }
-                if (district.Name == AllDistricts[DistrictType.Capital_Peak])
+                if (district.Name == AllDistrictsEn[DistrictType.Capital_Peak])
                 {
                     destroyedDistricts.DefeatedCapitalHalls[district.Level]++;
                 }

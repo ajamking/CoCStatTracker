@@ -219,7 +219,8 @@ public static class ClanFunctions
         str.AppendLine(StylingHelper.MakeItStyled("Сезонная статистика игроков клана", UiTextStyle.Header));
         str.AppendLine(StylingHelper.MakeItStyled($"{seasonStatisticsUistring.First().ClanName} - {seasonStatisticsUistring.First().ClanTag}\n", UiTextStyle.Name));
 
-        str.AppendLine(StylingHelper.MakeItStyled("Сбор статистики начат: " + seasonStatisticsUistring.First().InitializedOn.FormateToUiDateTime(), UiTextStyle.Subtitle));
+        str.Append(StylingHelper.MakeItStyled("Сбор статистики начат:  ", UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled(seasonStatisticsUistring.First().InitializedOn.FormateToUiDateTime(), UiTextStyle.Subtitle));
 
         str.AppendLine(seasonStatisticsUistring.First().UpdatedOn.GetUpdatedOnString());
 
@@ -231,7 +232,8 @@ public static class ClanFunctions
         str.AppendLine(StylingHelper.MakeItStyled("Адс - успешных атак на ДС за сезон.", UiTextStyle.Default));
         str.AppendLine(StylingHelper.MakeItStyled("З.с. - золото столицы, вложенное за сезон.\n", UiTextStyle.Default));
 
-        str.AppendLine(StylingHelper.MakeItStyled("Сбор статистики начинается заново каждый рейтинговый сезон или по усмотрению администратора.\n", UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled("Сбор статистики начинается заново каждые " +
+            "30 дней или по усмотрению главы вашего клана.\n", UiTextStyle.Subtitle));
 
         str.AppendLine($"``` " +
                   $"|{StylingHelper.GetCenteredString("Игрок", maxNameLength)}" +
@@ -273,7 +275,7 @@ public static class ClanFunctions
     {
         var str = new StringBuilder();
 
-        var maxNameLength = 14;
+        var maxNameLength = 18;
         var maxDistrictLength = 9;
         var maxAttackLenght = 6;
 
@@ -295,20 +297,26 @@ public static class ClanFunctions
 
                 var defeatedClansCounter = 0;
 
-                foreach (var defeatedClan in raid.DefeatedClans)
+                foreach (var defeatedClan in raid.DefeatedClans.OrderByDescending(x => x.TotalAttacksCount))
                 {
-                    str.AppendLine($"``` " +
+                    str.AppendLine($"``` ");
+
+                    var tableWidth = maxNameLength + maxDistrictLength + maxAttackLenght + 2;
+
+                    var properClanName = StylingHelper.GetProperName(defeatedClan.Name, defeatedClan.Name.Length);
+
+                    var defClanInfo = $"{defeatedClan.TotalAttacksCount} / {defeatedClan.TotalLoot.GetDividedString()}";
+
+                    str.AppendLine($" {StylingHelper.GetCenteredString($"{properClanName} / {defClanInfo}", tableWidth + 2)}");
+
+                    str.AppendLine(StylingHelper.GetTableDeviderLine(DeviderType.Colunmn, maxNameLength, maxDistrictLength, maxAttackLenght));
+
+                    str.AppendLine(" " +
                    $"|{StylingHelper.GetCenteredString("Игрок", maxNameLength)}" +
                    $"|{StylingHelper.GetCenteredString("Район", maxDistrictLength)}" +
                    $"|{StylingHelper.GetCenteredString("От-До%", maxAttackLenght)}|");
 
                     str.AppendLine(StylingHelper.GetTableDeviderLine(DeviderType.Colunmn, maxNameLength, maxDistrictLength, maxAttackLenght));
-
-                    var tableWidth = maxNameLength + maxDistrictLength + maxAttackLenght + 2;
-
-                    str.AppendLine($" {StylingHelper.GetCenteredString(" ", tableWidth + 2)}");
-
-                    str.AppendLine($" |{StylingHelper.GetCenteredStringDash(StylingHelper.GetProperName(defeatedClan.Name, defeatedClan.Name.Length), tableWidth)}|");
 
                     var districtCounter = 0;
 

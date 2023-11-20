@@ -141,7 +141,7 @@ public class CurrentStatisticsFunctions
         var max2ColumnLength = 5;
         var max3ColumnLength = 5;
 
-        var chosenDistrictName = FunctionsLogicHelper.AllDistricts.First(x => x.Key == districtType).Value;
+        var chosenDistrictName = FunctionsLogicHelper.AllDistrictsEn.First(x => x.Key == districtType).Value;
 
         var avgPercent = 0.0;
 
@@ -333,7 +333,7 @@ public class CurrentStatisticsFunctions
         str.AppendLine(StylingHelper.GetTableDeviderLine(DeviderType.Whitespace, maxClanNameLength, maxAttackLength, maxDDCLength, maxGoldLootedLength));
 
         var totalLoseDefenses = raidUi.Defenses
-            .Where(x => x.DestroyedFriendlyDistrictsCount == FunctionsLogicHelper.AllDistricts.Count);
+            .Where(x => x.DestroyedFriendlyDistrictsCount == FunctionsLogicHelper.AllDistrictsEn.Count);
 
         var averageDefenses = Math.Round((double)totalLoseDefenses
             .Sum(x => x.TotalAttacksCount)
@@ -359,7 +359,7 @@ public class CurrentStatisticsFunctions
         str.AppendLine($" {StylingHelper.GetCenteredString(" ", tableLength)}");
 
         var totalDefeatedClans = raidUi.DefeatedClans
-            .Where(x => x.DefeatedEmemyDistricts.Count == FunctionsLogicHelper.AllDistricts.Count);
+            .Where(x => x.DefeatedEmemyDistricts.Count == FunctionsLogicHelper.AllDistrictsEn.Count);
 
         var averageAttacks = Math.Round((double)totalDefeatedClans
             .Sum(x => x.TotalAttacksCount)
