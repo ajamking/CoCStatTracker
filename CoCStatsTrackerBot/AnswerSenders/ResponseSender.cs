@@ -3,12 +3,13 @@ using System;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CoCStatsTrackerBot;
 
 public static class ResponseSender
 {
+    private static object _lock = new object();
+
     public async static void SendAnswer(BotUserRequestParameters parameters, bool answerIsValid, params string[] splitedAnswer)
     {
         try
@@ -48,7 +49,10 @@ public static class ResponseSender
         }
         catch (Telegram.Bot.Exceptions.ApiRequestException exception)
         {
-            HandleBotApiExceptions(exception, parameters);
+            lock (_lock)
+            {
+                HandleBotApiExceptions(exception, parameters);
+            }
 
             return;
         }
@@ -78,7 +82,7 @@ public static class ResponseSender
         _ => message.Chat.Id.ToString(),
     };
 
-    public static async void HandleBotApiExceptions(Telegram.Bot.Exceptions.ApiRequestException exception, BotUserRequestParameters parameters)
+    public static async Task HandleBotApiExceptions(Telegram.Bot.Exceptions.ApiRequestException exception, BotUserRequestParameters parameters)
     {
         switch (exception.ErrorCode)
         {
