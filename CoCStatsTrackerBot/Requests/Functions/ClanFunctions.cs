@@ -303,11 +303,11 @@ public static class ClanFunctions
 
                     var tableWidth = maxNameLength + maxDistrictLength + maxAttackLenght + 2;
 
-                    var properClanName = StylingHelper.GetProperName(defeatedClan.Name, defeatedClan.Name.Length);
+                    var properClanName = StylingHelper.GetProperName(defeatedClan.Name, maxNameLength);
 
-                    var defClanInfo = $"{defeatedClan.TotalAttacksCount} / {defeatedClan.TotalLoot.GetDividedString()}";
+                    var defClanInfo = $"{properClanName} A-[{defeatedClan.TotalAttacksCount}] З-[{defeatedClan.TotalLoot.GetDividedString()}]";
 
-                    str.AppendLine($" {StylingHelper.GetCenteredString($"{properClanName} / {defClanInfo}", tableWidth + 2)}");
+                    str.AppendLine($" {StylingHelper.GetCenteredString(defClanInfo, tableWidth + 2)}");
 
                     str.AppendLine(StylingHelper.GetTableDeviderLine(DeviderType.Colunmn, maxNameLength, maxDistrictLength, maxAttackLenght));
 

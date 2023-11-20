@@ -458,6 +458,8 @@ public static class Navigation
         {
             var messages = msg.Split(' ');
 
+            var banList = System.IO.File.ReadAllLines(Program.BanListPath).ToList();
+
             if (messages[0] == "/ban")
             {
                 using StreamWriter writer = new(Program.BanListPath, true);
@@ -472,8 +474,6 @@ public static class Navigation
             {
                 var answer = "Пользователя с таким chatId нет в бан листе";
 
-                var banList = System.IO.File.ReadAllLines(Program.BanListPath).ToList();
-
                 if (banList.Contains(messages[1]))
                 {
                     banList.Remove(messages[1]);
@@ -487,6 +487,14 @@ public static class Navigation
 
                     answer = $"Пользователя разбанен, банлист:\n\n{string.Join('\n', banList)}";
                 }
+
+                activeBotUser.RequestHadnlerParameters.BotClient.SendTextMessageAsync(activeBotUser.ChatId,
+                     text: StylingHelper.MakeItStyled(answer, UiTextStyle.Name),
+                     parseMode: ParseMode.MarkdownV2);
+            }
+            if (messages[0] == "/banList")
+            {
+                var answer = $"Банлист:\n\n{string.Join('\n', banList)}";
 
                 activeBotUser.RequestHadnlerParameters.BotClient.SendTextMessageAsync(activeBotUser.ChatId,
                      text: StylingHelper.MakeItStyled(answer, UiTextStyle.Name),
