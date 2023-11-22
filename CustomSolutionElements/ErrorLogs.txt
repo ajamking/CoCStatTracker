@@ -163,3 +163,23 @@
    at Telegram.Bot.TelegramBotClientExtensions.SendTextMessageAsync(ITelegramBotClient botClient, ChatId chatId, String text, Nullable`1 parseMode, IEnumerable`1 entities, Nullable`1 disableWebPagePreview, Nullable`1 disableNotification, Nullable`1 protectContent, Nullable`1 replyToMessageId, Nullable`1 allowSendingWithoutReply, IReplyMarkup replyMarkup, CancellationToken cancellationToken)
    at CoCStatsTrackerBot.ResponseSender.SendAnswer(BotUserRequestParameters parameters, Boolean answerIsValid, String[] splitedAnswer) in C:\Users\tedto\OneDrive\Desktop\Программирование\CoCStatsTracker\CoCStatsTrackerBot\AnswerSenders\ResponseSender.cs:line 23
 
+2023-11-21 10:23:04.662 +03:00 [ERR] 
+------------------------------------
+На сообщение <UpdateAllProperties>b__1 от BaackGroundTask [1234567890]
+Произошла ошибка: SQLite Error 5: 'unable to delete/modify user-function due to active statements'.
+Дополнительное сообщение: Обновление частично не прошло, ошибка
+Стактрейс:    at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+   at Microsoft.Data.Sqlite.SqliteConnection.Open()
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternal(Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.Open(Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReader(RelationalCommandParameterObject parameterObject)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.InitializeReader(Enumerator enumerator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+   at System.Linq.Enumerable.TryGetSingle[TSource](IEnumerable`1 source, Boolean& found)
+   at lambda_method504(Closure , QueryContext )
+   at CoCStatsTracker.UpdateDbCommandHandler.<>c__DisplayClass1_0.<<UpdateTrackedClanClanMembers>b__3>d.MoveNext() in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTracker\Queries&Commands\Commands\UpdateDbCommandHandler.cs:line 76
+--- End of stack trace from previous location ---
+   at CoCStatsTracker.UpdateDbCommandHandler.UpdateTrackedClanClanMembers(String clanTag) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTracker\Queries&Commands\Commands\UpdateDbCommandHandler.cs:line 78
+   at CoCStatsTrackerBot.BotBackgroundTasksManager.<>c__DisplayClass3_0.<UpdateAllProperties>b__1() in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTrackerBot\BackgroundTasks\BotBackgroundTasksManager.cs:line 56
+   at CoCStatsTrackerBot.BotBackgroundTasksManager.ExecuteUpdate(Action action, String clanTagAndName) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTrackerBot\BackgroundTasks\BotBackgroundTasksManager.cs:line 96
+
