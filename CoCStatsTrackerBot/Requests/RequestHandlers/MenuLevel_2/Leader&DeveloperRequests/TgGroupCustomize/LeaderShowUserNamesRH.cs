@@ -1,4 +1,5 @@
 ﻿using CoCStatsTracker;
+using CoCStatsTracker.UIEntities.ClanInfo;
 using CoCStatsTrackerBot.BotMenues;
 using System.Text;
 
@@ -30,8 +31,8 @@ public class LeaderShowUserNamesRH : BaseRequestHandler
 
             answer.AppendLine(StylingHelper.MakeItStyled($"Члены клана {parameters.LastClanTagToMerge}, которым можно переприсвоить @Username\n", UiTextStyle.Header));
 
-            answer.AppendLine(StylingHelper.MakeItStyled("Формат: Ник - Тег - Юзернейм\n\nНики выводятся для удобства навигации, помните, что" +
-                "для изменения юзернеймов вводить их нужно в формате:\n#12345678-@username\n", UiTextStyle.Default));
+            answer.AppendLine(StylingHelper.MakeItStyled("Формат: Ник - Тег - ﴾ Юзернейм ﴿\n\nНики выводятся для удобства навигации. \nПомните, что " +
+                "для изменения юзернеймов вводить их нужно в формате:  #12345678-@username без лишних пробелов.\n", UiTextStyle.Default));
 
             var clanMembers = GetFromDbQueryHandler.GetAllClanMembersUi(parameters.LastClanTagToMerge);
 
@@ -44,7 +45,7 @@ public class LeaderShowUserNamesRH : BaseRequestHandler
                     userName = member.TelegramUserName;
                 }
 
-                answer.AppendLine(StylingHelper.MakeItStyled($"{member.Name} - {member.Tag} - {userName}", UiTextStyle.Name));
+                answer.AppendLine(StylingHelper.MakeItStyled($"{member.Name} - {member.Tag} - ﴾ {userName} ﴿", UiTextStyle.Name));
             }
 
             ResponseSender.SendAnswer(parameters, true, answer.ToString());

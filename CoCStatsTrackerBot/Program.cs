@@ -12,9 +12,6 @@ namespace CoCStatsTrackerBot;
 /// <summary>
 /// Тег клана:	"#YPPGCCY8", "#UQQGYJJP", "#VUJCUQ9Y"
 /// 
-/// #2Q9C292Y2  #2Q8028UJL - не крутили ЛВК
-/// 
-/// 
 /// Тег игрока: AJAMKING: #G8P9Q299R Зануда051: #LRPLYJ9U2
 /// </summary>
 
@@ -25,7 +22,6 @@ class Program
     private static string _botClientTokenTest = System.IO.File.ReadAllText(@"./../../../../CustomSolutionElements/BotClientTokenTEST.txt");
 
     public static TelegramBotClient BotClient { get; } = new(token: _botClientToken);
-
 
     public static string BanListPath { get; } = @"./../../../../CustomSolutionElements/BannedUsers.txt";
 

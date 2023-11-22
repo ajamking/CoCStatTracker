@@ -1,5 +1,6 @@
 ﻿using CoCStatsTracker;
 using CoCStatsTrackerBot.Requests;
+using Domain.Entities;
 using System.Text;
 
 namespace CoCStatsTrackerBot.Helpers;
@@ -33,33 +34,53 @@ public static class TagsConditionChecker
 
         answer.Append(StylingHelper.MakeItStyled("Введите тег клана клана из представленных ниже (можно скопировать и вставить), а затем выберите пункт из меню.\n\n", UiTextStyle.Default));
 
-        var allowedClans = new StringBuilder(StylingHelper.MakeItStyled("Доступные отслеживаемые кланы:\n", UiTextStyle.Subtitle));
+        var allowedClansStr = new StringBuilder(StylingHelper.MakeItStyled("Доступные отслеживаемые кланы:\n\n", UiTextStyle.Subtitle));
 
-        var blockedClans = new StringBuilder(StylingHelper.MakeItStyled("\nНедоступные отслеживаемые кланы:\n", UiTextStyle.Subtitle));
+        var blockedClansStr = new StringBuilder(StylingHelper.MakeItStyled("\nНедоступные отслеживаемые кланы:\n\n", UiTextStyle.Subtitle));
 
-        var isAnyBlackList = false;
+        var beautifulDveider = StylingHelper.MakeItStyled($"• • • • • • • • • • • • • • • • • • • • • •", UiTextStyle.Default);
 
-        foreach (var clan in GetFromDbQueryHandler.GetAllTrackedClans())
+        var trackedClans = GetFromDbQueryHandler.GetAllTrackedClans();
+
+        var allowedClansCount = trackedClans.Where(x => x.IsInBlackList == false).ToList().Count;
+
+        var blockedClansCount = trackedClans.Where(x => x.IsInBlackList == true).ToList().Count;
+
+        var allowedCounter = 0;
+
+        var blockedCounter = 0;
+
+        foreach (var clan in trackedClans)
         {
             if (clan.IsInBlackList is false)
             {
-                allowedClans.AppendLine(StylingHelper.MakeItStyled($"{clan.Name} - {clan.Tag}", UiTextStyle.Name));
+                allowedCounter++;
+
+                allowedClansStr.AppendLine(StylingHelper.MakeItStyled($"{clan.Name} - {clan.Tag}", UiTextStyle.Name));
+
+                if (allowedCounter < allowedClansCount)
+                {
+                    allowedClansStr.AppendLine(beautifulDveider);
+                }
             }
             else
             {
-                isAnyBlackList = true;
+                blockedCounter++;
 
-                blockedClans.AppendLine(StylingHelper.MakeItStyled($"{clan.Name} - {clan.Tag}", UiTextStyle.Name));
+                blockedClansStr.AppendLine(StylingHelper.MakeItStyled($"{clan.Name} - {clan.Tag}", UiTextStyle.Name));
+
+                if (blockedCounter < blockedClansCount)
+                {
+                    blockedClansStr.AppendLine(beautifulDveider);
+                }
             }
         }
 
-        answer.Append(allowedClans);
+        answer.Append(allowedClansStr);
 
-   
-
-        if (isAnyBlackList)
+        if (blockedClansCount > 0)
         {
-            answer.Append(blockedClans);
+            answer.Append(blockedClansStr);
         }
 
         answer.Append(StylingHelper.MakeItStyled("\nЕсли вы хотите получить информацию о другом отслеживаемом клане - " +

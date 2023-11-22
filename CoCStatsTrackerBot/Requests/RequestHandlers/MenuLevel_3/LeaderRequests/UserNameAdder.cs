@@ -7,11 +7,9 @@ public static class UserNameAdder
 {
     public static string TryAddUserNames(string clanTag, string userNames)
     {
-        var updatedMembers = new List<string>(50);
+        var updatedMembersDic = new Dictionary<string, string>(50);
 
-        var userNamesString = userNames.Split('\n');
-
-        foreach (var userNameString in userNamesString)
+        foreach (var userNameString in userNames.Split('\n'))
         {
             var tagAndUserName = userNameString.Split("-");
 
@@ -25,25 +23,24 @@ public static class UserNameAdder
                 return StylingHelper.MakeItStyled("Перед установкой юзернеймов необходимо выбрать редактируемый клан.", UiTextStyle.Default);
             }
 
-            var trackedClanDb = GetFromDbQueryHandler.GetTrackedClan(clanTag);
+            var clanMembersDb = GetFromDbQueryHandler.GetAllClanMembers(clanTag);
 
-            foreach (var clanMember in trackedClanDb.ClanMembers)
+            foreach (var clanMember in clanMembersDb)
             {
                 if (clanMember.Tag == tagAndUserName[0])
                 {
                     UpdateDbCommandHandler.ResetMemberUserName(tagAndUserName[0], tagAndUserName[1]);
 
-                    updatedMembers.Add(clanMember.Name);
+                    updatedMembersDic.Add(clanMember.Name, tagAndUserName[1]);
                 }
             }
-
         }
 
         var answer = new StringBuilder(StylingHelper.MakeItStyled("Юзернеймы для игроков успешно обновлены:\n\n", UiTextStyle.Subtitle));
 
-        foreach (var member in updatedMembers)
+        foreach (var member in updatedMembersDic)
         {
-            answer.AppendLine(StylingHelper.MakeItStyled($"{member}", UiTextStyle.Name));
+            answer.AppendLine(StylingHelper.MakeItStyled($"{member.Key}  ﴾ {member.Value} ﴿", UiTextStyle.Name));
         }
 
         return answer.ToString();

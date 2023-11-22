@@ -21,7 +21,7 @@ public static class Navigation
     };
 
     private static Regex TagRegex { get; set; } = new Regex(@"^#(\w{6,9})$");
-    private static Regex AdminUsersNameRegex { get; set; } = new Regex(@"^#(\w{6,9})-@\w");
+    private static Regex AdminUsersNameRegex { get; set; } = new Regex(@"^#(\w{6,9})-@[\w_]");
 
     private static readonly List<BotUser> _botUsers = new();
 
@@ -292,11 +292,20 @@ public static class Navigation
 
         if (AdminUsersNameRegex.IsMatch(msgText) && activeBotUser.CurrentMenuLevel is MenuLevel.LeaderTgGroupCustomize2)
         {
-            var answer = UserNameAdder.TryAddUserNames(activeBotUser.RequestHadnlerParameters.LastClanTagToMerge, msgText);
+            try
+            {
+                var answer = UserNameAdder.TryAddUserNames(activeBotUser.RequestHadnlerParameters.LastClanTagToMerge, msgText);
 
-            ResponseSender.SendAnswer(activeBotUser.RequestHadnlerParameters, true, answer);
+                ResponseSender.SendAnswer(activeBotUser.RequestHadnlerParameters, true, answer);
 
-            return true;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ResponseSender.SendAnswer(activeBotUser.RequestHadnlerParameters, false, ex.Message);
+
+                return true;
+            }
         }
 
         return false;

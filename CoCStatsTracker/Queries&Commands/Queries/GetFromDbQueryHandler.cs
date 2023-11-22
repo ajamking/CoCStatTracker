@@ -80,6 +80,21 @@ public static class GetFromDbQueryHandler
         return clanMembersUi;
     }
 
+    public static List<ClanMember> GetAllClanMembers(string clanTag)
+    {
+        using AppDbContext dbContext = new();
+
+        var clanMembers = new List<ClanMember>();
+
+        var trackedClanDb = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
+
+        NotFoundException.ThrowByPredicate(() => trackedClanDb == null, "GetAllClanMembers - No such clan was found in DB");
+
+        NotFoundException.ThrowByPredicate(() => trackedClanDb.ClanMembers == null || trackedClanDb.ClanMembers.Count == 0, "GetAllClanMembers - No tracked ClanMembers were found in DB");
+
+        return trackedClanDb.ClanMembers.ToList();
+    }
+
     public static List<MedianRaidPerfomanseUi> GetAverageRaidmembersPerfomanceUi(string clanTag)
     {
         using AppDbContext dbContext = new();

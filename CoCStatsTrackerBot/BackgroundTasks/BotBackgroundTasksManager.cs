@@ -2,11 +2,11 @@
 using CoCStatsTracker.Items.Exceptions;
 using CoCStatsTrackerBot.Requests;
 using Domain.Entities;
-using System.Diagnostics;
 using System.Net.NetworkInformation;
 using System.Security.Cryptography;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.InputFiles;
 
 namespace CoCStatsTrackerBot;
 
@@ -183,7 +183,8 @@ public static class BotBackgroundTasksManager
         if (_hashOfErrorLogFile != newHash)
         {
             await Program.BotClient.SendDocumentAsync(Program.AdminsChatId,
-                      document: Program.ExceptionLogsPath);
+                    new InputOnlineFile(System.IO.File.OpenRead(Program.ExceptionLogsPath))
+                    { FileName = $"ErrorLogs {StylingHelper.FormateToUiDateTime(DateTime.Now)} .txt" });
 
             _hashOfErrorLogFile = newHash;
         }
@@ -206,11 +207,11 @@ public static class BotBackgroundTasksManager
 
     private static string GetHashOfErrorLogsFile()
     {
-        using var md5 = MD5.Create();
+        var stream = File.OpenRead(Program.ExceptionLogsPath);
 
-        using var stream = File.OpenRead(Program.ExceptionLogsPath);
+        var hash = MD5.Create().ComputeHash(stream);
 
-        var hash = md5.ComputeHash(stream);
+        stream.Close();
 
         return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
     }

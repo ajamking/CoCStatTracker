@@ -191,8 +191,6 @@ public static class FunctionsLogicHelper
 
         var maxTotalRaidsAttakcs = raidsUi.TotalAttacksCount;
 
-        var magicNumber = 6;
-
         var destroyedDistricts = new DistrictsForPrediction();
 
         foreach (var district in raidsUi.DefeatedClans.SelectMany(x => x.DefeatedEmemyDistricts).ToList())
@@ -219,14 +217,13 @@ public static class FunctionsLogicHelper
 
         }
 
-        /*raidsUi.TotalAttacksCount*/
         var capitalHallsCount = destroyedDistricts.DefeatedCapitalHalls.Sum(chPair => chPair.Value * _capitalHallCostsByLvl[chPair.Key]);
 
         var otherDistrictsCount = destroyedDistricts.DefeatedOtherDistricts.Sum(dhPair => dhPair.Value * _districtHallCostsByLvl[dhPair.Key]);
 
         var offenseResult = (capitalHallsCount + otherDistrictsCount) / maxTotalRaidsAttakcs * maxMemberAttacksPerRaid;
 
-        return offenseResult + magicNumber;
+        return offenseResult;
     }
 
     private static int GetDefensePrediction(CapitalRaidUi raidsUi)
@@ -252,15 +249,15 @@ public static class FunctionsLogicHelper
             }
             if (district.TotalDestructionPercent <= 100 && district.AttacksCount == 1)
             {
-                summDeadUnits += maxDedUnitsPerAttack - 50;
+                summDeadUnits += maxDedUnitsPerAttack - 55;
             }
             if (district.TotalDestructionPercent <= 100 && district.AttacksCount == 2)
             {
-                summDeadUnits += maxDedUnitsPerAttack + 200;
+                summDeadUnits += maxDedUnitsPerAttack + 175;
             }
             if (district.TotalDestructionPercent <= 100 && district.AttacksCount == 3)
             {
-                summDeadUnits += maxDedUnitsPerAttack * 2 + 150;
+                summDeadUnits += maxDedUnitsPerAttack * 2 + 50;
             }
             if (district.TotalDestructionPercent <= 100 && district.AttacksCount == 4)
             {
@@ -268,11 +265,11 @@ public static class FunctionsLogicHelper
             }
             if (district.TotalDestructionPercent <= 100 && district.AttacksCount == 5)
             {
-                summDeadUnits += maxDedUnitsPerAttack * 4 + 100;
+                summDeadUnits += maxDedUnitsPerAttack * 4 + 50;
             }
             if (district.TotalDestructionPercent <= 100 && district.AttacksCount >= 6)
             {
-                summDeadUnits += maxDedUnitsPerAttack * 5 + 100;
+                summDeadUnits += maxDedUnitsPerAttack * 5 + 50;
             }
             else
             {
