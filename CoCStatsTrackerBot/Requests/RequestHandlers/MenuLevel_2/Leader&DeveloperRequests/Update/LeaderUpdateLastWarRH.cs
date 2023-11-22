@@ -37,8 +37,9 @@ public class LeaderUpdateLastWarRH : BaseRequestHandler
         }
         catch (FailedPullFromApiException)
         {
-            ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Выполнение операции на данный момент невозможно.\n" +
-                "Бот сможет получить сведения о войнах клана лишь если история войн будет общедоступной.", UiTextStyle.Default));
+            ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled("Операция не может быть выполнена. Возможные причины:\n" +
+               "1. История войн клана не общедоступна.\n" +
+               "2. На данный момент клан не участвует в войне, а последняя была слишком давно.", UiTextStyle.Default));
         }
         catch (Exception e)
         {
