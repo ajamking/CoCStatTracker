@@ -13,7 +13,7 @@ namespace CoCStatsTrackerBot;
 
 public static class Navigation
 {
-    private static readonly Dictionary<string, BotSlashFunction> _botSlashFunctions = new() {
+    public static Dictionary<string, BotSlashFunction> BotSlashFunctions { get; } = new() {
        { "/group_get_chat_id", BotSlashFunction.GroupGetChatId },
        { "/group_get_raid_short_info", BotSlashFunction.GroupGetRaidShortInfo },
        { "/group_war_short_info", BotSlashFunction.GroupGetWarShortInfo },
@@ -432,7 +432,7 @@ public static class Navigation
 
     private static bool HoldSlashFuncAction(BotUser activeBotUser)
     {
-        foreach (var slashFunc in _botSlashFunctions)
+        foreach (var slashFunc in BotSlashFunctions)
         {
             if (activeBotUser.RequestHadnlerParameters.Message.Text.Contains(slashFunc.Key))
             {
@@ -441,7 +441,7 @@ public static class Navigation
                          or ChatType.Group
                          or ChatType.Supergroup)
                 {
-                    AllSlashFunctionHandler.Handle(activeBotUser.RequestHadnlerParameters, _botSlashFunctions[slashFunc.Key]);
+                    AllSlashFunctionHandler.Handle(activeBotUser.RequestHadnlerParameters, BotSlashFunctions[slashFunc.Key]);
 
                     return true;
                 }

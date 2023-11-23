@@ -67,6 +67,12 @@ class Program
                     return;
                 }
 
+                if ((update.Message.Chat.Type is ChatType.Channel or ChatType.Group or ChatType.Supergroup) &&
+                    !Navigation.BotSlashFunctions.ContainsKey(update.Message.Text))
+                {
+                    return;
+                }
+
                 Console.Write($"{DateTime.Now}: Принято сообщение: \"{update.Message.Text}\" от ");
 
                 Console.ForegroundColor = ConsoleColor.Magenta;
