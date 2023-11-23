@@ -181,7 +181,7 @@ public static class FunctionsLogicHelper
 
     public static string GetTimeLeft(this DateTime endenOn)
     {
-        return $"{Math.Round(endenOn.Subtract(DateTime.Now).TotalHours, 0)}ч. {endenOn.Subtract(DateTime.Now).Minutes}м.";
+        return $"{Math.Floor(endenOn.Subtract(DateTime.Now).TotalHours)}ч. {endenOn.Subtract(DateTime.Now).Minutes}м.";
     }
 
 

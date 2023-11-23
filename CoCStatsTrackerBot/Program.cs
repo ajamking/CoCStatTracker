@@ -1,6 +1,7 @@
 ﻿using CoCStatsTracker;
 using CoCStatsTrackerBot.Requests;
 using Microsoft.Extensions.Hosting;
+using System.Linq;
 using System.Text;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
@@ -67,12 +68,24 @@ class Program
                     return;
                 }
 
-                if ((update.Message.Chat.Type is ChatType.Channel or ChatType.Group or ChatType.Supergroup) &&
-                    !Navigation.BotSlashFunctions.ContainsKey(update.Message.Text))
+                if (update.Message.Chat.Type is ChatType.Channel or ChatType.Group or ChatType.Supergroup)
                 {
-                    return;
-                }
+                    var validGroupMessage = false;
 
+                    foreach (var key in Navigation.BotSlashFunctions.Keys)
+                    {
+                        if (update.Message.Text.Contains(key))
+                        {
+                            validGroupMessage = true;
+                        }
+                    }
+
+                    if (validGroupMessage == false)
+                    {
+                        return;
+                    }
+                }
+               
                 Console.Write($"{DateTime.Now}: Принято сообщение: \"{update.Message.Text}\" от ");
 
                 Console.ForegroundColor = ConsoleColor.Magenta;

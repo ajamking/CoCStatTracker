@@ -135,7 +135,7 @@ public static class BotBackgroundTasksManager
         {
             var warTimeLeft = Math.Round(clanWarUi.EndedOn.Subtract(DateTime.Now).TotalHours, 2);
 
-            if (warTimeLeft > 2 && warTimeLeft < 1)
+            if (warTimeLeft > 1 && warTimeLeft < 2)
             {
                 var answer = CurrentStatisticsFunctions.GetCurrentWarShortInfo(clanWarUi);
 

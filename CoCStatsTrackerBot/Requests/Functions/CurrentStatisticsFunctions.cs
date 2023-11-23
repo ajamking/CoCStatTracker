@@ -17,7 +17,8 @@ public class CurrentStatisticsFunctions
 
         if (currentClanWarUi.NonAttackersCw.Count != currentClanWarUi.MembersResults.Count && currentClanWarUi.NonAttackersCw.Count != 0)
         {
-            str.AppendLine(StylingHelper.MakeItStyled("Игроки, проведшие не все атаки:", UiTextStyle.Subtitle));
+            str.AppendLine(StylingHelper.MakeItStyled("ПРОВЕЛИ НЕ ВСЕ АТАКИ: ", UiTextStyle.Subtitle));
+            str.AppendLine(StylingHelper.MakeItStyled("Формат: Игрок  ﴾ Атак проведено ﴿\n", UiTextStyle.Default));
 
             foreach (var nonAttacker in currentClanWarUi.NonAttackersCw)
             {
@@ -117,7 +118,8 @@ public class CurrentStatisticsFunctions
 
         if (raidsUi.NonAttackersRaids.Count != 0)
         {
-            str.AppendLine(StylingHelper.MakeItStyled("ПРОВЕЛИ МЕНЕЕ 6 ИЛИ НЕ ПРОВЕЛИ АТАК:\n", UiTextStyle.Subtitle));
+            str.AppendLine(StylingHelper.MakeItStyled("ПРОВЕЛИ МЕНЕЕ 6 ИЛИ НЕ ПРОВЕЛИ АТАК:", UiTextStyle.Subtitle));
+            str.AppendLine(StylingHelper.MakeItStyled("Формат: Игрок  ﴾ Атак проведено ﴿\n", UiTextStyle.Default));
 
             foreach (var nonAttacker in raidsUi.NonAttackersRaids)
             {
