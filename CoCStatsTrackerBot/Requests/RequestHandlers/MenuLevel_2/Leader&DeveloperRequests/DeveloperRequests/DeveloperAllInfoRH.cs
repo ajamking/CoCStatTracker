@@ -42,11 +42,11 @@ public class DeveloperAllInfoRH : BaseRequestHandler
 
             foreach (var clan in GetFromDbQueryHandler.GetAllTrackedClans())
             {
-                var isInBlackListText = "Подписка активна";
+                var isInBlackListText = $"Подписка {BeautyIcons.RedCircleEmoji}";
 
-                if (clan.IsInBlackList)
+                if (!clan.IsInBlackList)
                 {
-                    isInBlackListText = "Подписка приостановлена";
+                    isInBlackListText = $"Подписка {BeautyIcons.GreenCircleEmoji}";
                 }
 
                 var haveChatIdText = "ChatId не определен";
@@ -56,7 +56,16 @@ public class DeveloperAllInfoRH : BaseRequestHandler
                     haveChatIdText = clan.ClansTelegramChatId;
                 }
 
-                answer.AppendLine(StylingHelper.MakeItStyled($"\n[{clan.Name}] - [{clan.Tag}] - [{clan.AdminsKey}]\n[{haveChatIdText}] - [{isInBlackListText}]", UiTextStyle.Name));
+                var newsLetterOnText = $"Рассылка {BeautyIcons.RedCircleEmoji}";
+
+                if (!clan.RegularNewsLetterOn)
+                {
+                    newsLetterOnText = $"Рассылка {BeautyIcons.GreenCircleEmoji}";
+                }
+
+                answer.AppendLine(StylingHelper.MakeItStyled($"\n[{clan.Name}] - [{clan.Tag}]" +
+                    $"\n[ {isInBlackListText} ] - [ {clan.AdminsKey} ]" +
+                    $"\n[ {newsLetterOnText} ] - [ {haveChatIdText} ]", UiTextStyle.Name));
             }
 
             answer.AppendLine(StylingHelper.MakeItStyled("\n💠💠💠💠💠💠💠💠💠💠💠💠💠💠\n", UiTextStyle.Default));

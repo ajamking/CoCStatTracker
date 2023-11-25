@@ -8,9 +8,9 @@ public abstract class BaseRequestHandler
     public static string MessageSplitToken { get; } = "answerReservedSplitter";
     public static List<BaseMenu> AllMenues { get; private set; }
 
-    public static string DefaultNotFoundMessage = StylingHelper.MakeItStyled("Пока не обладаю запрашиваемыми сведениями.", UiTextStyle.Default);
+    public static readonly string DefaultNotFoundMessage = StylingHelper.MakeItStyled("Пока не обладаю запрашиваемыми сведениями.", UiTextStyle.Default);
 
-    public static string DefaultFailerPullFromApiMessage = StylingHelper.MakeItStyled("Не удалось получить запрашиваемые сведения. Проблема на стороне CoC API", UiTextStyle.Default);
+    public static readonly string DefaultFailerPullFromApiMessage = StylingHelper.MakeItStyled("Не удалось получить запрашиваемые сведения. Проблема на стороне CoC API", UiTextStyle.Default);
 
     public string Header { get; protected set; } = "Базовый метод, не вызывается вообще";
 

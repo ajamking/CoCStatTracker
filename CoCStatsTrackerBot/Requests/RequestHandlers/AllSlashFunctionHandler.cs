@@ -1,6 +1,6 @@
 ﻿using CoCStatsTracker;
 
-namespace CoCStatsTrackerBot.Requests.RequestHandlers.SlashFunctionHandlers;
+namespace CoCStatsTrackerBot.Requests.RequestHandlers;
 
 public static class AllSlashFunctionHandler
 {

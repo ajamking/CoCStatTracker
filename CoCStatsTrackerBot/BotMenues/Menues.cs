@@ -1,4 +1,5 @@
-﻿using Telegram.Bot.Types.ReplyMarkups;
+﻿using CoCStatsTrackerBot.Requests;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace CoCStatsTrackerBot.BotMenues;
 
@@ -308,21 +309,43 @@ public class LeaderDeleteMenu2 : BaseMenu
     }
 }
 
-public class TgGroupCustomize : BaseMenu
+public class TgGroupCustomize2 : BaseMenu
 {
-    public TgGroupCustomize()
+    public TgGroupCustomize2()
     {
         Header = "Настройки ТГ группы";
 
         Keyboard = new(new[]
         {
         new KeyboardButton[] { "Руководство", "Список членов клана" },
-        new KeyboardButton[] { "Включить рассылку", "Выключить рассылку" },
-        new KeyboardButton[] { "Установить клану ChatId", "Назад" }
+        new KeyboardButton[] { "Установить клану ChatId", "Настройки рассылки" },
+        new KeyboardButton[] { "Назад" }
         })
         { ResizeKeyboard = true };
 
         MenuLevel = MenuLevel.LeaderTgGroupCustomize2;
+    }
+}
+
+public class LeaderNewsLetterCustomize3 : BaseMenu
+{
+    public LeaderNewsLetterCustomize3()
+    {
+        Header = "Настройки рассылки";
+
+        Keyboard = new(new[]
+        {
+        new KeyboardButton[] { $"Начало КВ {BeautyIcons.RedCircleEmoji}/{BeautyIcons.GreenCircleEmoji}", 
+            $"Конец КВ {BeautyIcons.RedCircleEmoji}/{BeautyIcons.GreenCircleEmoji}",  "КВ задать собственное время" },
+
+        new KeyboardButton[] { $"Начало рейдов {BeautyIcons.RedCircleEmoji}/{BeautyIcons.GreenCircleEmoji}", 
+            $"Конец рейдов {BeautyIcons.RedCircleEmoji}/{BeautyIcons.GreenCircleEmoji}", "Рейды задать собственное время" },
+
+        new KeyboardButton[] { $"Инструкция", $"Рассылка {BeautyIcons.RedCircleEmoji}/{BeautyIcons.GreenCircleEmoji}", "Назад" }
+        })
+        { ResizeKeyboard = true };
+
+        MenuLevel = MenuLevel.LeaderNewsLetterCustomize3;
     }
 }
 
@@ -380,59 +403,6 @@ public class OtherMenu1 : BaseMenu
     }
 }
 
-public class Layouts2 : BaseMenu
-{
-    public Layouts2()
-    {
-        Header = "Планировки";
-
-        Keyboard = new(new[]
-        {
-        new KeyboardButton[] { "Основная деревня", "Деревня строителя" },
-        new KeyboardButton[] { "Столица кланов", "Назад" },
-        })
-        { ResizeKeyboard = true };
-
-        MenuLevel = MenuLevel.Layouts2;
-    }
-}
-
-public class ThLayouts3 : BaseMenu
-{
-    public ThLayouts3()
-    {
-        Header = "Планировки";
-
-        Keyboard = new(new[]
-        {
-        new KeyboardButton[] { "Тх 11", "Тх 12" },
-        new KeyboardButton[] { "Тх 13", "Тх 14" },
-        new KeyboardButton[] { "Тх 15", "Назад" },
-        })
-        { ResizeKeyboard = true };
-
-        MenuLevel = MenuLevel.ThLayouts3;
-    }
-}
-
-public class BbLayouts3 : BaseMenu
-{
-    public BbLayouts3()
-    {
-        Header = "Планировки";
-
-        Keyboard = new(new[]
-        {
-        new KeyboardButton[] { "Дс 8", "Дс 9" },
-        new KeyboardButton[] { "Дс 10", "Назад" },
-        })
-        { ResizeKeyboard = true };
-
-        MenuLevel = MenuLevel.BbLayouts3;
-    }
-}
-
-
 public enum MenuLevel
 {
     Main0,
@@ -459,13 +429,9 @@ public enum MenuLevel
     LeaderTgGroupCustomize2,
     DeveloperMenu2,
 
+    LeaderNewsLetterCustomize3,
     LeaderDeleteClanWarsMenu3,
     LeaderDeleteRaidsMenu3,
 
     Other1,
-
-    Layouts2,
-
-    ThLayouts3,
-    BbLayouts3,
 }

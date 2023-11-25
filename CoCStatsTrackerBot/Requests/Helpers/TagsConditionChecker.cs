@@ -1,9 +1,8 @@
 ﻿using CoCStatsTracker;
 using CoCStatsTrackerBot.Requests;
-using Domain.Entities;
 using System.Text;
 
-namespace CoCStatsTrackerBot.Helpers;
+namespace CoCStatsTrackerBot;
 
 public static class TagsConditionChecker
 {
@@ -38,7 +37,7 @@ public static class TagsConditionChecker
 
         var blockedClansStr = new StringBuilder(StylingHelper.MakeItStyled("\nНедоступные отслеживаемые кланы:\n\n", UiTextStyle.Subtitle));
 
-        var beautifulDveider = StylingHelper.MakeItStyled($"• • • • • • • • • • • • • • • • • • • • • •", UiTextStyle.Default);
+        var beautifulDveider = StylingHelper.MakeItStyled(BeautyIcons.BeautyClansDeviderString, UiTextStyle.Default);
 
         var trackedClans = GetFromDbQueryHandler.GetAllTrackedClans();
 

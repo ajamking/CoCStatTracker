@@ -1,9 +1,7 @@
 ﻿using CoCStatsTracker;
-using CoCStatsTrackerBot.Helpers;
 using CoCStatsTrackerBot.BotMenues;
 using CoCStatsTrackerBot.Requests;
 using CoCStatsTrackerBot.Requests.RequestHandlers;
-using CoCStatsTrackerBot.Requests.RequestHandlers.SlashFunctionHandlers;
 using System.Text.RegularExpressions;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -43,7 +41,8 @@ public static class Navigation
         AdminsKeyAction,
         HoldSlashFuncAction,
         FeedBackAction,
-        AdminBanUserAction,
+        AdminResetCustomRaidOrCwMessageAction,
+        BotHolderBanUserAction,
         IsAliveAction,
         TrashMessageAction
     };
@@ -209,23 +208,13 @@ public static class Navigation
 
                     return true;
                 }
-            case MenuLevel.Layouts2:
+            case MenuLevel.LeaderNewsLetterCustomize3:
                 {
                     _allRequestHandlers
-                    .First(x => x.HandlerMenuLevel == MenuLevel.Other1)
+                    .First(x => x.HandlerMenuLevel == MenuLevel.LeaderTgGroupCustomize2)
                     .ShowKeyboard(activeBotUser.RequestHadnlerParameters);
 
-                    activeBotUser.CurrentMenuLevel = MenuLevel.Other1;
-
-                    return true;
-                }
-            case MenuLevel.BbLayouts3 or MenuLevel.ThLayouts3:
-                {
-                    _allRequestHandlers
-                    .First(x => x.HandlerMenuLevel == MenuLevel.Layouts2)
-                    .ShowKeyboard(activeBotUser.RequestHadnlerParameters);
-
-                    activeBotUser.CurrentMenuLevel = MenuLevel.Layouts2;
+                    activeBotUser.CurrentMenuLevel = MenuLevel.LeaderTgGroupCustomize2;
 
                     return true;
                 }
@@ -459,7 +448,7 @@ public static class Navigation
         return false;
     }
 
-    private static bool AdminBanUserAction(BotUser activeBotUser)
+    private static bool BotHolderBanUserAction(BotUser activeBotUser)
     {
         var msg = activeBotUser.RequestHadnlerParameters.Message.Text;
 
@@ -528,6 +517,61 @@ public static class Navigation
                        parseMode: ParseMode.MarkdownV2);
 
             ResponseSender.SendAnswer(activeBotUser.RequestHadnlerParameters, true, StylingHelper.MakeItStyled($"Отзыв принят!", UiTextStyle.Default));
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool AdminResetCustomRaidOrCwMessageAction(BotUser activeBotUser)
+    {
+        var msg = activeBotUser.RequestHadnlerParameters.Message.Text;
+
+        if (!(msg.StartsWith("КВ-") || msg.StartsWith("РЕЙДЫ-")) || activeBotUser.CurrentMenuLevel != MenuLevel.LeaderNewsLetterCustomize3)
+        {
+            return false;
+        }
+
+        if (msg.StartsWith("КВ-") && activeBotUser.RequestHadnlerParameters.LastClanTagToMerge != null)
+        {
+            int.TryParse(string.Join("", msg.Where(c => char.IsDigit(c))), out int timeLeft);
+
+            if (timeLeft > 48)
+            {
+                ResponseSender.SendAnswer(activeBotUser.RequestHadnlerParameters, true, StylingHelper.MakeItStyled(
+                    $"Некорректный ввод. Значение после КВ- может быть от 0 до 48. Попробуйте еще раз.\n\n", UiTextStyle.Default) +
+                    AdminsMessageHelper.GetOneTrackedClanStatement(activeBotUser.RequestHadnlerParameters.LastClanTagToMerge));
+
+                return true;
+            }
+
+            UpdateDbCommandHandler.ResetClanRegularNewsLetter(activeBotUser.RequestHadnlerParameters.LastClanTagToMerge, NewsLetterType.WarCustomTime, timeLeft);
+
+            ResponseSender.SendAnswer(activeBotUser.RequestHadnlerParameters, true, StylingHelper.MakeItStyled(
+                    $"Пользовательское время для КВ рассылки успешно проставлено!\n\n", UiTextStyle.Default) +
+                    AdminsMessageHelper.GetOneTrackedClanStatement(activeBotUser.RequestHadnlerParameters.LastClanTagToMerge));
+
+            return true;
+        }
+        if (msg.StartsWith("РЕЙДЫ-") && activeBotUser.RequestHadnlerParameters.LastClanTagToMerge != null)
+        {
+            int.TryParse(string.Join("", msg.Where(c => char.IsDigit(c))), out int timeLeft);
+
+            if (timeLeft > 48)
+            {
+                ResponseSender.SendAnswer(activeBotUser.RequestHadnlerParameters, true, StylingHelper.MakeItStyled(
+                    $"Некорректный ввод. Значение после РЕЙДЫ- может быть от 0 до 48. Попробуйте еще раз.\n\n", UiTextStyle.Default) +
+                    AdminsMessageHelper.GetOneTrackedClanStatement(activeBotUser.RequestHadnlerParameters.LastClanTagToMerge));
+
+                return true;
+            }
+
+            UpdateDbCommandHandler.ResetClanRegularNewsLetter(activeBotUser.RequestHadnlerParameters.LastClanTagToMerge, NewsLetterType.RaidCustomTime, timeLeft);
+
+            ResponseSender.SendAnswer(activeBotUser.RequestHadnlerParameters, true, StylingHelper.MakeItStyled(
+                   $"Пользовательское время для рейдовой рассылки успешно проставлено!\n\n", UiTextStyle.Default) +
+                   AdminsMessageHelper.GetOneTrackedClanStatement(activeBotUser.RequestHadnlerParameters.LastClanTagToMerge));
 
             return true;
         }

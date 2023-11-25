@@ -8,7 +8,7 @@ namespace CoCStatsTrackerBot;
 
 public static class ResponseSender
 {
-    private static object _lock = new object();
+    private static readonly object _lock = new();
 
     public async static void SendAnswer(BotUserRequestParameters parameters, bool answerIsValid, params string[] splitedAnswer)
     {

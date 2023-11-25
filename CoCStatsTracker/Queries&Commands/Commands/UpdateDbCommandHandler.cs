@@ -58,14 +58,14 @@ public static class UpdateDbCommandHandler
 
             var oldClanMemberDb = trackedClanBuilder.Clan.ClanMembers.FirstOrDefault(x => x.Tag == playerInfoFromApi.Tag);
 
-            var clanMemberBuilder = new ClanMemberBuilder(oldClanMemberDb);
-
-            clanMemberBuilder.SetBaseProperties(playerInfoFromApi);
-
             if (oldClanMemberDb != null && dbContext.Units.Where(x => x.ClanMemberId == oldClanMemberDb.Id).Any())
             {
                 dbContext.Units.RemoveRange(dbContext.Units.Where(x => x.ClanMemberId == oldClanMemberDb.Id));
             }
+
+            var clanMemberBuilder = new ClanMemberBuilder(oldClanMemberDb);
+
+            clanMemberBuilder.SetBaseProperties(playerInfoFromApi);
 
             clanMemberBuilder.SetUnits(playerInfoFromApi.Troops, playerInfoFromApi.Heroes);
 
@@ -336,11 +336,61 @@ public static class UpdateDbCommandHandler
         dbContext.SaveChanges();
     }
 
-    public static void ResetClanRegularNewsLetter(string clanTag, bool newsLetterIsOn)
+    public static void ResetClanRegularNewsLetter(string clanTag, NewsLetterType newsLetterType, int customTime = 0)
     {
         using AppDbContext dbContext = new();
 
-        dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag).RegularNewsLetterOn = newsLetterIsOn;
+        var clan = dbContext.TrackedClans.FirstOrDefault(x => x.Tag == clanTag);
+
+        switch (newsLetterType)
+        {
+            case NewsLetterType.All:
+                {
+                    clan.RegularNewsLetterOn = !clan.RegularNewsLetterOn;
+
+                    break;
+                }
+            case NewsLetterType.WarStart:
+                {
+                    clan.WarStartMessageOn = !clan.WarStartMessageOn;
+
+                    break;
+                }
+            case NewsLetterType.WarEnd:
+                {
+                    clan.WarEndMessageOn = !clan.WarEndMessageOn;
+
+                    break;
+                }
+            case NewsLetterType.WarCustomTime:
+                {
+                    clan.WarTimeToMessageBeforeEnd = customTime;
+
+                    break;
+                }
+            case NewsLetterType.RaidStart:
+                {
+                    clan.RaidStartMessageOn = !clan.RaidStartMessageOn;
+
+                    break;
+                }
+            case NewsLetterType.RaidEnd:
+                {
+                    clan.RaidEndMessageOn = !clan.RaidEndMessageOn;
+
+                    break;
+                }
+            case NewsLetterType.RaidCustomTime:
+                {
+                    clan.RaidTimeToMessageBeforeEnd = customTime;
+
+                    break;
+                }
+            default:
+                {
+                    throw new NotFoundException("ResetClanRegularNewsLetter Не смог определить тип  NewsLetterType");
+                }
+        }
 
         dbContext.SaveChanges();
     }
@@ -353,4 +403,17 @@ public static class UpdateDbCommandHandler
 
         dbContext.SaveChanges();
     }
+}
+
+public enum NewsLetterType
+{
+    All,
+
+    WarStart,
+    WarEnd,
+    WarCustomTime,
+
+    RaidStart,
+    RaidEnd,
+    RaidCustomTime
 }

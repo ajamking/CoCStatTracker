@@ -1,7 +1,6 @@
 ﻿using CoCStatsTracker;
 using CoCStatsTrackerBot.Requests;
 using Microsoft.Extensions.Hosting;
-using System.Linq;
 using System.Text;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
@@ -10,7 +9,7 @@ using Telegram.Bot.Types.Enums;
 
 namespace CoCStatsTrackerBot;
 
-/// <summary>
+/// <summary> 
 /// Тег клана:	"#YPPGCCY8", "#UQQGYJJP", "#VUJCUQ9Y"
 /// 
 /// Тег игрока: AJAMKING: #G8P9Q299R Зануда051: #LRPLYJ9U2
@@ -18,9 +17,9 @@ namespace CoCStatsTrackerBot;
 
 class Program
 {
-    private static string _botClientToken = System.IO.File.ReadAllText(@"./../../../../CustomSolutionElements/BotClientToken.txt");
+    private static readonly string _botClientToken = System.IO.File.ReadAllText(@"./../../../../CustomSolutionElements/BotClientToken.txt");
 
-    private static string _botClientTokenTest = System.IO.File.ReadAllText(@"./../../../../CustomSolutionElements/BotClientTokenTEST.txt");
+    private static readonly string _botClientTokenTest = System.IO.File.ReadAllText(@"./../../../../CustomSolutionElements/BotClientTokenTEST.txt");
 
     public static TelegramBotClient BotClient { get; } = new(token: _botClientToken);
 
@@ -32,11 +31,11 @@ class Program
 
     async static Task Main()
     {
-        Console.OutputEncoding = Encoding.UTF8;
-
         //CreateNewTestDb("#YPPGCCY8", "#UQQGYJJP", "#VUJCUQ9Y");
 
-        BotBackgroundTasksManager.StartAstync(BotClient);
+        Console.OutputEncoding = Encoding.UTF8;
+
+        BotBackgroundUpdateManager.StartAstync(BotClient);
 
         BotClient.StartReceiving(HandleUpdateAsync, HandleError);
 
@@ -58,34 +57,19 @@ class Program
         {
             if (update.Type == UpdateType.Message && update?.Message?.Text != null)
             {
-                if (System.IO.File.ReadAllLines(BanListPath).Contains(update.Message.Chat.Id.ToString()))
+                if (IsBannedUserCheck(botClient, update).Result)
                 {
-                    await botClient.SendTextMessageAsync(update.Message.Chat.Id,
-                        text: StylingHelper.MakeItStyled("Вы были заблокированы за неподобающее поведение и " +
-                        "больше не можете пользоваться ботом.", UiTextStyle.Default),
-                        parseMode: ParseMode.MarkdownV2);
-
                     return;
                 }
 
                 if (update.Message.Chat.Type is ChatType.Channel or ChatType.Group or ChatType.Supergroup)
                 {
-                    var validGroupMessage = false;
-
-                    foreach (var key in Navigation.BotSlashFunctions.Keys)
-                    {
-                        if (update.Message.Text.Contains(key))
-                        {
-                            validGroupMessage = true;
-                        }
-                    }
-
-                    if (validGroupMessage == false)
+                    if (IsInvalidGroupMessageCheck(update).Result || IsUnknownGroupIdCheck(botClient, update).Result)
                     {
                         return;
                     }
                 }
-               
+
                 Console.Write($"{DateTime.Now}: Принято сообщение: \"{update.Message.Text}\" от ");
 
                 Console.ForegroundColor = ConsoleColor.Magenta;
@@ -109,7 +93,6 @@ class Program
 
     static Task HandleError(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
     {
-
         Console.WriteLine($"Прилетело исключение {exception.Message}");
 
         var errorMessage = exception switch
@@ -124,7 +107,60 @@ class Program
         return Task.CompletedTask;
     }
 
-    public static void CreateNewTestDb(params string[] ClanTags)
+    async static Task<bool> IsBannedUserCheck(ITelegramBotClient botClient, Update update)
+    {
+        if (System.IO.File.ReadAllLines(BanListPath).Contains(update.Message.Chat.Id.ToString()))
+        {
+            await botClient.SendTextMessageAsync(update.Message.Chat.Id,
+                text: StylingHelper.MakeItStyled("Вы были заблокированы за неподобающее поведение и " +
+                "больше не можете пользоваться ботом.", UiTextStyle.Default),
+                parseMode: ParseMode.MarkdownV2);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    async static Task<bool> IsInvalidGroupMessageCheck(Update update)
+    {
+        var validGroupMessage = true;
+
+        foreach (var key in Navigation.BotSlashFunctions.Keys)
+        {
+            if (update.Message.Text.Contains(key))
+            {
+                validGroupMessage = false;
+            }
+        }
+
+        return validGroupMessage;
+    }
+
+    async static Task<bool> IsUnknownGroupIdCheck(ITelegramBotClient botClient, Update update)
+    {
+        if (update.Message.Text.Contains("/group_get_chat_id"))
+        {
+            return false;
+        }
+
+        if (!GetFromDbQueryHandler.GetAllTrackedClans().Where(x => x.ClansTelegramChatId == update.Message.Chat.Id.ToString() && x.IsInBlackList == false).Any())
+        {
+            await botClient.SendTextMessageAsync(update.Message.Chat.Id,
+              text: StylingHelper.MakeItStyled("Доступ к функциям бота закрыт. Возможные причины:" +
+              "\n1. Ваш клан не подключен к боту;" +
+              "\n2. Глава клана не связал бота с группой;" +
+              "\n3. Глава сменил привязанную к клану ТГ группу;" +
+              "\n4. Истекла подписка на услуги бота.", UiTextStyle.Default),
+              parseMode: ParseMode.MarkdownV2);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private static void CreateNewTestDb(params string[] ClanTags)
     {
         AddToDbCommandHandler.ResetDb();
 

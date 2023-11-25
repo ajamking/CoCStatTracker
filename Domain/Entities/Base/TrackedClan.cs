@@ -7,6 +7,13 @@ public class TrackedClan : Entity
 {
     public string ClansTelegramChatId { get; set; }
     public bool RegularNewsLetterOn { get; set; }
+    public int WarTimeToMessageBeforeEnd { get; set; }
+    public bool WarStartMessageOn { get; set; }
+    public bool WarEndMessageOn { get;set; }
+    public int RaidTimeToMessageBeforeEnd { get; set; }
+    public bool RaidStartMessageOn { get; set; }
+    public bool RaidEndMessageOn { get; set; }
+
     public string AdminsKey { get; set; }
     public bool IsInBlackList { get; set; }
 

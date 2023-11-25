@@ -1,5 +1,6 @@
 ﻿using CoCStatsTracker;
 using CoCStatsTrackerBot.BotMenues;
+using CoCStatsTrackerBot.Requests;
 using System.Text;
 
 namespace CoCStatsTrackerBot.Requests;
@@ -16,7 +17,7 @@ public class LeaderChoseClanToMergeRH : BaseRequestHandler
     {
         try
         {
-            var answer = new StringBuilder(StylingHelper.MakeItStyled("Клан, выбранный в качестве изменяемого: ", UiTextStyle.Default));
+            var answer = new StringBuilder(StylingHelper.MakeItStyled("Клан, выбранный в качестве изменяемого: ", UiTextStyle.Subtitle));
 
             if (string.IsNullOrEmpty(parameters.LastClanTagToMerge))
             {
@@ -27,52 +28,11 @@ public class LeaderChoseClanToMergeRH : BaseRequestHandler
                 answer.Append(StylingHelper.MakeItStyled(parameters.LastClanTagToMerge, UiTextStyle.Name));
             }
 
-            answer.AppendLine(StylingHelper.MakeItStyled("\n\nКланы, которые вы можете модерировать: ", UiTextStyle.Default));
+            answer.AppendLine(StylingHelper.MakeItStyled("\n\nКланы, которые вы можете модерировать:\n", UiTextStyle.Subtitle));
 
-            var trackedClans = GetFromDbQueryHandler.GetAllTrackedClans();
+            answer.Append(AdminsMessageHelper.GetTrackedClansStatementsMessage(parameters.IsBotHolder, parameters.AdminsKey));
 
-            if (parameters.IsBotHolder)
-            {
-                foreach (var clan in trackedClans)
-                {
-                    var newsLetter = "Рассылка выключена";
-
-                    var chatId = "ChatId Не установлен";
-
-                    if (!string.IsNullOrEmpty(clan.ClansTelegramChatId))
-                    {
-                        chatId = $"Айди чата: {clan.ClansTelegramChatId}";
-                    }
-                    if (clan.RegularNewsLetterOn)
-                    {
-                        newsLetter = "Рассылка включена";
-                    }
-
-                    answer.AppendLine(StylingHelper.MakeItStyled($"{clan.Name} - {clan.Tag}\n[ {newsLetter} ] - [ {chatId} ]\n", UiTextStyle.Name));
-                }
-            }
-            else
-            {
-                foreach (var clan in trackedClans.Where(x => x.AdminsKey == parameters.AdminsKey).Where(x => x.IsInBlackList == false))
-                {
-                    var newsLetter = "Рассылка выключена";
-
-                    var chatId = "ChatId Не установлен";
-
-                    if (!string.IsNullOrEmpty(clan.ClansTelegramChatId))
-                    {
-                        chatId = $"Айди чата: {clan.ClansTelegramChatId}";
-                    }
-                    if (clan.RegularNewsLetterOn)
-                    {
-                        newsLetter = "Рассылка включена";
-                    }
-
-                    answer.AppendLine(StylingHelper.MakeItStyled($"{clan.Name} - {clan.Tag}\n[ {newsLetter} ] - [ {chatId} ]\n", UiTextStyle.Name));
-                }
-            }
-
-            answer.AppendLine(StylingHelper.MakeItStyled("Для переопределения модерируемого клана введите один из тегов, представленных выше. ", UiTextStyle.Default));
+            answer.AppendLine(StylingHelper.MakeItStyled("Для переопределения модерируемого клана введите один из тегов, представленных выше.", UiTextStyle.Subtitle));
 
             ResponseSender.SendAnswer(parameters, true, SplitAnswer(answer.ToString()));
         }
