@@ -98,9 +98,7 @@ public static class BotBackgroundNewsLetterManager
 
         if (DateTime.Now.Subtract(lastRaidUi.StartedOn).TotalHours > 0 && DateTime.Now.Subtract(lastRaidUi.StartedOn).TotalHours < timeAfterNoNeedToSendAMessage)
         {
-            var answer = CurrentStatisticsFunctions.GetCurrentRaidShortInfo(lastRaidUi);
-
-            var newAnswer = answer.Insert(0, StylingHelper.MakeItStyled("Дни рейдов начались! Пора в бой!", UiTextStyle.Header) + " \n\n");
+            var newAnswer = NewsLetterFunctions.GetRaidStartShortMessage(lastRaidUi);
 
             await botClient.SendTextMessageAsync(clanNewsLetterState.TelegramsChatId,
                    text: newAnswer,
@@ -140,9 +138,7 @@ public static class BotBackgroundNewsLetterManager
 
         if (DateTime.Now.Subtract(lastRaidUi.EndedOn).TotalHours > 0 && DateTime.Now.Subtract(lastRaidUi.EndedOn).TotalHours < timeAfterNoNeedToSendAMessage)
         {
-            var answer = CurrentStatisticsFunctions.GetCurrentRaidShortInfo(lastRaidUi);
-
-            var newAnswer = answer.Insert(0, StylingHelper.MakeItStyled("Дни рейдов окончены! Подведем итоги!", UiTextStyle.Header) + " \n\n");
+            var newAnswer = NewsLetterFunctions.GetRaidEndShortMessage(lastRaidUi);
 
             await botClient.SendTextMessageAsync(clanNewsLetterState.TelegramsChatId,
                  text: newAnswer,
@@ -161,9 +157,7 @@ public static class BotBackgroundNewsLetterManager
 
         if (DateTime.Now.Subtract(clanWarUi.StartedOn).TotalHours > 0 && DateTime.Now.Subtract(clanWarUi.StartedOn).TotalHours < timeAfterNoNeedToSendAMessage)
         {
-            var answer = CurrentStatisticsFunctions.GetCurrentWarShortInfo(clanWarUi);
-
-            var newAnswer = answer.Insert(0, StylingHelper.MakeItStyled("Война началась! Пора в бой!", UiTextStyle.Header) + " \n\n");
+            var newAnswer = NewsLetterFunctions.GetClanWarStartShortMessage(clanWarUi);
 
             await botClient.SendTextMessageAsync(clanNewsLetterState.TelegramsChatId,
                  text: newAnswer,
@@ -203,9 +197,7 @@ public static class BotBackgroundNewsLetterManager
 
         if (DateTime.Now.Subtract(clanWarUi.EndedOn).TotalHours > 0 && DateTime.Now.Subtract(clanWarUi.EndedOn).TotalHours < timeAfterNoNeedToSendAMessage)
         {
-            var answer = CurrentStatisticsFunctions.GetCurrentWarShortInfo(clanWarUi);
-
-            var newAnswer = answer.Insert(0, StylingHelper.MakeItStyled("Война окончена! Подведем итоги!", UiTextStyle.Header) + " \n\n");
+            var newAnswer = NewsLetterFunctions.GetClanWarEndShortMessage(clanWarUi);
 
             await botClient.SendTextMessageAsync(clanNewsLetterState.TelegramsChatId,
                  text: newAnswer,

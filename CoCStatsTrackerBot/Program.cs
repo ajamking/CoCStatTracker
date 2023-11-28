@@ -21,7 +21,7 @@ class Program
 
     private static readonly string _botClientTokenTest = System.IO.File.ReadAllText(@"./../../../../CustomSolutionElements/BotClientTokenTEST.txt");
 
-    public static TelegramBotClient BotClient { get; } = new(token: _botClientToken);
+    public static TelegramBotClient BotClient { get; } = new(token: _botClientTokenTest);
 
     public static string BanListPath { get; } = @"./../../../../CustomSolutionElements/BannedUsers.txt";
 
@@ -35,7 +35,7 @@ class Program
 
         Console.OutputEncoding = Encoding.UTF8;
 
-        BotBackgroundUpdateManager.StartAstync(BotClient);
+        BotBackgroundManager.StartAstync(BotClient);
 
         BotClient.StartReceiving(HandleUpdateAsync, HandleError);
 
