@@ -181,7 +181,7 @@ public static class BotBackgroundNewsLetterManager
 
         var warTimeLeft = clanWarUi.EndedOn.Subtract(DateTime.Now).TotalHours;
 
-        if (warTimeLeft >= clanNewsLetterState.RaidTimeToMessageBeforeEnd - 0.5 && warTimeLeft <= clanNewsLetterState.RaidTimeToMessageBeforeEnd + 0.5)
+        if (warTimeLeft >= clanNewsLetterState.WarTimeToMessageBeforeEnd - 0.5 && warTimeLeft <= clanNewsLetterState.WarTimeToMessageBeforeEnd + 0.5)
         {
             var answer = CurrentStatisticsFunctions.GetCurrentWarShortInfo(clanWarUi);
 

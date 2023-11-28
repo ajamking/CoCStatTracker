@@ -7,3 +7,91 @@
    at Telegram.Bot.TelegramBotClientExtensions.SendTextMessageAsync(ITelegramBotClient botClient, ChatId chatId, String text, Nullable`1 parseMode, IEnumerable`1 entities, Nullable`1 disableWebPagePreview, Nullable`1 disableNotification, Nullable`1 protectContent, Nullable`1 replyToMessageId, Nullable`1 allowSendingWithoutReply, IReplyMarkup replyMarkup, CancellationToken cancellationToken)
    at CoCStatsTrackerBot.ResponseSender.SendAnswer(BotUserRequestParameters parameters, Boolean answerIsValid, String[] splitedAnswer) in C:\Users\tedto\OneDrive\Desktop\Программирование\CoCStatsTracker\CoCStatsTrackerBot\AnswerSenders\ResponseSender.cs:line 23
 
+2023-11-25 19:05:28.154 +03:00 [ERR] 
+------------------------------------
+На сообщение <UpdateAllProperties>b__1 от BotBackgroundUpdateManager [707]
+Произошла ошибка: The database operation was expected to affect 1 row(s), but actually affected 0 row(s); data may have been modified or deleted since entities were loaded. See http://go.microsoft.com/fwlink/?LinkId=527962 for information on understanding and handling optimistic concurrency exceptions.
+Дополнительное сообщение: Обновление частично не прошло, ошибка:
+Стактрейс:    at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ThrowAggregateUpdateConcurrencyException(RelationalDataReader reader, Int32 commandIndex, Int32 expectedRowsAffected, Int32 rowsAffected)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetWithRowsAffectedOnly(Int32 commandIndex, RelationalDataReader reader)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.Consume(RelationalDataReader reader)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.Execute(IRelationalConnection connection)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.Execute(IEnumerable`1 commandBatches, IRelationalConnection connection)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChanges(IList`1 entries)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChanges(IList`1 entriesToSave)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChanges(StateManager stateManager, Boolean acceptAllChangesOnSuccess)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.<>c.<SaveChanges>b__107_0(DbContext _, ValueTuple`2 t)
+   at Microsoft.EntityFrameworkCore.Storage.NonRetryingExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChanges(Boolean acceptAllChangesOnSuccess)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChanges(Boolean acceptAllChangesOnSuccess)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChanges()
+   at CoCStatsTracker.UpdateDbCommandHandler.UpdateTrackedClanClanMembers(String clanTag) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTracker\Queries&Commands\Commands\UpdateDbCommandHandler.cs:line 86
+   at CoCStatsTrackerBot.BotBackgroundUpdateManager.<>c__DisplayClass4_0.<UpdateAllProperties>b__1() in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTrackerBot\BackgroundTasks\BotBackgroundUpdateManager.cs:line 96
+   at CoCStatsTrackerBot.BotBackgroundUpdateManager.ExecuteUpdate(Action action, String clanTagAndName) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTrackerBot\BackgroundTasks\BotBackgroundUpdateManager.cs:line 120
+
+2023-11-27 11:55:46.113 +03:00 [ERR] 
+------------------------------------
+На сообщение <UpdateAllProperties>b__1 от BotBackgroundUpdateManager [707]
+Произошла ошибка: The database operation was expected to affect 1 row(s), but actually affected 0 row(s); data may have been modified or deleted since entities were loaded. See http://go.microsoft.com/fwlink/?LinkId=527962 for information on understanding and handling optimistic concurrency exceptions.
+Дополнительное сообщение: Обновление частично не прошло, ошибка:
+Стактрейс:    at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ThrowAggregateUpdateConcurrencyException(RelationalDataReader reader, Int32 commandIndex, Int32 expectedRowsAffected, Int32 rowsAffected)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetWithRowsAffectedOnly(Int32 commandIndex, RelationalDataReader reader)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.Consume(RelationalDataReader reader)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.Execute(IRelationalConnection connection)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.Execute(IEnumerable`1 commandBatches, IRelationalConnection connection)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChanges(IList`1 entries)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChanges(IList`1 entriesToSave)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChanges(StateManager stateManager, Boolean acceptAllChangesOnSuccess)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.<>c.<SaveChanges>b__107_0(DbContext _, ValueTuple`2 t)
+   at Microsoft.EntityFrameworkCore.Storage.NonRetryingExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChanges(Boolean acceptAllChangesOnSuccess)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChanges(Boolean acceptAllChangesOnSuccess)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChanges()
+   at CoCStatsTracker.UpdateDbCommandHandler.UpdateTrackedClanClanMembers(String clanTag) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTracker\Queries&Commands\Commands\UpdateDbCommandHandler.cs:line 86
+   at CoCStatsTrackerBot.BotBackgroundUpdateManager.<>c__DisplayClass4_0.<UpdateAllProperties>b__1() in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTrackerBot\BackgroundTasks\BotBackgroundUpdateManager.cs:line 96
+   at CoCStatsTrackerBot.BotBackgroundUpdateManager.ExecuteUpdate(Action action, String clanTagAndName) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTrackerBot\BackgroundTasks\BotBackgroundUpdateManager.cs:line 120
+
+2023-11-27 14:16:21.588 +03:00 [ERR] 
+------------------------------------
+На сообщение <UpdateAllProperties>b__1 от BotBackgroundUpdateManager [707]
+Произошла ошибка: The database operation was expected to affect 1 row(s), but actually affected 0 row(s); data may have been modified or deleted since entities were loaded. See http://go.microsoft.com/fwlink/?LinkId=527962 for information on understanding and handling optimistic concurrency exceptions.
+Дополнительное сообщение: Обновление частично не прошло, ошибка:
+Стактрейс:    at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ThrowAggregateUpdateConcurrencyException(RelationalDataReader reader, Int32 commandIndex, Int32 expectedRowsAffected, Int32 rowsAffected)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetWithRowsAffectedOnly(Int32 commandIndex, RelationalDataReader reader)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.Consume(RelationalDataReader reader)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.Execute(IRelationalConnection connection)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.Execute(IEnumerable`1 commandBatches, IRelationalConnection connection)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChanges(IList`1 entries)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChanges(IList`1 entriesToSave)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChanges(StateManager stateManager, Boolean acceptAllChangesOnSuccess)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.<>c.<SaveChanges>b__107_0(DbContext _, ValueTuple`2 t)
+   at Microsoft.EntityFrameworkCore.Storage.NonRetryingExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChanges(Boolean acceptAllChangesOnSuccess)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChanges(Boolean acceptAllChangesOnSuccess)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChanges()
+   at CoCStatsTracker.UpdateDbCommandHandler.UpdateTrackedClanClanMembers(String clanTag) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTracker\Queries&Commands\Commands\UpdateDbCommandHandler.cs:line 86
+   at CoCStatsTrackerBot.BotBackgroundUpdateManager.<>c__DisplayClass4_0.<UpdateAllProperties>b__1() in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTrackerBot\BackgroundTasks\BotBackgroundUpdateManager.cs:line 96
+   at CoCStatsTrackerBot.BotBackgroundUpdateManager.ExecuteUpdate(Action action, String clanTagAndName) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTrackerBot\BackgroundTasks\BotBackgroundUpdateManager.cs:line 136
+
+2023-11-28 20:19:51.435 +03:00 [ERR] 
+------------------------------------
+На сообщение <UpdateAllProperties>b__1 от BotBackgroundUpdateManager [707]
+Произошла ошибка: The database operation was expected to affect 1 row(s), but actually affected 0 row(s); data may have been modified or deleted since entities were loaded. See http://go.microsoft.com/fwlink/?LinkId=527962 for information on understanding and handling optimistic concurrency exceptions.
+Дополнительное сообщение: Обновление частично не прошло, ошибка:
+Стактрейс:    at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ThrowAggregateUpdateConcurrencyException(RelationalDataReader reader, Int32 commandIndex, Int32 expectedRowsAffected, Int32 rowsAffected)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetWithRowsAffectedOnly(Int32 commandIndex, RelationalDataReader reader)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.Consume(RelationalDataReader reader)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.Execute(IRelationalConnection connection)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.Execute(IEnumerable`1 commandBatches, IRelationalConnection connection)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChanges(IList`1 entries)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChanges(IList`1 entriesToSave)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChanges(StateManager stateManager, Boolean acceptAllChangesOnSuccess)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.<>c.<SaveChanges>b__107_0(DbContext _, ValueTuple`2 t)
+   at Microsoft.EntityFrameworkCore.Storage.NonRetryingExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChanges(Boolean acceptAllChangesOnSuccess)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChanges(Boolean acceptAllChangesOnSuccess)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChanges()
+   at CoCStatsTracker.UpdateDbCommandHandler.UpdateTrackedClanClanMembers(String clanTag) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTracker\Queries&Commands\Commands\UpdateDbCommandHandler.cs:line 86
+   at CoCStatsTrackerBot.BotBackgroundUpdateManager.<>c__DisplayClass4_0.<UpdateAllProperties>b__1() in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTrackerBot\BackgroundTasks\BotBackgroundUpdateManager.cs:line 96
+   at CoCStatsTrackerBot.BotBackgroundUpdateManager.ExecuteUpdate(Action action, String clanTagAndName) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTrackerBot\BackgroundTasks\BotBackgroundUpdateManager.cs:line 136
+

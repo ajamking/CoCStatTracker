@@ -218,8 +218,7 @@ public static class BotBackgroundUpdateManager
                 clanNewsLetter.RaidStartNewsLetterOn = clan.RaidStartMessageOn;
                 clanNewsLetter.RaidEndNewsLetterOn = clan.RaidEndMessageOn;
 
-
-
+                clanNewsLetter.TelegramsChatId = clan.ClansTelegramChatId;
             }
         }
     }
