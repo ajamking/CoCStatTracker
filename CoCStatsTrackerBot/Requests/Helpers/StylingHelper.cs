@@ -145,6 +145,8 @@ public static class StylingHelper
         }
     }
 
+
+
     public static string GetDividedString(this int value)
     {
         var devidedString = string.Format("{0:N}", value);
@@ -230,6 +232,16 @@ public static class StylingHelper
         }
 
         return str.ToString();
+    }
+
+    public static int ReturnZeroIfLess(this int param)
+    {
+        if (param < 0)
+        {
+            return 0;
+        }
+
+        return param;
     }
 }
 

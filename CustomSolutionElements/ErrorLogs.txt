@@ -117,3 +117,17 @@
    at CoCStatsTrackerBot.BotBackgroundManager.<>c__DisplayClass4_0.<UpdateAllProperties>b__1() in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTrackerBot\BackgroundTasks\BotBackgroundManager.cs:line 97
    at CoCStatsTrackerBot.BotBackgroundManager.ExecuteUpdate(Action action, String clanTagAndName) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTrackerBot\BackgroundTasks\BotBackgroundManager.cs:line 137
 
+2023-11-30 00:20:34.870 +03:00 [ERR] 
+------------------------------------
+На сообщение Показатели месяца от godfather98 [411592573]
+Произошла ошибка: Exception of type 'System.Exception' was thrown.
+Дополнительное сообщение: Что-то пошло не так, был выдан ответ-заглушка.
+Стактрейс: 
+
+2023-11-30 00:22:59.328 +03:00 [ERR] 
+------------------------------------
+На сообщение Показатели месяца от godfather98 [411592573]
+Произошла ошибка: Exception of type 'System.Exception' was thrown.
+Дополнительное сообщение: Что-то пошло не так, был выдан ответ-заглушка.
+Стактрейс: 
+

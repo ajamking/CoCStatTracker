@@ -215,7 +215,6 @@ public static class ClanFunctions
         var versusAttacksWinsLength = 3;
         var maxCapitalLootLength = 7;
 
-
         str.AppendLine(StylingHelper.MakeItStyled("Сезонная статистика игроков клана", UiTextStyle.Header));
         str.AppendLine(StylingHelper.MakeItStyled($"{seasonStatisticsUistring.First().ClanName} - {seasonStatisticsUistring.First().ClanTag}\n", UiTextStyle.Name));
 
@@ -253,17 +252,17 @@ public static class ClanFunctions
 
             str.Append($" |{StylingHelper.GetCenteredString(properName, maxNameLength)}|");
 
-            str.Append($"{StylingHelper.GetCenteredString(member.WarStarsEarned.ToString(), maxStarsLength)}|");
+            str.Append($"{StylingHelper.GetCenteredString(member.WarStarsEarned.ReturnZeroIfLess().ToString(), maxStarsLength)}|");
 
-            str.Append($"{StylingHelper.GetCenteredString(member.DonationsSend.GetDividedString(), maxDonationsLength)}|");
+            str.Append($"{StylingHelper.GetCenteredString(member.DonationsSend.ReturnZeroIfLess().GetDividedString(), maxDonationsLength)}|");
 
-            str.Append($"{StylingHelper.GetCenteredString(member.DonationRecieved.GetDividedString(), maxDonationsRecievedLength)}|");
+            str.Append($"{StylingHelper.GetCenteredString(member.DonationRecieved.ReturnZeroIfLess().GetDividedString(), maxDonationsRecievedLength)}|");
 
-            str.Append($"{StylingHelper.GetCenteredString(member.AttackWins.ToString(), attacskWinsLength)}|");
+            str.Append($"{StylingHelper.GetCenteredString(member.AttackWins.ReturnZeroIfLess().ToString(), attacskWinsLength)}|");
 
-            str.Append($"{StylingHelper.GetCenteredString(member.VersusBattleWins.ToString(), versusAttacksWinsLength)}|");
+            str.Append($"{StylingHelper.GetCenteredString(member.VersusBattleWins.ReturnZeroIfLess().ToString(), versusAttacksWinsLength)}|");
 
-            str.AppendLine($"{StylingHelper.GetCenteredString(member.CapitalContributions.GetDividedString(), maxCapitalLootLength)}|");
+            str.AppendLine($"{StylingHelper.GetCenteredString(member.CapitalContributions.ReturnZeroIfLess().GetDividedString(), maxCapitalLootLength)}|");
         }
 
         str.Append("```\n");
