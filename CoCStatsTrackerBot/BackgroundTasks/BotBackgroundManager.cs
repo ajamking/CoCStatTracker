@@ -29,11 +29,18 @@ public static class BotBackgroundManager
 
             var allTrackedClans = GetFromDbQueryHandler.GetAllTrackedClans();
 
-            var tasks = allTrackedClans
-           .Select(x => Task.Run(() => UpdateAllProperties(x)))
-           .ToList();
 
-            await Task.WhenAll(tasks);
+            //Почему-то когда вызов этих функций происходит асинхронно - что-то там где-то ломается.
+            // var tasks = allTrackedClans
+            //.Select(x => Task.Run(() => UpdateAllProperties(x)))
+            //.ToList();
+
+            // await Task.WhenAll(tasks);
+
+            foreach (var clan in allTrackedClans)
+            {
+                UpdateAllProperties(clan);
+            }
 
             Console.WriteLine($"<{DateTime.Now:HH:mm:ss}> Все кланы обновлены.\n");
 
@@ -57,7 +64,7 @@ public static class BotBackgroundManager
 
             await Task.Delay(TimeSpan.FromHours(1));
         }
-      
+
     }
 
     public static bool CheckInternetConnection()

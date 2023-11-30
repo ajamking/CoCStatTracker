@@ -175,7 +175,7 @@ public static class ClanFunctions
         {
             if (allArmysUi.Any(x => x.SuperUnits.FirstOrDefault(x => x.Name == superUnit.Key)?.SuperTroopIsActivated == true))
             {
-                str.AppendLine(StylingHelper.MakeItStyled(superUnit.Value + ":", UiTextStyle.TableAnnotation));
+                str.AppendLine(StylingHelper.MakeItStyled($"✨ {superUnit.Value} ✨", UiTextStyle.TableAnnotation));
 
                 var members = "";
 
