@@ -131,3 +131,18 @@
 Дополнительное сообщение: Что-то пошло не так, был выдан ответ-заглушка.
 Стактрейс: 
 
+2023-11-30 04:27:53.252 +03:00 [ERR] 
+------------------------------------
+На сообщение <UpdateAllProperties>b__1 от BotBackgroundUpdateManager [707]
+Произошла ошибка: An error occurred while saving the entity changes. See the inner exception for details.
+Дополнительное сообщение: Обновление частично не прошло, ошибка:
+Стактрейс:    at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.Execute(IRelationalConnection connection)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.Execute(IEnumerable`1 commandBatches, IRelationalConnection connection)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChanges(IList`1 entriesToSave)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChanges(StateManager stateManager, Boolean acceptAllChangesOnSuccess)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChanges(Boolean acceptAllChangesOnSuccess)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChanges(Boolean acceptAllChangesOnSuccess)
+   at CoCStatsTracker.UpdateDbCommandHandler.UpdateTrackedClanClanMembers(String clanTag) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTracker\Queries&Commands\Commands\UpdateDbCommandHandler.cs:line 86
+   at CoCStatsTrackerBot.BotBackgroundManager.<>c__DisplayClass4_0.<UpdateAllProperties>b__1() in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTrackerBot\BackgroundTasks\BotBackgroundManager.cs:line 97
+   at CoCStatsTrackerBot.BotBackgroundManager.ExecuteUpdate(Action action, String clanTagAndName) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTrackerBot\BackgroundTasks\BotBackgroundManager.cs:line 137
+
