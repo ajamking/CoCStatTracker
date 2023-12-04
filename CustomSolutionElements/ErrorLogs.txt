@@ -146,3 +146,11 @@
    at CoCStatsTrackerBot.BotBackgroundManager.<>c__DisplayClass4_0.<UpdateAllProperties>b__1() in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTrackerBot\BackgroundTasks\BotBackgroundManager.cs:line 97
    at CoCStatsTrackerBot.BotBackgroundManager.ExecuteUpdate(Action action, String clanTagAndName) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTrackerBot\BackgroundTasks\BotBackgroundManager.cs:line 137
 
+2023-12-01 10:10:13.975 +03:00 [ERR] 
+------------------------------------
+На сообщение <UpdateAllProperties>b__2 от BotBackgroundUpdateManager [707]
+Произошла ошибка: UpdateClanCurrentRaidOld is failed, no last raid found
+Дополнительное сообщение: Обновление частично не прошло, ошибка:
+Стактрейс:    at CoCStatsTracker.UpdateDbCommandHandler.UpdateClanCurrentRaid(String clanTag) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTracker\Queries&Commands\Commands\UpdateDbCommandHandler.cs:line 142
+   at CoCStatsTrackerBot.BotBackgroundManager.ExecuteUpdate(Action action, String clanTagAndName) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTrackerBot\BackgroundTasks\BotBackgroundManager.cs:line 144
+
