@@ -167,9 +167,12 @@ public static class BotBackgroundManager
 
         foreach (var clan in trackedClans)
         {
-            var seasonalStatisticsUi = GetFromDbQueryHandler.GetSeasonStatisticsUi(clan.Tag);
+            if (clan.PreviousClanMembersStaticstics.FirstOrDefault()?.UpdatedOn == null)
+            {
+                continue;
+            }
 
-            if ((DateTime.Now - seasonalStatisticsUi.First().InitializedOn).TotalDays > 30)
+            if ((DateTime.Now - clan.PreviousClanMembersStaticstics.First().UpdatedOn).TotalDays > 30)
             {
                 UpdateDbCommandHandler.ResetLastClanMembersStaticstics(clan.Tag);
 

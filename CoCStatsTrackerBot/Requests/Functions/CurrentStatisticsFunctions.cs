@@ -54,17 +54,17 @@ public class CurrentStatisticsFunctions
 
         str.AppendLine(warMapUi.UpdatedOn.GetUpdatedOnString());
 
-        str.AppendLine(StylingHelper.MakeItStyled("\nНачало подготовки:", UiTextStyle.Subtitle));
-        str.AppendLine(StylingHelper.MakeItStyled(warMapUi.PreparationStartTime.FormateToUiDateTime(), UiTextStyle.Default));
-        str.AppendLine(StylingHelper.MakeItStyled("Начало войны:", UiTextStyle.Subtitle));
-        str.AppendLine(StylingHelper.MakeItStyled(warMapUi.StartedOn.FormateToUiDateTime(), UiTextStyle.Default));
-        str.AppendLine(StylingHelper.MakeItStyled("Конец войны:", UiTextStyle.Subtitle));
-        str.AppendLine(StylingHelper.MakeItStyled(warMapUi.EndedOn.FormateToUiDateTime(), UiTextStyle.Default));
+        str.Append(StylingHelper.MakeItStyled("\nНачало подготовки:  ", UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled(warMapUi.PreparationStartTime.FormateToUiDateTime(), UiTextStyle.Subtitle));
+        str.Append(StylingHelper.MakeItStyled("Начало войны:  ", UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled(warMapUi.StartedOn.FormateToUiDateTime(), UiTextStyle.Subtitle));
+        str.Append(StylingHelper.MakeItStyled("Конец войны:  ", UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled(warMapUi.EndedOn.FormateToUiDateTime(), UiTextStyle.Subtitle));
 
         if (Math.Round(warMapUi.EndedOn.Subtract(DateTime.Now).TotalHours, 0) > 0)
         {
-            str.AppendLine(StylingHelper.MakeItStyled("Осталось времени до конца:", UiTextStyle.Subtitle));
-            str.AppendLine(StylingHelper.MakeItStyled(warMapUi.EndedOn.GetTimeLeft(), UiTextStyle.Default));
+            str.Append(StylingHelper.MakeItStyled("\nОсталось времени до конца:  ", UiTextStyle.Default));
+            str.AppendLine(StylingHelper.MakeItStyled(warMapUi.EndedOn.GetTimeLeft(), UiTextStyle.Subtitle));
         }
 
         str.AppendLine(StylingHelper.MakeItStyled("\nКарта войны:", UiTextStyle.Subtitle));

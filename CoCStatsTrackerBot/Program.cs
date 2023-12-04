@@ -31,8 +31,6 @@ class Program
 
     async static Task Main()
     {
-        //CreateNewTestDb("#YPPGCCY8", "#UQQGYJJP", "#VUJCUQ9Y");
-
         Console.OutputEncoding = Encoding.UTF8;
 
         BotBackgroundManager.StartAstync(BotClient);

@@ -96,6 +96,8 @@ public static class UpdateDbCommandHandler
 
         var trackedClanBuilder = new TrackedClanBuilder(trackedClanDb);
 
+        dbContext.PreviousClanMembers.RemoveRange(trackedClanDb.PreviousClanMembersStaticstics);
+
         trackedClanBuilder.SetLastClanMembersStaticstics(trackedClanBuilder.Clan.ClanMembers);
 
         dbContext.SaveChanges();
