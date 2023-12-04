@@ -29,7 +29,6 @@ public static class BotBackgroundManager
 
             var allTrackedClans = GetFromDbQueryHandler.GetAllTrackedClans();
 
-
             //Почему-то когда вызов этих функций происходит асинхронно - что-то там где-то ломается.
             // var tasks = allTrackedClans
             //.Select(x => Task.Run(() => UpdateAllProperties(x)))
@@ -37,10 +36,10 @@ public static class BotBackgroundManager
 
             // await Task.WhenAll(tasks);
 
-            foreach (var clan in allTrackedClans)
-            {
-                UpdateAllProperties(clan);
-            }
+            //foreach (var clan in allTrackedClans)
+            //{
+            //    UpdateAllProperties(clan);
+            //}
 
             Console.WriteLine($"<{DateTime.Now:HH:mm:ss}> Все кланы обновлены.\n");
 
@@ -51,7 +50,7 @@ public static class BotBackgroundManager
                 Console.WriteLine($"<{DateTime.Now:HH:mm:ss}> Обновленный файл ErrorLogs.txt послан админу.\n");
             }
 
-            var isAnySeasonalStatisticChanged = await TryChangeSeasonalStatistics(allTrackedClans);
+            var isAnySeasonalStatisticChanged = TryChangeSeasonalStatistics(allTrackedClans);
 
             foreach (var update in isAnySeasonalStatisticChanged.Where(x => x.Value == true))
             {
@@ -161,18 +160,16 @@ public static class BotBackgroundManager
         return false;
     }
 
-    private static async Task<Dictionary<string, bool>> TryChangeSeasonalStatistics(List<TrackedClan> trackedClans)
+    private static Dictionary<string, bool> TryChangeSeasonalStatistics(List<TrackedClan> trackedClans)
     {
         var isSeasonalStatisticChanged = new Dictionary<string, bool>();
 
         foreach (var clan in trackedClans)
         {
-            if (clan.PreviousClanMembersStaticstics.FirstOrDefault()?.UpdatedOn == null)
-            {
-                continue;
-            }
+            var previousClanMembers = GetFromDbQueryHandler.GetClanPreviousClanMembers(clan.Tag);
 
-            if ((DateTime.Now - clan.PreviousClanMembersStaticstics.First().UpdatedOn).TotalDays > 30)
+            if (previousClanMembers != null && previousClanMembers.Count != 0
+               && (DateTime.Now - previousClanMembers.First().UpdatedOn).TotalDays > 30)
             {
                 UpdateDbCommandHandler.ResetLastClanMembersStaticstics(clan.Tag);
 

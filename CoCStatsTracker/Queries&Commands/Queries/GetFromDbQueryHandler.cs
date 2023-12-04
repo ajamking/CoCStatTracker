@@ -151,6 +151,17 @@ public static class GetFromDbQueryHandler
         return seasonStatisticsUi;
     }
 
+    public static List<PreviousClanMember> GetClanPreviousClanMembers(string clanTag)
+    {
+        using AppDbContext dbContext = new();
+
+        var trackedClanDb = dbContext.TrackedClans.First(x => x.Tag == clanTag);
+
+        NotFoundException.ThrowByPredicate(() => trackedClanDb == null, "GetClanPreviousClanMembers - No such Clan was found in DB");
+
+        return trackedClanDb.PreviousClanMembersStaticstics.ToList();
+    }
+
     /*--------------Клан Войны--------------*/
     public static List<ClanWarUi> GetAllClanWarsUi(string clanTag)
     {
@@ -277,7 +288,7 @@ public static class GetFromDbQueryHandler
         var raidMembershipsDb = dbContext.ClanMembers.FirstOrDefault(x => x.Tag == playersTag).RaidMemberships;
 
         NotFoundException.ThrowByPredicate(() => raidMembershipsDb == null || raidMembershipsDb.Count == 0, "GetAllMemberRaidMembershipsUi - No tracked WarMemberships were found in DB");
-        
+
         var uiRaidMemberships = new List<RaidMembershipUi>();
 
         uiRaidMemberships.AddRange(raidMembershipsDb.Select(Mapper.MapToUi).ToList());
