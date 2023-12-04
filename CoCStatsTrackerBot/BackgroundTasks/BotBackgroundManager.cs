@@ -36,10 +36,10 @@ public static class BotBackgroundManager
 
             // await Task.WhenAll(tasks);
 
-            //foreach (var clan in allTrackedClans)
-            //{
-            //    UpdateAllProperties(clan);
-            //}
+            foreach (var clan in allTrackedClans)
+            {
+                UpdateAllProperties(clan);
+            }
 
             Console.WriteLine($"<{DateTime.Now:HH:mm:ss}> Все кланы обновлены.\n");
 

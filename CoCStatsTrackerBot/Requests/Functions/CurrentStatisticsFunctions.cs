@@ -38,7 +38,7 @@ public class CurrentStatisticsFunctions
 
     public static string GetCurrentWarMap(WarMapUi warMapUi)
     {
-        var maxNameLength = 16;
+        var maxNameLength = 14;
 
         var warMembers = warMapUi.WarMembers.OrderBy(x => x.MapPosition).ToList();
 
