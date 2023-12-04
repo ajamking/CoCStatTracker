@@ -154,3 +154,10 @@
 Стактрейс:    at CoCStatsTracker.UpdateDbCommandHandler.UpdateClanCurrentRaid(String clanTag) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTracker\Queries&Commands\Commands\UpdateDbCommandHandler.cs:line 142
    at CoCStatsTrackerBot.BotBackgroundManager.ExecuteUpdate(Action action, String clanTagAndName) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTrackerBot\BackgroundTasks\BotBackgroundManager.cs:line 144
 
+2023-12-04 13:46:29.881 +03:00 [ERR] 
+------------------------------------
+На сообщение Карта от godfather98 [411592573]
+Произошла ошибка: Exception of type 'System.Exception' was thrown.
+Дополнительное сообщение: Что-то пошло не так, был выдан ответ-заглушка.
+Стактрейс: 
+

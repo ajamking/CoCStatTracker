@@ -38,7 +38,7 @@ public class CurrentStatisticsFunctions
 
     public static string GetCurrentWarMap(WarMapUi warMapUi)
     {
-        var maxNameLength = 14;
+        var maxNameLength = 15;
 
         var warMembers = warMapUi.WarMembers.OrderBy(x => x.MapPosition).ToList();
 
@@ -79,7 +79,7 @@ public class CurrentStatisticsFunctions
 
             var properMateName = StylingHelper.GetCenteredString(StylingHelper.GetProperName(mate.Name, maxNameLength), maxNameLength);
 
-            var properOpponentName = StylingHelper.GetProperName(StylingHelper.GetCenteredString(opponent.Name, maxNameLength), maxNameLength);
+            var properOpponentName = StylingHelper.GetCenteredString(StylingHelper.GetProperName(opponent.Name, maxNameLength), maxNameLength);
 
             var position = StylingHelper.GetCenteredString((i + 1).ToString(), 2);
 

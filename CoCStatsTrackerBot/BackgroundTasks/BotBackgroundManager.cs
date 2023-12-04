@@ -23,7 +23,8 @@ public static class BotBackgroundManager
     {
         var clanNewsLetterStates = new List<ClanNewsLetterState>();
 
-        while (/*CheckInternetConnection()*/true)
+        /*CheckInternetConnection() - на сервере иногда пропадает подключение к интернету и бот перестает обноввлять БД, поэтом убрали.*/
+        while (true)
         {
             Console.WriteLine($"<{DateTime.Now:HH:mm:ss}> Обновляю кланы...");
 
@@ -33,7 +34,6 @@ public static class BotBackgroundManager
             // var tasks = allTrackedClans
             //.Select(x => Task.Run(() => UpdateAllProperties(x)))
             //.ToList();
-
             // await Task.WhenAll(tasks);
 
             foreach (var clan in allTrackedClans)
