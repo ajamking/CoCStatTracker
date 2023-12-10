@@ -161,3 +161,12 @@
 Дополнительное сообщение: Что-то пошло не так, был выдан ответ-заглушка.
 Стактрейс: 
 
+2023-12-06 21:50:20.590 +03:00 [ERR] 
+------------------------------------
+На сообщение Текущий рейд от DALER980 [1300278399]
+Произошла ошибка: Too Many Requests: retry after 109
+Дополнительное сообщение: 
+Стактрейс:    at Telegram.Bot.TelegramBotClient.MakeRequestAsync[TResponse](IRequest`1 request, CancellationToken cancellationToken)
+   at Telegram.Bot.TelegramBotClientExtensions.SendTextMessageAsync(ITelegramBotClient botClient, ChatId chatId, String text, Nullable`1 parseMode, IEnumerable`1 entities, Nullable`1 disableWebPagePreview, Nullable`1 disableNotification, Nullable`1 protectContent, Nullable`1 replyToMessageId, Nullable`1 allowSendingWithoutReply, IReplyMarkup replyMarkup, CancellationToken cancellationToken)
+   at CoCStatsTrackerBot.ResponseSender.SendAnswer(BotUserRequestParameters parameters, Boolean answerIsValid, String[] splitedAnswer) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTrackerBot\AnswerSenders\ResponseSender.cs:line 23
+
