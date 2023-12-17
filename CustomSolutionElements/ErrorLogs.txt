@@ -170,3 +170,10 @@
    at Telegram.Bot.TelegramBotClientExtensions.SendTextMessageAsync(ITelegramBotClient botClient, ChatId chatId, String text, Nullable`1 parseMode, IEnumerable`1 entities, Nullable`1 disableWebPagePreview, Nullable`1 disableNotification, Nullable`1 protectContent, Nullable`1 replyToMessageId, Nullable`1 allowSendingWithoutReply, IReplyMarkup replyMarkup, CancellationToken cancellationToken)
    at CoCStatsTrackerBot.ResponseSender.SendAnswer(BotUserRequestParameters parameters, Boolean answerIsValid, String[] splitedAnswer) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTrackerBot\AnswerSenders\ResponseSender.cs:line 23
 
+2023-12-17 11:40:12.638 +03:00 [ERR] 
+------------------------------------
+На сообщение Показатели рейда от stivensonp [766538440]
+Произошла ошибка: Exception of type 'System.Exception' was thrown.
+Дополнительное сообщение: Что-то пошло не так, был выдан ответ-заглушка.
+Стактрейс: 
+
