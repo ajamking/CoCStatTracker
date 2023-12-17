@@ -274,9 +274,9 @@ public static class ClanFunctions
     {
         var str = new StringBuilder();
 
-        var maxNameLength = 18;
-        var maxDistrictLength = 9;
-        var maxAttackLenght = 6;
+        var maxNameLength = 15;
+        var maxDistrictLength = 10;
+        var maxAttackLenght = 7;
 
         str.AppendLine(StylingHelper.MakeItStyled("Результаты рейдов клана", UiTextStyle.Header));
 
@@ -321,7 +321,12 @@ public static class ClanFunctions
 
                     foreach (var district in defeatedClan.DefeatedEmemyDistricts.SortDistrictsAsOnMap())
                     {
-                        foreach (var attack in district.Attacks)
+                        if (FunctionsLogicHelper.AllDistrictsShortNamesRU.ContainsKey(district.Name))
+                        {
+                            district.Name = FunctionsLogicHelper.AllDistrictsShortNamesRU.First(x => x.Key == district.Name).Value;
+                        }
+
+                        foreach (var attack in district.Attacks.OrderBy(x => x.DestructionPercentFrom))
                         {
                             var properName = StylingHelper.GetProperName(attack.AttackerName, maxNameLength);
 

@@ -308,7 +308,7 @@ public static class PlayerFunctions
                     {
                         var enDistctictKeyValuePair = FunctionsLogicHelper.AllDistrictsEn.FirstOrDefault(x=>x.Value == attack.DistrictName);
 
-                        attack.DistrictName = FunctionsLogicHelper.AllDistrictsRU[enDistctictKeyValuePair.Key];
+                        attack.DistrictName = FunctionsLogicHelper.AllDistrictsFullNamesRU[enDistctictKeyValuePair.Key];
                     }
 
                     if (attack.DistrictName.Length > maxDistrictLenght)

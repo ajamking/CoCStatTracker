@@ -396,7 +396,7 @@ public static class Navigation
             else if (requestHandler.HandlerMenuLevel is MenuLevel.DeveloperMenu2 && activeBotUser.RequestHadnlerParameters.IsBotHolder is false)
             {
                 ResponseSender.SendAnswer(activeBotUser.RequestHadnlerParameters, true,
-              StylingHelper.MakeItStyled($"У вас недостаточно прав для вызова этого меню, оно предназначено лишь для администратора.", UiTextStyle.Default));
+                StylingHelper.MakeItStyled($"У вас недостаточно прав для вызова этого меню, оно предназначено лишь для администратора.", UiTextStyle.Default));
             }
             //Проверка установленного для изменения клана
             else if (string.IsNullOrEmpty(activeBotUser.RequestHadnlerParameters.LastClanTagToMerge) &&
@@ -404,7 +404,24 @@ public static class Navigation
                 or MenuLevel.LeaderDeleteMenu2 or MenuLevel.LeaderTgGroupCustomize2)
             {
                 ResponseSender.SendAnswer(activeBotUser.RequestHadnlerParameters, true,
-            StylingHelper.MakeItStyled($"Для использования этих функций необходимо сначала выбрать редактируемый клан.\nДоступные кланы ➙ скопировать и отправить нужный тег.", UiTextStyle.Default));
+                StylingHelper.MakeItStyled($"Для использования этих функций необходимо сначала выбрать редактируемый клан.\nДоступные кланы ➙ скопировать и отправить нужный тег.", UiTextStyle.Default));
+            }
+            //Проверка активной подписки
+            else if (TagsConditionChecker.CheckClanIsInBlackList(activeBotUser.RequestHadnlerParameters) &&
+                requestHandler.HandlerMenuLevel
+                is MenuLevel.ClanInfo2
+                or MenuLevel.ClanWarsHistory3
+                or MenuLevel.ClanRaidsHistory3
+                or MenuLevel.CurrentDistrictStatistics3
+                or MenuLevel.CurrentWarInfo2
+                or MenuLevel.CurrentRaidInfo2
+                or MenuLevel.PlayerInfo2
+                or MenuLevel.PlayerWarStatistics3
+                or MenuLevel.PlayerRaidStatistics3
+                or MenuLevel.PlayerArmy3)
+            {
+                ResponseSender.SendAnswer(activeBotUser.RequestHadnlerParameters, true,
+                   StylingHelper.MakeItStyled($"Подписка на услуги бота для вашего клана была приостановлена.\nДля продления подписки - попросите главу клана обратиться к администратору.", UiTextStyle.Default));
             }
             else
             {

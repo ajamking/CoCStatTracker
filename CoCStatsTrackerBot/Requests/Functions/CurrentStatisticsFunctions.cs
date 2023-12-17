@@ -173,7 +173,7 @@ public class CurrentStatisticsFunctions
         str.AppendLine(StylingHelper.MakeItStyled($"{raidUi.ClanName} - {raidUi.ClanTag}\n", UiTextStyle.Name));
 
         str.Append(StylingHelper.MakeItStyled("В атаках на район: ", UiTextStyle.Default));
-        str.AppendLine(StylingHelper.MakeItStyled($"{FunctionsLogicHelper.AllDistrictsRU.First(x => x.Key == districtType).Value}\n", UiTextStyle.Header));
+        str.AppendLine(StylingHelper.MakeItStyled($"{FunctionsLogicHelper.AllDistrictsFullNamesRU.First(x => x.Key == districtType).Value}\n", UiTextStyle.Header));
 
         str.AppendLine(raidUi.UpdatedOn.GetUpdatedOnString());
 
@@ -312,10 +312,10 @@ public class CurrentStatisticsFunctions
         str.Append("```");
 
         str.AppendLine(StylingHelper.MakeItStyled("\nПояснение таблицы:", UiTextStyle.TableAnnotation));
-        str.AppendLine(StylingHelper.MakeItStyled("Атаки - число проведенных атак;", UiTextStyle.Default));
-        str.AppendLine(StylingHelper.MakeItStyled("Р-н - количество полностью уничтоженных районов;", UiTextStyle.Default));
-        str.AppendLine(StylingHelper.MakeItStyled("Золото - суммарно награбленное золото;", UiTextStyle.Default));
-        str.AppendLine(StylingHelper.MakeItStyled("Защиты/Атаки ~123 - среднее количество атак, затрачиваемых на полное уничтожение клана.\n", UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled("-- Атаки - число проведенных атак;", UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled("-- Р-н - количество полностью уничтоженных районов;", UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled("-- Золото - суммарно награбленное золото;", UiTextStyle.Default));
+        str.AppendLine(StylingHelper.MakeItStyled("-- Защиты/Атаки ~123 - среднее количество атак, затрачиваемых на полное уничтожение клана.", UiTextStyle.Default));
 
         var maxClanNameLength = 16;
         var maxAttackLength = 5;

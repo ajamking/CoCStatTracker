@@ -1,6 +1,7 @@
 ﻿using CoCStatsTracker.UIEntities;
 
 namespace CoCStatsTrackerBot.Requests;
+
 public static class FunctionsLogicHelper
 {
     private static readonly Dictionary<int, int> _districtHallCostsByLvl = new()
@@ -26,7 +27,20 @@ public static class FunctionsLogicHelper
             {DistrictType.Goblin_Mines, "Goblin Mines" },
     };
 
-    public static Dictionary<DistrictType, string> AllDistrictsRU { get; set; } = new Dictionary<DistrictType, string>()
+    public static Dictionary<string, string> AllDistrictsShortNamesRU { get; set; } = new Dictionary<string, string>()
+    {
+            {"Capital Peak", "Пик" },
+            {"Barbarian Camp", "Варвары" },
+            {"Wizard Valley", "Колдуны" },
+            {"Balloon Lagoon", "Лагуна" },
+            {"Builder's Workshop", "Мастерская" },
+            {"Dragon Cliffs", "Утесы" },
+            {"Golem Quarry", "Карьер" },
+            {"Skeleton Park", "Скелеты" },
+            {"Goblin Mines", "Шахты" },
+    }; 
+
+    public static Dictionary<DistrictType, string> AllDistrictsFullNamesRU { get; set; } = new Dictionary<DistrictType, string>()
     {
             {DistrictType.Capital_Peak, "Столичный пик" },
             {DistrictType.Barbarian_Camp, "Лагерь варваров" },
@@ -67,6 +81,7 @@ public static class FunctionsLogicHelper
                 { "Yeti", "Йети"},
                 { "Dragon Rider", "Всадник на драконе"},
                 { "Electro Titan", "Электротитанида"},
+                { "Root Rider", "Лесная всадница"},
 
                 { "Minion", "Миньон"},
                 { "Hog Rider", "Всадник на кабане"},
@@ -183,7 +198,6 @@ public static class FunctionsLogicHelper
     {
         return $"{Math.Floor(endenOn.Subtract(DateTime.Now).TotalHours)}ч. {endenOn.Subtract(DateTime.Now).Minutes}м.";
     }
-
 
     private static int GetOffensePrediction(CapitalRaidUi raidsUi)
     {

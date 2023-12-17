@@ -110,4 +110,9 @@ public static class TagsConditionChecker
         return GetFromDbQueryHandler.GetAllTrackedClans()
                .Any(x => x.AdminsKey == adminsKey);
     }
+
+    public static bool CheckClanIsInBlackList(BotUserRequestParameters parameters)
+    {
+        return GetFromDbQueryHandler.GetTrackedClan(parameters.LastClanTagMessage).IsInBlackList;
+    }
 }

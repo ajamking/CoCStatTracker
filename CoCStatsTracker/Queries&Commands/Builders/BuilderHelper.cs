@@ -192,7 +192,7 @@ public static class BuilderHelper
 
             default:
                 {
-                    return "Без лиги";
+                    return leagueApiName;
                 }
         }
     }

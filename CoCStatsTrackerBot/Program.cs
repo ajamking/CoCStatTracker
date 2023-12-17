@@ -33,7 +33,7 @@ class Program
     {
         Console.OutputEncoding = Encoding.UTF8;
 
-        BotBackgroundManager.StartAstync(BotClient);
+        //BotBackgroundManager.StartAstync(BotClient);
 
         BotClient.StartReceiving(HandleUpdateAsync, HandleError);
 
