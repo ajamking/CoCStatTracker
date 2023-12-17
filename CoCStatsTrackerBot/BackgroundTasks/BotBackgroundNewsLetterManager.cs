@@ -52,9 +52,16 @@ public static class BotBackgroundNewsLetterManager
 
             return clanNewsLetterState;
         }
-        catch
+        catch (Exception e)
         {
-            Console.WriteLine($"<{DateTime.Now:HH:mm:ss}> [{clanNewsLetterState.Tag}] - {clanNewsLetterState.Name} - нет последнего рейда.");
+            if (e.Message == "Bad Request: chat not found")
+            {
+                Console.WriteLine($"<{DateTime.Now:HH:mm:ss}> [{clanNewsLetterState.Tag}] - {clanNewsLetterState.Name} - невозможно отправиль сообщение, бот не подключен к чату клана.");
+            }
+            else
+            {
+                Console.WriteLine($"<{DateTime.Now:HH:mm:ss}> [{clanNewsLetterState.Tag}] - {clanNewsLetterState.Name} - нет последнего рейда.");
+            }
 
             return clanNewsLetterState;
         }
@@ -83,9 +90,16 @@ public static class BotBackgroundNewsLetterManager
 
             return clanNewsLetterState;
         }
-        catch
+        catch (Exception e)
         {
-            Console.WriteLine($"<{DateTime.Now:HH:mm:ss}> [{clanNewsLetterState.Tag}] - {clanNewsLetterState.Name} - нет последней войны.");
+            if (e.Message == "Bad Request: chat not found")
+            {
+                Console.WriteLine($"<{DateTime.Now:HH:mm:ss}> [{clanNewsLetterState.Tag}] - {clanNewsLetterState.Name} - невозможно отправиль сообщение, бот не подключен к чату клана.");
+            }
+            else
+            {
+                Console.WriteLine($"<{DateTime.Now:HH:mm:ss}> [{clanNewsLetterState.Tag}] - {clanNewsLetterState.Name} - нет последней войны.");
+            }
 
             return clanNewsLetterState;
         }

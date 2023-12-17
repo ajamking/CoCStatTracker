@@ -26,7 +26,7 @@ public static class BotBackgroundManager
         /*CheckInternetConnection() - на сервере иногда пропадает подключение к интернету и бот перестает обноввлять БД, поэтом убрали.*/
         while (true)
         {
-            Console.WriteLine($"<{DateTime.Now:HH:mm:ss}> Обновляю кланы...");
+            Console.WriteLine($"<{DateTime.Now:HH:mm:ss}> Обновляю подписанные кланы...");
 
             var allTrackedClans = GetFromDbQueryHandler.GetAllTrackedClans();
 
@@ -36,12 +36,12 @@ public static class BotBackgroundManager
             //.ToList();
             // await Task.WhenAll(tasks);
 
-            foreach (var clan in allTrackedClans)
+            foreach (var clan in allTrackedClans.Where(x => x.IsInBlackList == false))
             {
                 UpdateAllProperties(clan);
             }
 
-            Console.WriteLine($"<{DateTime.Now:HH:mm:ss}> Все кланы обновлены.\n");
+            Console.WriteLine($"<{DateTime.Now:HH:mm:ss}> Все подписанные кланы обновлены.\n");
 
             var isLogFileSent = await SendLogFileToAdmin();
 
