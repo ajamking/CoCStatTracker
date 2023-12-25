@@ -11,21 +11,21 @@ namespace CoCStatsTrackerBot;
 
 /// <summary> 
 /// Тег клана:	"#YPPGCCY8", "#UQQGYJJP", "#VUJCUQ9Y"
-/// 
+/// private static readonly string _botClientToken = System.IO.File.ReadAllText(@"./../../../../CustomSolutionElements/BotClientToken.txt");
 /// Тег игрока: AJAMKING: #G8P9Q299R Зануда051: #LRPLYJ9U2
 /// </summary>
 
 class Program
 {
-    private static readonly string _botClientToken = System.IO.File.ReadAllText(@"./../../../../CustomSolutionElements/BotClientToken.txt");
-
-    private static readonly string _botClientTokenTest = System.IO.File.ReadAllText(@"./../../../../CustomSolutionElements/BotClientTokenTEST.txt");
+    private static readonly string _botClientToken = System.IO.File.ReadAllText(@"./CustomSolutionElements/BotClientToken.txt");
+   
+    private static readonly string _botClientTokenTest = System.IO.File.ReadAllText(@"./CustomSolutionElements/BotClientTokenTEST.txt");
 
     public static TelegramBotClient BotClient { get; } = new(token: _botClientToken);
 
-    public static string BanListPath { get; } = @"./../../../../CustomSolutionElements/BannedUsers.txt";
+    public static string BanListPath { get; } = @"./CustomSolutionElements/BannedUsers.txt";
 
-    public static string ExceptionLogsPath { get; } = @"./../../../../CustomSolutionElements/ErrorLogs.txt";
+    public static string ExceptionLogsPath { get; } = @"./CustomSolutionElements/ErrorLogs.txt";
 
     public static string AdminsChatId { get; } = "6621123435";
 

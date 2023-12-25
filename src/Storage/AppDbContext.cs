@@ -8,7 +8,7 @@ namespace Storage;
 
 public class AppDbContext : DbContext, ICoCDbContext
 {
-    public string ConnectionString { get; } = "Data Source=./../../../../CustomSolutionElements/CoCStatsTracker.db";
+    public string ConnectionString { get; } = "Data Source=./CustomSolutionElements/CoCStatsTracker.db";
 
     public DbSet<TrackedClan> TrackedClans { get; set; }
     public DbSet<ClanMember> ClanMembers { get; set; }
