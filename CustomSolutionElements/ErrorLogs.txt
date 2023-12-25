@@ -205,3 +205,34 @@
 Дополнительное сообщение: Что-то пошло не так, был выдан ответ-заглушка.
 Стактрейс: 
 
+2023-12-18 01:19:45.842 +03:00 [ERR] 
+------------------------------------
+На сообщение /start от cyberrat2077 [402262317]
+Произошла ошибка: GetTrackedClan - No such Clan was found in DB
+Дополнительное сообщение: Проигнорировали исключение в HandleUpdateAsync
+Стактрейс:    at CoCStatsTracker.NotFoundException.ThrowByPredicate(Func`1 predicate, String msg) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTracker\Items\Exceptions\NotFoundException.cs:line 11
+   at CoCStatsTracker.GetFromDbQueryHandler.GetTrackedClan(String clanTag) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTracker\Queries&Commands\Queries\GetFromDbQueryHandler.cs:line 55
+   at CoCStatsTrackerBot.TagsConditionChecker.CheckClanIsInBlackList(BotUserRequestParameters parameters) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTrackerBot\Requests\Helpers\TagsConditionChecker.cs:line 116
+   at CoCStatsTrackerBot.Navigation.AnyRequestHeaderMatchAction(BotUser activeBotUser) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTrackerBot\Navigation.cs:line 410
+   at CoCStatsTrackerBot.Navigation.Execute(ITelegramBotClient botClient, Message message) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTrackerBot\Navigation.cs:line 58
+   at CoCStatsTrackerBot.Program.<>c__DisplayClass15_0.<HandleUpdateAsync>b__0() in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTrackerBot\Program.cs:line 79
+   at System.Threading.Tasks.Task.InnerInvoke()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at CoCStatsTrackerBot.Program.HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken) in C:\Users\Administrator\Desktop\C_S_T\CoCStatsTrackerBot\Program.cs:line 90
+
+2023-12-18 19:34:39.294 +03:00 [ERR] 
+------------------------------------
+На сообщение #G8P9Q299R-@godfather98
+#JJQYCU00-@kushio01
+#LP8YCLRU-@artof
+#JJQYCU00-@kushio01
+#LRPLYJ9U2-@Zanuda051
+#LYVRC98YJ-@Alasking072 #J8LRY2G-@clashgamertotoro
+#8CQL8CQ9L-@clashgamertotoro от Tabakeuss [1842299143]
+Произошла ошибка: Exception of type 'System.Exception' was thrown.
+Дополнительное сообщение: Что-то пошло не так, был выдан ответ-заглушка.
+Стактрейс: 
+

@@ -113,6 +113,11 @@ public static class TagsConditionChecker
 
     public static bool CheckClanIsInBlackList(BotUserRequestParameters parameters)
     {
+        if (string.IsNullOrEmpty(parameters.LastClanTagMessage))
+        {
+            return false;
+        }
+
         return GetFromDbQueryHandler.GetTrackedClan(parameters.LastClanTagMessage).IsInBlackList;
     }
 }
