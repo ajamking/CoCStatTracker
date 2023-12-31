@@ -2,6 +2,7 @@
 using CoCStatsTrackerBot.Requests;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Globalization;
 using System.Text;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
@@ -33,6 +34,8 @@ class Program
     async static Task Main()
     {
         Console.OutputEncoding = Encoding.UTF8;
+
+        CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("ru-RU");
 
         BotBackgroundManager.StartAstync(BotClient);
 
