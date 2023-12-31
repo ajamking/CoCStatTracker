@@ -39,6 +39,8 @@ public static class ClanFunctions
         str.AppendLine(StylingHelper.MakeItStyled(clanUi.Name + " - " + clanUi.Tag, UiTextStyle.Name));
         str.AppendLine();
         str.AppendLine(clanUi.UpdatedOn.GetUpdatedOnString());
+       
+
         str.AppendLine();
         str.AppendLine(StylingHelper.MakeItStyled("Шапка клана:", UiTextStyle.Subtitle));
         str.AppendLine(StylingHelper.MakeItStyled(clanUi.Description, UiTextStyle.Default));

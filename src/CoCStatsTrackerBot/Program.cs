@@ -1,6 +1,7 @@
 ﻿using CoCStatsTracker;
 using CoCStatsTrackerBot.Requests;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.Text;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
