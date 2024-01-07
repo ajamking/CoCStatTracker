@@ -248,7 +248,7 @@ public class CurrentStatisticsFunctions
         }
 
         var firstColumnLength = 21;
-        var secondColumnLength = 9;
+        var secondColumnLength = 10;
 
         str.AppendLine($"\n``` " +
                 $"|{StylingHelper.GetCenteredString("Параметр", firstColumnLength)}" +
