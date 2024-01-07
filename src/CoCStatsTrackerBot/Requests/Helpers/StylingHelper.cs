@@ -42,20 +42,27 @@ public static class StylingHelper
     /// Центрирует строку, отбивая пробелами слева и справа.
     public static string GetCenteredString(string str, int maxStringWidth)
     {
-        var newStr = SymbolDisplay.FormatLiteral(str, false);
+        try
+        {
+            var newStr = SymbolDisplay.FormatLiteral(str, false);
 
-        //if (newStr.Length >= maxStringWidth)
-        //{
-        //    return str;
-        //}
+            //if (newStr.Length >= maxStringWidth)
+            //{
+            //    return str;
+            //}
 
-        int leftPadding = (maxStringWidth - str.Length) / 2;
+            int leftPadding = (maxStringWidth - str.Length) / 2;
 
-        int rightPadding = maxStringWidth - str.Length - leftPadding;
+            int rightPadding = maxStringWidth - str.Length - leftPadding;
 
-        var answer = new string(' ', leftPadding) + newStr + new string(' ', rightPadding);
+            var answer = new string(' ', leftPadding) + newStr + new string(' ', rightPadding);
 
-        return answer;
+            return answer;
+        }
+        catch (Exception e)
+        {
+            return "Exc";
+        }
     }
 
     /// Центрирует строку, отбивая тире слева и справа.
