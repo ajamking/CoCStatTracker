@@ -158,14 +158,14 @@ public static class StylingHelper
     {
         var devidedString = string.Format("{0:N}", value);
 
-        return devidedString.Remove(devidedString.Length - 3);
+        return devidedString.Split(',')[0];
     }
 
     public static string GetDividedString(this double value)
     {
         var devidedString = string.Format("{0:N}", value);
 
-        return devidedString.Remove(devidedString.Length - 3);
+        return devidedString.Split(',')[0];
     }
 
     public static string FormateToUiDateTime(this DateTime dateTime)

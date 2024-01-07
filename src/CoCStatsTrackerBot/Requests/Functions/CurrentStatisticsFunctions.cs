@@ -248,7 +248,7 @@ public class CurrentStatisticsFunctions
         }
 
         var firstColumnLength = 21;
-        var secondColumnLength = 10;
+        var secondColumnLength = 9;
 
         str.AppendLine($"\n``` " +
                 $"|{StylingHelper.GetCenteredString("Параметр", firstColumnLength)}" +
@@ -257,6 +257,9 @@ public class CurrentStatisticsFunctions
         str.AppendLine(StylingHelper.GetTableDeviderLine(DeviderType.Colunmn, firstColumnLength, secondColumnLength));
 
         var raidMedalsPrediction = FunctionsLogicHelper.GetCurrentRaidMedalsRewardPrediction(raidUi);
+
+        var a = raidUi.TotalCapitalLoot;
+        var b = raidUi.TotalCapitalLoot.GetDividedString();
 
         var dic = new Dictionary<string, string>()
         {
