@@ -68,7 +68,7 @@ public static class BotBackgroundManager
 
             await BotBackgroundNewsLetterManager.StartAstync(botClient);
 
-            await Task.Delay(TimeSpan.FromMinutes(1));
+            await Task.Delay(TimeSpan.FromHours(1));
         }
     }
 
