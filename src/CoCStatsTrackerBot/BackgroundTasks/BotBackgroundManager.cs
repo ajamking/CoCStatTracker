@@ -68,7 +68,7 @@ public static class BotBackgroundManager
 
             await BotBackgroundNewsLetterManager.StartAstync(botClient);
 
-            await Task.Delay(TimeSpan.FromHours(1));
+            await Task.Delay(TimeSpan.FromMinutes(1));
         }
     }
 
@@ -92,12 +92,13 @@ public static class BotBackgroundManager
 
         if (reply.Status == IPStatus.Success)
         {
-            Console.WriteLine("Подключение к Internet стабильно");
+            Console.WriteLine($"<{DateTime.Now:HH:mm:ss}> Подключение к Internet стабильно");
+
             return true;
         }
         else
         {
-            Console.WriteLine("Нет подключения к Internet");
+            Console.WriteLine($"<{DateTime.Now:HH:mm:ss}> Нет подключения к Internet");
 
             return false;
         }

@@ -250,12 +250,21 @@ public static class BotBackgroundNewsLetterManager
     private static void ChangeNewsLetterStatesForAllClans(this List<ClanNewsLetterState> clanNewsLetterStates)
     {
         var properClans = GetFromDbQueryHandler.GetAllTrackedClans()
-              .Where(x => x.IsInBlackList == false && x.RegularNewsLetterOn == true && !string.IsNullOrEmpty(x.ClansTelegramChatId))
+              .Where(x => x.IsInBlackList == false && !string.IsNullOrEmpty(x.ClansTelegramChatId))
               .ToList();
 
         foreach (var clan in properClans)
         {
-            if (clanNewsLetterStates.FirstOrDefault(x => x.Tag == clan.Tag) == null)
+            var clanNewsLetter = clanNewsLetterStates.FirstOrDefault(x => x.Tag == clan.Tag);
+
+            if (clan.RegularNewsLetterOn == false)
+            {
+                clanNewsLetterStates.Remove(clanNewsLetter);
+
+                continue;
+            }
+
+            if (clanNewsLetter == null)
             {
                 clanNewsLetterStates.Add(
                     new ClanNewsLetterState(clan.Tag, clan.Name, clan.ClansTelegramChatId, clan.RaidTimeToMessageBeforeEnd, clan.WarTimeToMessageBeforeEnd)
@@ -268,8 +277,6 @@ public static class BotBackgroundNewsLetterManager
             }
             else
             {
-                var clanNewsLetter = clanNewsLetterStates.First(x => x.Tag == clan.Tag);
-
                 clanNewsLetter.WarTimeToMessageBeforeEnd = clan.WarTimeToMessageBeforeEnd;
                 clanNewsLetter.WarStartNewsLetterOn = clan.WarStartMessageOn;
                 clanNewsLetter.WarEndNewsLetterOn = clan.WarEndMessageOn;
