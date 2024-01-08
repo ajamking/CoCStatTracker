@@ -21,16 +21,25 @@ public static class BotBackgroundManager
 
     public static async Task StartAstync(ITelegramBotClient botClient)
     {
-        var clanNewsLetterStates = new List<ClanNewsLetterState>();
-
-        /*CheckInternetConnection() - на сервере иногда пропадает подключение к интернету и бот перестает обноввлять БД, поэтом убрали.*/
         while (true)
         {
+            //Перед каждой итерацией фоновых задач проверяем подключение к интернету.
+            while (true)
+            {
+                if (CheckInternetConnection() == true)
+                {
+                    break;
+                }
+
+                await Task.Delay(TimeSpan.FromSeconds(5));
+            }
+
             Console.WriteLine($"<{DateTime.Now:HH:mm:ss}> Обновляю подписанные кланы...");
 
             var allTrackedClans = GetFromDbQueryHandler.GetAllTrackedClans();
 
-            //Почему-то когда вызов этих функций происходит асинхронно - что-то там где-то ломается.
+            /*Почему-то когда вызов этих функций происходит асинхронно - что-то там где-то ломается.
+              Поэтому заменили асинхронный вариант на синхронный*/
             // var tasks = allTrackedClans
             //.Select(x => Task.Run(() => UpdateAllProperties(x)))
             //.ToList();
@@ -57,13 +66,10 @@ public static class BotBackgroundManager
                 Console.WriteLine($"<{DateTime.Now:HH:mm:ss}> Сезонная статистика обновлена для {update.Key}.\n");
             }
 
-            clanNewsLetterStates.AddNewsletterStateForNewClans();
-
-            await BotBackgroundNewsLetterManager.StartAstync(botClient, clanNewsLetterStates);
+            await BotBackgroundNewsLetterManager.StartAstync(botClient);
 
             await Task.Delay(TimeSpan.FromHours(1));
         }
-
     }
 
     public static bool CheckInternetConnection()
@@ -86,6 +92,7 @@ public static class BotBackgroundManager
 
         if (reply.Status == IPStatus.Success)
         {
+            Console.WriteLine("Подключение к Internet стабильно");
             return true;
         }
         else
@@ -193,41 +200,5 @@ public static class BotBackgroundManager
         stream.Close();
 
         return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
-    }
-
-    private static void AddNewsletterStateForNewClans(this List<ClanNewsLetterState> clanNewsLetterStates)
-    {
-        var properClans = GetFromDbQueryHandler.GetAllTrackedClans()
-              .Where(x => x.IsInBlackList == false && x.RegularNewsLetterOn == true && !string.IsNullOrEmpty(x.ClansTelegramChatId))
-              .ToList();
-
-        foreach (var clan in properClans)
-        {
-            if (clanNewsLetterStates.FirstOrDefault(x => x.Tag == clan.Tag) == null)
-            {
-                clanNewsLetterStates.Add(
-                    new ClanNewsLetterState(clan.Tag, clan.Name, clan.ClansTelegramChatId, clan.RaidTimeToMessageBeforeEnd, clan.WarTimeToMessageBeforeEnd)
-                    {
-                        WarStartNewsLetterOn = clan.WarStartMessageOn,
-                        WarEndNewsLetterOn = clan.WarEndMessageOn,
-                        RaidStartNewsLetterOn = clan.RaidStartMessageOn,
-                        RaidEndNewsLetterOn = clan.RaidEndMessageOn,
-                    });
-            }
-            else
-            {
-                var clanNewsLetter = clanNewsLetterStates.First(x => x.Tag == clan.Tag);
-
-                clanNewsLetter.WarTimeToMessageBeforeEnd = clan.WarTimeToMessageBeforeEnd;
-                clanNewsLetter.WarStartNewsLetterOn = clan.WarStartMessageOn;
-                clanNewsLetter.WarEndNewsLetterOn = clan.WarEndMessageOn;
-
-                clanNewsLetter.RaidTimeToMessageBeforeEnd = clan.RaidTimeToMessageBeforeEnd;
-                clanNewsLetter.RaidStartNewsLetterOn = clan.RaidStartMessageOn;
-                clanNewsLetter.RaidEndNewsLetterOn = clan.RaidEndMessageOn;
-
-                clanNewsLetter.TelegramsChatId = clan.ClansTelegramChatId;
-            }
-        }
     }
 }

@@ -8,16 +8,17 @@ namespace CoCStatsTrackerBot;
 
 public static class BotBackgroundNewsLetterManager
 {
-    private static string _cwImageFilePath = "https://disk.yandex.ru/i/05a1XlLx0-FcOg";
-    private static string _raidImageFilePath = "https://disk.yandex.ru/i/llhYHEC1USL0tQ";
+    private static int _timeAfterNoNeedToSendAMessage = 2;
 
-    private static int timeAfterNoNeedToSendAMessage = 2;
+    private static List<ClanNewsLetterState> _clanNewsLetterStates = new();
 
-    public static async Task StartAstync(ITelegramBotClient botClient, List<ClanNewsLetterState> clanNewsLetterStates)
+    public static async Task StartAstync(ITelegramBotClient botClient)
     {
+        _clanNewsLetterStates.ChangeNewsLetterStatesForAllClans();
+
         Console.WriteLine($"<{DateTime.Now:HH:mm:ss}> Начинаю рассылку в группы...");
 
-        foreach (var clanNewsLetter in clanNewsLetterStates)
+        foreach (var clanNewsLetter in _clanNewsLetterStates)
         {
             await clanNewsLetter.SendGroupRaidMessages(botClient);
 
@@ -110,7 +111,7 @@ public static class BotBackgroundNewsLetterManager
     {
         if (lastRaidUi == null) return false;
 
-        if (DateTime.Now.Subtract(lastRaidUi.StartedOn).TotalHours > 0 && DateTime.Now.Subtract(lastRaidUi.StartedOn).TotalHours < timeAfterNoNeedToSendAMessage)
+        if (DateTime.Now.Subtract(lastRaidUi.StartedOn).TotalHours > 0 && DateTime.Now.Subtract(lastRaidUi.StartedOn).TotalHours < _timeAfterNoNeedToSendAMessage)
         {
             var newAnswer = NewsLetterFunctions.GetRaidStartShortMessage(lastRaidUi);
 
@@ -150,7 +151,7 @@ public static class BotBackgroundNewsLetterManager
     {
         if (lastRaidUi == null) return false;
 
-        if (DateTime.Now.Subtract(lastRaidUi.EndedOn).TotalHours > 0 && DateTime.Now.Subtract(lastRaidUi.EndedOn).TotalHours < timeAfterNoNeedToSendAMessage)
+        if (DateTime.Now.Subtract(lastRaidUi.EndedOn).TotalHours > 0 && DateTime.Now.Subtract(lastRaidUi.EndedOn).TotalHours < _timeAfterNoNeedToSendAMessage)
         {
             var newAnswer = NewsLetterFunctions.GetRaidEndShortMessage(lastRaidUi);
 
@@ -169,7 +170,7 @@ public static class BotBackgroundNewsLetterManager
     {
         if (clanWarUi == null) return false;
 
-        if (DateTime.Now.Subtract(clanWarUi.StartedOn).TotalHours > 0 && DateTime.Now.Subtract(clanWarUi.StartedOn).TotalHours < timeAfterNoNeedToSendAMessage)
+        if (DateTime.Now.Subtract(clanWarUi.StartedOn).TotalHours > 0 && DateTime.Now.Subtract(clanWarUi.StartedOn).TotalHours < _timeAfterNoNeedToSendAMessage)
         {
             var newAnswer = NewsLetterFunctions.GetClanWarStartShortMessage(clanWarUi);
 
@@ -209,7 +210,7 @@ public static class BotBackgroundNewsLetterManager
     {
         if (clanWarUi == null) return false;
 
-        if (DateTime.Now.Subtract(clanWarUi.EndedOn).TotalHours > 0 && DateTime.Now.Subtract(clanWarUi.EndedOn).TotalHours < timeAfterNoNeedToSendAMessage)
+        if (DateTime.Now.Subtract(clanWarUi.EndedOn).TotalHours > 0 && DateTime.Now.Subtract(clanWarUi.EndedOn).TotalHours < _timeAfterNoNeedToSendAMessage)
         {
             var newAnswer = NewsLetterFunctions.GetClanWarEndShortMessage(clanWarUi);
 
@@ -243,6 +244,42 @@ public static class BotBackgroundNewsLetterManager
             clanNewsLetterState.WarIsStartMessageSent = false;
             clanNewsLetterState.WarIsCustomTimeMessageSent = false;
             clanNewsLetterState.WarIsEndMessageSent = false;
+        }
+    }
+
+    private static void ChangeNewsLetterStatesForAllClans(this List<ClanNewsLetterState> clanNewsLetterStates)
+    {
+        var properClans = GetFromDbQueryHandler.GetAllTrackedClans()
+              .Where(x => x.IsInBlackList == false && x.RegularNewsLetterOn == true && !string.IsNullOrEmpty(x.ClansTelegramChatId))
+              .ToList();
+
+        foreach (var clan in properClans)
+        {
+            if (clanNewsLetterStates.FirstOrDefault(x => x.Tag == clan.Tag) == null)
+            {
+                clanNewsLetterStates.Add(
+                    new ClanNewsLetterState(clan.Tag, clan.Name, clan.ClansTelegramChatId, clan.RaidTimeToMessageBeforeEnd, clan.WarTimeToMessageBeforeEnd)
+                    {
+                        WarStartNewsLetterOn = clan.WarStartMessageOn,
+                        WarEndNewsLetterOn = clan.WarEndMessageOn,
+                        RaidStartNewsLetterOn = clan.RaidStartMessageOn,
+                        RaidEndNewsLetterOn = clan.RaidEndMessageOn,
+                    });
+            }
+            else
+            {
+                var clanNewsLetter = clanNewsLetterStates.First(x => x.Tag == clan.Tag);
+
+                clanNewsLetter.WarTimeToMessageBeforeEnd = clan.WarTimeToMessageBeforeEnd;
+                clanNewsLetter.WarStartNewsLetterOn = clan.WarStartMessageOn;
+                clanNewsLetter.WarEndNewsLetterOn = clan.WarEndMessageOn;
+
+                clanNewsLetter.RaidTimeToMessageBeforeEnd = clan.RaidTimeToMessageBeforeEnd;
+                clanNewsLetter.RaidStartNewsLetterOn = clan.RaidStartMessageOn;
+                clanNewsLetter.RaidEndNewsLetterOn = clan.RaidEndMessageOn;
+
+                clanNewsLetter.TelegramsChatId = clan.ClansTelegramChatId;
+            }
         }
     }
 }
