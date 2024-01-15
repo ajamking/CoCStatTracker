@@ -152,7 +152,25 @@ public static class StylingHelper
         }
     }
 
+    /// Заменяет различные смайлики и т.д. в строке на символ ! с фиксированной шириной и возвращает корректно отображающееся в Telegram таблице строку.
+    public static string RemoveInvalidSymbols(this string str)
+    {
+        var tempName = new StringBuilder();
 
+        foreach (var symbol in SymbolDisplay.FormatLiteral(str, false))
+        {
+            if (symbol == '⃢')
+            {
+                tempName.Append('?');
+            }
+            else
+            {
+                tempName.Append(symbol);
+            }
+        }
+
+        return tempName.ToString();
+    }
 
     public static string GetDividedString(this int value)
     {

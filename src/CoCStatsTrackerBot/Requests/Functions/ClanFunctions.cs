@@ -39,7 +39,7 @@ public static class ClanFunctions
         str.AppendLine(StylingHelper.MakeItStyled(clanUi.Name + " - " + clanUi.Tag, UiTextStyle.Name));
         str.AppendLine();
         str.AppendLine(clanUi.UpdatedOn.GetUpdatedOnString());
-       
+
 
         str.AppendLine();
         str.AppendLine(StylingHelper.MakeItStyled("Шапка клана:", UiTextStyle.Subtitle));
@@ -90,7 +90,7 @@ public static class ClanFunctions
                 newCounter = counter.ToString();
             }
 
-            str.AppendLine(StylingHelper.MakeItStyled($"{newCounter}| {member.Name}  [{member.Tag}]  {member.TelegramUserName}", UiTextStyle.Name));
+            str.AppendLine(StylingHelper.MakeItStyled($"{newCounter}| {member.Name.RemoveInvalidSymbols()}  [{member.Tag}]  {member.TelegramUserName}", UiTextStyle.Name));
         }
 
         return str.ToString();

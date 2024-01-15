@@ -45,7 +45,7 @@ public class LeaderClanMembersRH : BaseRequestHandler
                     userName = member.TelegramUserName;
                 }
 
-                answer.AppendLine(StylingHelper.MakeItStyled($"{member.Name} - {member.Tag} - ﴾ {userName} ﴿", UiTextStyle.Name));
+                answer.AppendLine(StylingHelper.MakeItStyled($"{member.Name.RemoveInvalidSymbols()} - {member.Tag} - ﴾ {userName} ﴿", UiTextStyle.Name));
             }
 
             ResponseSender.SendAnswer(parameters, true, answer.ToString());
