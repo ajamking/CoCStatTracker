@@ -23,7 +23,7 @@ class Program
    
     private static readonly string _botClientTokenTest = System.IO.File.ReadAllText(@"./CustomSolutionElements/BotClientTokenTEST.txt");
 
-    public static TelegramBotClient BotClient { get; } = new(token: _botClientTokenTest);
+    public static TelegramBotClient BotClient { get; } = new(token: _botClientToken);
 
     public static string BanListPath { get; } = @"./CustomSolutionElements/BannedUsers.txt";
 
