@@ -185,7 +185,7 @@ public static class ClanFunctions
                 {
                     if (memberArmy.SuperUnits.FirstOrDefault(x => x.Name == superUnit.Key)?.SuperTroopIsActivated == true)
                     {
-                        var properName = memberArmy.PlayerName;
+                        var properName = memberArmy.PlayerName.RemoveInvalidSymbols();
 
                         if (properName.Length > maxNameLength)
                         {

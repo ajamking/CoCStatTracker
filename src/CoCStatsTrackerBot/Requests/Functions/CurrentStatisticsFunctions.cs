@@ -29,7 +29,7 @@ public class CurrentStatisticsFunctions
                     telegramUserName = nonAttacker.TelegramUserName;
                 }
 
-                str.AppendLine(StylingHelper.MakeItStyled($"{nonAttacker.Name} ﴾ {nonAttacker.AttacksCount} ﴿ {telegramUserName}", UiTextStyle.Name));
+                str.AppendLine(StylingHelper.MakeItStyled($"{nonAttacker.Name.RemoveInvalidSymbols()} ﴾ {nonAttacker.AttacksCount} ﴿ {telegramUserName}", UiTextStyle.Name));
             }
         }
 
@@ -97,7 +97,7 @@ public class CurrentStatisticsFunctions
                 opponentThLevel += " ";
             }
 
-            var mapStr = $"{properMateName.Replace("\\\\", "\\")} {membersThLevel} |{position}| {opponent.TownHallLevel} {properOpponentName}";
+            var mapStr = $"{properMateName.RemoveInvalidSymbols().Replace("\\\\", "\\")} {membersThLevel} |{position}| {opponent.TownHallLevel} {properOpponentName.RemoveInvalidSymbols().Replace("\\\\", "\\")}";
 
             str.AppendLine($@"{StylingHelper.MakeItStyled(mapStr, UiTextStyle.Default)}");
         }
@@ -130,7 +130,7 @@ public class CurrentStatisticsFunctions
                     telegramUserName = nonAttacker.TelegramUserName;
                 }
 
-                str.AppendLine(StylingHelper.MakeItStyled($"{nonAttacker.Name} ﴾ {nonAttacker.AttacksCount} ﴿ {telegramUserName}", UiTextStyle.Name));
+                str.AppendLine(StylingHelper.MakeItStyled($"{nonAttacker.Name.RemoveInvalidSymbols()} ﴾ {nonAttacker.AttacksCount} ﴿ {telegramUserName}", UiTextStyle.Name));
             }
         }
 
