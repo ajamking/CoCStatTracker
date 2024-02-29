@@ -63,7 +63,10 @@ public class ClanMemberBuilder
 
             if (TroopDefiner.BaseUnitsForSupers.ContainsKey(unit.Name))
             {
-                unit.Level = troops.FirstOrDefault(x => x.Name == TroopDefiner.BaseUnitsForSupers[unit.Name]).Level;
+                var temp = troops.FirstOrDefault(x => x.Name == TroopDefiner.BaseUnitsForSupers[unit.Name]);
+
+                unit.Level = temp != null ? temp.Level : 0;
+
             }
             else
             {
