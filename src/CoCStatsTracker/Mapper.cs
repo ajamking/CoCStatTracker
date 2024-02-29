@@ -153,7 +153,7 @@ public static class Mapper
     //
     public static ClanMemberUi MapToUi(ClanMember clanMember)
     {
-        if (clanMember == null)
+        if (clanMember == null || clanMember.TrackedClan == null)
         {
             return new ClanMemberUi();
         }

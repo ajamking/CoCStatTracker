@@ -84,6 +84,8 @@ public static class UpdateDbCommandHandler
         dbContext.ClanMembers.RemoveRange(obsoleteMembersWithoutClan);
 
         dbContext.SaveChanges();
+
+        var a = 1;
     }
 
     public static void ResetLastClanMembersStaticstics(string clanTag)

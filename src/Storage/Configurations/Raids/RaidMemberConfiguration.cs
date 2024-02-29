@@ -13,14 +13,8 @@ public class RaidMemberConfiguration : IEntityTypeConfiguration<RaidMember>
         builder.Property(p => p.CapitalRaidId).IsRequired();
 
         builder
-       .HasOne<ClanMember>(x => x.ClanMember)
-       .WithMany(x => x.RaidMemberships)
-       .OnDelete(DeleteBehavior.Cascade);
-
-        builder
        .HasOne<CapitalRaid>(x => x.CapitalRaid)
        .WithMany(x => x.RaidMembers)
        .OnDelete(DeleteBehavior.Cascade);
-
     }
 }

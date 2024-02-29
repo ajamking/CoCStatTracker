@@ -56,11 +56,11 @@ public class DeveloperAllInfoRH : BaseRequestHandler
                     haveChatIdText = clan.ClansTelegramChatId;
                 }
 
-                var newsLetterOnText = $"Рассылка {BeautyIcons.RedCircleEmoji}";
+                var newsLetterOnText = $"Рассылка {BeautyIcons.GreenCircleEmoji}";
 
                 if (!clan.RegularNewsLetterOn)
                 {
-                    newsLetterOnText = $"Рассылка {BeautyIcons.GreenCircleEmoji}";
+                    newsLetterOnText = $"Рассылка {BeautyIcons.RedCircleEmoji}";
                 }
 
                 answer.AppendLine(StylingHelper.MakeItStyled($"\n[{clan.Name}] - [{clan.Tag}]" +
