@@ -6,6 +6,7 @@ namespace CoCStatsTracker.UIEntities;
 
 public class ClanWarUi : UiEntity
 {
+    public bool IsCwl { get; set; }
     public DateTime PreparationStartTime { get; set; }
     public DateTime StartedOn { get; set; }
     public DateTime EndedOn { get; set; }

@@ -39,11 +39,11 @@ public static class GetFromDbQueryHandler
     {
         using AppDbContext dbContext = new();
 
-        var trackedClansDb = dbContext.TrackedClans;
+        var trackedClansDb = dbContext.TrackedClans.ToList();
 
         NotFoundException.ThrowByPredicate(() => trackedClansDb == null || !trackedClansDb.Any(), "GetAllTrackedClans - No tracked clans were found in DB");
 
-        return trackedClansDb.ToList();
+        return trackedClansDb;
     }
 
     public static TrackedClan GetTrackedClan(string clanTag)

@@ -19,9 +19,11 @@ namespace CoCStatsTrackerBot;
 
 class Program
 {
+#if DEBUG
+    private static readonly string _botClientToken = System.IO.File.ReadAllText(@"./CustomSolutionElements/BotClientTokenTEST.txt");
+#else
     private static readonly string _botClientToken = System.IO.File.ReadAllText(@"./CustomSolutionElements/BotClientToken.txt");
-   
-    private static readonly string _botClientTokenTest = System.IO.File.ReadAllText(@"./CustomSolutionElements/BotClientTokenTEST.txt");
+#endif
 
     public static TelegramBotClient BotClient { get; } = new(token: _botClientToken);
 
@@ -37,7 +39,7 @@ class Program
 
         CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("ru-RU");
 
-        BotBackgroundManager.StartAstync(BotClient);
+        //BotBackgroundManager.StartAstync(BotClient);
 
         BotClient.StartReceiving(HandleUpdateAsync, HandleError);
 

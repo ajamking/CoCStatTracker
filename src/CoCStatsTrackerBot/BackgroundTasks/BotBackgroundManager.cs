@@ -38,13 +38,6 @@ public static class BotBackgroundManager
 
             var allTrackedClans = GetFromDbQueryHandler.GetAllTrackedClans();
 
-            /*Почему-то когда вызов этих функций происходит асинхронно - что-то там где-то ломается.
-              Поэтому заменили асинхронный вариант на синхронный*/
-            // var tasks = allTrackedClans
-            //.Select(x => Task.Run(() => UpdateAllProperties(x)))
-            //.ToList();
-            // await Task.WhenAll(tasks);
-
             foreach (var clan in allTrackedClans.Where(x => x.IsInBlackList == false))
             {
                 UpdateAllProperties(clan);
@@ -74,18 +67,6 @@ public static class BotBackgroundManager
 
     public static bool CheckInternetConnection()
     {
-        //var process = new Process();
-        //process.StartInfo.FileName = "ping";
-        //process.StartInfo.Arguments = "-c 5 google.com";
-        //process.StartInfo.RedirectStandardOutput = true;
-
-        //process.Start();
-        //process.WaitForExit();
-
-        ////Console.WriteLine(process.StandardOutput.ReadToEnd());
-
-        //return true;
-
         var myPing = new Ping();
 
         PingReply reply = myPing.Send("google.com", 10, new byte[32], new PingOptions());

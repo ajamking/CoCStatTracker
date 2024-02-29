@@ -94,6 +94,7 @@ public static class Mapper
 
         return new ClanWarUi
         {
+            IsCwl = clanWar.IsCWL,
             UpdatedOn = clanWar.UpdatedOn,
             PreparationStartTime = clanWar.PreparationStartTime,
             StartedOn = clanWar.StartedOn,

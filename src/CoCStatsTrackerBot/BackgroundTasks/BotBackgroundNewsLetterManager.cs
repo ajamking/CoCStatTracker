@@ -72,7 +72,14 @@ public static class BotBackgroundNewsLetterManager
     {
         try
         {
-            var lastWarUi = GetFromDbQueryHandler.GetLastClanWarUi(clanNewsLetterState.Tag);
+            var allClanWars = GetFromDbQueryHandler.GetAllClanWarsUi(clanNewsLetterState.Tag).OrderByDescending(x => x.StartedOn).ToList();
+
+            var lastWarUi = allClanWars.First();
+
+            if (allClanWars.Count>1 && allClanWars[1].IsCwl)
+            {
+                lastWarUi = allClanWars[1];
+            }
 
             clanNewsLetterState.TryResetClanWarNewsLetterState(lastWarUi.StartedOn);
 
