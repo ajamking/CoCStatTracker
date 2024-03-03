@@ -23,9 +23,9 @@ public class StartMenuHandler : BaseRequestHandler
 
         answer.AppendLine(StylingHelper.GetInlineLink("\nРуководство по использованию", "https://disk.yandex.ru/d/ZcPoSyQsDSPImA"));
 
-        answer.AppendLine(StylingHelper.GetInlineLink("\nВидео-руководство", "https://www.youtube.com/watch?v=c7DLH61E01o&t=21s"));
+        answer.AppendLine(StylingHelper.GetInlineLink("\nВидео руководство", "https://www.youtube.com/watch?v=c7DLH61E01o&t=21s"));
 
-        answer.AppendLine(StylingHelper.GetInlineLink("\nВидео-руководство для главы клана", "https://www.youtube.com/watch?v=tKxKOvCTO0g&t=565s"));
+        answer.AppendLine(StylingHelper.GetInlineLink("\nВидео руководство для главы клана", "https://www.youtube.com/watch?v=tKxKOvCTO0g&t=565s"));
 
         answer.AppendLine(StylingHelper.MakeItStyled("\nКраткое описание:\n", UiTextStyle.TableAnnotation));
 
