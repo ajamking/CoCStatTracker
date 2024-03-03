@@ -21,7 +21,7 @@ public class CapitalRaid : Entity
     public virtual ICollection<RaidDefense> RaidDefenses { get; set; }
     public virtual ICollection<AttackedClanOnRaid> AttackedClans { get; set; }
     public virtual ICollection<RaidMember> RaidMembers { get; set; }
-  
+
 
     public CapitalRaid()
     {

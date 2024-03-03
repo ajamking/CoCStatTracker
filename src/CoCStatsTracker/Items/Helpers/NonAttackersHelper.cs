@@ -1,6 +1,5 @@
 ﻿using CoCStatsTracker.UIEntities.ClanInfo;
 using Domain.Entities;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 

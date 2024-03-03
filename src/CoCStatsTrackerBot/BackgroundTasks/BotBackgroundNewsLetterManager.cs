@@ -76,7 +76,7 @@ public static class BotBackgroundNewsLetterManager
 
             var lastWarUi = allClanWars.First();
 
-            if (allClanWars.Count>1 && allClanWars[1].IsCwl)
+            if (allClanWars.Count > 1 && allClanWars[1].IsCwl)
             {
                 lastWarUi = allClanWars[1];
             }

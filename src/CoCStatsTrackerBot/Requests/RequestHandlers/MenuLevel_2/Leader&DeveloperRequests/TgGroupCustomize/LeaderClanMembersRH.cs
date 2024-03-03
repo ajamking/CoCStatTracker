@@ -1,5 +1,4 @@
 ﻿using CoCStatsTracker;
-using CoCStatsTracker.UIEntities.ClanInfo;
 using CoCStatsTrackerBot.BotMenues;
 using System.Text;
 

@@ -13,7 +13,7 @@ public class DefeatedEmemyDistrictConfiguration : IEntityTypeConfiguration<Defea
         builder
           .HasOne<AttackedClanOnRaid>(x => x.AttackedClan)
           .WithMany(x => x.DefeatedEmemyDistricts)
-          .HasForeignKey(x=>x.AttackedClanOnRaidId)
+          .HasForeignKey(x => x.AttackedClanOnRaidId)
           .OnDelete(DeleteBehavior.Cascade);
     }
 }

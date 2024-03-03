@@ -15,7 +15,7 @@ public class AttackedClanOnRaidConfiguration : IEntityTypeConfiguration<Attacked
         builder
        .HasOne<CapitalRaid>(x => x.CapitalRaid)
        .WithMany(x => x.AttackedClans)
-       .HasForeignKey(x=>x.CapitalRaidId)
+       .HasForeignKey(x => x.CapitalRaidId)
        .OnDelete(DeleteBehavior.Cascade);
 
         builder

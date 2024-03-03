@@ -38,7 +38,7 @@ public static class FunctionsLogicHelper
             {"Golem Quarry", "Карьер" },
             {"Skeleton Park", "Скелеты" },
             {"Goblin Mines", "Шахты" },
-    }; 
+    };
 
     public static Dictionary<DistrictType, string> AllDistrictsFullNamesRU { get; set; } = new Dictionary<DistrictType, string>()
     {

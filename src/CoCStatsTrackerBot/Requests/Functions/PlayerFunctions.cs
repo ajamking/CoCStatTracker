@@ -306,7 +306,7 @@ public static class PlayerFunctions
                 {
                     if (FunctionsLogicHelper.AllDistrictsEn.ContainsValue(attack.DistrictName))
                     {
-                        var enDistctictKeyValuePair = FunctionsLogicHelper.AllDistrictsEn.FirstOrDefault(x=>x.Value == attack.DistrictName);
+                        var enDistctictKeyValuePair = FunctionsLogicHelper.AllDistrictsEn.FirstOrDefault(x => x.Value == attack.DistrictName);
 
                         attack.DistrictName = FunctionsLogicHelper.AllDistrictsFullNamesRU[enDistctictKeyValuePair.Key];
                     }

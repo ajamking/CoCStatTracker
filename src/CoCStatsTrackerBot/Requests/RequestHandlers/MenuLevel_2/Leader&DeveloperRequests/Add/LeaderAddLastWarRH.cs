@@ -36,7 +36,7 @@ public class LeaderAddLastWarRH : BaseRequestHandler
 
                 ResponseSender.SendAnswer(parameters, true, SplitAnswer(answer));
             }
-          
+
         }
         catch (NotFoundException)
         {

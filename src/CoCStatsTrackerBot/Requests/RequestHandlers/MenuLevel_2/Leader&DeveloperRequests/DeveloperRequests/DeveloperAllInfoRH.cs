@@ -37,7 +37,7 @@ public class DeveloperAllInfoRH : BaseRequestHandler
             answer.AppendLine(CheckAndGetPropertyString(parameters.ClanChatIdToMerge));
 
             answer.AppendLine(StylingHelper.MakeItStyled("\n💠💠💠💠💠💠💠💠💠💠💠💠💠💠\n", UiTextStyle.Default));
-            
+
             answer.AppendLine(StylingHelper.MakeItStyled("Кланы, которые вы можете модерировать:", UiTextStyle.Header));
 
             foreach (var clan in GetFromDbQueryHandler.GetAllTrackedClans())

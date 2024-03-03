@@ -335,10 +335,10 @@ public class LeaderNewsLetterCustomize3 : BaseMenu
 
         Keyboard = new(new[]
         {
-        new KeyboardButton[] { $"Начало КВ {BeautyIcons.RedCircleEmoji}/{BeautyIcons.GreenCircleEmoji}", 
+        new KeyboardButton[] { $"Начало КВ {BeautyIcons.RedCircleEmoji}/{BeautyIcons.GreenCircleEmoji}",
             $"Конец КВ {BeautyIcons.RedCircleEmoji}/{BeautyIcons.GreenCircleEmoji}",  "КВ задать собственное время" },
 
-        new KeyboardButton[] { $"Начало рейдов {BeautyIcons.RedCircleEmoji}/{BeautyIcons.GreenCircleEmoji}", 
+        new KeyboardButton[] { $"Начало рейдов {BeautyIcons.RedCircleEmoji}/{BeautyIcons.GreenCircleEmoji}",
             $"Конец рейдов {BeautyIcons.RedCircleEmoji}/{BeautyIcons.GreenCircleEmoji}", "Рейды задать собственное время" },
 
         new KeyboardButton[] { $"Инструкция", $"Рассылка {BeautyIcons.RedCircleEmoji}/{BeautyIcons.GreenCircleEmoji}", "Назад" }

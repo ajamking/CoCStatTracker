@@ -29,7 +29,7 @@ public class LeaderUpdateLastWarRH : BaseRequestHandler
                 ResponseSender.SendAnswer(parameters, true, StylingHelper.MakeItStyled($"Операция успешна, информация о ранее зафиксированных " +
                     $"войнах текущей лиги обновлена.", UiTextStyle.Default));
             }
-            
+
         }
         catch (NotFoundException)
         {

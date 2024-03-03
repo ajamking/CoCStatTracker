@@ -1,6 +1,5 @@
 ﻿using CoCStatsTrackerBot.BotMenues;
 using System.Text;
-using static System.Net.WebRequestMethods;
 
 namespace CoCStatsTrackerBot.Requests;
 

@@ -1,5 +1,4 @@
 ﻿using CoCStatsTracker;
-using CoCStatsTrackerBot;
 using CoCStatsTrackerBot.BotMenues;
 
 namespace CoCStatsTrackerBot.Requests;
