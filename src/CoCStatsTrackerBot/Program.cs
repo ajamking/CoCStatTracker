@@ -38,7 +38,7 @@ class Program
 
         CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("ru-RU");
 
-        BotBackgroundManager.StartAstync(BotClient);
+        //BotBackgroundManager.StartAstync(BotClient);
 
         BotClient.StartReceiving(HandleUpdateAsync, HandleError);
 
